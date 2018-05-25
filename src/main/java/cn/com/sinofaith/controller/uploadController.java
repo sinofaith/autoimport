@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Me. on 2018/5/23
  */
 @Controller
-public class uploadController {
+public class UploadController {
     @Autowired
     private uploadService us;
     @Autowired
