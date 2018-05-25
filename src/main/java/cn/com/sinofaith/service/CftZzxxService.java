@@ -86,7 +86,7 @@ public class CftZzxxService {
         cell = row.createCell(8);
         cell.setCellValue("接收方");
         cell = row.createCell(9);
-        cell.setCellValue("接受金额(元)");
+        cell.setCellValue("接收金额(元)");
         int i = 1;
         for(CftZzxxEntity zzxx: listZzxx){
             row = sheet.createRow(i);
