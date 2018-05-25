@@ -1,0 +1,243 @@
+ul.phototip{
+    padding:5px;
+    position:absolute;
+    width:100%;
+    bottom:-7px;
+    left:15%;
+}
+ul.phototip>li{
+    list-style: none;
+    display: block;
+    float:left;
+    height:20px;
+    line-height: 20px;
+    text-align: center;
+    color:white;
+    margin-right: 5px;
+    padding: 0 4px;
+}
+a.btn{
+    padding: 8px 8px;
+    height:20px;
+    line-height: 20px;
+    color:#ffffff;
+    background-color: #00aaef;
+    text-align: center;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius: 2px;
+    border-bottom: 2px solid #00aaef;
+    cursor: pointer;
+}
+
+a.btn:hover {
+    background-color: #82D3F6;
+    border-color: #82D3F6;
+}
+
+a.btn-full{
+    display: block;
+    margin: 5px 0;
+
+}
+
+a.btn-green{
+    background-color: #1fbf41;
+
+    border-bottom: 2px solid #1fbf41;
+    height:34px;
+    line-height: 34px;
+}
+a.btn-blue{
+    background-color: #00aaef;
+    width:200px;
+    border-bottom: 2px solid #00aaef;
+    height:34px;
+    line-height: 34px;
+}
+a.btn-blue:hover {
+    background-color: #00aaef;
+    border-color: #00aaef;
+}
+
+a.btn-green:hover {
+    background-color: #2ADB2B;
+    border-color: #2ADB2B;
+}
+
+a.btn-orange{
+    background-color: #ff6600;
+
+    border-bottom: 2px solid #ff6600;
+    height:34px;
+    line-height: 34px;
+}
+
+a.btn-orange:hover {
+    background-color: #ff9900;
+    border-color: #ff9900;
+}
+
+a.btn-white {
+    color: #000000;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+a.btn-white:hover {
+    color: #000000;
+    background-color: #F7F7F7;
+    border-color: #F7F7F7;
+}
+.width_100{ width: 100%}
+.width_80{ width: 80%}
+.padd_5{ padding-left: 10px;}
+input[type="text"],input[type="password"]{
+    font-size: 12px;
+    border:solid 1px #e1e1e3;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius: 4px;
+    height: 28px;
+    line-height: 28px;
+    display: inline-block;
+    overflow-x: visible;
+    padding-left: 5px;
+}
+
+.divider {
+    height: 2px;
+    width: 100%;
+    background-color: #F5F5F5;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.circleToken {
+    width: 20px;
+    height: 20px;
+    background: #82D2F5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+.circleToken text {
+    font-size: small;
+    color: #ffffff;
+    background-color: transparent;
+    position: relative;
+    top: -6px;
+    left: 5px;
+}
+.circleToken-red {
+    background-color: #BD2242;
+}
+
+.tooltip {
+    width: 200px;
+    height: 270px;
+    border: 2px solid #EFEFEF;
+    border-radius: 15px;
+    background: wheat;
+    -moz-box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
+    -webkit-box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
+    box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
+}
+
+.myTable {
+    width: 100%;
+}
+
+.myTable>tbody>tr>td {
+    text-align: center;
+    font-size: small;
+}
+
+.myTable>tbody>tr {
+    height: 30px;
+}
+
+/*.myTable>tbody>tr:nth-of-type(even) {*/
+    /*background: #F5F5F5;*/
+/*}*/
+
+.btgScale {
+    width: 100px;
+    height: 30px;
+}
+
+.btgScale .btnZoomIn {
+    display: inline-block;
+    width: 40px;
+    height: 30px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border: 2px solid #EFEFEF;
+    cursor: pointer;
+}
+
+.btgScale .btnZoomIn:hover {
+    background: #EFEFEF;
+}
+
+.btgScale .btnZoomIn img {
+    position: relative;
+    top: 7px;
+    left: 10px;
+}
+
+.btgScale .btnZoomOut {
+    display: inline-block;
+    width: 40px;
+    height: 30px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    position: relative;
+    left: -6px;
+    border: 2px solid #EFEFEF;
+    cursor: pointer;
+}
+
+.btgScale .btnZoomOut:hover {
+    background: #EFEFEF;
+}
+
+.btgScale .btnZoomOut img {
+    position: relative;
+    top: 7px;
+    left: 10px;
+}
+
+.slidebar {
+
+    position: absolute;
+    left: -60px;
+    width: 20px;
+    height: 80%;
+    background: transparent;
+    box-shadow: 10px 0 10px 0 rgba(0,0,0,0.1);
+}
+
+.slidebar>img {
+    width: 20px;
+    height: 60px;
+    position: relative;
+    top: 50%;
+    cursor: pointer;
+}
+
+#tj_DetailsDiv {
+    width: 300px;
+    height: 70%;
+    background: #C7C7C7;
+    position: absolute;
+    right: 5px;
+    top: 50px;
+    z-index: 999;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #CDCAB7 inset;
+    overflow-y: scroll;
+}

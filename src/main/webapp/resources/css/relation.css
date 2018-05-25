@@ -1,0 +1,127 @@
+#phoneBox>input[type="text"]{
+    width: 235px;
+    padding:0 40px 0 5px;
+}
+
+#phoneBox>a{
+    margin-top:5px;
+}
+
+
+#rightbar{
+    position:relative;
+}
+
+#phoneEntry {
+    width: 70%;
+    height: 35px;
+    margin: 10px;
+}
+
+#btnLoadFile {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: -45px;
+    top: 8px;
+    cursor: pointer;
+}
+
+a.btn-pattern {
+    width: 28%;
+    border: 1px solid #E8E8EA;
+    display: inline-block;
+    margin-left:-8px;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+a.btn-pattern.selected {
+    background-color: #333644;
+    color: #ffffff;
+}
+
+#rightbar select {
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: white;
+    width: 150px;
+    height: 30px;
+    border: 1px solid #E8E8EA;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+#modelToggle {
+    width: 280px;
+    display: inline-block;
+    float: right;
+}
+
+#modelToggle a {
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    background-color: #ffffff;
+    border: 1px solid #E8E8EA;
+    cursor: pointer;
+    padding: 5px 15px 5px 15px;
+}
+
+#modelToggle a:hover {
+    background-color: #E8E8E9;
+    border-color: #E8E8E9;
+}
+
+#modelToggle a.selected {
+    color: #ffffff;
+    background: #333644;
+}
+
+#modelToggle img {
+    width: 24px;
+    height: 13px;
+    padding: 8px;
+}
+
+#modelToggle span {
+    font-size: small;
+    position: relative;
+    top: -8px;
+}
+
+#modelToggle a.selected > span{
+    color: #ffffff;
+}
+
+#btnDownload {
+    position: absolute;
+    top: 40px;
+    z-index: 100;
+    float: right;
+    right: 40px;
+}
+
+#btnDownload>img {
+    width: 28px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.mytable td,.mytable th{
+    line-height: 30px;
+    height: 30px;
+}
+
+table a{
+    color:black;
+}
+.table-option img{
+    width: 19px;
+    height: 19px;
+    margin-top: 5px;
+}
+.mytable tbody tr.rwechat>td{background-color:#dff0d8;}
+.mytable tbody tr.rweibo>td{background-color:#f2dede;}
+.mytable tbody tr.remail>td{background-color:#fcf8e3;}
+.mytable tbody tr.rqq>td{background-color:#d9edf7;}
+.mytable thead tr>th{background-color:#333645; color: white;}
+.mytable{margin-top: 10px;}

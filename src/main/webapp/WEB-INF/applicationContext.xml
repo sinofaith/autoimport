@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.1.xsd"
+>
+
+    <context:annotation-config/>
+    <context:component-scan base-package="cn.com.sinofaith.*"/>
+
+    <!--数据库连接-->
+    <bean id="propertyConfigure" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="/WEB-INF/jdbc.properties" />
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          p:driverClassName="${jdbc.driverClassName}"
+          p:url="${jdbc.databaseurl}"
+          p:username="${jdbc.username}"
+          p:password="${jdbc.password}"
+          p:maxActive="10"
+          p:initialSize="5"/>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation">
+            <value>/WEB-INF/hibernate.cfg.xml</value>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${jdbc.dialect}</prop>
+                <prop key="hibernate.connection.autocommit">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <!--<prop key="hibernate.connection.url">jdbc:oracle:thin:@//localhost:1521/orcl</prop>-->
+                <!--<prop key="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</prop>-->
+            </props>
+        </property>
+
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="insert*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="get*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="add*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="update*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="delete*" read-only="false" propagation="REQUIRED" />
+            <tx:method name="select*" read-only="true" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <!--<aop:config>-->
+    <!--<aop:advisor pointcut="execution(* cn.com.ieven.dao.*.*(..))"  advice-ref="txAdvice"/>-->
+    <!--</aop:config>-->
+
+
+</beans>

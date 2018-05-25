@@ -1,0 +1,234 @@
+#phoneEntry {
+    width: 70%;
+    height: 35px;
+    margin: 10px;
+}
+
+#btnLoadFile {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: -45px;
+    top: 8px;
+    cursor: pointer;
+}
+
+#btnDetails {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+a.btn-pattern {
+    width: 28%;
+    border: 1px solid #E8E8EA;
+    display: inline-block;
+    margin-left:-8px;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+a.btn-pattern.selected {
+    background-color: #333644;
+    color: #ffffff;
+}
+
+#zoneSelection {
+    margin: 10px 0 10px 20px;
+}
+
+#zoneSelection select {
+    background-color: white;
+    height: 30px;
+    width: 95px;
+    border: 1px solid #E8E8EA;
+}
+
+#showController select {
+    background-color: white;
+    width: 150px;
+    height: 30px;
+    border: 1px solid #E8E8EA;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+#modelToggle {
+    width: 320px;
+    display: inline-block;
+    position: absolute;
+    top: 5px;
+    right: 20px;
+}
+
+#modelToggle a {
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    background-color: #ffffff;
+    border: 1px solid #E8E8EA;
+    cursor: pointer;
+    padding: 5px 15px 5px 15px;
+}
+
+#modelToggle a:hover {
+    background-color: #E8E8E9;
+    border-color: #E8E8E9;
+}
+
+#modelToggle a.selected {
+    color: #ffffff;
+    background: #333644;
+}
+
+#modelToggle img {
+    width: 24px;
+    height: 13px;
+    padding: 8px;
+}
+
+#modelToggle span {
+    font-size: small;
+    position: relative;
+    top: -8px;
+}
+
+#modelToggle a.selected > span{
+    color: #ffffff;
+}
+
+#phoneTable {
+    max-height: 160px;
+    overflow-y: scroll;
+}
+
+
+#phoneTable span[type="text"]{
+    position: relative;
+    top: -5px;
+}
+
+/*#tooltip>span {*/
+    /*position: absolute;*/
+    /*right: 10px;*/
+    /*top: 5px;*/
+    /*cursor: pointer;*/
+/*}*/
+
+/*#tooltip>span:hover{*/
+    /*color: #099A21;*/
+/*}*/
+
+/*#tooltip>pre {*/
+    /*overflow-x: hidden;*/
+    /*overflow-y: auto;*/
+    /*width: 170px;*/
+    /*height: 260px;*/
+    /*padding: 0 0 0 20px;*/
+    /*font-size: small;*/
+/*}*/
+
+ul.phototip {
+    bottom: 170px;
+    left: 520px;
+}
+
+.warning {
+    border: 1px solid red !important;
+    -moz-box-shadow:4px 4px 12px -2px rgba(230, 0, 103,0.5);
+    -webkit-box-shadow:4px 4px 12px -2px rgba(230, 0, 103,0.5);
+    box-shadow:4px 4px 12px -2px rgba(230, 0, 103,0.5);
+}
+
+#btnDownload {
+    position: absolute;
+    top: 590px;
+    z-index: 100;
+    right: 30px;
+}
+
+#btnDownload>img {
+    width: 28px;
+    height: 20px;
+    cursor: pointer;
+}
+
+#btgScale {
+    position: absolute;
+    top: 580px;
+    left: 420px;
+    z-index: 200;
+}
+
+.node {
+    font-size: 10px;
+}
+
+.node>circle {
+    cursor: pointer;
+}
+
+.recorded {
+    stroke: red;
+    stroke-width: 2px;
+}
+
+/*circle:hover {*/
+    /*stroke: #BCBAB8;*/
+    /*stroke-width: 2px;*/
+/*}*/
+
+circle:hover{
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+.link {
+    font-size: 10px;
+}
+
+.background {
+    fill: none;
+    pointer-events: all;
+}
+
+#IMgraph .node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+#IMgraph .link {
+    stroke: #999;
+    stroke-opacity: .6;
+    stroke-width: 1.5px;
+}
+
+.ImNode {
+    cursor: pointer;
+    stroke: #000;
+    stroke-width: .5px;
+}
+
+.ImLink {
+    fill: none;
+    stroke: #9ecae1;
+    stroke-width: 1.5px;
+    cursor: pointer;
+}
+
+.zoneCircle {
+    fill: rgb(31, 119, 180);
+    fill-opacity: .25;
+    stroke: rgb(31, 119, 180);
+    stroke-width: 1px;
+}
+
+.leaf .zoneCircle {
+    fill: #ff7f0e;
+    fill-opacity: 1;
+}
+
+.linkShowTitle{
+    cursor: pointer;
+}

@@ -1,0 +1,40 @@
+
+
+/* d3 */
+.node {
+
+}
+#nodesearch{
+    display:block;
+    width: 130px;
+    position: absolute;
+    top:0px;
+    left:10px;
+    background: url("/AMD/resources/img/magnifier.png") no-repeat;
+    background-position: 95% 50%;
+;
+}
+
+.link {
+    stroke: #666666;
+    stroke-opacity: .6;
+}
+
+circle:hover, polygon:hover,rect:hover{
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+circle.selected, polygon.selected,rect.selected{
+    stroke: #cc0000;
+    stroke-width: 4px;
+}
+
+.stared{
+    stroke: #104e8b;
+    stroke-width: 2px;
+}
+.searched{
+    stroke: #cc0000;
+    stroke-width: 2px;
+}

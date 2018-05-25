@@ -1,0 +1,153 @@
+#phoneBox>input[type="text"]{
+    width: 235px;
+    padding:0 40px 0 5px;
+}
+
+#phoneBox>a{
+    margin-top:5px;
+}
+
+
+
+/* d3 */
+.node {
+
+}
+
+
+.link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
+
+#rightbar{
+    position:relative;
+}
+
+#rightbar>a#filter{
+    display:block;
+    width: 60px;
+    position: absolute;
+    top:10px;
+    right:10px;
+    height:20px;
+    line-height: 20px;
+}
+#rightbar>a#star{
+    display:block;
+    width: 60px;
+    position: absolute;
+    top:10px;
+    left:10px;
+    height:20px;
+    line-height: 20px;
+}
+#nodesearch{
+    display:block;
+    width: 130px;
+    position: absolute;
+    bottom:10px;
+    right:10px;
+    padding-right: 30px;
+    background: url("/AMD/resources/img/magnifier.png") no-repeat;
+    background-position: 95% 50%;
+;
+}
+#rightbar .block{
+    width: 300px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+#rightbar .block h1{
+    width:293px;
+}
+
+table{
+    margin-top: 10px;
+}
+
+tr{
+   height:25px;
+    line-height: 25px;
+
+}
+td{
+
+    font-size: smaller;
+    padding-left:10px;
+}
+
+#phoneEntry {
+    width: 70%;
+    height: 35px;
+    margin: 10px;
+}
+
+#btnLoadFile {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: -45px;
+    top: 8px;
+    cursor: pointer;
+}
+
+
+circle:hover{
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+circle.selected{
+    stroke: #cc0000;
+    stroke-width: 4px;
+}
+
+.stared{
+    stroke: #104e8b;
+    stroke-width: 2px;
+}
+.searched{
+    stroke: #cc0000;
+    stroke-width: 2px;
+}
+
+a.btn-pattern {
+    width: 28%;
+    border: 1px solid #E8E8EA;
+    display: inline-block;
+    margin-left:-8px;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+a.btn-pattern.selected {
+    background-color: #333644;
+    color: #ffffff;
+}
+
+#btgScale{
+    position: absolute;
+    bottom: 10px;
+    left:10px;
+}
+
+#tooltip>span {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+
+#tooltip>span:hover{
+    color: #099A21;
+}
+
+#tooltip>pre {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 170px;
+    height: 260px;
+    padding: 0 0 0 20px;
+    font-size: small;
+}

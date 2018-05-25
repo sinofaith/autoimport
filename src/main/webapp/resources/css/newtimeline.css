@@ -1,0 +1,45 @@
+.boxmini{
+    float: left;
+    margin:0px;
+    padding: 4px;
+    width: 10px;
+    height: 10px;
+    font-size: 999;
+    cursor: pointer;
+    overflow: hidden;
+}
+.boxc{
+    float: left;
+    margin:5px;
+    padding: 4px;
+    width: 60px;
+    height: 60px;
+    line-height: 20px;
+    font-size: 12px;
+    color: white;
+    cursor: pointer;
+}
+.boxn{
+    float: left;
+    margin:5px;
+    padding: 4px;
+    width: 60px;
+    height: 60px;
+    line-height: 20px;
+    font-size: medium;
+}
+.boxc>span{
+    display: none;
+}
+.boxc>p,.boxn>p{
+    font-size: xx-large;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+#rightbar{
+    position:relative;
+}
+

@@ -1,0 +1,118 @@
+#leftbar{
+    float: left;
+    width: 380px;
+    margin-right:20px;
+    padding-top: 0;
+}
+.block{
+    width: 100%;
+    background-color: #fff;
+    min-height: 70px;
+    margin-bottom: 20px;
+    border-image:url("/AMD/resources/img/block.png") 6 6 round;
+    -moz-border-image:url("/AMD/resources/img/block.png") 6 6 round; /* 老的 Firefox */
+    -webkit-border-image:url("/AMD/resources/img/block.png") 6 6 round; /* Safari 和 Chrome */
+    -o-border-image:url("/AMD/resources/img/block.png") 6 6 round; /* Opera */
+    padding-bottom: 10px;
+
+}
+.block h1{
+    position: relative;
+    width: 371px;
+    height:35px;
+    line-height: 35px;
+    background-color: #f5f5f5;
+    color: #000;
+    padding-left: 10px;
+    font-size: medium;
+    font-weight: normal;
+    margin:-1px -1px;
+}
+.block h1 a{
+    position:absolute;
+    right:10px;
+    color:#00aaef;
+}
+
+#leftbar .block h2 {
+    font-size: small;
+    font-weight: normal;
+    position: relative;
+    left: 20px;
+}
+
+#leftbar .block-noborder {
+    width: 100%;
+    background-color: transparent;
+}
+
+#leftbar .block-noborder h1 {
+    position: relative;
+    height: 35px;
+    line-height: 35px;
+    background-color: transparent;
+    color: #000;
+    padding-left: 10px;
+    font-size: small;
+    font-weight: normal;
+    margin: -1px -1px;
+}
+
+#rightbar{
+    float:left;
+    width:730px;
+    background-color: #fff;
+    min-height: 600px;
+    padding: 10px 10px;
+    border-image:url("/AMD/resources/img/block.png") 6 6 round;
+    -moz-border-image:url("/AMD/resources/img/block.png") 6 6 round; /* 老的 Firefox */
+    -webkit-border-image:url("/AMD/resources/img/block.png") 6 6 round; /* Safari 和 Chrome */
+    -o-border-image:url("/AMD/resources/img/block.png") 6 6 round; /* Opera */
+
+}
+
+#loginbar{
+    width: 100%;
+    position: relative;
+    height: 540px;
+    background: url("/AMD/resources/img/login.png") top right no-repeat;
+    margin:0 auto;
+}
+
+#loginbardiv{
+    position: absolute;
+    top:200px;
+    right:60px;
+    width: 220px;
+    height: 190px;
+}
+
+#loginbar input{
+    width: 100%;
+}
+
+.block ul{
+    list-style: none;
+    border-top:dotted 1px #e1e1e3;
+    padding: 0;
+}
+.block ul li{
+    height:36px;
+    line-height: 36px;
+    margin:0;
+    padding: 0 5px 0 5px;
+    color:black;
+}
+
+.block ul li:nth-of-type(even){
+    background:#fbfbfb;
+}
+.block input[type="text"]{
+
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.block>div,.block>ul{
+    margin:15px 5px 0 5px;
+}

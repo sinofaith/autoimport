@@ -1,0 +1,106 @@
+.boxmini{
+    float: left;
+    margin:0px;
+    padding: 4px;
+    width: 10px;
+    height: 10px;
+    font-size: 999;
+    cursor: pointer;
+    overflow: hidden;
+}
+.boxc{
+    float: left;
+    margin:5px;
+    padding: 4px;
+    width: 60px;
+    height: 60px;
+    font-size: small;
+    color: white;
+    cursor: pointer;
+}
+.boxn{
+    float: left;
+    margin:5px;
+    padding: 4px;
+    width: 60px;
+    height: 60px;
+    font-size: medium;
+}
+.boxc>span{
+    display: none;
+}
+.boxc>p,.boxn>p{
+    font-size: xx-large;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+#phoneBox>input[type="text"]{
+    width: 235px;
+    padding:0 40px 0 5px;
+}
+
+#phoneBox>a{
+    margin-top:5px;
+}
+
+
+
+#rightbar{
+    position:relative;
+}
+
+
+#phoneEntry {
+    width: 70%;
+    height: 35px;
+    margin: 10px;
+}
+
+#btnLoadFile {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: -45px;
+    top: 8px;
+    cursor: pointer;
+}
+
+a.btn-pattern {
+    width: 46%;
+    border: 1px solid #E8E8EA;
+    display: inline-block;
+    margin-left:-8px;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+a.btn-pattern.selected {
+    background-color: #333644;
+    color: #ffffff;
+}
+
+#btgScale{
+    position: absolute;
+    bottom: 10px;
+    left:10px;
+}
+
+#tooltip>span {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+
+#tooltip>span:hover{
+    color: #099A21;
+}
+
+#tooltip>pre {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 170px;
+    height: 260px;
+    padding: 0 0 0 20px;
+    font-size: small;
+}

@@ -1,0 +1,32 @@
+/*/自动换行*/
+th.ui-th-column div
+{
+    /* jqGrid columns name wrap  */
+    white-space:normal !important;
+    height:auto !important;
+    padding:0px;
+}
+/*单元格换行*/
+.ui-jqgrid tr.jqgrow td[aria-describedby="grid-table_content"] {
+    white-space: normal !important;
+    height:auto;
+    vertical-align:text-top;
+    padding-top:2px;
+}
+.ui-jqgrid tr.jqgrow td{
+     font-size: 10px;
+ }
+.EditButton a.btn{
+    padding: 0px 8px;
+    height: 25px;
+}
+#ViewTbl_grid-table tr.FormData {
+    display: table-row;
+}
+#ViewTbl_grid-table tr.FormData td.DataTD {
+
+     white-space: normal !important;
+     height:auto;
+     vertical-align:text-top;
+     padding-top:2px;
+ }

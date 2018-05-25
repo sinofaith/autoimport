@@ -1,0 +1,80 @@
+
+#phoneEntry {
+    width: 50%;
+    height: 35px;
+}
+
+#btnLoadFile {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    left: -45px;
+    top: 8px;
+    cursor: pointer;
+}
+
+a.btn-pattern.selected {
+    background-color: #333644;
+    color: #ffffff;
+}
+a.btn-pattern {
+    width: 45%;
+    border: 1px solid #E8E8EA;
+    display: inline-block;
+    margin-left: -8px;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+.chartTypeSelector {
+    background-color: white;
+    width: 150px;
+    height: 30px;
+    border: 1px solid #E8E8EA;
+    box-shadow: 0 0 3px #E8E8EA;
+}
+
+#analyseTypeSelector {
+    background-color: white;
+    width: 70px;
+    height: 30px;
+    border: 1px solid #E8E8EA;
+    box-shadow: 0 0 3px #E8E8EA;
+    margin-left: 5px;
+}
+
+#sortDiv {
+    float: right;
+    position: relative;
+    left: -110px;
+    top: 85px;
+    z-index: 10000;
+}
+
+#sortDiv>img {
+    cursor: pointer;
+    position: absolute;
+    left: 70px;
+}
+
+#sortDiv>ul {
+    display: block;
+    position: absolute;
+    top: 30px;
+    padding: 0;
+    width: 100px;
+    margin: 0;
+    border: solid 2px #CCCCCC;
+    box-shadow: 2px 2px 2px 2px rgba(224, 224, 224,0.5);
+}
+
+#sortDiv li {
+    list-style-type: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: small;
+    background: white;
+}
+
+#sortDiv li:hover {
+    background: #E8E8E8;
+}

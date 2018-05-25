@@ -1,0 +1,20 @@
+
+.mytable td,.mytable th{
+    line-height: 30px;
+    height: 30px;
+}
+
+table a{
+    color:black;
+}
+.table-option img{
+    width: 19px;
+    height: 19px;
+    margin-top: 5px;
+}
+.mytable thead tr>th{background-color:#333645; color: white;}
+.mytable{margin-top: 10px;}
+
+span>a>img{
+    height:12px;
+}

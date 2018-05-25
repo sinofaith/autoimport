@@ -1,0 +1,113 @@
+
+
+#showPatternDropdown>li>.selected {
+    background: #2669B7;
+    color: #fff;
+}
+
+#comFactorConfigTd input {
+    width: 120px;
+}
+
+.node {
+    font-size: 10px;
+}
+
+.node>image {
+    cursor: pointer;
+}
+.node>circle {
+    cursor: pointer;
+}
+
+.recorded {
+    stroke: #00AAEF;
+    stroke-width: 2px;
+}
+
+/*circle:hover {*/
+    /*stroke: #BCBAB8;*/
+    /*stroke-width: 2px;*/
+/*}*/
+/*circle.selected{*/
+    /*stroke: #cc0000;*/
+    /*stroke-width: 4px;*/
+/*}*/
+/*rect:hover {*/
+    /*stroke: #BCBAB8;*/
+    /*stroke-width: 2px;*/
+/*}*/
+
+/*polygon:hover {*/
+    /*stroke: #BCBAB8;*/
+    /*stroke-width: 2px;*/
+/*}*/
+
+.link {
+    font-size: 10px;
+}
+
+.background {
+    fill: none;
+    pointer-events: all;
+}
+
+#IMgraph .node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+#IMgraph .link {
+    stroke: #999;
+    stroke-opacity: .6;
+    stroke-width: 1.5px;
+}
+
+.ImNode {
+    cursor: pointer;
+    stroke: #000;
+    stroke-width: .5px;
+}
+
+.ImLink {
+    fill: none;
+    stroke: #9ecae1;
+    stroke-width: 1.5px;
+    cursor: pointer;
+}
+
+.zoneCircle {
+    fill: rgb(31, 119, 180);
+    fill-opacity: .25;
+    stroke: rgb(31, 119, 180);
+    stroke-width: 1px;
+}
+
+.leaf .zoneCircle {
+    fill: #ff7f0e;
+    fill-opacity: 1;
+}
+
+.linkShowTitle {
+    cursor: pointer;
+}
+
+.communicateNormalLine {
+    stroke-width: 1px;
+    stroke: #666666;
+}
+
+.communicatePolyLine {
+    stroke-width: 2px;
+    stroke: #0066FF;
+    stroke-opacity: 0.6;
+}
+
+.IMLine {
+    stroke-width: 1px;
+    stroke: #666666;
+}
+
+.filterHit {
+    stroke: red;
+}
