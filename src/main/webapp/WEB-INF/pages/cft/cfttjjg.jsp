@@ -47,6 +47,7 @@
                                     <tr align="center">
                                         <td width="7%">序号</td>
                                         <td width="8%">交易账户</td>
+                                        <td width="8%">交易类型</td>
                                         <td width="9%">交易总次数</td>
                                         <td width="8%">进账总次数</td>
                                         <td width="10%">进账总金额(元)</td>
@@ -57,11 +58,12 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.jyzh}</td>
+                                                <td align="center">${item.jylx}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>

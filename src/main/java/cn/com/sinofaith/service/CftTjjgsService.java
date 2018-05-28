@@ -98,7 +98,7 @@ public class CftTjjgsService {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
-        List<CftTjjgsEntity> listTjjg = cfttjsd.find("from CftTjjgsEntity where 1=1 "+seach);
+        List<CftTjjgsEntity> listTjjg = cfttjsd.find("from CftTjjgsEntity where 1=1 "+seach +  " order by czzje desc,jzzje desc ");
         HSSFWorkbook wb = createExcel(listTjjg);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+new String("财付通统计信息2.xls".getBytes(), "ISO8859-1"));

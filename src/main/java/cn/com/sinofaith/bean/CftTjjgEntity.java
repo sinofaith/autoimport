@@ -1,16 +1,19 @@
 package cn.com.sinofaith.bean;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Created by Me. on 2018/5/22
  */
 @Entity
+@IdClass(value = CftTjjgEntity.class)
 @Table(name="cft_tjjg",schema = "",catalog = "")
-public class CftTjjgEntity {
+public class CftTjjgEntity implements Serializable {
     private long id;
     private String jyzh;
+    private String jylx;
     private BigDecimal jyzcs = new BigDecimal(0);
     private BigDecimal jzzcs = new BigDecimal(0);
     private BigDecimal jzzje = new BigDecimal(0);
@@ -36,6 +39,16 @@ public class CftTjjgEntity {
         this.jyzh = jyzh;
     }
 
+    @Id
+    @Column(name="jylx",nullable = false,length = 20)
+    public String getJylx() {
+        return jylx;
+    }
+
+    public void setJylx(String jylx) {
+        this.jylx = jylx;
+    }
+
     @Basic
     @Column(name="jyzcs",nullable = false,precision = 0)
     public BigDecimal getJyzcs() {
@@ -56,7 +69,7 @@ public class CftTjjgEntity {
     }
 
     @Basic
-    @Column(name="jzzje",nullable = false,precision = 0)
+    @Column(name="jzzje",nullable = false,precision = 2)
     public BigDecimal getJzzje() {
         return jzzje;
     }
@@ -76,7 +89,7 @@ public class CftTjjgEntity {
     }
 
     @Basic
-    @Column(name="czzje",nullable = false,precision = 0)
+    @Column(name="czzje",nullable = false,precision = 2)
     public BigDecimal getCzzje() {
         return czzje;
     }
@@ -84,6 +97,8 @@ public class CftTjjgEntity {
     public void setCzzje(BigDecimal czzje) {
         this.czzje = czzje;
     }
+
+
 
     @Override
     public String toString() {

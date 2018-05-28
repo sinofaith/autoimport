@@ -65,7 +65,7 @@ public class CftTjjgsEntity implements Serializable {
     }
 
     @Basic
-    @Column(name="jzzje",nullable = false,precision = 0)
+    @Column(name="jzzje",nullable = false,precision = 2)
     public BigDecimal getJzzje() {
         return jzzje;
     }
@@ -85,7 +85,7 @@ public class CftTjjgsEntity implements Serializable {
     }
 
     @Basic
-    @Column(name="czzje",nullable = false,precision = 0)
+    @Column(name="czzje",nullable = false,precision = 2)
     public BigDecimal getCzzje() {
         return czzje;
     }

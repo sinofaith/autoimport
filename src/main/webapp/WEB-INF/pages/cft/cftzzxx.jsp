@@ -62,12 +62,12 @@
                                                 <td align="center">${item.zh}</td>
                                                 <td align="center">${item.jdlx}</td>
                                                 <td align="center">${item.jylx}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.jssj eq null? item.jysj:item.jssj}</td>
                                                 <td align="center">${item.fsf}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.fsje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.fsje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.jsf}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.jsje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.jsje}" pattern="#,##0.0#"/></td>
                                             </tr>
 
                                         </c:forEach>

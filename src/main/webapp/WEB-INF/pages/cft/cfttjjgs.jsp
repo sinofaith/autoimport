@@ -61,9 +61,9 @@
                                                 <td align="center">${item.dfzh}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.##"/></td>
+                                                <td align="right"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>

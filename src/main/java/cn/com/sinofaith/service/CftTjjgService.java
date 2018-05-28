@@ -55,15 +55,15 @@ public class CftTjjgService {
         CftZzxxEntity zzxx = null;
         for(int i=0;i<listZzxx.size();i++){
             zzxx = listZzxx.get(i);
-            if(map.containsKey(zzxx.getZh())){
+            if(map.containsKey(zzxx.getZh()+zzxx.getJylx())){
                 if(zzxx.getZh().equals(zzxx.getFsf())){
-                    tjjg = map.get(zzxx.getZh());
+                    tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
                     tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                     tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                     tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
                 }
                 if(zzxx.getZh().equals(zzxx.getJsf())){
-                    tjjg = map.get(zzxx.getJsf());
+                    tjjg = map.get(zzxx.getJsf()+zzxx.getJylx());
                     tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                     tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                     tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
@@ -72,18 +72,20 @@ public class CftTjjgService {
                 if(zzxx.getZh().equals(zzxx.getFsf())){
                     CftTjjgEntity tj1 = new CftTjjgEntity();
                     tj1.setJyzh(zzxx.getZh());
+                    tj1.setJylx(zzxx.getJylx());
                     tj1.setJyzcs(new BigDecimal(1));
                     tj1.setCzzcs(new BigDecimal(1));
                     tj1.setCzzje(zzxx.getJyje());
-                    map.put(zzxx.getFsf(),tj1);
+                    map.put(zzxx.getFsf()+zzxx.getJylx(),tj1);
                 }
                 if(zzxx.getZh().equals(zzxx.getJsf())){
                     CftTjjgEntity tj2 = new CftTjjgEntity();
                     tj2.setJyzh(zzxx.getZh());
+                    tj2.setJylx(zzxx.getJylx());
                     tj2.setJyzcs(new BigDecimal(1));
                     tj2.setJzzcs(new BigDecimal(1));
                     tj2.setJzzje(zzxx.getJyje());
-                    map.put(zzxx.getJsf(),tj2);
+                    map.put(zzxx.getJsf()+zzxx.getJylx(),tj2);
                 }
             }
         }
@@ -98,7 +100,7 @@ public class CftTjjgService {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
-        List<CftTjjgEntity> listTjxx = cfttjd.find("from CftTjjgEntity where 1=1 "+seach);
+        List<CftTjjgEntity> listTjxx = cfttjd.find("from CftTjjgEntity where 1=1 "+seach + " order by jyzh desc ,czzje desc,jzzje desc");
         HSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+new String("财付通统计信息.xls".getBytes(), "ISO8859-1"));

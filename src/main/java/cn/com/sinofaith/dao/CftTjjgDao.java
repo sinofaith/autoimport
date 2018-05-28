@@ -20,7 +20,7 @@ public class CftTjjgDao extends BaseDao<CftTjjgEntity>{
     }
 
     public List<CftTjjgEntity> getDoPage(String seachCode,int offset,int length){
-        List<CftTjjgEntity> result = doPage("from CftTjjgEntity si where 1=1 "+seachCode+" order by jyzcs desc",offset,length);
+        List<CftTjjgEntity> result = doPage("from CftTjjgEntity si where 1=1 "+seachCode+" order by jyzh desc,czzje desc,jzzje desc",offset,length);
         return result;
     }
 

@@ -77,7 +77,7 @@ public class CftZzxxEntity {
         this.jylx = jylx;
     }
     @Basic
-    @Column(name = "jyje",nullable = true,precision = 0)
+    @Column(name = "jyje",nullable = true,precision = 2)
     public BigDecimal getJyje() {
         return jyje;
     }
@@ -87,7 +87,7 @@ public class CftZzxxEntity {
     }
     
     @Basic
-    @Column(name = "zhye",nullable = true,precision = 0)
+    @Column(name = "zhye",nullable = true,precision = 2)
     public BigDecimal getZhye() {
         return zhye;
     }
@@ -146,7 +146,7 @@ public class CftZzxxEntity {
     }
 
     @Basic
-    @Column(name = "fsje",nullable = true,precision = 0)
+    @Column(name = "fsje",nullable = true,precision = 2)
     public BigDecimal getFsje() {
         return fsje;
     }
@@ -173,7 +173,7 @@ public class CftZzxxEntity {
         this.jssj = jssj;
     }
     @Basic
-    @Column(name = "jsje",nullable = true,precision = 0)
+    @Column(name = "jsje",nullable = true,precision = 2)
     public BigDecimal getJsje() {
         return jsje;
     }
@@ -210,17 +210,17 @@ public class CftZzxxEntity {
         a.setJydh(s.get(1).replace("[","").replace("]",""));
         a.setJdlx(s.get(2));
         a.setJylx(s.get(3));
-        a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4))/100));
-        a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5))/100));
+        a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4))/100.00));
+        a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5))/100.00));
         a.setJysj(s.get(6));
         a.setYhlx(s.get(7));
         a.setJysm(s.get(8));
         a.setShmc(s.get(9));
         a.setFsf(s.get(10));
-        a.setFsje(BigDecimal.valueOf(Long.parseLong(s.get(11))/100));
+        a.setFsje(BigDecimal.valueOf(Long.parseLong(s.get(11))/100.00));
         a.setJsf(s.get(12));
         a.setJssj(s.get(13));
-        a.setJsje(BigDecimal.valueOf(Long.parseLong(s.get(14))/100));
+        a.setJsje(BigDecimal.valueOf(Long.parseLong(s.get(14))/100.00));
         return a;
     }
 
