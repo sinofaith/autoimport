@@ -7,10 +7,7 @@ import cn.com.sinofaith.dao.CftZzxxDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.List;
  * Created by Me. on 2018/5/23
  */
 @Service
-public class uploadService {
+public class UploadService {
 
     @Autowired
     private CftZcxxDao zcd;
@@ -43,19 +40,21 @@ public class uploadService {
 
     public List<CftZzxxEntity> getZzxxByTxt(List<String> listPath){
         List<CftZzxxEntity> zzxxs = new ArrayList<>();
-        BufferedReader reader = null;
         File file = null;
-        FileReader fr = null;
+        BufferedReader br = null;
+        FileInputStream fis = null;
+        InputStreamReader isr = null;
         if(listPath.size()>0){
             for(int i=0; i<listPath.size();i++){
-                file = new File(listPath.get(i));
                 try {
+                    file = new File(listPath.get(i));
+                    fis = new FileInputStream(file);
 //                    String txtPath = listPath.get(i);
-                    fr = new FileReader(file);
-                    reader = new BufferedReader(fr);
+                    isr = new InputStreamReader(fis,"UTF-8");
+                    br = new BufferedReader(isr);
                     String txtStr="";
                     List<String> zzxxStr = new ArrayList<>();
-                    while ((txtStr=reader.readLine())!=null){
+                    while ((txtStr=br.readLine())!=null){
                         if (txtStr.startsWith("用户ID")) {
                             continue;
                         }
@@ -65,16 +64,19 @@ public class uploadService {
                             zzxxs.add(CftZzxxEntity.listToObj(zzxxStr));
                         }
                     }
+                    br.close();
+                    isr.close();
+                    fis.close();
                     file.delete();
-                    fr.close();
-                    reader.close();
                 }catch (IOException e){
                     e.printStackTrace();
                 }finally {
-                    if(reader != null){
+                    if(br != null){
                         try {
-                            fr.close();
-                            reader.close();
+                            br.close();
+                            isr.close();
+                            fis.close();
+                            file.delete();
                         }catch (IOException e){
                             e.printStackTrace();
                         }
@@ -87,26 +89,31 @@ public class uploadService {
 
     public List<CftZcxxEntity> getZcxxByTxt(List<String> listPath){
         List<CftZcxxEntity> zcxxs = new ArrayList<CftZcxxEntity>();
-        BufferedReader reader = null;
         File file = null;
-        FileReader fr = null;
+        BufferedReader br = null;
+        FileInputStream fis = null;
+        InputStreamReader isr = null;
         if(listPath.size()>0){
             for(int i=0;i< listPath.size();i++){
-                 file = new File(listPath.get(i));
                 try{
+                     file = new File(listPath.get(i));
+                     fis = new FileInputStream(file);
 //                    String txtPath = listPath.get(i);
-                    fr = new FileReader(file);
-                    reader = new BufferedReader(fr);
+                     isr = new InputStreamReader(fis,"UTF-8");
+                    br = new BufferedReader(isr);
                     String txtString = "";
                     List<String> zcxxStr = new ArrayList<String>();
                     List<CftZcxxEntity> listZcxx = new ArrayList<CftZcxxEntity>();
                     int line = 0;
-                    while ((txtString = reader.readLine()) != null){
+                    while ((txtString = br.readLine()) != null){
                         if (txtString.startsWith("账户状态")) {
                             line++;
                             continue;
                         }
                         String[] s = txtString.split("\t");
+                        for(String a : s){
+                            System.out.println(a+"\t1111111111111");
+                        }
                         zcxxStr= Arrays.asList(s);
                         if(line>1){
                             if(zcxxStr.get(0).isEmpty()){
@@ -134,16 +141,19 @@ public class uploadService {
                         }
                         line++;
                     }
+                    br.close();
+                    isr.close();
+                    fis.close();
                     file.delete();
-                    fr.close();
-                    reader.close();
                 }catch (IOException e){
                     e.printStackTrace();
                 }finally {
-                    if(reader!=null){
+                    if(br!=null){
                         try {
-                            fr.close();
-                            reader.close();
+                            br.close();
+                            isr.close();
+                            fis.close();
+                            file.delete();
                         }catch (IOException e){
 
                         }

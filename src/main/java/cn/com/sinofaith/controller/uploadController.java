@@ -4,7 +4,7 @@ import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.service.CftTjjgService;
 import cn.com.sinofaith.service.CftTjjgsService;
 import cn.com.sinofaith.service.CftZzxxService;
-import cn.com.sinofaith.service.uploadService;
+import cn.com.sinofaith.service.UploadService;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ import java.util.List;
 @Controller
 public class UploadController {
     @Autowired
-    private uploadService us;
+    private UploadService us;
     @Autowired
     private CftTjjgService tjs;
     @Autowired
