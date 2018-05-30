@@ -29,7 +29,7 @@ public class CftZzxxEntity {
     private String jssj;
     private BigDecimal jsje;
 
-    @Basic
+    @Id
     @Column(name = "id",nullable = false,precision = 0)
     public long getId() {
         return id;
@@ -48,7 +48,7 @@ public class CftZzxxEntity {
         this.zh = zh;
     }
 
-    @Id
+    @Basic
     @Column(name ="jydh",nullable = true,length = 50)
     public String getJydh() {
         return jydh;
@@ -207,33 +207,33 @@ public class CftZzxxEntity {
     public static CftZzxxEntity listToObj(List<String> s){
         CftZzxxEntity a = new CftZzxxEntity();
         if(s.size()>11){
-            a.setZh(s.get(0).replace("[","").replace("]","").trim());
-            a.setJydh(s.get(1).replace("[","").replace("]","").trim());
-            a.setJdlx(s.get(2).trim());
-            a.setJylx(s.get(3).trim());
+            a.setZh(s.get(0).replace("[","").replace("]",""));
+            a.setJydh(s.get(1).replace("[","").replace("]",""));
+            a.setJdlx(s.get(2));
+            a.setJylx(s.get(3));
             a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4))/100.00));
             a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5))/100.00));
-            a.setJysj(s.get(6).trim());
-            a.setYhlx(s.get(7).trim());
-            a.setJysm(s.get(8).trim());
-            a.setShmc(s.get(9).trim());
-            a.setFsf(s.get(10).trim());
+            a.setJysj(s.get(6));
+            a.setYhlx(s.get(7));
+            a.setJysm(s.get(8));
+            a.setShmc(s.get(9));
+            a.setFsf(s.get(10));
             a.setFsje(BigDecimal.valueOf(Long.parseLong(s.get(11))/100.00));
-            a.setJsf(s.get(12).trim());
-            a.setJssj(s.get(13).trim());
+            a.setJsf(s.get(12));
+            a.setJssj(s.get(13));
             a.setJsje(BigDecimal.valueOf(Long.parseLong(s.get(14))/100.00));
         }
         if(s.size()<11){
             a.setZh(s.get(0).replace("[","").replace("]",""));
             a.setJydh(s.get(1).replace("[","").replace("]",""));
-            a.setJdlx(s.get(2).trim());
-            a.setJylx(s.get(3).trim());
+            a.setJdlx(s.get(2));
+            a.setJylx(s.get(3));
             a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4))/100.00));
             a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5))/100.00));
-            a.setJysj(s.get(6).trim());
-            a.setYhlx(s.get(7).trim());
-            a.setJysm(s.get(8).trim());
-            a.setShmc(s.get(9).trim());
+            a.setJysj(s.get(6));
+            a.setYhlx(s.get(7));
+            a.setJysm(s.get(8));
+            a.setShmc(s.get(9));
             a.setFsf(null);
             a.setFsje(new BigDecimal(0));
             a.setJsf(null);

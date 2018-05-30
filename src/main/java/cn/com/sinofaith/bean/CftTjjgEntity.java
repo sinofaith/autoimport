@@ -105,6 +105,7 @@ public class CftTjjgEntity implements Serializable {
         return "TjjgEntity{" +
                 "id=" + id +
                 ", jyzh='" + jyzh + '\'' +
+                ", jylx='" + jylx + '\'' +
                 ", jyzcs=" + jyzcs +
                 ", jzzcs=" + jzzcs +
                 ", jzzje=" + jzzje +

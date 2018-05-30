@@ -51,41 +51,42 @@ public class CftTjjgService {
     public int count(List<CftZzxxEntity> listZzxx){
         List<CftTjjgEntity> listTjjg = null;
         Map<String,CftTjjgEntity> map = new HashMap();
-        CftTjjgEntity tjjg = new CftTjjgEntity();
-        CftZzxxEntity zzxx = null;
         for(int i=0;i<listZzxx.size();i++){
+            CftTjjgEntity tjjg = null;
+            CftZzxxEntity zzxx = null;
             zzxx = listZzxx.get(i);
+
             if(map.containsKey(zzxx.getZh()+zzxx.getJylx())){
-                if(zzxx.getZh().equals(zzxx.getFsf())){
+                if("出".equals(zzxx.getJdlx())){
                     tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
                     tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                     tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                     tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
                 }
-                if(zzxx.getZh().equals(zzxx.getJsf())){
-                    tjjg = map.get(zzxx.getJsf()+zzxx.getJylx());
+                if("入".equals(zzxx.getJdlx())){
+                    tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
                     tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                     tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                     tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
                 }
             }else{
-                if(zzxx.getZh().equals(zzxx.getFsf())){
+                if("出".equals(zzxx.getJdlx())){
                     CftTjjgEntity tj1 = new CftTjjgEntity();
                     tj1.setJyzh(zzxx.getZh());
                     tj1.setJylx(zzxx.getJylx());
                     tj1.setJyzcs(new BigDecimal(1));
                     tj1.setCzzcs(new BigDecimal(1));
                     tj1.setCzzje(zzxx.getJyje());
-                    map.put(zzxx.getFsf()+zzxx.getJylx(),tj1);
+                    map.put(zzxx.getZh()+zzxx.getJylx(),tj1);
                 }
-                if(zzxx.getZh().equals(zzxx.getJsf())){
+                if("入".equals(zzxx.getJdlx())){
                     CftTjjgEntity tj2 = new CftTjjgEntity();
                     tj2.setJyzh(zzxx.getZh());
                     tj2.setJylx(zzxx.getJylx());
                     tj2.setJyzcs(new BigDecimal(1));
                     tj2.setJzzcs(new BigDecimal(1));
                     tj2.setJzzje(zzxx.getJyje());
-                    map.put(zzxx.getJsf()+zzxx.getJylx(),tj2);
+                    map.put(zzxx.getZh()+zzxx.getJylx(),tj2);
                 }
             }
         }
@@ -151,7 +152,6 @@ public class CftTjjgService {
         for(int a=0;a<7;a++){
             sheet.autoSizeColumn(a);
         }
-
         return wb;
     }
 }

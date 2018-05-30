@@ -35,7 +35,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity>{
     }
 
     public List<CftZzxxEntity> getAlla(){
-        List<CftZzxxEntity> listZzxx = getAll();
+        List<CftZzxxEntity> listZzxx = find("from CftZzxxEntity");
         return listZzxx;
     }
 }
