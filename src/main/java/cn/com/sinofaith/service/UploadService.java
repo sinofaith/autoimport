@@ -60,7 +60,7 @@ public class UploadService {
                         }
                         String[] s = txtStr.split("\t");
                         zzxxStr = Arrays.asList(s);
-                        if(zzxxStr.size()>14){
+                        if(zzxxStr.size()>8){
                             zzxxs.add(CftZzxxEntity.listToObj(zzxxStr));
                         }
                     }
@@ -111,9 +111,6 @@ public class UploadService {
                             continue;
                         }
                         String[] s = txtString.split("\t");
-                        for(String a : s){
-                            System.out.println(a+"\t1111111111111");
-                        }
                         zcxxStr= Arrays.asList(s);
                         if(line>1){
                             if(zcxxStr.get(0).isEmpty()){
