@@ -24,6 +24,19 @@ public class UploadService {
     @Autowired
     private CftZzxxDao zzd;
 
+    public int deleteAll(String uploadPath){
+        File files = new File(uploadPath);
+        String[] filep = files.list();
+        File temps = null;
+        for(int i =0; i<files.length(); i++){
+            temps = new File(uploadPath+filep[i]);
+            if(temps.isFile()){
+                temps.delete();
+            }
+        }
+        return 1;
+    }
+
     public int insertZcxx(String filepath, String filter){
         List<String> listPath = getFileList(filepath,filter);
         List<CftZcxxEntity> listZcxx = getZcxxByTxt(listPath);

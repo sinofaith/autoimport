@@ -238,7 +238,7 @@ function zcxxSkip(){
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
-        alert("你输入的页数已经超过总页数，请从新输入！");
+        $("#num").val(totalPage);
         return;
     } else {
         location="/SINOFAITH/cftzcxx/seach?pageNo="+onPage;
@@ -254,7 +254,7 @@ function tjjgSkip(){
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
-        alert("你输入的页数已经超过总页数，请从新输入！");
+        $("#num").val(totalPage);
         return;
     } else {
         location="/SINOFAITH/cfttjjg/seach?pageNo="+onPage;
@@ -270,7 +270,7 @@ function tjjgsSkip(){
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
-        alert("你输入的页数已经超过总页数，请从新输入！");
+        $("#num").val(totalPage);
         return;
     } else {
         location="/SINOFAITH/cfttjjgs/seach?pageNo="+onPage;
@@ -285,7 +285,7 @@ function zzxxSkip(){
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
-        alert("你输入的页数已经超过总页数，请从新输入！");
+        $("#num").val(totalPage);
         return;
     } else {
         location="/SINOFAITH/cftzzxx/seach?pageNo="+onPage;
