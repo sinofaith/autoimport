@@ -37,6 +37,7 @@ public class CftZcxxDao extends BaseDao<CftZcxxEntity>{
     public int saveZcxx(List<CftZcxxEntity> listZcxx){
         int i = 0;
         for (CftZcxxEntity zcxx:listZcxx){
+            zcxx.setInserttime(TimeFormatUtil.getDate("/"));
             save(zcxx);
             i+=1;
         }

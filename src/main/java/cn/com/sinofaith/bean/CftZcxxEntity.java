@@ -151,14 +151,18 @@ public class CftZcxxEntity {
 
     public static CftZcxxEntity listToObj(List<String> s){
         CftZcxxEntity a = new CftZcxxEntity();
-        a.setZhzt(s.get(0));
-        a.setZh(s.get(1));
-        a.setXm(s.get(2));
-        a.setZcsj(s.get(3));
-        a.setSfzhm(s.get(4).replace("[","").replace("]",""));
-        a.setBdsj(s.get(5));
-        a.setKhh(s.get(6));
-        a.setYhzh(s.get(7).replace("[","").replace("]",""));
+        try{
+            a.setZhzt(s.get(0));
+            a.setZh(s.get(1));
+            a.setXm(s.get(2));
+            a.setZcsj(s.get(3));
+            a.setSfzhm(s.get(4).replace("[","").replace("]",""));
+            a.setBdsj(s.get(5));
+            a.setKhh(s.get(6));
+            a.setYhzh(s.get(7).replace("[","").replace("]",""));
+        }catch (Exception e){
+            e.getMessage();
+        }
         return a;
     }
 }

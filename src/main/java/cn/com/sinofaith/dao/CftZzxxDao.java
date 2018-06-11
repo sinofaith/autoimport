@@ -1,8 +1,10 @@
 package cn.com.sinofaith.dao;
 
 import cn.com.sinofaith.bean.CftZzxxEntity;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity>{
     public int saveZzxx(List<CftZzxxEntity> listZzxx){
         int i = 0;
         for (CftZzxxEntity zzxx:listZzxx){
+            zzxx.setInserttime(TimeFormatUtil.getDate("/"));
             save(zzxx);
             i+=1;
         }

@@ -1,7 +1,9 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.CftPersonEntity;
 import cn.com.sinofaith.bean.CftZcxxEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
+import cn.com.sinofaith.dao.CftPersonDao;
 import cn.com.sinofaith.dao.CftZcxxDao;
 import cn.com.sinofaith.dao.CftZzxxDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +26,24 @@ public class UploadService {
     @Autowired
     private CftZzxxDao zzd;
 
+    @Autowired
+    private CftPersonDao cpd;
+
     public int deleteAll(String uploadPath){
-        File files = new File(uploadPath);
-        String[] filep = files.list();
-        File temps = null;
-        for(int i =0; i<files.length(); i++){
-            temps = new File(uploadPath+filep[i]);
-            if(temps.isFile()){
-                temps.delete();
+        try {
+            File files = new File(uploadPath);
+            String[] filep = files.list();
+            File temps = null;
+            for (int i = 0; i < filep.length; i++) {
+                temps = new File(uploadPath + filep[i]);
+                if (temps.isFile()) {
+                    temps.delete();
+                }
             }
+        }catch (Exception e){
+            e.getMessage();
         }
-        return 1;
+        return 0;
     }
 
     public int insertZcxx(String filepath, String filter){
@@ -117,6 +126,7 @@ public class UploadService {
                     String txtString = "";
                     List<String> zcxxStr = new ArrayList<String>();
                     List<CftZcxxEntity> listZcxx = new ArrayList<CftZcxxEntity>();
+                    CftPersonEntity cp = new CftPersonEntity();
                     int line = 0;
                     while ((txtString = br.readLine()) != null){
                         if (txtString.startsWith("账户状态")) {
@@ -149,6 +159,8 @@ public class UploadService {
                             listZcxx.add(CftZcxxEntity.listToObj(zcxxStr));
                             zcxxs.addAll(listZcxx);
                         }
+                        cp = CftPersonEntity.listToObj(zcxxStr);
+                        cpd.insert(cp);
                         line++;
                     }
                     br.close();

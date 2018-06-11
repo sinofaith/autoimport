@@ -35,6 +35,22 @@ public class CftTjjgController {
         ModelAndView mav = new ModelAndView("redirect:/cfttjjg/seach?pageNo=1");
         httpSession.removeAttribute("tjseachCondition"); //查询条件
         httpSession.removeAttribute("tjseachCode");//查询内容
+        httpSession.removeAttribute("orderby");
+        httpSession.removeAttribute("desc");
+        return mav;
+    }
+
+    @RequestMapping(value = "/order")
+    public ModelAndView order(@RequestParam("orderby") String orderby,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/cfttjjg/seach?pageNo=1");
+        String desc = (String) ses.getAttribute("desc");
+        if(desc==null||" ,c.id ".equals(desc)){
+            desc = " desc";
+        }else{
+            desc = " ,c.id ";
+        }
+        ses.setAttribute("orderby",orderby);
+        ses.setAttribute("desc",desc);
         return mav;
     }
 
@@ -44,10 +60,19 @@ public class CftTjjgController {
         String seachCondition = (String) req.getSession().getAttribute("tjseachCondition");
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
+        String orderby = (String) req.getSession().getAttribute("orderby");
+        String desc = (String) req.getSession().getAttribute("desc");
         if(seachCondition!=null){
-            seach = " and "+ seachCondition+" like "+"'"+ seachCode +"'";
+            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
+                seach = " and c."+ seachCondition + " >= "+seachCode;
+            }else{
+                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
+            }
         }else{
             seach = " and ( 1=1 ) ";
+        }
+        if(orderby!=null){
+            seach =seach + " order by c." +orderby + desc;
         }
         Page page = cfttjs.queryForPage(Integer.valueOf(pageNo),10,seach);
 //        System.out.println(req.getSession().getServletContext().getRealPath("/")+"\n");
@@ -79,10 +104,19 @@ public class CftTjjgController {
         String seachCondition = (String) req.getSession().getAttribute("tjseachCondition");
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
+        String orderby = (String) req.getSession().getAttribute("orderby");
+        String desc = (String) req.getSession().getAttribute("desc");
         if(seachCondition!=null){
-            seach = " and "+ seachCondition+" like "+"'"+ seachCode +"'";
+            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
+                seach = " and c."+ seachCondition + " >= "+seachCode;
+            }else{
+                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
+            }
         }else{
             seach = " and ( 1=1 ) ";
+        }
+        if(orderby!=null){
+            seach =seach + " order by c." +orderby + desc;
         }
         cfttjs.downloadFile(seach, rep);
     }

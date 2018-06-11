@@ -28,6 +28,7 @@ public class CftZzxxEntity {
     private String jsf;
     private String jssj;
     private BigDecimal jsje;
+    private String inserttime;
 
     @Id
     @Column(name = "id",nullable = false,precision = 0)
@@ -182,6 +183,12 @@ public class CftZzxxEntity {
         this.jsje = jsje;
     }
 
+    @Basic
+    @Column(name = "inserttime",nullable = true,length = 30)
+    public String getInserttime(){return inserttime;}
+
+    public void setInserttime(String inserttime){this.inserttime=inserttime;}
+
     @Override
     public String toString() {
         return "CftZzxxEntity{" +
@@ -206,22 +213,23 @@ public class CftZzxxEntity {
 
     public static CftZzxxEntity listToObj(List<String> s){
         CftZzxxEntity a = new CftZzxxEntity();
+        try {
         if(s.size()>11){
             a.setZh(s.get(0).replace("[","").replace("]",""));
             a.setJydh(s.get(1).replace("[","").replace("]",""));
             a.setJdlx(s.get(2));
             a.setJylx(s.get(3));
-            a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4))/100.00));
-            a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5))/100.00));
+            a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4).replace("null","0"))/100.00));
+            a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5).replace("null","0"))/100.00));
             a.setJysj(s.get(6));
             a.setYhlx(s.get(7));
             a.setJysm(s.get(8));
             a.setShmc(s.get(9));
             a.setFsf(s.get(10));
-            a.setFsje(BigDecimal.valueOf(Long.parseLong(s.get(11))/100.00));
+            a.setFsje(BigDecimal.valueOf(Long.parseLong(s.get(11).replace("null","0"))/100.00));
             a.setJsf(s.get(12));
             a.setJssj(s.get(13));
-            a.setJsje(BigDecimal.valueOf(Long.parseLong(s.get(14))/100.00));
+            a.setJsje(BigDecimal.valueOf(Long.parseLong(s.get(14).replace("null","0"))/100.00));
         }
         if(s.size()<11){
             a.setZh(s.get(0).replace("[","").replace("]",""));
@@ -239,6 +247,9 @@ public class CftZzxxEntity {
             a.setJsf(null);
             a.setJssj(null);
             a.setJsje(new BigDecimal(0));
+        }
+        }catch (Exception e){
+            e.getMessage();
         }
         return a;
     }

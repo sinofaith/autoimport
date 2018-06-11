@@ -122,8 +122,9 @@
 
 <body style="height: 100%;"><!-- #BeginLibraryItem "/Library/top.lbi" -->
 <header id="navbar">
+    <a class="logo"><img src="<c:url value="/resources/img/logo02.png"/>"style=" width: 63px ;float: left"/></a>
 
-        <span  class="fl_l padd_l_100  font15 color_black" >
+    <span  class="fl_l padd_l_100  font15 color_black">
           财付通数据清洗展示模型
         </span>
     <!-- /.navbar-header -->

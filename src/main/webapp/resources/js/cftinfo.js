@@ -202,6 +202,7 @@ function ZGdownload() {
 
 function submitSeach(){
     var seachCode = $("#seachCode").val();
+
     if(seachCode ===""){
         alert("查询条件不能为空！");
     } else {
@@ -213,6 +214,19 @@ function submitSeach(){
         }
     }
 }
+
+function seachChange() {
+        var seachCondition = $("#seachCondition").val()
+        var seachCode = $("#seachCode")
+        if(seachCondition === "jzzje" || seachCondition === "czzje"){
+            seachCode.val("50000")
+        }else{
+            seachCode.val("")
+        }
+}
+
+
+
 
 function fileOnclick(){
     $("input[id='files1']").click();

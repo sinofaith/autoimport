@@ -3,7 +3,10 @@ package cn.com.sinofaith.service;
 import cn.com.sinofaith.bean.CftTjjgEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.dao.CftTjjgDao;
+import cn.com.sinofaith.form.CftTjjgForm;
+import cn.com.sinofaith.form.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -31,16 +34,29 @@ public class CftTjjgService {
         Page page = new Page();
         //总记录数
         int allRow = cfttjd.getAllRowCount(seach);
-        List<CftTjjgEntity> cfttj = new ArrayList<CftTjjgEntity>();
-        int xh = 1;
+        List<CftTjjgForm> cfttjs = new ArrayList<CftTjjgForm>();
+        CftTjjgForm cftForm = null;
+        List cftList = cfttjd.getDoPage(seach,currentPage,pageSize);
         if(allRow != 0) {
-            cfttj = cfttjd.getDoPage(seach,currentPage,pageSize);
-            for(int i=0; i<cfttj.size();i++){
-                cfttj.get(i).setId(xh+(currentPage-1)*10);
+            int xh = 1;
+            for(int i=0;i<cftList.size();i++){
+                Map map = (Map)cftList.get(i);
+                cftForm = new CftTjjgForm();
+                cftForm.setId(xh+(currentPage-1)*pageSize);
+                cftForm.setName((String) map.get("XM"));
+                cftForm.setJyzh((String) map.get("JYZH"));
+                cftForm.setJylx((String) map.get("JYLX"));
+                cftForm.setJyzcs( new BigDecimal(map.get("JYZCS").toString()));
+                cftForm.setJzzcs( new BigDecimal(map.get("JZZCS").toString()));
+                cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
+                cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
+                cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
+                cfttjs.add(cftForm);
                 xh++;
             }
+
         }
-        page.setList(cfttj);
+        page.setList(cfttjs);
         page.setPageNo(currentPage);
         page.setPageSize(pageSize);
         page.setTotalRecords(allRow);
@@ -93,6 +109,7 @@ public class CftTjjgService {
         listTjjg = new ArrayList<>(map.values());
         int i = 0;
         for(CftTjjgEntity tj:listTjjg){
+            tj.setInserttime(TimeFormatUtil.getDate("/"));
             cfttjd.insert(tj);
             i++;
         }
@@ -101,55 +118,66 @@ public class CftTjjgService {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
-        List<CftTjjgEntity> listTjxx = cfttjd.find("from CftTjjgEntity where 1=1 "+seach + " order by jyzh desc ,czzje desc,jzzje desc");
+        List listTjxx = cfttjd.findBySQL("select s.xm,c.* from cft_tjjg c ,cft_person s where 1=1 and c.jyzh = s.zh "+seach);
         HSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String("财付通统计信息.xls".getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String("财付通账户信息.xls".getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
         op.close();
     }
 
-    public HSSFWorkbook createExcel(List<CftTjjgEntity> listTjjg){
+    public HSSFWorkbook createExcel(List listTjjg){
         HSSFWorkbook wb = new HSSFWorkbook();
-        Sheet sheet = wb.createSheet("财付通统计信息");
+        Sheet sheet = wb.createSheet("财付通账户信息");
 
         Row row = sheet.createRow(0);
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
         cell = row.createCell(1);
-        cell.setCellValue("交易账户");
+        cell.setCellValue("姓名");
         cell = row.createCell(2);
-        cell.setCellValue("交易总次数");
+        cell.setCellValue("交易账户");
         cell = row.createCell(3);
-        cell.setCellValue("进账总次数");
+        cell.setCellValue("交易类型");
         cell = row.createCell(4);
-        cell.setCellValue("进账总金额(元)");
+        cell.setCellValue("交易总次数");
         cell = row.createCell(5);
-        cell.setCellValue("出账总次数");
+        cell.setCellValue("进账总次数");
         cell = row.createCell(6);
+        cell.setCellValue("进账总金额(元)");
+        cell = row.createCell(7);
+        cell.setCellValue("出账总次数");
+        cell = row.createCell(8);
         cell.setCellValue("出账总金额(元)");
-        int i = 1;
-        for(CftTjjgEntity tjjg: listTjjg){
-            row = sheet.createRow(i);
+
+        for(int i=0;i<listTjjg.size();i++){
+            Map map = (Map)listTjjg.get(i);
+            row = sheet.createRow(i+1);
             cell = row.createCell(0);
-            cell.setCellValue(i);
+            cell.setCellValue(i+1);
             cell = row.createCell(1);
-            cell.setCellValue(tjjg.getJyzh());
+            if(map.get("XM") != null && map.get("XM").toString().length()>0){
+                cell.setCellValue(map.get("XM").toString());
+            }
             cell = row.createCell(2);
-            cell.setCellValue(tjjg.getJyzcs().toString());
+            cell.setCellValue(map.get("JYZH").toString());
             cell = row.createCell(3);
-            cell.setCellValue(tjjg.getJzzcs().toString());
+            cell.setCellValue(map.get("JYLX").toString());
             cell = row.createCell(4);
-            cell.setCellValue(String.valueOf(tjjg.getJzzje().doubleValue()));
+            cell.setCellValue(map.get("JYZCS").toString());
             cell = row.createCell(5);
-            cell.setCellValue(tjjg.getCzzcs().toString());
+            cell.setCellValue(map.get("JZZCS").toString());
             cell = row.createCell(6);
-            cell.setCellValue(String.valueOf(tjjg.getCzzje().doubleValue()));
-            i++;
+            cell.setCellValue(map.get("JZZJE").toString());
+            cell = row.createCell(7);
+            cell.setCellValue(map.get("CZZCS").toString());
+            cell = row.createCell(8);
+            cell.setCellValue(map.get("CZZJE").toString());
         }
-        for(int a=0;a<7;a++){
+
+        for(int a=0;a<10;a++){
             sheet.autoSizeColumn(a);
         }
         return wb;

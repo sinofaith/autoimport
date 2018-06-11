@@ -60,11 +60,14 @@ public class UploadController {
         }
         int a = us.insertZcxx(uploadPath,"info.txt");
         int b = us.insertZzxx(uploadPath,"trades.txt");
-
+        if(a+b>0){
+            us.deleteAll(uploadPath);
+        }
         List<CftZzxxEntity> listZzxx = zzs.getAll();
 
         int c = tjs.count(listZzxx);
         int d = tjss.count(listZzxx);
+
 
         if(a+b+c+d>0){
             result = String.valueOf(a);

@@ -1,6 +1,6 @@
 body{background-color: white;}
-header{ width: 100%; display: block; height: 50px; background: #f6f6f6;  border-bottom:1px solid #e0dfdf;font-size: 0.75em;margin-bottom: 20px;}
-header span{  line-height: 50px;}
+header{ width: 100%; display: block; height: 64px; background: #f6f6f6;  border-bottom:1px solid #e0dfdf;font-size: 1em;margin-bottom: 15px;}
+header span{  line-height: 64px;}
 header span a{ color: #333; color: #fff;}
 .logo{ border-bottom: 1px solid #e0dfdf; float: left}
 .sideMenu_left{ width: 80px;  position: fixed; height: 100%; background: #e9e9e9;}

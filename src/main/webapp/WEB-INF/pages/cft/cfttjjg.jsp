@@ -27,7 +27,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a href="/SINOFAITH/cftzcxx">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg"  class="addactive">财付通统计信息</a><a href="/SINOFAITH/cfttjjgs">财付通统计信息2</a></span>
+    <span class="tab_nav">  <a href="/SINOFAITH/cftzcxx">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg"  class="addactive">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs">财付通对手账户信息</a></span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -40,30 +40,32 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>财付通统计信息</strong>
+                                                <strong>财付通账户信息</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
                                         <td width="7%">序号</td>
+                                        <td width="7%">姓名</td>
                                         <td width="8%">交易账户</td>
                                         <td width="8%">交易类型</td>
-                                        <td width="9%">交易总次数</td>
-                                        <td width="8%">进账总次数</td>
-                                        <td width="10%">进账总金额(元)</td>
-                                        <td width="8%">出账总次数</td>
-                                        <td width="10%">出账总金额(元)</td>
+                                        <td width="9%"><a href="/SINOFAITH/cfttjjg/order?orderby=jyzcs">交易总次数</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cfttjjg/order?orderby=jzzcs">进账总次数</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/cfttjjg/order?orderby=jzzje">进账总金额(元)</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cfttjjg/order?orderby=czzcs">出账总次数</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/cfttjjg/order?orderby=czzje">出账总金额(元)</a></td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
+                                                <td align="center">${item.name}</td>
                                                 <td align="center">${item.jyzh}</td>
                                                 <td align="center">${item.jylx}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="right"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
@@ -115,8 +117,10 @@
                                 <form action="/SINOFAITH/cfttjjg/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
-                                        <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
+                                        <select name="seachCondition" id = "seachCondition" onchange="seachChange()" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="jyzh"<c:if test="${tjseachCondition=='jyzh'}">selected="selected"</c:if>>交易账户</option>
+                                            <option value="jzzje"<c:if test="${tjseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
+                                            <option value="czzje"<c:if test="${tjseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <%--<option value="xm" <c:if test="${seachCondition=='xm'}">selected="selected"</c:if> >姓名</option>--%>
                                             <%--<option value="sfzhm" <c:if test="${seachCondition=='sfzhm'}">selected="selected"</c:if> >身份证号码</option>--%>
                                             <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>

@@ -19,6 +19,7 @@ public class CftTjjgEntity implements Serializable {
     private BigDecimal jzzje = new BigDecimal(0);
     private BigDecimal czzcs = new BigDecimal(0);
     private BigDecimal czzje = new BigDecimal(0);
+    private String inserttime;
 
     @Basic
     @Column(name = "id",nullable = true,precision = 0)
@@ -98,6 +99,11 @@ public class CftTjjgEntity implements Serializable {
         this.czzje = czzje;
     }
 
+    @Basic
+    @Column(name = "inserttime",nullable = true,length = 30)
+    public String getInserttime(){return inserttime;}
+
+    public void setInserttime(String inserttime){this.inserttime=inserttime;}
 
 
     @Override
