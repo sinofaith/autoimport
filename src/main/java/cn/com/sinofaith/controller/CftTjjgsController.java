@@ -37,12 +37,19 @@ public class CftTjjgsController {
     public ModelAndView order(@RequestParam("orderby") String orderby,HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
         String desc = (String) ses.getAttribute("sdesc");
-        if(desc==null||" ,c.id ".equals(desc)){
-            desc = " desc";
+        String lastOrder = (String) ses.getAttribute("slastOrder");
+        if(orderby.equals(lastOrder)){
+            if(desc==null||" ,c.id ".equals(desc)){
+                desc = " desc";
+            }else{
+                desc = " ,c.id ";
+            }
         }else{
-            desc = " ,c.id ";
+            desc = " desc ";
         }
+
         ses.setAttribute("sorderby",orderby);
+        ses.setAttribute("slastOrder",orderby);
         ses.setAttribute("sdesc",desc);
         return mav;
     }
