@@ -72,6 +72,8 @@ public class CftTjjgController {
         if(seachCondition!=null){
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                 seach = " and c."+ seachCondition + " >= "+seachCode;
+            }else if("xm".equals(seachCondition)){
+                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
             }else{
                 seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
             }
@@ -116,6 +118,8 @@ public class CftTjjgController {
         if(seachCondition!=null){
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                 seach = " and c."+ seachCondition + " >= "+seachCode;
+            }else if("xm".equals(seachCondition)){
+                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
             }else{
                 seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
             }

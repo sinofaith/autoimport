@@ -14,7 +14,8 @@ import java.util.Map;
 @Repository
 public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
     public int getAllRowCount(String seachCode){
-        String sql = "select to_char(Count(1)) num from cft_tjjgs c where 1=1 "+seachCode;
+        String sql = "select to_char(Count(1)) num from cft_tjjgs c ," +
+                "cft_person s  where 1=1 and c.jyzh = s.zh"+seachCode;
         List list = findBySQL(sql);
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));

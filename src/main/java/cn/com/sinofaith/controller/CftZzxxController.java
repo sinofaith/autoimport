@@ -39,7 +39,11 @@ public class CftZzxxController {
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
         if(seachCondition!=null){
-            seach = " and "+ seachCondition+" like "+"'"+ seachCode +"'";
+            if("xm".equals(seachCondition)){
+                seach = " and s."+seachCondition + " like "+"'"+seachCode+"'";
+            }else {
+                seach = " and c." + seachCondition + " like " + "'" + seachCode + "'";
+            }
         }else{
             seach = " and ( 1=1 ) ";
         }
@@ -74,7 +78,11 @@ public class CftZzxxController {
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
         if(seachCondition!=null){
-            seach = " and "+ seachCondition+" like "+"'"+ seachCode +"'";
+            if("name".equals(seachCondition)){
+                seach = " and s."+seachCondition + " like "+"'"+seachCode+"'";
+            }else {
+                seach = " and c." + seachCondition + " like " + "'" + seachCode + "'";
+            }
         }else{
             seach = " and ( 1=1 ) ";
         }
