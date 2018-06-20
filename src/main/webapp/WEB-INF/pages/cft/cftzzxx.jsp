@@ -45,11 +45,11 @@
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="7%">序号</td>
-                                        <td width="7%">姓名</td>
+                                        <td width="6%">序号</td>
+                                        <td width="6%">姓名</td>
                                         <td width="9%">微信账户</td>
-                                        <td width="5%">借贷类型</td>
-                                        <td width="7%">交易类型</td>
+                                        <td width="6%">借贷类型</td>
+                                        <td width="10%">交易类型</td>
                                         <td width="7%">交易金额(元)</td>
                                         <td width="12%">交易时间</td>
                                         <td width="10%">发送方</td>
@@ -76,7 +76,7 @@
                                         <c:choose>
                                             <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                                 <tr>
-                                                    <td colspan="10" align="center"> 无数据 </td>
+                                                    <td colspan="11" align="center"> 无数据 </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>
@@ -156,7 +156,8 @@
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>
+                           <button class="sideBar_r_button" data-toggle="modal"
+                                   data-target="#myModal">财付通数据导入</button>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cftzzxx/download'">数据导出</button>
                        </span>
                                     </div>
@@ -165,10 +166,10 @@
                         </div>
                     </div>
                 </div>
-                <form id="uploadFileForm" action="/SINOFAITH/uploadFolder" method="post" style="display: none;">
-                    <input type="file" webkitdirectory name="file" id="file" style="display: none;">
-                    <input type="text" id="updatestate" name="updatestate" style="display: none;" value="1">
-                </form>
+                <%--<form id="uploadFileForm" action="/SINOFAITH/uploadFolder" method="post" style="display: none;">--%>
+                    <%--<input type="file" webkitdirectory name="file" id="file" style="display: none;">--%>
+                    <%--<input type="text" id="updatestate" name="updatestate" style="display: none;" value="1">--%>
+                <%--</form>--%>
 
                 <form id="seachDetail" action="<c:url value=""/>"  method="post" style="display: none;">
                 </form>
@@ -176,5 +177,41 @@
             </div>
         </div>
     </ul>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">文件上传进度</h4>
+            </div>
+            <div class="modal-body">
+                <progress id="progressBar" value="0" max="100"
+                          style="width: 100%;height: 20px; "> </progress>
+                <span id="percentage" style="color:blue;"></span> <br>
+                <br>
+                <div class="file-box">
+                    文件夹:<input type='text' name='textfield' id='textfield' class='txt' />
+                    <input type='button' class='btn' value='浏览...' />
+                    <input
+                            type="file" name="file" webkitdirectory class="file" id="file" size="28"
+                            onchange="document.getElementById('textfield').value=this.value;" />
+                    <br>
+                    案件名:<input type="text" name = 'aj' id ='aj' class='txt'>
+                    <input type="submit" name="submit" class="btn" value="上传"
+                           onclick="UpladFile()" />
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
 </div>
 <%@include file="../template/newfooter.jsp" %>

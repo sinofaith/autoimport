@@ -62,7 +62,6 @@ public class CftZcxxService {
     public HSSFWorkbook createExcel(List<CftZcxxEntity> listZcxx)throws Exception{
         HSSFWorkbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet("财付通注册信息");
-
         Row row = sheet.createRow(0);
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
@@ -83,8 +82,32 @@ public class CftZcxxService {
         cell = row.createCell(8);
         cell.setCellValue("银行账号");
         int i = 1;
+        int b = 1;
         for(CftZcxxEntity czxx:listZcxx){
-            row = sheet.createRow(i);
+            if(i>=65536 && i%65536==0){
+                sheet = wb.createSheet("财付通注册信息("+b+")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("账户状态");
+                cell = row.createCell(2);
+                cell.setCellValue("微信账户");
+                cell = row.createCell(3);
+                cell.setCellValue("姓名");
+                cell = row.createCell(4);
+                cell.setCellValue("注册时间");
+                cell = row.createCell(5);
+                cell.setCellValue("身份证号");
+                cell = row.createCell(6);
+                cell.setCellValue("绑定手机");
+                cell = row.createCell(7);
+                cell.setCellValue("开户行");
+                cell = row.createCell(8);
+                cell.setCellValue("银行账号");
+                b+=1;
+            }
+            row = sheet.createRow(i%65536);
             cell = row.createCell(0);
             cell.setCellValue(i);
             cell = row.createCell(1);
@@ -103,12 +126,13 @@ public class CftZcxxService {
             cell.setCellValue(czxx.getKhh());
             cell = row.createCell(8);
             cell.setCellValue(czxx.getYhzh());
+            if(i%65536==0) {
+                for (int a = 0; a < 9; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
             i++;
         }
-        for(int a=0;a<9;a++){
-            sheet.autoSizeColumn(a);
-        }
-
         return wb;
     }
 }

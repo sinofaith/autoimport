@@ -62,6 +62,29 @@ public class CftTjjgsService {
         page.setTotalRecords(allRow);
         return page;
     }
+
+    public String getSeach(String seachCondition,String seachCode,String orderby,String desc){
+        String seach = "";
+        if(seachCondition!=null){
+            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
+                 seach = " and c."+ seachCondition + " >= "+seachCode;
+            }else if("xm".equals(seachCondition)){
+                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
+            }else{
+                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
+            }
+        }else{
+            seach = " and ( 1=1 ) ";
+        }
+        if(orderby!=null){
+            if("xm".equals(orderby)){
+                seach = seach + " order by s." + orderby + desc + " nulls last";
+            }else{
+                seach =seach + " order by c." +orderby + desc;
+            }
+        }
+        return seach;
+    }
 //    public Page queryForPage(int currentPage,int pageSize,String seach){
 //        Page page = new Page();
 //        int allRow = cfttjsd.getAllRowCount(seach);
@@ -80,13 +103,15 @@ public class CftTjjgsService {
 //        page.setTotalRecords(allRow);
 //        return page;
 //    }
-    public int count(List<CftZzxxEntity> listZzxx){
+
+    public int count(List<CftZzxxEntity> listZzxx,long aj){
         Map<String,CftTjjgsEntity> map = new HashMap();
         CftTjjgsEntity tjjgs = new CftTjjgsEntity();
         CftZzxxEntity zzxx = null;
 
         for(int i=0;i<listZzxx.size();i++){
             zzxx = listZzxx.get(i);
+            tjjgs.setAj_id(aj);
             if(zzxx.getZh().equals(zzxx.getFsf())){
                 if(map.containsKey(zzxx.getZh()+zzxx.getJsf())){
                     tjjgs = map.get(zzxx.getZh()+zzxx.getJsf());
@@ -120,19 +145,15 @@ public class CftTjjgsService {
                 }
             }
         }
-        List<CftTjjgsEntity> listTjjgs =null;
-        listTjjgs = new ArrayList<>(map.values());
+        List<CftTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
         int i =0;
-        for (CftTjjgsEntity tjs:listTjjgs){
-            tjs.setInserttime(TimeFormatUtil.getDate("/"));
-            cfttjsd.insert(tjs);
-            i++;
-        }
+        cfttjsd.delAll();
+        cfttjsd.save(listTjjgs);
         return i;
     }
 
     public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
-        List listTjjg = cfttjsd.findBySQL("select s.xm,c.* from cft_tjjgs c , cft_person s  where 1=1 and  c.jyzh = s.zh "+seach);
+        List listTjjg = cfttjsd.findBySQL("select s.xm,c.* from cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listTjjg);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+new String("财付对手账户信息.xls".getBytes(), "ISO8859-1"));
@@ -145,7 +166,6 @@ public class CftTjjgsService {
     public HSSFWorkbook createExcel(List listTjjg){
         HSSFWorkbook wb = new HSSFWorkbook();
         Sheet sheet = wb.createSheet("财付对手账户信息");
-
         Row row = sheet.createRow(0);
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
@@ -165,10 +185,36 @@ public class CftTjjgsService {
         cell.setCellValue("出账总次数");
         cell = row.createCell(8);
         cell.setCellValue("出账总金额(元)");
-
+        for(int a=0;a<10;a++){
+            sheet.autoSizeColumn(a);
+        }
+        int b = 1;
         for(int i=0;i<listTjjg.size();i++){
+            if(i>=65535&& i%65535==0){
+                sheet = wb.createSheet("财付对手账户信息("+b+")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("姓名");
+                cell = row.createCell(2);
+                cell.setCellValue("交易账户");
+                cell = row.createCell(3);
+                cell.setCellValue("对手账户");
+                cell = row.createCell(4);
+                cell.setCellValue("交易总次数");
+                cell = row.createCell(5);
+                cell.setCellValue("进账总次数");
+                cell = row.createCell(6);
+                cell.setCellValue("进账总金额(元)");
+                cell = row.createCell(7);
+                cell.setCellValue("出账总次数");
+                cell = row.createCell(8);
+                cell.setCellValue("出账总金额(元)");
+                b+=1;
+            }
             Map map = (Map)listTjjg.get(i);
-            row = sheet.createRow(i+1);
+            row = sheet.createRow(i%65535 + 1);
             cell = row.createCell(0);
             cell.setCellValue(i+1);
             cell = row.createCell(1);
@@ -191,12 +237,12 @@ public class CftTjjgsService {
             cell.setCellValue(map.get("CZZCS").toString());
             cell = row.createCell(8);
             cell.setCellValue(map.get("CZZJE").toString());
+            if(i%65536==0) {
+                for (int a = 0; a < 10; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
         }
-
-        for(int a=0;a<10;a++){
-            sheet.autoSizeColumn(a);
-        }
-
         return wb;
     }
 }

@@ -61,22 +61,7 @@ public class CftTjjgsController {
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
-        if(seachCondition!=null){
-            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach = " and c."+ seachCondition + " >= "+seachCode;
-            }else if("xm".equals(seachCondition)){
-                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
-            }else{
-                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
-            }
-        }else{
-            seach = " and ( 1=1 ) ";
-        }
-
-        if(orderby!=null){
-            seach =seach + " order by c." +orderby + desc;
-        }
-
+        seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc);
         Page page = cfttjss.queryForPage(Integer.valueOf(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("tjsseachCode",seachCode);
@@ -108,20 +93,7 @@ public class CftTjjgsController {
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
-        if(seachCondition!=null){
-            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach = " and c."+ seachCondition + " >= "+seachCode;
-            }else if("xm".equals(seachCondition)){
-                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
-            }else{
-                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
-            }
-        }else{
-            seach = " and ( 1=1 ) ";
-        }
-        if(orderby!=null){
-            seach =seach + " order by c." +orderby + desc;
-        }
+        seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc);
         cfttjss.downloadFile(seach, rep);
     }
 }

@@ -88,7 +88,7 @@ public class CftZzxxService {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
-        List listZzxx = cftzzd.findBySQL("select s.xm,c.* from cft_zzxx c ,cft_person s where 1=1 and c.zh = s.zh "+seach);
+        List listZzxx = cftzzd.findBySQL("select s.xm,c.* from cft_zzxx c left join cft_person s on c.zh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+new String("财付通转账信息.xls".getBytes(), "ISO8859-1"));
@@ -100,67 +100,95 @@ public class CftZzxxService {
 
     public HSSFWorkbook createExcel(List listZzxx)throws Exception{
         HSSFWorkbook wb = new HSSFWorkbook();
+        int b = 1;
         Sheet sheet = wb.createSheet("财付通转账信息");
-
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
-        cell.setCellValue("序号");
-        cell = row.createCell(1);
-        cell.setCellValue("姓名");
-        cell = row.createCell(2);
-        cell.setCellValue("微信账户");
-        cell = row.createCell(3);
-        cell.setCellValue("借贷类型");
-        cell = row.createCell(4);
-        cell.setCellValue("交易类型");
-        cell = row.createCell(5);
-        cell.setCellValue("交易金额(元)");
-        cell = row.createCell(6);
-        cell.setCellValue("交易时间");
-        cell = row.createCell(7);
-        cell.setCellValue("发送方");
-        cell = row.createCell(8);
-        cell.setCellValue("发送金额(元)");
-        cell = row.createCell(9);
-        cell.setCellValue("接收方");
-        cell = row.createCell(10);
-        cell.setCellValue("接收金额(元)");
-        for(int i=0;i<listZzxx.size();i++){
-            Map map = (Map)listZzxx.get(i);
-            row = sheet.createRow(i+1);
-            cell = row.createCell(0);
-            cell.setCellValue(i+1);
+            Row row = sheet.createRow(0);
+            Cell cell = row.createCell(0);
+            cell.setCellValue("序号");
             cell = row.createCell(1);
-            if(map.get("XM") != null && map.get("XM").toString().length()>0){
-                cell.setCellValue(map.get("XM").toString());
-            }
+            cell.setCellValue("姓名");
             cell = row.createCell(2);
-            cell.setCellValue(map.get("ZH").toString());
+            cell.setCellValue("微信账户");
             cell = row.createCell(3);
-            cell.setCellValue(map.get("JDLX").toString());
+            cell.setCellValue("借贷类型");
             cell = row.createCell(4);
-            cell.setCellValue(map.get("JYLX").toString());
+            cell.setCellValue("交易类型");
             cell = row.createCell(5);
-            cell.setCellValue(map.get("JYJE").toString());
+            cell.setCellValue("交易金额(元)");
             cell = row.createCell(6);
-            cell.setCellValue(map.get("JYSJ").toString());
+            cell.setCellValue("交易时间");
             cell = row.createCell(7);
-            if(map.get("FSF") != null && map.get("FSF").toString().length()>0){
-                cell.setCellValue(map.get("FSF").toString());
-            }
+            cell.setCellValue("发送方");
             cell = row.createCell(8);
-            cell.setCellValue(map.get("FSJE").toString());
+            cell.setCellValue("发送金额(元)");
             cell = row.createCell(9);
-            if(map.get("JSF") != null && map.get("JSF").toString().length()>0){
-                cell.setCellValue(map.get("JSF").toString());
-            }
+            cell.setCellValue("接收方");
             cell = row.createCell(10);
-            cell.setCellValue(map.get("JSJE").toString());
-        }
-        for(int a=0;a<12;a++){
-            sheet.autoSizeColumn(a);
-        }
-
+            cell.setCellValue("接收金额(元)");
+            for (int i = 0; i<listZzxx.size(); i++) {
+                if(i>=65535&& i%65535==0){
+                    sheet = wb.createSheet("财付通转账信息("+b+")");
+                    row = sheet.createRow(0);
+                    cell = row.createCell(0);
+                    cell.setCellValue("序号");
+                    cell = row.createCell(1);
+                    cell.setCellValue("姓名");
+                    cell = row.createCell(2);
+                    cell.setCellValue("微信账户");
+                    cell = row.createCell(3);
+                    cell.setCellValue("借贷类型");
+                    cell = row.createCell(4);
+                    cell.setCellValue("交易类型");
+                    cell = row.createCell(5);
+                    cell.setCellValue("交易金额(元)");
+                    cell = row.createCell(6);
+                    cell.setCellValue("交易时间");
+                    cell = row.createCell(7);
+                    cell.setCellValue("发送方");
+                    cell = row.createCell(8);
+                    cell.setCellValue("发送金额(元)");
+                    cell = row.createCell(9);
+                    cell.setCellValue("接收方");
+                    cell = row.createCell(10);
+                    cell.setCellValue("接收金额(元)");
+                    b+=1;
+                }
+                Map map = (Map) listZzxx.get(i);
+                row = sheet.createRow(i%65535 + 1);
+                cell = row.createCell(0);
+                cell.setCellValue(i + 1);
+                cell = row.createCell(1);
+                if (map.get("XM") != null && map.get("XM").toString().length() > 0) {
+                    cell.setCellValue(map.get("XM").toString());
+                }
+                cell = row.createCell(2);
+                cell.setCellValue(map.get("ZH").toString());
+                cell = row.createCell(3);
+                cell.setCellValue(map.get("JDLX").toString());
+                cell = row.createCell(4);
+                cell.setCellValue(map.get("JYLX").toString());
+                cell = row.createCell(5);
+                cell.setCellValue(map.get("JYJE").toString());
+                cell = row.createCell(6);
+                cell.setCellValue(map.get("JYSJ").toString());
+                cell = row.createCell(7);
+                if (map.get("FSF") != null && map.get("FSF").toString().length() > 0) {
+                    cell.setCellValue(map.get("FSF").toString());
+                }
+                cell = row.createCell(8);
+                cell.setCellValue(map.get("FSJE").toString());
+                cell = row.createCell(9);
+                if (map.get("JSF") != null && map.get("JSF").toString().length() > 0) {
+                    cell.setCellValue(map.get("JSF").toString());
+                }
+                cell = row.createCell(10);
+                cell.setCellValue(map.get("JSJE").toString());
+                if(i%65536==0){
+                    for (int a = 0; a < 12; a++) {
+                        sheet.autoSizeColumn(a);
+                    }
+                }
+            }
         return wb;
     }
 }

@@ -46,8 +46,8 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="7%">序号</td>
-                                        <td width="7%">姓名</td>
-                                        <td width="9%">交易账户</td>
+                                        <td width="7%"><a href="/SINOFAITH/cfttjjgs/order?orderby=xm">姓名</a></td>
+                                        <td width="9%">微信账户</td>
                                         <td width="9%">对方账户</td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzcs">进账总次数</a></td>
@@ -118,8 +118,8 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" id="seachCondition" onchange="seachChange()" class="width100" STYLE="margin-bottom: 20px;">
+                                            <option value="jyzh"<c:if test="${tjsseachCondition=='jyzh'}">selected="selected"</c:if>>微信账户</option>
                                             <option value="xm"<c:if test="${tjsseachCondition=='xm'}">selected="selected"</c:if>>姓名</option>
-                                            <option value="jyzh"<c:if test="${tjsseachCondition=='jyzh'}">selected="selected"</c:if>>交易账户</option>
                                             <option value="dfzh" <c:if test="${tjsseachCondition=='dfzh'}">selected="selected"</c:if> >对方账户</option>
                                             <option value="jzzje"<c:if test="${tjsseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${tjsseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>

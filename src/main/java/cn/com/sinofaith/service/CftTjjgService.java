@@ -4,11 +4,8 @@ import cn.com.sinofaith.bean.CftTjjgEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.dao.CftTjjgDao;
 import cn.com.sinofaith.form.CftTjjgForm;
-import cn.com.sinofaith.form.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.TimeFormatUtil;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,7 +13,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -63,15 +59,37 @@ public class CftTjjgService {
         return page;
     }
 
+    public String getSeach(String seachCondition,String seachCode,String orderby,String desc){
+        String seach;
+        if(seachCondition!=null){
+            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
+                seach = " and c."+ seachCondition + " >= "+seachCode;
+            }else if("xm".equals(seachCondition)){
+                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
+            }else{
+                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
+            }
+        }else{
+            seach = " and ( 1=1 ) ";
+        }
+        if(orderby!=null){
+            if("xm".equals(orderby)){
+                seach = seach + " order by s." + orderby + desc +" nulls last";
+            }else{
+                seach =seach + " order by c." +orderby + desc;
+            }
+        }
+        return seach;
+    }
 
-    public int count(List<CftZzxxEntity> listZzxx){
+    public int count(List<CftZzxxEntity> listZzxx,long aj){
         List<CftTjjgEntity> listTjjg = null;
         Map<String,CftTjjgEntity> map = new HashMap();
         for(int i=0;i<listZzxx.size();i++){
-            CftTjjgEntity tjjg = null;
+            CftTjjgEntity tjjg = new CftTjjgEntity();
             CftZzxxEntity zzxx = null;
             zzxx = listZzxx.get(i);
-
+            tjjg.setAj_id(aj);
             if(map.containsKey(zzxx.getZh()+zzxx.getJylx())){
                 if("出".equals(zzxx.getJdlx())){
                     tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
@@ -108,17 +126,14 @@ public class CftTjjgService {
         }
         listTjjg = new ArrayList<>(map.values());
         int i = 0;
-        for(CftTjjgEntity tj:listTjjg){
-            tj.setInserttime(TimeFormatUtil.getDate("/"));
-            cfttjd.insert(tj);
-            i++;
-        }
+        cfttjd.delAll();
+        cfttjd.save(listTjjg);
 
         return i;
     }
 
     public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
-        List listTjxx = cfttjd.findBySQL("select s.xm,c.* from cft_tjjg c ,cft_person s where 1=1 and c.jyzh = s.zh "+seach);
+        List listTjxx = cfttjd.findBySQL("select s.xm,c.* from cft_tjjg c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+new String("财付通账户信息.xls".getBytes(), "ISO8859-1"));
@@ -130,8 +145,8 @@ public class CftTjjgService {
 
     public HSSFWorkbook createExcel(List listTjjg){
         HSSFWorkbook wb = new HSSFWorkbook();
+        int b = 1;
         Sheet sheet = wb.createSheet("财付通账户信息");
-
         Row row = sheet.createRow(0);
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
@@ -151,10 +166,32 @@ public class CftTjjgService {
         cell.setCellValue("出账总次数");
         cell = row.createCell(8);
         cell.setCellValue("出账总金额(元)");
-
         for(int i=0;i<listTjjg.size();i++){
+            if(i>=65535&& i%65535==0){
+                sheet = wb.createSheet("财付通账户信息("+b+")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("姓名");
+                cell = row.createCell(2);
+                cell.setCellValue("交易账户");
+                cell = row.createCell(3);
+                cell.setCellValue("交易类型");
+                cell = row.createCell(4);
+                cell.setCellValue("交易总次数");
+                cell = row.createCell(5);
+                cell.setCellValue("进账总次数");
+                cell = row.createCell(6);
+                cell.setCellValue("进账总金额(元)");
+                cell = row.createCell(7);
+                cell.setCellValue("出账总次数");
+                cell = row.createCell(8);
+                cell.setCellValue("出账总金额(元)");
+                b+=1;
+            }
             Map map = (Map)listTjjg.get(i);
-            row = sheet.createRow(i+1);
+            row = sheet.createRow(i%65535 + 1);
             cell = row.createCell(0);
             cell.setCellValue(i+1);
             cell = row.createCell(1);
@@ -175,11 +212,14 @@ public class CftTjjgService {
             cell.setCellValue(map.get("CZZCS").toString());
             cell = row.createCell(8);
             cell.setCellValue(map.get("CZZJE").toString());
+            if(i%65536==0) {
+                for (int a = 0; a < 10; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
         }
 
-        for(int a=0;a<10;a++){
-            sheet.autoSizeColumn(a);
-        }
+
         return wb;
     }
 }

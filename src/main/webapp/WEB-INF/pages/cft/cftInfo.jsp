@@ -19,10 +19,8 @@
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
 </script>
-<style>
+<style type="text/css">
     .crimeterrace{ background-color: #636B75 !important;}
-
-
 </style>
 
 <div class="tab_div">
@@ -51,7 +49,7 @@
                                         <td width="14%">注册时间</td>
                                         <td width="14%">身份证号</td>
                                         <td width="10%">绑定手机</td>
-                                        <td width="17%">开户行</td>
+                                        <td width="18%">开户行</td>
                                         <td width="16%">银行账号</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
@@ -149,7 +147,10 @@
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>
+                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
+
+                <button class="sideBar_r_button" data-toggle="modal"
+                        data-target="#myModal">财付通数据导入</button>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cftzcxx/download'" >数据导出</button>
                        </span>
                                     </div>
@@ -158,10 +159,10 @@
                         </div>
                     </div>
                 </div>
-                <form id="uploadFileForm" action="/SINOFAITH/uploadFolder" method="post"  style="display: none;">
-                    <input type="file" webkitdirectory name="file" id="file" style="display: none;">
-                    <input type="text" id="updatestate" name="updatestate" style="display: none;" value="1">
-                </form>
+                <%--<form id="uploadFileForm" action="/SINOFAITH/uploadFolder" method="post"  style="display: none;">--%>
+                    <%--<input type="file" webkitdirectory name="file" id="file" style="display: none;">--%>
+                    <%--<input type="text" id="updatestate" name="updatestate" style="display: none;" value="1">--%>
+                <%--</form>--%>
 
                 <form id="seachDetail" action="<c:url value=""/>"  method="post" style="display: none;">
                 </form>
@@ -169,5 +170,42 @@
             </div>
         </div>
     </ul>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">文件上传进度</h4>
+            </div>
+            <div class="modal-body">
+                <progress id="progressBar" value="0" max="100"
+                          style="width: 100%;height: 20px; "> </progress>
+                <span id="percentage" style="color:blue;"></span> <br>
+                <br>
+                <div class="file-box">
+                    文件夹:<input type='text' name='textfield' id='textfield' class='txt' />
+                    <input type='button' class='btn' value='浏览...' />
+                    <input
+                        type="file" name="file" webkitdirectory class="file" id="file" size="28"
+                        onchange="document.getElementById('textfield').value=this.value;" />
+                <br>
+                    案件名:<input type="text" name = 'aj' id ='aj' class='txt'>
+                    <input type="submit" name="submit" class="btn" value="上传"
+                           onclick="UpladFile()" />
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
 </div>
 <%@include file="../template/newfooter.jsp" %>

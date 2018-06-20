@@ -1,6 +1,9 @@
 package cn.com.sinofaith.bean;
 
 
+import cn.com.sinofaith.util.RemoveMessy;
+import sun.security.provider.MD5;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,6 +31,7 @@ public class CftZzxxEntity {
     private String jsf;
     private String jssj;
     private BigDecimal jsje;
+    private long aj_id;
     private String inserttime;
 
     @Id
@@ -189,6 +193,16 @@ public class CftZzxxEntity {
 
     public void setInserttime(String inserttime){this.inserttime=inserttime;}
 
+    @Basic
+    @Column(name = "aj_id",nullable = false,precision = 0)
+    public long getAj_id() {
+        return aj_id;
+    }
+
+    public void setAj_id(long aj_id) {
+        this.aj_id = aj_id;
+    }
+
     @Override
     public String toString() {
         return "CftZzxxEntity{" +
@@ -214,7 +228,7 @@ public class CftZzxxEntity {
     public static CftZzxxEntity listToObj(List<String> s){
         CftZzxxEntity a = new CftZzxxEntity();
         try {
-        if(s.size()>11){
+        if(s.size()>=11){
             a.setZh(s.get(0).replace("[","").replace("]",""));
             a.setJydh(s.get(1).replace("[","").replace("]",""));
             a.setJdlx(s.get(2));
@@ -223,7 +237,7 @@ public class CftZzxxEntity {
             a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5).replace("null","0"))/100.00));
             a.setJysj(s.get(6));
             a.setYhlx(s.get(7));
-            a.setJysm(s.get(8));
+            a.setJysm(RemoveMessy.rMessy(s.get(8)));
             a.setShmc(s.get(9));
             a.setFsf(s.get(10));
             a.setFsje(BigDecimal.valueOf(Long.parseLong(s.get(11).replace("null","0"))/100.00));
@@ -236,11 +250,11 @@ public class CftZzxxEntity {
             a.setJydh(s.get(1).replace("[","").replace("]",""));
             a.setJdlx(s.get(2));
             a.setJylx(s.get(3));
-            a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4))/100.00));
-            a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5))/100.00));
+            a.setJyje(BigDecimal.valueOf(Long.parseLong(s.get(4).replace("null","0"))/100.00));
+            a.setZhye(BigDecimal.valueOf(Long.parseLong(s.get(5).replace("null","0"))/100.00));
             a.setJysj(s.get(6));
             a.setYhlx(s.get(7));
-            a.setJysm(s.get(8));
+            a.setJysm(RemoveMessy.rMessy(s.get(8)));
             a.setShmc(s.get(9));
             a.setFsf(null);
             a.setFsje(new BigDecimal(0));

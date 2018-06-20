@@ -69,20 +69,8 @@ public class CftTjjgController {
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
         String orderby = (String) req.getSession().getAttribute("orderby");
         String desc = (String) req.getSession().getAttribute("desc");
-        if(seachCondition!=null){
-            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach = " and c."+ seachCondition + " >= "+seachCode;
-            }else if("xm".equals(seachCondition)){
-                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
-            }else{
-                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
-            }
-        }else{
-            seach = " and ( 1=1 ) ";
-        }
-        if(orderby!=null){
-            seach =seach + " order by c." +orderby + desc;
-        }
+        seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc);
+
         Page page = cfttjs.queryForPage(Integer.valueOf(pageNo),10,seach);
 //        System.out.println(req.getSession().getServletContext().getRealPath("/")+"\n");
         mav.addObject("page",page);
@@ -115,28 +103,9 @@ public class CftTjjgController {
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
         String orderby = (String) req.getSession().getAttribute("orderby");
         String desc = (String) req.getSession().getAttribute("desc");
-        if(seachCondition!=null){
-            if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach = " and c."+ seachCondition + " >= "+seachCode;
-            }else if("xm".equals(seachCondition)){
-                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
-            }else{
-                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
-            }
-        }else{
-            seach = " and ( 1=1 ) ";
-        }
-        if(orderby!=null){
-            seach =seach + " order by c." +orderby + desc;
-        }
+        seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc);
+
         cfttjs.downloadFile(seach, rep);
     }
 
-//    @RequestMapping(value = "/refresh")
-//    public ModelAndView refresh(){
-//        ModelAndView mav = new ModelAndView("redirect:/cfttjjg/seach?pageNo=1");
-//        List<CftZzxxEntity> listZzxx =null;
-//
-//        return mav;
-//    }
 }

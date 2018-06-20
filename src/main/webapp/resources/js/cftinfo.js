@@ -41,8 +41,10 @@ $(document).ready(function(){
             alertify.alert('请选择要上传的文件夹')
             return;
         }
+
         var files = event.target.files;
         var actual_filesCount=files.length;
+
         if(actual_filesCount>1000){
             alertify.alert("文件过多,单次可上传1000个文件");
             return;
@@ -353,4 +355,55 @@ function matrix() {
             check_val.push(obj[k].value);
     }
     window.open("http://10.38.14.209.83:9000/matrix2.html#" + check_val);
+}
+
+function UpladFile() {
+    var fileObj = document.getElementById("file");// js 获取文件对象
+    var file = $("#file").val();
+    if(file==''){
+        alertify.alert('请选择要上传的文件夹')
+        return;
+    }
+    var aj = $("#aj").val();
+    if(aj==''){
+        alertify.alert('请填写案件名称')
+        return
+    }
+    var FileController = "/SINOFAITH/uploadFolder"; // 接收上传文件的后台地址
+    // FormData 对象
+    var form = new FormData();
+    form.append("aj", aj); // 可以增加表单数据
+    for(i=0;i<fileObj.files.length;i++){
+        form.append("file", fileObj.files[i]); // 文件对象
+    }
+    var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
+    xhr.open("post", FileController, true);
+    xhr.onload = function() {
+        alertify.alert("导入完成!");
+        $('#myModal').modal('hide');
+        setTimeout(function () {document.getElementById("seachDetail").submit()},2000);
+    };
+    xhr.upload.addEventListener("progress", progressFunction, false);
+    xhr.send(form);
+}
+
+function progressFunction(evt) {
+
+    var progressBar = document.getElementById("progressBar");
+
+    var percentageDiv = document.getElementById("percentage");
+
+    if (evt.lengthComputable) {
+
+        progressBar.max = evt.total;
+
+        progressBar.value = evt.loaded;
+
+        percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
+
+        if((evt.loaded/evt.total) ==1 ){
+            alertify.alert("文件夹上传成功\n请等待数据导入...");
+        }
+    }
+
 }

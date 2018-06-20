@@ -46,17 +46,17 @@ public class UploadService {
         return 0;
     }
 
-    public int insertZcxx(String filepath, String filter){
+    public int insertZcxx(String filepath, String filter,long aj){
         List<String> listPath = getFileList(filepath,filter);
         List<CftZcxxEntity> listZcxx = getZcxxByTxt(listPath);
-        int i = zcd.saveZcxx(listZcxx);
+        int i = zcd.saveZcxx(listZcxx,aj);
         return i;
     }
 
-    public int insertZzxx(String filepath,String filter){
+    public int insertZzxx(String filepath,String filter,long aj){
         List<String> listPath = getFileList(filepath,filter);
         List<CftZzxxEntity> listZzxx = getZzxxByTxt(listPath);
-        int i = zzd.saveZzxx(listZzxx);
+        int i = zzd.insertZzxx(listZzxx,aj);
         return i;
     }
 
@@ -157,12 +157,14 @@ public class UploadService {
                         }
                         if(zcxxStr.size()>7){
                             listZcxx.add(CftZcxxEntity.listToObj(zcxxStr));
-                            zcxxs.addAll(listZcxx);
                         }
                         cp = CftPersonEntity.listToObj(zcxxStr);
-                        cpd.insert(cp);
+                        if(cp.getXm().length()>0){
+                            cpd.insert(cp);
+                        }
                         line++;
                     }
+                    zcxxs.addAll(listZcxx);
                     br.close();
                     isr.close();
                     fis.close();

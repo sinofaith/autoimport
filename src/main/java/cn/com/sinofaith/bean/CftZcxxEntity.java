@@ -18,6 +18,7 @@ public class CftZcxxEntity {
     private String bdsj;
     private String khh;
     private String yhzh;
+    private long aj_id;
     private String inserttime;
 
     @Basic
@@ -118,6 +119,16 @@ public class CftZcxxEntity {
 
     public void setInserttime(String inserttime) {
         this.inserttime = inserttime;
+    }
+
+    @Basic
+    @Column(name = "aj_id",nullable = true,precision = 0)
+    public long getAj_id() {
+        return aj_id;
+    }
+
+    public void setAj_id(long aj_id) {
+        this.aj_id = aj_id;
     }
 
     public void setNull() {

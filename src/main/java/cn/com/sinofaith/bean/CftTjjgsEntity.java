@@ -19,6 +19,7 @@ public class CftTjjgsEntity implements Serializable {
     private BigDecimal jzzje = new BigDecimal(0);
     private BigDecimal czzcs = new BigDecimal(0);
     private BigDecimal czzje = new BigDecimal(0);
+    private long aj_id;
     private String inserttime;
 
     @Basic
@@ -100,6 +101,16 @@ public class CftTjjgsEntity implements Serializable {
     public String getInserttime(){return inserttime;}
 
     public void setInserttime(String inserttime){this.inserttime=inserttime;}
+
+    @Basic
+    @Column(name = "aj_id",nullable = false,precision = 0)
+    public long getAj_id() {
+        return aj_id;
+    }
+
+    public void setAj_id(long aj_id) {
+        this.aj_id = aj_id;
+    }
 
     @Override
     public String toString() {

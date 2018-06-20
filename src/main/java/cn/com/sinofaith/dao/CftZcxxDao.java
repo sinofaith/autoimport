@@ -4,14 +4,12 @@ import cn.com.sinofaith.bean.CftZcxxEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.TimeFormatUtil;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,19 +28,28 @@ public class CftZcxxDao extends BaseDao<CftZcxxEntity>{
     }
 
     public List<CftZcxxEntity> getDoPage(String seachCode,int offset,int length){
-        List<CftZcxxEntity> result = doPage("from CftZcxxEntity  where 1=1" +seachCode +"order by id desc ",offset,length);
+        List<CftZcxxEntity> result = doPage("from CftZcxxEntity  where 1=1" +seachCode +"order by id desc,xm ",offset,length);
         return result;
     }
 
-    public int saveZcxx(List<CftZcxxEntity> listZcxx){
+    public int saveZcxx(List<CftZcxxEntity> listZcxx,long aj){
         int i = 0;
+        Map<String,CftZcxxEntity> map = new HashMap<>();
+        for(CftZcxxEntity zc: listZcxx){
+            map.put(zc.getYhzh()+zc.getZh(),zc);
+        }
+        listZcxx = new ArrayList<>(map.values());
         for (CftZcxxEntity zcxx:listZcxx){
+            zcxx.setAj_id(aj);
             zcxx.setInserttime(TimeFormatUtil.getDate("/"));
             save(zcxx);
             i+=1;
         }
+        map = null;
+        listZcxx=null;
         return i;
     }
+
 
 
 }

@@ -33,7 +33,7 @@ public class CftZzxxController {
     }
 
     @RequestMapping(value = "/seach")
-    public ModelAndView getCftzcxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
+    public ModelAndView getCftzzxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("cft/cftzzxx");
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
         String seach = "";
