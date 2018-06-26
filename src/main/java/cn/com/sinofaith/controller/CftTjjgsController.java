@@ -1,5 +1,6 @@
 package cn.com.sinofaith.controller;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.CftTjjgsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * Created by Me. on 2018/5/23
  */
@@ -26,8 +29,10 @@ public class CftTjjgsController {
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
         ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
-        httpSession.removeAttribute("tjsseachCondition"); //查询条件
-        httpSession.removeAttribute("tjsseachCode");//查询内容
+        //查询条件
+        httpSession.removeAttribute("tjsseachCondition");
+        //查询内容
+        httpSession.removeAttribute("tjsseachCode");
         httpSession.removeAttribute("sorderby");
         httpSession.removeAttribute("sdesc");
         return mav;
@@ -57,16 +62,17 @@ public class CftTjjgsController {
     public ModelAndView getcfttj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("cft/cfttjjgs");
         String seachCondition = (String) req.getSession().getAttribute("tjsseachCondition");
-        String seach = "";
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
-        seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc);
-        Page page = cfttjss.queryForPage(Integer.valueOf(pageNo),10,seach);
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        Page page = cfttjss.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("tjsseachCode",seachCode);
         mav.addObject("tjsseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
+        mav.addObject("ajm",aj);
         return mav;
     }
 
@@ -89,11 +95,11 @@ public class CftTjjgsController {
     @RequestMapping("/download")
     public void getTjjgDownload(HttpServletResponse rep, HttpServletRequest req) throws Exception{
         String seachCondition = (String) req.getSession().getAttribute("tjsseachCondition");
-        String seach = "";
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
-        seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc);
-        cfttjss.downloadFile(seach, rep);
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        cfttjss.downloadFile(seach, rep,aj.getAj());
     }
 }

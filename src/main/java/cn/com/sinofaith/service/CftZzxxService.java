@@ -1,7 +1,9 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftZcxxEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
+import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.CftZzxxDao;
 import cn.com.sinofaith.form.CftZzxxForm;
 import cn.com.sinofaith.page.Page;
@@ -28,6 +30,8 @@ import java.util.Map;
 public class CftZzxxService {
     @Autowired
     private CftZzxxDao cftzzd;
+    @Autowired
+    private AJDao ad;
 
     public Page queryForPage(int currentPage,int pageSize,String seach){
         Page page = new Page();
@@ -82,16 +86,16 @@ public class CftZzxxService {
 //        return page;
 //    }
 
-    public List<CftZzxxEntity> getAll(){
-        List<CftZzxxEntity> zzs = cftzzd.getAlla();
+    public List<CftZzxxEntity> getAll(long ajid){
+        List<CftZzxxEntity> zzs = cftzzd.getAlla(ajid);
         return zzs;
     }
 
-    public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
+    public void downloadFile(String seach, HttpServletResponse rep,String aj) throws Exception{
         List listZzxx = cftzzd.findBySQL("select s.xm,c.* from cft_zzxx c left join cft_person s on c.zh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String("财付通转账信息.xls".getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("财付通转账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -190,5 +194,38 @@ public class CftZzxxService {
                 }
             }
         return wb;
+    }
+
+    public String getSeach(String seachCode, String seachCondition, AjEntity aj){
+        String[] ajm = new String[]{};
+        StringBuffer ajid = new StringBuffer();
+        if(aj.getAj().contains(",")) {
+            ajm = aj.getAj().split(",");
+            for (int i = 0; i < ajm.length; i++) {
+                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                if (i != ajm.length - 1) {
+                    ajid.append(",");
+                }
+            }
+        }else{
+            ajid.append(aj.getId());
+        }
+        StringBuffer seach = new StringBuffer(" and aj_id in ("+ajid+") ");
+
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            if("xm".equals(seachCondition)){
+                seach.append(" and s."+seachCondition + " like "+"'"+seachCode+"'");
+            }else {
+                seach.append(" and c." + seachCondition + " like " + "'" + seachCode + "'");
+            }
+        }else{
+            seach.append(" and ( 1=1 ) ");
+        }
+        return seach.toString();
+    }
+
+    public void deleteByAj_id(long id){
+        cftzzd.deleteByAjid(id);
     }
 }

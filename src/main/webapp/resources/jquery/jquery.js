@@ -15,8 +15,8 @@ $(document).ready(function (){
 
     $(".sideMenu_left  span a").each(function (){
         $this=$(this);
-        if( $this[0]==String(window.location)){
-            $(this).siblings("a").removeClass("sidebar_left_addative").end().addClass('sidebar_left_addative');
+        if(String(window.location).lastIndexOf($this[0])==0){
+            $(this).siblings("a").removeClass("sidebar_left_addative").end().addClass("sidebar_left_addative");
         }
 
     })

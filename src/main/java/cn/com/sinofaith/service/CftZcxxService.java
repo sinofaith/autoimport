@@ -1,8 +1,12 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftZcxxEntity;
+import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.CftZcxxDao;
 import cn.com.sinofaith.page.Page;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -26,6 +30,8 @@ public class CftZcxxService {
 
     @Autowired
     private CftZcxxDao czd;
+    @Autowired
+    private AJDao ad;
 
 
     public Page queryForPage(int currentPage,int pageSize,String seach){
@@ -48,11 +54,11 @@ public class CftZcxxService {
         return page;
     }
 
-    public void downloadFIle(String seach, HttpServletResponse rep) throws Exception{
+    public void downloadFile(String seach, HttpServletResponse rep,String aj) throws Exception{
         List<CftZcxxEntity> listZcxx = czd.find("from CftZcxxEntity where 1=1"+seach+" order by id");
         HSSFWorkbook wb = createExcel(listZcxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String("财付通注册信息.xls".getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-Disposition","attachment;filename="+new String(("财付通注册信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -134,5 +140,35 @@ public class CftZcxxService {
             i++;
         }
         return wb;
+    }
+
+    public String getSeach(String seachCode, String seachCondition, AjEntity aj){
+        StringBuffer seach = new StringBuffer();
+        String[] ajm = new String[]{};
+        StringBuffer ajid = new StringBuffer();
+        if(aj.getAj().contains(",")) {
+            ajm = aj.getAj().split(",");
+            for (int i = 0; i < ajm.length; i++) {
+                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                if (i != ajm.length - 1) {
+                    ajid.append(",");
+                }
+            }
+        }else{
+            ajid.append(aj.getId());
+        }
+
+        if(seachCode!=null){
+            seachCode =seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            seach = seach.append(" and aj_id in ("+ajid.toString()+") and "+ seachCondition+" like "+"'"+ seachCode +"'");
+        }else{
+            seach = seach.append(" and aj_id in ("+ajid.toString()+") and ( 1=1 ) ");
+        }
+
+        return seach.toString();
+    }
+
+    public void deleteByAj_id(long ajid){
+        czd.deleteByAj(ajid);
     }
 }

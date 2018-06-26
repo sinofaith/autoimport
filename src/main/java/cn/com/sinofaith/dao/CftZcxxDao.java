@@ -51,5 +51,7 @@ public class CftZcxxDao extends BaseDao<CftZcxxEntity>{
     }
 
 
-
+    public void deleteByAj(long ajid){
+        delete("delete from CftZcxxEntity where aj_id = "+ajid);
+    }
 }

@@ -71,7 +71,6 @@ public class UploadService {
                 try {
                     file = new File(listPath.get(i));
                     fis = new FileInputStream(file);
-//                    String txtPath = listPath.get(i);
                     isr = new InputStreamReader(fis,"UTF-8");
                     br = new BufferedReader(isr);
                     String txtStr="";
@@ -86,18 +85,18 @@ public class UploadService {
                             zzxxs.add(CftZzxxEntity.listToObj(zzxxStr));
                         }
                     }
-                    br.close();
-                    isr.close();
                     fis.close();
+                    isr.close();
+                    br.close();
                     file.delete();
                 }catch (IOException e){
                     e.printStackTrace();
                 }finally {
                     if(br != null){
                         try {
-                            br.close();
-                            isr.close();
                             fis.close();
+                            isr.close();
+                            br.close();
                             file.delete();
                         }catch (IOException e){
                             e.printStackTrace();
@@ -115,19 +114,20 @@ public class UploadService {
         BufferedReader br = null;
         FileInputStream fis = null;
         InputStreamReader isr = null;
+        List<String> zcxxStr = null;
+        List<CftZcxxEntity> listZcxx = null;
+        CftPersonEntity cp = null;
+        int line = 0;
         if(listPath.size()>0){
             for(int i=0;i< listPath.size();i++){
                 try{
                      file = new File(listPath.get(i));
                      fis = new FileInputStream(file);
-//                    String txtPath = listPath.get(i);
                      isr = new InputStreamReader(fis,"UTF-8");
                     br = new BufferedReader(isr);
                     String txtString = "";
-                    List<String> zcxxStr = new ArrayList<String>();
-                    List<CftZcxxEntity> listZcxx = new ArrayList<CftZcxxEntity>();
-                    CftPersonEntity cp = new CftPersonEntity();
-                    int line = 0;
+                    listZcxx = new ArrayList<CftZcxxEntity>();
+                    line = 0;
                     while ((txtString = br.readLine()) != null){
                         if (txtString.startsWith("账户状态")) {
                             line++;

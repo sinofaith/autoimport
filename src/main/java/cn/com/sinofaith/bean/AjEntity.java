@@ -5,8 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "aj",schema = "",catalog = "")
 public class AjEntity {
-    private long id;
-    private String aj;
+    private long id = -1;
+    private String aj ="";
     private String inserttime;
 
     @Id

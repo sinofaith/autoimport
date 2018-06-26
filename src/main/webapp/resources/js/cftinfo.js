@@ -257,7 +257,7 @@ function zcxxSkip(){
         $("#num").val(totalPage);
         return;
     } else {
-        location="/SINOFAITH/cftzcxx/seach?pageNo="+onPage;
+        location="/SINOFAITH/cft/seach?pageNo="+onPage;
     }
 }
 
@@ -357,7 +357,7 @@ function matrix() {
     window.open("http://10.38.14.209.83:9000/matrix2.html#" + check_val);
 }
 
-function UpladFile() {
+function UploadCft() {
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
@@ -369,7 +369,7 @@ function UpladFile() {
         alertify.alert('请填写案件名称')
         return
     }
-    var FileController = "/SINOFAITH/uploadFolder"; // 接收上传文件的后台地址
+    var FileController = "/SINOFAITH/uploadCft"; // 接收上传文件的后台地址
     // FormData 对象
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
@@ -381,7 +381,7 @@ function UpladFile() {
     xhr.onload = function() {
         alertify.alert("导入完成!");
         $('#myModal').modal('hide');
-        setTimeout(function () {document.getElementById("seachDetail").submit()},2000);
+        setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
     };
     xhr.upload.addEventListener("progress", progressFunction, false);
     xhr.send(form);

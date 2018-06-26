@@ -72,7 +72,7 @@ a:hover{ transition: color 0.2s;}
 .dropdown-menu > li{font-size:12px;text-align: left; }
 .ddr .dropdown ul { text-align: center; width:175px; color: #fff; font-size:1.14em !important; font-size: 12px !important; height:200px !important;overflow-y: scroll;  }
  .dropdown_index .dropdown { text-align: center; width:175px !important; font-size:1.14em !important; }
-.dropdown_index .dropdown { text-align: center; width:175px !important;  font-size:1.14em !important;  }
+.dropdown_index .dropdown { text-align: center; width:300px !important;  font-size:1.14em !important;  }
 .dropdown_index .dropdown .dropdown-menu{top:25px;height: auto!important;}
 .bu02 .dropdown{ font-size: 1em !important; width: auto !important; text-align: center}
 .bu02 .dropdown-menu{ z-index: 5;}

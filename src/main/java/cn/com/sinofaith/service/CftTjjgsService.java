@@ -1,5 +1,6 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftTjjgEntity;
 import cn.com.sinofaith.bean.CftTjjgsEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
@@ -63,27 +64,28 @@ public class CftTjjgsService {
         return page;
     }
 
-    public String getSeach(String seachCondition,String seachCode,String orderby,String desc){
-        String seach = "";
-        if(seachCondition!=null){
+    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj){
+        StringBuffer seach = new StringBuffer(" and aj_id ="+aj.getId());
+        if(seachCode!=null){
+            seachCode=seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                 seach = " and c."+ seachCondition + " >= "+seachCode;
+                 seach.append(" and c."+ seachCondition + " >= "+seachCode);
             }else if("xm".equals(seachCondition)){
-                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
+                seach.append(" and s."+ seachCondition+" like "+"'"+ seachCode+"'");
             }else{
-                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
+                seach.append(" and c."+ seachCondition+" like "+"'"+ seachCode +"'");
             }
         }else{
-            seach = " and ( 1=1 ) ";
+            seach.append(" and ( 1=1 ) ");
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
-                seach = seach + " order by s." + orderby + desc + " nulls last";
+                seach.append(seach + " order by s." + orderby + desc + " nulls last");
             }else{
-                seach =seach + " order by c." +orderby + desc;
+                seach.append(seach + " order by c." +orderby + desc);
             }
         }
-        return seach;
+        return seach.toString();
     }
 //    public Page queryForPage(int currentPage,int pageSize,String seach){
 //        Page page = new Page();
@@ -106,13 +108,11 @@ public class CftTjjgsService {
 
     public int count(List<CftZzxxEntity> listZzxx,long aj){
         Map<String,CftTjjgsEntity> map = new HashMap();
-        CftTjjgsEntity tjjgs = new CftTjjgsEntity();
+        CftTjjgsEntity tjjgs = null;
         CftZzxxEntity zzxx = null;
-
         for(int i=0;i<listZzxx.size();i++){
             zzxx = listZzxx.get(i);
-            tjjgs.setAj_id(aj);
-            if(zzxx.getZh().equals(zzxx.getFsf())){
+            if(zzxx.getZh().equals(zzxx.getFsf()) && "出".equals(zzxx.getJdlx())){
                 if(map.containsKey(zzxx.getZh()+zzxx.getJsf())){
                     tjjgs = map.get(zzxx.getZh()+zzxx.getJsf());
                     tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
@@ -125,10 +125,11 @@ public class CftTjjgsService {
                     tjs1.setJyzcs(new BigDecimal(1));
                     tjs1.setCzzcs(new BigDecimal(1));
                     tjs1.setCzzje(zzxx.getJyje());
+                    tjs1.setAj_id(aj);
                     map.put(zzxx.getZh()+zzxx.getJsf(),tjs1);
                 }
             }
-            if(zzxx.getZh().equals(zzxx.getJsf())){
+            if(zzxx.getZh().equals(zzxx.getJsf()) && "入".equals(zzxx.getJdlx())){
                 if(map.containsKey(zzxx.getZh()+zzxx.getFsf())){
                     tjjgs = map.get(zzxx.getZh()+zzxx.getFsf());
                     tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
@@ -141,22 +142,23 @@ public class CftTjjgsService {
                     tjs2.setJyzcs(new BigDecimal(1));
                     tjs2.setJzzcs(new BigDecimal(1));
                     tjs2.setJzzje(zzxx.getJyje());
+                    tjs2.setAj_id(aj);
                     map.put(zzxx.getZh()+zzxx.getFsf(),tjs2);
                 }
             }
         }
         List<CftTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
         int i =0;
-        cfttjsd.delAll();
+        cfttjsd.delAll(aj);
         cfttjsd.save(listTjjgs);
         return i;
     }
 
-    public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
+    public void downloadFile(String seach, HttpServletResponse rep,String aj) throws Exception{
         List listTjjg = cfttjsd.findBySQL("select s.xm,c.* from cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listTjjg);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String("财付对手账户信息.xls".getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("财付对手账户信息("+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -244,5 +246,8 @@ public class CftTjjgsService {
             }
         }
         return wb;
+    }
+    public void deleteByAjid(long id){
+        cfttjsd.delAll(id);
     }
 }

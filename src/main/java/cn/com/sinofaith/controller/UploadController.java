@@ -36,14 +36,18 @@ public class UploadController {
     @Autowired
     private AjServices ajs;
 
-    @RequestMapping(value = "/uploadFolder",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/uploadCft",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj, HttpSession httpSession,HttpServletRequest request){
-        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/";
+        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+TimeFormatUtil.getDate("")+"/";
         String filePath ="";
         String fileName="";
         String result = "";
         File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if(!uploadPathd.exists()){
+            uploadPathd.mkdirs();
+        }
         for(int i=0;i<file.size();i++){
             fileName =TimeFormatUtil.getDate("") +file.get(i).getOriginalFilename();
              filePath = uploadPath + fileName;
@@ -67,15 +71,16 @@ public class UploadController {
         int b = us.insertZzxx(uploadPath,"trades.txt",aje.get(0).getId());
         if(a+b>0){
             us.deleteAll(uploadPath);
+            uploadPathd.delete();
         }
-        List<CftZzxxEntity> listZzxx = zzs.getAll();
+        List<CftZzxxEntity> listZzxx = zzs.getAll(aje.get(0).getId());
 
         int c = tjs.count(listZzxx,aje.get(0).getId());
         int d = tjss.count(listZzxx,aje.get(0).getId());
 
 
         if(a+b+c+d>0){
-            result = String.valueOf(a);
+            result = String.valueOf(a+b+c+d);
         }else {
             result = "";
         }

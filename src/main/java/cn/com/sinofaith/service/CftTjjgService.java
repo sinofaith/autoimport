@@ -1,5 +1,6 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftTjjgEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.dao.CftTjjgDao;
@@ -59,37 +60,37 @@ public class CftTjjgService {
         return page;
     }
 
-    public String getSeach(String seachCondition,String seachCode,String orderby,String desc){
-        String seach;
-        if(seachCondition!=null){
+    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj){
+        StringBuffer seach = new StringBuffer(" and aj_id ="+aj.getId());
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach = " and c."+ seachCondition + " >= "+seachCode;
+                seach.append( " and c."+ seachCondition + " >= "+seachCode);
             }else if("xm".equals(seachCondition)){
-                seach = " and s."+ seachCondition+" like "+"'"+ seachCode+"'";
+                seach.append(" and s."+ seachCondition+" like "+"'"+ seachCode+"'");
             }else{
-                seach = " and c."+ seachCondition+" like "+"'"+ seachCode +"'";
+                seach.append(" and c."+ seachCondition+" like "+"'"+ seachCode +"'");
             }
         }else{
-            seach = " and ( 1=1 ) ";
+            seach.append(" and ( 1=1 ) ");
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
-                seach = seach + " order by s." + orderby + desc +" nulls last";
+                seach.append(" order by s." + orderby + desc +" nulls last");
             }else{
-                seach =seach + " order by c." +orderby + desc;
+                seach.append(" order by c." +orderby + desc);
             }
         }
-        return seach;
+        return seach.toString();
     }
 
     public int count(List<CftZzxxEntity> listZzxx,long aj){
         List<CftTjjgEntity> listTjjg = null;
         Map<String,CftTjjgEntity> map = new HashMap();
+        CftTjjgEntity tjjg = null;
+        CftZzxxEntity zzxx = null;
         for(int i=0;i<listZzxx.size();i++){
-            CftTjjgEntity tjjg = new CftTjjgEntity();
-            CftZzxxEntity zzxx = null;
             zzxx = listZzxx.get(i);
-            tjjg.setAj_id(aj);
             if(map.containsKey(zzxx.getZh()+zzxx.getJylx())){
                 if("出".equals(zzxx.getJdlx())){
                     tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
@@ -111,6 +112,7 @@ public class CftTjjgService {
                     tj1.setJyzcs(new BigDecimal(1));
                     tj1.setCzzcs(new BigDecimal(1));
                     tj1.setCzzje(zzxx.getJyje());
+                    tj1.setAj_id(aj);
                     map.put(zzxx.getZh()+zzxx.getJylx(),tj1);
                 }
                 if("入".equals(zzxx.getJdlx())){
@@ -120,23 +122,24 @@ public class CftTjjgService {
                     tj2.setJyzcs(new BigDecimal(1));
                     tj2.setJzzcs(new BigDecimal(1));
                     tj2.setJzzje(zzxx.getJyje());
+                    tj2.setAj_id(aj);
                     map.put(zzxx.getZh()+zzxx.getJylx(),tj2);
                 }
             }
         }
         listTjjg = new ArrayList<>(map.values());
         int i = 0;
-        cfttjd.delAll();
+        cfttjd.delAll(aj);
         cfttjd.save(listTjjg);
 
         return i;
     }
 
-    public void downloadFile(String seach, HttpServletResponse rep) throws Exception{
+    public void downloadFile(String seach, HttpServletResponse rep,String aj) throws Exception{
         List listTjxx = cfttjd.findBySQL("select s.xm,c.* from cft_tjjg c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String("财付通账户信息.xls".getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("财付通账户信息("+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -221,5 +224,9 @@ public class CftTjjgService {
 
 
         return wb;
+    }
+
+    public void  deleteByAjid(long id){
+        cfttjd.delAll(id);
     }
 }

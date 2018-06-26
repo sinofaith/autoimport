@@ -1,5 +1,6 @@
 package cn.com.sinofaith.controller;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.CftZzxxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Created by Me. on 2018/5/22
@@ -36,23 +39,15 @@ public class CftZzxxController {
     public ModelAndView getCftzzxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("cft/cftzzxx");
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
-        String seach = "";
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
-        if(seachCondition!=null){
-            if("xm".equals(seachCondition)){
-                seach = " and s."+seachCondition + " like "+"'"+seachCode+"'";
-            }else {
-                seach = " and c." + seachCondition + " like " + "'" + seachCode + "'";
-            }
-        }else{
-            seach = " and ( 1=1 ) ";
-        }
-
-        Page page = cftzzs.queryForPage(Integer.valueOf(pageNo),10,seach);
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String seach = cftzzs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity());
+        Page page = cftzzs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("seachCode",seachCode);
         mav.addObject("seachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
+        mav.addObject("aj",aj);
         return mav;
     }
 
@@ -75,17 +70,9 @@ public class CftZzxxController {
     @RequestMapping(value = "/download")
     public void getZzxxDownload(HttpServletResponse rep,HttpServletRequest req) throws Exception{
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
-        String seach = "";
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
-        if(seachCondition!=null){
-            if("name".equals(seachCondition)){
-                seach = " and s."+seachCondition + " like "+"'"+seachCode+"'";
-            }else {
-                seach = " and c." + seachCondition + " like " + "'" + seachCode + "'";
-            }
-        }else{
-            seach = " and ( 1=1 ) ";
-        }
-        cftzzs.downloadFile(seach,rep);
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String seach = cftzzs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity());
+        cftzzs.downloadFile(seach,rep,aj.getAj());
     }
 }

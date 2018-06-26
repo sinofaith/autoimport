@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%--<%@include file="../template/sideBar_left.jsp" %>--%>
+<%@include file="../template/sideBar_left.jsp" %>
 <%@include file="../template/newmain.jsp" %>
 
 <%--详情模块脚本--%>
@@ -27,7 +27,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a href="/SINOFAITH/cftzcxx">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs" class="addactive">财付通对手账户信息</a></span>
+    <span class="tab_nav">  <a href="/SINOFAITH/cft">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs" class="addactive">财付通对手账户信息</a></span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -40,7 +40,7 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>财付通对手账户信息</strong>
+                                                <strong>财付通对手账户信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>

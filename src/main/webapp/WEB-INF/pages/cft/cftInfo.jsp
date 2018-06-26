@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%--<%@include file="../template/sideBar_left.jsp" %>--%>
+<%@include file="../template/sideBar_left.jsp" %>
 <%@include file="../template/newmain.jsp" %>
 
 <%--详情模块脚本--%>
@@ -10,8 +10,8 @@
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
-<script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
+<script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/cftinfo.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
@@ -24,7 +24,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/cftzcxx" class="addactive">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs">财付通对手账户信息</a></span>
+    <span class="tab_nav">  <a  href="/SINOFAITH/cft" class="addactive">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs">财付通对手账户信息</a></span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -37,7 +37,7 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>财付通注册信息</strong>
+                                                <strong>财付通注册信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
@@ -80,10 +80,10 @@
                                 <c:when test="${detailinfo!=null && detailinfo.size()!=0}">
                                     <div  class="page_nmber">
                                         <div class="mar_t_15">共${page.totalRecords}条记录 共<span id="totalPage">${page.totalPages}</span>页 当前第${page.pageNo}页<br></div>
-                                        <a href="/SINOFAITH/cftzcxx/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
+                                        <a href="/SINOFAITH/cft/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
                                         <c:choose>
                                             <c:when test="${page.pageNo!=1}">
-                                                <a href="/SINOFAITH/cftzcxx/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
+                                                <a href="/SINOFAITH/cft/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="previousPage" value="上一页" />
@@ -91,13 +91,13 @@
                                         </c:choose>
                                         <c:choose>
                                             <c:when test="${page.pageNo != page.totalPages}">
-                                                <a href="/SINOFAITH/cftzcxx/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
+                                                <a href="/SINOFAITH/cft/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="nextPage" value="下一页" />
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="/SINOFAITH/cftzcxx/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
+                                        <a href="/SINOFAITH/cft/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
                                         <input type="button" value="跳转" onclick="zcxxSkip()">
                                     </div>
@@ -111,7 +111,7 @@
                         <div class=" ">
 
                             <div>
-                                <form action="/SINOFAITH/cftzcxx/SeachCode" method="post">
+                                <form action="/SINOFAITH/cft/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
@@ -151,7 +151,7 @@
 
                 <button class="sideBar_r_button" data-toggle="modal"
                         data-target="#myModal">财付通数据导入</button>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cftzcxx/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cft/download'" >数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -193,9 +193,9 @@
                         type="file" name="file" webkitdirectory class="file" id="file" size="28"
                         onchange="document.getElementById('textfield').value=this.value;" />
                 <br>
-                    案件名:<input type="text" name = 'aj' id ='aj' class='txt'>
+                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' value="${aj.aj}">
                     <input type="submit" name="submit" class="btn" value="上传"
-                           onclick="UpladFile()" />
+                           onclick="UploadCft()" />
 
                 </div>
             </div>

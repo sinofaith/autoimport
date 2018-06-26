@@ -100,7 +100,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>mvc-dispatcher</servlet-name>
-    <url-pattern>/cftzcxx</url-pattern>
+    <url-pattern>/aj</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>mvc-dispatcher</servlet-name>
@@ -108,6 +108,6 @@
   </servlet-mapping>
 
   <welcome-file-list>
-    <welcome-file>cftzcxx</welcome-file>
+    <welcome-file>aj</welcome-file>
   </welcome-file-list>
 </web-app>

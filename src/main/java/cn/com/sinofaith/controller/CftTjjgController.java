@@ -1,5 +1,6 @@
 package cn.com.sinofaith.controller;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.CftTjjgService;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Created by Me. on 2018/5/23
@@ -69,14 +72,14 @@ public class CftTjjgController {
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
         String orderby = (String) req.getSession().getAttribute("orderby");
         String desc = (String) req.getSession().getAttribute("desc");
-        seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc);
-
-        Page page = cfttjs.queryForPage(Integer.valueOf(pageNo),10,seach);
-//        System.out.println(req.getSession().getServletContext().getRealPath("/")+"\n");
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc,aj!=null? aj : new AjEntity());
+        Page page = cfttjs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("tjseachCode",seachCode);
         mav.addObject("tjseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
+        mav.addObject("aj",aj);
         return mav;
     }
 
@@ -103,9 +106,10 @@ public class CftTjjgController {
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
         String orderby = (String) req.getSession().getAttribute("orderby");
         String desc = (String) req.getSession().getAttribute("desc");
-        seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc);
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc,aj!=null? aj : new AjEntity());
 
-        cfttjs.downloadFile(seach, rep);
+        cfttjs.downloadFile(seach, rep,aj.getAj());
     }
 
 }

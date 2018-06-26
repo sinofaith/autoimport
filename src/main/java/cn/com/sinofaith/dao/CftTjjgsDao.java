@@ -1,5 +1,6 @@
 package cn.com.sinofaith.dao;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftTjjgsEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.form.CftTjjgsForm;
@@ -42,8 +43,8 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
 //        return result;
 //    }
 
-    public void delAll(){
-        delete("delete from CftTjjgsEntity");
+    public void delAll(long ajid){
+        delete("delete from CftTjjgsEntity where aj_id="+ajid);
     }
 
     public void insert(CftTjjgsEntity tjs){
@@ -52,8 +53,8 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
 
     public void save(List<CftTjjgsEntity> tjjgs){
         Connection con = DBUtil.getConn();
-        String sql = "insert into cft_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime) " +
-                "values(?,?,?,?,?,?,?,?)";
+        String sql = "insert into cft_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id) " +
+                "values(?,?,?,?,?,?,?,?,?)";
         PreparedStatement st ;
         CftTjjgsEntity tjjg = new CftTjjgsEntity();
         try {
@@ -69,6 +70,7 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
                 st.setBigDecimal(6,tjjg.getCzzcs());
                 st.setBigDecimal(7,tjjg.getCzzje());
                 st.setString(8, TimeFormatUtil.getDate("/"));
+                st.setLong(9,tjjg.getAj_id());
                 st.addBatch();
                 if((i+1)%1000 == 0){
                     st.executeBatch();

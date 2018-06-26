@@ -52,7 +52,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
 
     public int insertZzxx(List<CftZzxxEntity> listZzxx,long aj){
         Map<String,CftZzxxEntity> map1 = new HashMap<>();
-        List<CftZzxxEntity> all  = getAll();
+        List<CftZzxxEntity> all  = getAlla(aj);
         for(int i=0;i<all.size();i++){
             CftZzxxEntity x = all.get(i);
             map1.put((x.getZh()+x.getJydh()+x.getJysm()+x.getShmc()+
@@ -88,7 +88,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
         int a = 1;
         PreparedStatement pstm ;
 
-        CftZzxxEntity zzxx = new CftZzxxEntity();
+        CftZzxxEntity zzxx = null;
         try{
             con.setAutoCommit(false);
             pstm =con.prepareStatement(sql);
@@ -130,8 +130,12 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
         return a;
     }
 
-    public List<CftZzxxEntity> getAlla(){
-        List<CftZzxxEntity> listZzxx = find("from CftZzxxEntity");
+    public List<CftZzxxEntity> getAlla(long ajid){
+        List<CftZzxxEntity> listZzxx = find("from CftZzxxEntity where aj_id ="+ajid);
         return listZzxx;
+    }
+
+    public void deleteByAjid(long ajid){
+        delete("delete from CftZzxxEntity where aj_id =" + ajid);
     }
 }

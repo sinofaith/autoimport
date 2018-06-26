@@ -1,5 +1,6 @@
 package cn.com.sinofaith.page;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public class Page {
     // 结果集
-    private List list;
+    private List list = new ArrayList();
 
     // 查询记录总数
     private int totalRecords;

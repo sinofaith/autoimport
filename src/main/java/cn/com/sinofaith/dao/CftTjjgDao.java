@@ -41,8 +41,8 @@ public class CftTjjgDao extends BaseDao<CftTjjgEntity>{
 //        return result;
 //    }
 
-    public void delAll(){
-        delete("delete from CftTjjgEntity");
+    public void delAll(long ajid){
+        delete("delete from CftTjjgEntity where aj_id="+ajid);
     }
 
     public int insert(CftTjjgEntity cft){
@@ -52,8 +52,8 @@ public class CftTjjgDao extends BaseDao<CftTjjgEntity>{
 
     public void save(List<CftTjjgEntity> tjjgs){
         Connection con = DBUtil.getConn();
-        String sql = "insert into cft_tjjg(jyzh,jylx,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime) " +
-                "values(?,?,?,?,?,?,?,?)";
+        String sql = "insert into cft_tjjg(jyzh,jylx,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id) " +
+                "values(?,?,?,?,?,?,?,?,?)";
         PreparedStatement st ;
         CftTjjgEntity tjjg = new CftTjjgEntity();
         try {
@@ -69,6 +69,7 @@ public class CftTjjgDao extends BaseDao<CftTjjgEntity>{
                 st.setBigDecimal(6,tjjg.getCzzcs());
                 st.setBigDecimal(7,tjjg.getCzzje());
                 st.setString(8, TimeFormatUtil.getDate("/"));
+                st.setLong(9,tjjg.getAj_id());
                 st.addBatch();
                 if((i+1)%1000 == 0){
                     st.executeBatch();
