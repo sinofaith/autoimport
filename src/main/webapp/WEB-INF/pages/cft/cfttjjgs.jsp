@@ -27,7 +27,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a href="/SINOFAITH/cft">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs" class="addactive">财付通对手账户信息</a></span>
+    <span class="tab_nav">  <a href="/SINOFAITH/cft">财付通注册信息</a><a href="/SINOFAITH/cftzzxx">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs" class="addactive">财付通对手账户信息</a><a href="/SINOFAITH/cftgtzh">财付通共同账户信息</a></span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">

@@ -20,9 +20,9 @@ import java.util.Map;
 @Repository
 public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
     public int getAllRowCount(String seachCode){
-        String sql = "select to_char(Count(1)) num from cft_tjjgs c left join " +
-                " cft_person s on c.jyzh = s.zh where 1=1 "+seachCode;
-        List list = findBySQL(sql);
+        StringBuffer sql = new StringBuffer("select to_char(Count(1)) num from cft_tjjgs c left join " +
+                " cft_person s on c.jyzh = s.zh where 1=1 ").append(seachCode);
+        List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
     }
@@ -33,6 +33,35 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
         sql.append("FROM (SELECT  s.xm,c.* ");
         sql.append("FROM  cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+seachCode+") a ");
+        sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
+
+        return findBySQL(sql.toString());
+    }
+
+    public int getGtCount(String seachCode,long ajid){
+        StringBuffer sql= new StringBuffer("select count(1) NUM from cft_tjjgs c right join (" +
+                "       select t.dfzh,count(1) as num from cft_tjjgs t " +
+                "       where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +ajid+
+                "       group by dfzh " +
+                "       having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
+                "       left join cft_person s on c.jyzh = s.zh" +
+                "       where a.num is not null").append(seachCode);
+        List list = findBySQL(sql.toString());
+        Map map = (Map) list.get(0);
+        return Integer.parseInt(String.valueOf(map.get("NUM")));
+    }
+
+    public List getDoPageGt(String seachCode,int offset,int length,long ajid){
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT * ");
+        sql.append("FROM (SELECT a.*, ROWNUM rn ");
+        sql.append("FROM (select s.xm,c.*,a.num from cft_tjjgs c right join (" +
+                "       select t.dfzh,count(1) as num from cft_tjjgs t " +
+                "       where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +ajid+
+                "       group by dfzh " +
+                "       having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
+                "       left join cft_person s on c.jyzh = s.zh" +
+                "       where a.num is not null "+seachCode+") a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
 
         return findBySQL(sql.toString());

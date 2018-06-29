@@ -27,7 +27,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/cft">财付通注册信息</a><a href="/SINOFAITH/cftzzxx" class="addactive">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs">财付通对手账户信息</a></span>
+    <span class="tab_nav">  <a  href="/SINOFAITH/cft">财付通注册信息</a><a href="/SINOFAITH/cftzzxx" class="addactive">财付通转账信息</a><a href="/SINOFAITH/cfttjjg">财付通账户信息</a><a href="/SINOFAITH/cfttjjgs">财付通对手账户信息</a><a href="/SINOFAITH/cftgtzh">财付通共同账户信息</a></span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -38,24 +38,25 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="12"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>财付通转账信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="6%">序号</td>
-                                        <td width="6%">姓名</td>
-                                        <td width="9%">微信账户</td>
-                                        <td width="6%">借贷类型</td>
-                                        <td width="10%">交易类型</td>
-                                        <td width="7%">交易金额(元)</td>
-                                        <td width="12%">交易时间</td>
-                                        <td width="10%">发送方</td>
-                                        <td width="7%">发送金额(元)</td>
-                                        <td width="10%">接收方</td>
-                                        <td width="7%">接收金额(元)</td>
+                                        <td width="5%">序号</td>
+                                        <td width="5%">姓名</td>
+                                        <td width="8%">微信账户</td>
+                                        <td width="7%">借贷类型</td>
+                                        <td width="8%">交易类型</td>
+                                        <td width="15%">商户名称</td>
+                                        <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=jyje">交易金额(元)</a></td>
+                                        <td width="15%">交易时间</td>
+                                        <td width="8%">发送方</td>
+                                        <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=fsje">发送金额(元)</a></td>
+                                        <td width="8%">接收方</td>
+                                        <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=jsje">接收金额(元)</a></td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -64,6 +65,7 @@
                                                 <td align="center">${item.zh}</td>
                                                 <td align="center">${item.jdlx}</td>
                                                 <td align="center">${item.jylx}</td>
+                                                <td align="center">${item.shmc}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.jssj eq null? item.jysj:item.jssj}</td>
                                                 <td align="center">${item.fsf}</td>
@@ -125,6 +127,7 @@
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="zh"<c:if test="${zzseachCondition=='zh'}">selected="selected"</c:if>>微信账户</option>
                                             <option value="xm"<c:if test="${zzseachCondition=='xm'}">selected="selected"</c:if>>姓名</option>
+                                            <option value="jylx"<c:if test="${zzseachCondition=='jylx'}">selected="selected"</c:if>>交易类型</option>
                                             <option value="fsf" <c:if test="${zzseachCondition=='fsf'}">selected="selected"</c:if> >发送方</option>
                                             <option value="jsf" <c:if test="${zzseachCondition=='jsf'}">selected="selected"</c:if> >接收方</option>
                                             <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>

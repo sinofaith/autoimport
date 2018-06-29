@@ -277,6 +277,21 @@ function tjjgSkip(){
     }
 }
 
+function gtzhSkip() {
+    var totalPage = $("#totalPage").text();
+    var onPage = $("#num").val();
+    if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
+        alert("请输入你要跳转的页数！");
+        return;
+    }
+    if(parseInt(onPage)>parseInt(totalPage)){
+        $("#num").val(totalPage);
+        return;
+    } else {
+        location="/SINOFAITH/cftgtzh/seach?pageNo="+onPage;
+    }
+}
+
 
 function tjjgsSkip(){
     var totalPage = $("#totalPage").text();
@@ -406,4 +421,8 @@ function progressFunction(evt) {
         }
     }
 
+}
+
+function getZzDetails(name,jylx) {
+    console.log(name,jylx)
 }

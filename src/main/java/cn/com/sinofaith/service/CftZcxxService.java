@@ -5,8 +5,6 @@ import cn.com.sinofaith.bean.CftZcxxEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.CftZcxxDao;
 import cn.com.sinofaith.page.Page;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.ArrayList;

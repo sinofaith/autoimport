@@ -19,7 +19,7 @@ header span a{ color: #333; color: #fff;}
 .form-group_search { font-size:0.75em !important;  }
 .tab_div{width: 100%; float: left; padding-left: 75px;}
 .tab_div span.tab_nav{ width: 98%; background: #c6c1c4; float: left; margin-left: 13px;padding-right: 0px;}
-.tab_div span a{ width: 25%; float: left; background: #c6c1c4;  padding: 6px; text-align: center; color:#fff}
+.tab_div span a{ width: 20%; float: left; background: #c6c1c4;  padding: 6px; text-align: center; color:#fff}
 .tab_div span a.addactive{ background: #09CEB8; color: #fff;  }
 .tab_div  ul{width: 100%; padding-top: 15px; padding-left: 0px; float: left}
 .sidebar_left_addative{ background: #636187;color: #fff !important;}

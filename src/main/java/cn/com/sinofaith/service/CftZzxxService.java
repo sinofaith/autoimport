@@ -49,6 +49,7 @@ public class CftZzxxService {
                 zzf.setZh((String)map.get("ZH"));
                 zzf.setJdlx((String)map.get("JDLX"));
                 zzf.setJylx((String)map.get("JYLX"));
+                zzf.setShmc((String)map.get("SHMC"));
                 zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
                 zzf.setJysj((String)map.get("JYSJ"));
                 zzf.setFsf((String)map.get("FSF"));
@@ -108,27 +109,29 @@ public class CftZzxxService {
         Sheet sheet = wb.createSheet("财付通转账信息");
             Row row = sheet.createRow(0);
             Cell cell = row.createCell(0);
-            cell.setCellValue("序号");
-            cell = row.createCell(1);
-            cell.setCellValue("姓名");
-            cell = row.createCell(2);
-            cell.setCellValue("微信账户");
-            cell = row.createCell(3);
-            cell.setCellValue("借贷类型");
-            cell = row.createCell(4);
-            cell.setCellValue("交易类型");
-            cell = row.createCell(5);
-            cell.setCellValue("交易金额(元)");
-            cell = row.createCell(6);
-            cell.setCellValue("交易时间");
-            cell = row.createCell(7);
-            cell.setCellValue("发送方");
-            cell = row.createCell(8);
-            cell.setCellValue("发送金额(元)");
-            cell = row.createCell(9);
-            cell.setCellValue("接收方");
-            cell = row.createCell(10);
-            cell.setCellValue("接收金额(元)");
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("姓名");
+                cell = row.createCell(2);
+                cell.setCellValue("微信账户");
+                cell = row.createCell(3);
+                cell.setCellValue("借贷类型");
+                cell = row.createCell(4);
+                cell.setCellValue("交易类型");
+                cell = row.createCell(5);
+                cell.setCellValue("商户名称");
+                cell = row.createCell(6);
+                cell.setCellValue("交易金额(元)");
+                cell = row.createCell(7);
+                cell.setCellValue("交易时间");
+                cell = row.createCell(8);
+                cell.setCellValue("发送方");
+                cell = row.createCell(9);
+                cell.setCellValue("发送金额(元)");
+                cell = row.createCell(10);
+                cell.setCellValue("接收方");
+                cell = row.createCell(11);
+                cell.setCellValue("接收金额(元)");
             for (int i = 0; i<listZzxx.size(); i++) {
                 if(i>=65535&& i%65535==0){
                     sheet = wb.createSheet("财付通转账信息("+b+")");
@@ -144,16 +147,18 @@ public class CftZzxxService {
                     cell = row.createCell(4);
                     cell.setCellValue("交易类型");
                     cell = row.createCell(5);
-                    cell.setCellValue("交易金额(元)");
+                    cell.setCellValue("商户名称");
                     cell = row.createCell(6);
-                    cell.setCellValue("交易时间");
+                    cell.setCellValue("交易金额(元)");
                     cell = row.createCell(7);
-                    cell.setCellValue("发送方");
+                    cell.setCellValue("交易时间");
                     cell = row.createCell(8);
-                    cell.setCellValue("发送金额(元)");
+                    cell.setCellValue("发送方");
                     cell = row.createCell(9);
-                    cell.setCellValue("接收方");
+                    cell.setCellValue("发送金额(元)");
                     cell = row.createCell(10);
+                    cell.setCellValue("接收方");
+                    cell = row.createCell(11);
                     cell.setCellValue("接收金额(元)");
                     b+=1;
                 }
@@ -172,23 +177,25 @@ public class CftZzxxService {
                 cell = row.createCell(4);
                 cell.setCellValue(map.get("JYLX").toString());
                 cell = row.createCell(5);
-                cell.setCellValue(map.get("JYJE").toString());
+                cell.setCellValue(map.get("SHMC").toString());
                 cell = row.createCell(6);
-                cell.setCellValue(map.get("JYSJ").toString());
+                cell.setCellValue(map.get("JYJE").toString());
                 cell = row.createCell(7);
+                cell.setCellValue(map.get("JYSJ").toString());
+                cell = row.createCell(8);
                 if (map.get("FSF") != null && map.get("FSF").toString().length() > 0) {
                     cell.setCellValue(map.get("FSF").toString());
                 }
-                cell = row.createCell(8);
-                cell.setCellValue(map.get("FSJE").toString());
                 cell = row.createCell(9);
+                cell.setCellValue(map.get("FSJE").toString());
+                cell = row.createCell(10);
                 if (map.get("JSF") != null && map.get("JSF").toString().length() > 0) {
                     cell.setCellValue(map.get("JSF").toString());
                 }
-                cell = row.createCell(10);
+                cell = row.createCell(11);
                 cell.setCellValue(map.get("JSJE").toString());
                 if(i%65536==0){
-                    for (int a = 0; a < 12; a++) {
+                    for (int a = 0; a < 13; a++) {
                         sheet.autoSizeColumn(a);
                     }
                 }
@@ -196,7 +203,7 @@ public class CftZzxxService {
         return wb;
     }
 
-    public String getSeach(String seachCode, String seachCondition, AjEntity aj){
+    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj){
         String[] ajm = new String[]{};
         StringBuffer ajid = new StringBuffer();
         if(aj.getAj().contains(",")) {
@@ -221,6 +228,9 @@ public class CftZzxxService {
             }
         }else{
             seach.append(" and ( 1=1 ) ");
+        }
+        if(orderby != null){
+            seach .append(" order by "+orderby).append(desc);
         }
         return seach.toString();
     }

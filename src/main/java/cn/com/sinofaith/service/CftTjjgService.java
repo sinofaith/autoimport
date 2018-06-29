@@ -139,7 +139,7 @@ public class CftTjjgService {
         List listTjxx = cfttjd.findBySQL("select s.xm,c.* from cft_tjjg c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("财付通账户信息("+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("财付通账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();

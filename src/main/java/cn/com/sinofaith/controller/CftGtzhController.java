@@ -17,32 +17,29 @@ import javax.servlet.http.HttpSession;
 
 import static java.lang.Integer.parseInt;
 
-/**
- * Created by Me. on 2018/5/23
- */
 @Controller
-@RequestMapping("/cfttjjgs")
-public class CftTjjgsController {
+@RequestMapping("/cftgtzh")
+public class CftGtzhController {
     @Autowired
     private CftTjjgsService cfttjss;
 
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
-        ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
+        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
         //查询条件
-        httpSession.removeAttribute("tjsseachCondition");
+        httpSession.removeAttribute("gtseachCondition");
         //查询内容
-        httpSession.removeAttribute("tjsseachCode");
-        httpSession.removeAttribute("sorderby");
-        httpSession.removeAttribute("sdesc");
+        httpSession.removeAttribute("gtseachCode");
+        httpSession.removeAttribute("gorderby");
+        httpSession.removeAttribute("gdesc");
         return mav;
     }
 
     @RequestMapping(value = "/order")
-    public ModelAndView order(@RequestParam("orderby") String orderby,HttpSession ses){
-        ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
-        String desc = (String) ses.getAttribute("sdesc");
-        String lastOrder = (String) ses.getAttribute("slastOrder");
+    public ModelAndView order(@RequestParam("orderby") String orderby, HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
+        String desc = (String) ses.getAttribute("gdesc");
+        String lastOrder = (String) ses.getAttribute("glastOrder");
         if(orderby.equals(lastOrder)){
             if(desc==null||" ,c.id ".equals(desc)){
                 desc = " desc";
@@ -53,24 +50,25 @@ public class CftTjjgsController {
             desc = " desc ";
         }
 
-        ses.setAttribute("sorderby",orderby);
-        ses.setAttribute("slastOrder",orderby);
-        ses.setAttribute("sdesc",desc);
+        ses.setAttribute("gorderby",orderby);
+        ses.setAttribute("glastOrder",orderby);
+        ses.setAttribute("gdesc",desc);
         return mav;
     }
+
     @RequestMapping(value = "/seach")
     public ModelAndView getcfttj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
-        ModelAndView mav = new ModelAndView("cft/cfttjjgs");
-        String seachCondition = (String) req.getSession().getAttribute("tjsseachCondition");
-        String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
-        String orderby = (String) req.getSession().getAttribute("sorderby");
-        String desc = (String) req.getSession().getAttribute("sdesc");
+        ModelAndView mav = new ModelAndView("cft/cftgtzh");
+        String seachCondition = (String) req.getSession().getAttribute("gtseachCondition");
+        String seachCode = (String) req.getSession().getAttribute("gtseachCode");
+        String orderby = (String) req.getSession().getAttribute("gorderby");
+        String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        Page page = cfttjss.queryForPage(parseInt(pageNo),10,seach);
+        Page page = cfttjss.queryForPageGt(parseInt(pageNo),10,seach,aj.getId());
         mav.addObject("page",page);
-        mav.addObject("tjsseachCode",seachCode);
-        mav.addObject("tjsseachCondition",seachCondition);
+        mav.addObject("gtseachCode",seachCode);
+        mav.addObject("gtseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
         mav.addObject("ajm",aj);
         return mav;
@@ -79,29 +77,27 @@ public class CftTjjgsController {
     @RequestMapping(value = "/SeachCode" , method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView seachCode(String seachCode,String seachCondition,HttpSession httpSession){
-        ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
+        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
         if(seachCode == null || seachCode.isEmpty()){
-            httpSession.removeAttribute("tjsseachCode");
-            httpSession.removeAttribute("tjsseachCondition");
+            httpSession.removeAttribute("gtseachCode");
+            httpSession.removeAttribute("gtseachCondition");
             return mav;
         }
 
         String seach = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-        httpSession.setAttribute("tjsseachCondition",seachCondition);
-        httpSession.setAttribute("tjsseachCode",seachCode);
+        httpSession.setAttribute("gtseachCondition",seachCondition);
+        httpSession.setAttribute("gtseachCode",seachCode);
         return mav;
     }
 
     @RequestMapping("/download")
     public void getTjjgDownload(HttpServletResponse rep, HttpServletRequest req) throws Exception{
-        String seachCondition = (String) req.getSession().getAttribute("tjsseachCondition");
-        String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
-        String orderby = (String) req.getSession().getAttribute("sorderby");
-        String desc = (String) req.getSession().getAttribute("sdesc");
+        String seachCondition = (String) req.getSession().getAttribute("gtseachCondition");
+        String seachCode = (String) req.getSession().getAttribute("gtseachCode");
+        String orderby = (String) req.getSession().getAttribute("gorderby");
+        String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        cfttjss.downloadFile(seach, rep,aj.getAj(),"对手",req);
+        cfttjss.downloadFile(seach, rep,aj.getAj(),"共同",req);
     }
-
-
 }

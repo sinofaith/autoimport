@@ -16,7 +16,7 @@ import java.util.Properties;
 public class DBUtil {
     private static Connection con = null;
 
-    private static Properties props;
+    private static Properties props=null;
 
     public static Connection getConn() {
         InputStream in = DBUtil.class.getResourceAsStream("/jdbc.properties");

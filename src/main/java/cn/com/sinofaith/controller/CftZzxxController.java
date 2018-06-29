@@ -41,7 +41,9 @@ public class CftZzxxController {
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity());
+        String orderby = (String) req.getSession().getAttribute("zorderby");
+        String desc = (String) req.getSession().getAttribute("zdesc");
+        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
         Page page = cftzzs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("seachCode",seachCode);
@@ -72,7 +74,30 @@ public class CftZzxxController {
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity());
+        String orderby = (String) req.getSession().getAttribute("orderby");
+        String desc = (String) req.getSession().getAttribute("desc");
+        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
         cftzzs.downloadFile(seach,rep,aj.getAj());
+    }
+
+    @RequestMapping(value = "/order")
+    public ModelAndView order(@RequestParam("orderby") String orderby,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/cftzzxx/seach?pageNo=1");
+        String desc = (String) ses.getAttribute("zdesc");
+        String lastOrder = (String) ses.getAttribute("zlastOrder");
+        if(orderby.equals(lastOrder)){
+            if(desc==null||" ,c.id ".equals(desc)){
+                desc = " desc ";
+            }else{
+                desc = " ,c.id ";
+            }
+        }else{
+            desc = " desc ";
+        }
+
+        ses.setAttribute("zorderby",orderby);
+        ses.setAttribute("zlastOrder",orderby);
+        ses.setAttribute("zdesc",desc);
+        return mav;
     }
 }

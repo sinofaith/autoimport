@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -46,8 +47,13 @@ public class AjController {
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("ajseachCode");
         if(seachCode!=null){
-            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            seach = " and "+ seachCondition+" like "+"'"+ seachCode +"'";
+            String temp  = seachCode.replace("，","")
+                    .replace(" ","")
+                    .replace(" ","")
+                    .replace("\t","");
+            temp = Arrays.asList(temp.split("\r\n")).toString().replace("[","").
+                    replace(", ","%' or "+seachCondition+ " like '%").replace("]","");
+            seach = " and "+ seachCondition+" like "+"'%"+ temp +"%'";
         }else{
             seach = " and ( 1=1 ) ";
         }

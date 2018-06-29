@@ -12,6 +12,7 @@ public class CftTjjgsForm {
     private BigDecimal jzzje = new BigDecimal(0);
     private BigDecimal czzcs = new BigDecimal(0);
     private BigDecimal czzje = new BigDecimal(0);
+    private BigDecimal count = new BigDecimal(0);
 
     public long getId() {
         return id;
@@ -83,5 +84,13 @@ public class CftTjjgsForm {
 
     public void setCzzje(BigDecimal czzje) {
         this.czzje = czzje;
+    }
+
+    public BigDecimal getCount() {
+        return count;
+    }
+
+    public void setCount(BigDecimal count) {
+        this.count = count;
     }
 }
