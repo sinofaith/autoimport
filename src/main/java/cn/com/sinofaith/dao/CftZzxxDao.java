@@ -138,4 +138,11 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
     public void deleteByAjid(long ajid){
         delete("delete from CftZzxxEntity where aj_id =" + ajid);
     }
+
+    public List findByZhlx(String jyzh,String jylx,String type,String ajid){
+        String sql = "select p.xm,c.* from cft_zzxx c left join cft_person p on c.zh = p.zh where c.zh='"+jyzh+
+                "' and c."+type+"='"+jylx+"' and c.aj_id in("+ajid+")";
+        List list = findBySQL(sql);
+        return list;
+    }
 }

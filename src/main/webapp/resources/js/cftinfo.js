@@ -423,6 +423,51 @@ function progressFunction(evt) {
 
 }
 
-function getZzDetails(name,jylx) {
-    console.log(name,jylx)
+
+
+function getZzDetails(obj) {
+    var jyzh = $(obj).closest("tr").find("td:eq(2)").text()
+    var jylx = $(obj).closest("tr").find("td:eq(3)").text()
+    var tbody = window.document.getElementById("result")
+    // var title = window.document.getElementById("title")
+    var url = "/SINOFAITH/cftzzxx/getDetails"
+
+    $.ajax({
+        type:"post",
+        dataType:"json",
+        url:url,
+        data:{
+            jyzh:jyzh,
+            jylx:jylx
+        },
+        success:function (msg) {
+            var str = ""
+            for (i in msg){
+                str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"+
+                    "<td width=\"4%\">"+msg[i].id+"</td>"+
+                    "<td width=\"5%\">"+msg[i].name+"</td>"+
+                    "<td width=\"15%\">"+msg[i].zh+"</td>"+
+                    "<td width=\"6%\">"+msg[i].jdlx+"</td>"+
+                    "<td width=\"10%\">"+msg[i].jylx+"</td>"+
+                    "<td width=\"14%\">"+msg[i].shmc+"</td>"+
+                    "<td width=\"8%\">"+msg[i].jyje+"</td>"+
+                    "<td width=\"13%\">"+msg[i].jysj+"</td>"+
+                    "<td width=\"15%\">"+msg[i].fsf+"</td>"+
+                    "<td width=\"8%\">"+msg[i].fsje+"</td>"+
+                    "<td width=\"15%\">"+msg[i].jsf+"</td>"+
+                    "<td width=\"8%\">"+msg[i].jsje+"</td>"+
+                    "</tr>";
+            }
+            tbody.innerHTML = str
+            $("#jylx").attr("value",jylx);
+            $("#zh").attr("value",jyzh);
+            // title.innerText ="<"+jyzh+","+jylx+">"
+        }
+    })
+}
+
+function downDetailJylx(){
+  var zh = $("#zh").val();
+  var jylx =$("#jylx").val();
+  location="/SINOFAITH/cftzzxx/downDetailJylx?zh="+zh+"&jylx="+jylx
 }

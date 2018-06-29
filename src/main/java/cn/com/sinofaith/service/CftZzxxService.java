@@ -7,6 +7,9 @@ import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.CftZzxxDao;
 import cn.com.sinofaith.form.CftZzxxForm;
 import cn.com.sinofaith.page.Page;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -20,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -237,5 +241,43 @@ public class CftZzxxService {
 
     public void deleteByAj_id(long id){
         cftzzd.deleteByAjid(id);
+    }
+
+    public String getByJyzhlx(String jyzh,String jylx,String type,AjEntity aj){
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String[] ajm = new String[]{};
+        StringBuffer ajid = new StringBuffer();
+        if(aj.getAj().contains(",")) {
+            ajm = aj.getAj().split(",");
+            for (int i = 0; i < ajm.length; i++) {
+                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                if (i != ajm.length - 1) {
+                    ajid.append(",");
+                }
+            }
+        }else{
+            ajid.append(aj.getId());
+        }
+        List zzList = cftzzd.findByZhlx(jyzh,jylx,type,ajid.toString());
+        List<CftZzxxForm> zzFs = new ArrayList<>();
+        CftZzxxForm zzf = null;
+        for(int i=0;i<zzList.size();i++){
+            Map map = (Map)zzList.get(i);
+            zzf = new CftZzxxForm();
+            zzf.setId(i+1);
+            zzf.setName((String)map.get("XM"));
+            zzf.setZh((String)map.get("ZH"));
+            zzf.setJdlx((String)map.get("JDLX"));
+            zzf.setJylx((String)map.get("JYLX"));
+            zzf.setShmc((String)map.get("SHMC"));
+            zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
+            zzf.setJysj((String)map.get("JYSJ"));
+            zzf.setFsf((String)map.get("FSF"));
+            zzf.setFsje(new BigDecimal(map.get("FSJE").toString()));
+            zzf.setJsf((String)map.get("JSF"));
+            zzf.setJsje(new BigDecimal(map.get("JSJE").toString()));
+            zzFs.add(zzf);
+        }
+        return gson.toJson(zzFs);
     }
 }

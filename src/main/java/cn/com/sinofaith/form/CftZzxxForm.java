@@ -15,9 +15,9 @@ public class CftZzxxForm {
     private String yhlx;
     private String jysm;
     private String shmc;
-    private String fsf;
+    private String fsf="";
     private BigDecimal fsje;
-    private String jsf;
+    private String jsf="";
     private String jssj;
     private BigDecimal jsje;
     private String inserttime;
@@ -26,8 +26,7 @@ public class CftZzxxForm {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(long id) { this.id = id;
     }
 
     public String getName() {
@@ -35,6 +34,9 @@ public class CftZzxxForm {
     }
 
     public void setName(String name) {
+        if(name==null){
+            name="";
+        }
         this.name = name;
     }
 
@@ -123,6 +125,9 @@ public class CftZzxxForm {
     }
 
     public void setFsf(String fsf) {
+        if(fsf==null){
+            fsf="";
+        }
         this.fsf = fsf;
     }
 
@@ -139,6 +144,9 @@ public class CftZzxxForm {
     }
 
     public void setJsf(String jsf) {
+        if(jsf==null){
+            jsf="";
+        }
         this.jsf = jsf;
     }
 

@@ -100,4 +100,18 @@ public class CftZzxxController {
         ses.setAttribute("zdesc",desc);
         return mav;
     }
+
+    @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getDetails(@RequestParam("jyzh") String jyzh,@RequestParam("jylx")String jylx,HttpServletRequest req){
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        return cftzzs.getByJyzhlx(jyzh,jylx,"jylx",aj!=null ? aj:new AjEntity());
+    }
+
+    @RequestMapping(value = "/downDetailJylx")
+    public void downDetailJylx(@RequestParam("zh") String zh,@RequestParam("jylx") String jylx,HttpServletRequest req,HttpServletResponse rep)throws Exception{
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String seach = " and c.zh ='"+zh+"' and jylx='"+jylx+"'";
+        cftzzs.downloadFile(seach,rep, aj.getAj());
+    }
 }

@@ -68,7 +68,7 @@
                                                 <td align="center">${item.czzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">
-                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzDetails(${item.name},${item.jylx})">详情</button>
+                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzDetails(this)">详情</button>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -188,29 +188,35 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">转账详情</h4>
+                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
             </div>
-            <div class="modal-body" style=" overflow-y:auto; overflow-x:auto; width:100%; height:400px;">
-                <br>
+            <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
-                    <tr align="center">
-                        <td width="3%">序号</td>
-                        <td width="4%">姓名</td>
-                        <td width="8%">微信账户</td>
-                        <td width="7%">借贷类型</td>
-                        <td width="8%">交易类型</td>
-                        <td width="15%">商户名称</td>
-                        <td width="8%">交易金额(元)</td>
-                        <td width="15%">交易时间</td>
-                        <td width="8%">发送方</td>
-                        <td width="8%">发送金额(元)</td>
-                        <td width="8%">接收方</td>
-                        <td width="8%">接收金额(元)</td>
-                    </tr>
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                        <tr align="center">
+                            <td width="4%">序号</td>
+                            <td width="5%">姓名</td>
+                            <td width="15%">微信账户</td>
+                            <td width="6%">借贷类型</td>
+                            <td width="10%">交易类型</td>
+                            <td width="14%">商户名称</td>
+                            <td width="8%">交易金额/元</td>
+                            <td width="13%">交易时间</td>
+                            <td width="15%">发送方</td>
+                            <td width="8%">发送金额/元</td>
+                            <td width="15%">接收方</td>
+                            <td width="8%">接收金额/元</td>
+                        </tr>
+                        <input name="label" id="zh" hidden="hidden" value="">
+                        <input name="label" id="jylx" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;">
+
+                    </tbody>
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" >导出</button>
+                <button type="button" class="btn btn-default" onclick="downDetailJylx()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
