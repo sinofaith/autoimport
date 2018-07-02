@@ -2275,7 +2275,7 @@ th {
   padding-left: 2px;
   padding-right: 2px;
   line-height: 1.42857143;
-  vertical-align: top;
+  vertical-align: middle;
 
 }
 .table > thead > tr > th {
@@ -2527,6 +2527,7 @@ input[type="checkbox"] {
   margin: 4px 0 0;
   margin-top: 1px \9;
   line-height: normal;
+  vertical-align: text-bottom;
 }
 input[type="file"] {
   display: block;

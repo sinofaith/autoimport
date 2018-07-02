@@ -54,6 +54,7 @@
                                         <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzje">进账总金额(元)</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=czzcs">出账总次数</a></td>
                                         <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=czzje">出账总金额(元)</a></td>
+                                        <td width="7%">详情</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -66,6 +67,9 @@
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.czzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center">
+                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzDetails(this)">详情</button>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
@@ -173,5 +177,50 @@
             </div>
         </div>
     </ul>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="4%">序号</td>
+                        <td width="5%">姓名</td>
+                        <td width="15%">微信账户</td>
+                        <td width="6%">借贷类型</td>
+                        <td width="10%">交易类型</td>
+                        <td width="14%">商户名称</td>
+                        <td width="8%">交易金额(元)</td>
+                        <td width="13%">交易时间</td>
+                        <td width="15%">发送方</td>
+                        <td width="8%">发送金额(元)</td>
+                        <td width="15%">接收方</td>
+                        <td width="8%">接收金额(元)</td>
+                    </tr>
+                    <input name="label" id="zh" hidden="hidden" value="">
+                    <input name="label" id="jylx" hidden="hidden" value="">
+                    <input name="label" id="allRow" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF()">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="downDetailJylx()">导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
 </div>
 <%@include file="../template/newfooter.jsp" %>

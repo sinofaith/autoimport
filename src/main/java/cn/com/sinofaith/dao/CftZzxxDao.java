@@ -139,10 +139,14 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
         delete("delete from CftZzxxEntity where aj_id =" + ajid);
     }
 
-    public List findByZhlx(String jyzh,String jylx,String type,String ajid){
-        String sql = "select p.xm,c.* from cft_zzxx c left join cft_person p on c.zh = p.zh where c.zh='"+jyzh+
-                "' and c."+type+"='"+jylx+"' and c.aj_id in("+ajid+")";
-        List list = findBySQL(sql);
-        return list;
-    }
+//    public List findByZhlx(String jyzh,String jylx,String type,String ajid){
+//        StringBuffer sql = new StringBuffer();
+//            sql.append("SELECT * ");
+//            sql.append("FROM (SELECT a.*, ROWNUM rn ");
+//            sql.append("FROM (SELECT  s.xm,c.* ");
+//            sql.append("FROM  cft_zzxx c left join cft_person s on c.zh=s.zh where 1=1 "+seachCode+") a ");
+//            sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
+//        List list = findBySQL(sql.toString());
+//        return list;
+//    }
 }

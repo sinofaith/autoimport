@@ -103,15 +103,25 @@ public class CftZzxxController {
 
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String getDetails(@RequestParam("jyzh") String jyzh,@RequestParam("jylx")String jylx,HttpServletRequest req){
+    public String getDetails(@RequestParam("jyzh") String jyzh,@RequestParam("jylx")String jylx,
+                             @RequestParam("type") String type,@RequestParam("page")int page, HttpServletRequest req){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        return cftzzs.getByJyzhlx(jyzh,jylx,"jylx",aj!=null ? aj:new AjEntity());
+        return cftzzs.getByJyzhlx(jyzh,jylx,type,aj!=null ? aj:new AjEntity(),page);
     }
 
     @RequestMapping(value = "/downDetailJylx")
-    public void downDetailJylx(@RequestParam("zh") String zh,@RequestParam("jylx") String jylx,HttpServletRequest req,HttpServletResponse rep)throws Exception{
+    public void downDetailJylx(@RequestParam("zh") String zh,@RequestParam("jylx") String jylx,
+                               @RequestParam("type") String type, HttpServletRequest req,HttpServletResponse rep)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = " and c.zh ='"+zh+"' and jylx='"+jylx+"'";
+        String seach ="";
+        if("jylx".equals(type)) {
+            seach = " and c.zh ='" + zh + "' and c.jylx='" + jylx + "' order by c.jysj desc";
+        }else{
+            seach = " and c.zh ='"+zh+"' and ( c.fsf ='"+jylx+"' or c.jsf='"+jylx+"'"+") order by c.jysj desc";
+            if(zh.equals(jylx)){
+                seach = "and c.fsf = c.jsf and c.zh='"+zh+"' order by c.jysj desc";
+            }
+        }
         cftzzs.downloadFile(seach,rep, aj.getAj());
     }
 }

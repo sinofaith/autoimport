@@ -200,17 +200,18 @@
                             <td width="6%">借贷类型</td>
                             <td width="10%">交易类型</td>
                             <td width="14%">商户名称</td>
-                            <td width="8%">交易金额/元</td>
+                            <td width="8%">交易金额(元)</td>
                             <td width="13%">交易时间</td>
                             <td width="15%">发送方</td>
-                            <td width="8%">发送金额/元</td>
+                            <td width="8%">发送金额(元)</td>
                             <td width="15%">接收方</td>
-                            <td width="8%">接收金额/元</td>
+                            <td width="8%">接收金额(元)</td>
                         </tr>
                         <input name="label" id="zh" hidden="hidden" value="">
                         <input name="label" id="jylx" hidden="hidden" value="">
+                        <input name="label" id="allRow" hidden="hidden" value="">
                     </thead>
-                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;">
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF()">
 
                     </tbody>
                 </table>

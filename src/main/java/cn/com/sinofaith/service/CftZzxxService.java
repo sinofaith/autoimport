@@ -243,7 +243,8 @@ public class CftZzxxService {
         cftzzd.deleteByAjid(id);
     }
 
-    public String getByJyzhlx(String jyzh,String jylx,String type,AjEntity aj){
+    public String getByJyzhlx(String zh,String jylx,String type,AjEntity aj,int page){
+        Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
         String[] ajm = new String[]{};
         StringBuffer ajid = new StringBuffer();
@@ -258,13 +259,28 @@ public class CftZzxxService {
         }else{
             ajid.append(aj.getId());
         }
-        List zzList = cftzzd.findByZhlx(jyzh,jylx,type,ajid.toString());
+
+        String seach ="";
+        if("jylx".equals(type)){
+            seach=" and c.zh='"+zh+"' and c.jylx='"+jylx+"' order by c.jysj desc";
+        }else{
+            seach=" and c.zh='"+zh+"' and (c.fsf='"+jylx+"' or c.jsf='"+jylx+"') order by c.jysj desc";
+            if(zh.equals(jylx)){
+                seach = "and c.fsf = c.jsf and c.zh='"+zh+"' order by c.jysj desc";
+            }
+        }
+
+        int allRow = cftzzd.getAllRowCount(seach);
+        List zzList = cftzzd.getDoPage(seach,page,100);
+
+
+
         List<CftZzxxForm> zzFs = new ArrayList<>();
         CftZzxxForm zzf = null;
         for(int i=0;i<zzList.size();i++){
             Map map = (Map)zzList.get(i);
             zzf = new CftZzxxForm();
-            zzf.setId(i+1);
+            zzf.setId(i+1+(page-1)*100);
             zzf.setName((String)map.get("XM"));
             zzf.setZh((String)map.get("ZH"));
             zzf.setJdlx((String)map.get("JDLX"));
@@ -278,6 +294,10 @@ public class CftZzxxService {
             zzf.setJsje(new BigDecimal(map.get("JSJE").toString()));
             zzFs.add(zzf);
         }
-        return gson.toJson(zzFs);
+        pages.setTotalRecords(allRow);
+        pages.setPageSize(100);
+        pages.setPageNo(page);
+        pages.setList(zzFs);
+        return gson.toJson(pages);
     }
 }

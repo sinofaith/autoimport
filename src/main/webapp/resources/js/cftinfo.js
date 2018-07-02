@@ -423,51 +423,134 @@ function progressFunction(evt) {
 
 }
 
+var page = 1
 
+function scrollF() {
+    var tbody = window.document.getElementById("result")
+    var allRow = $("#allRow").val()
+    var scrollT = parseFloat(tbody.scrollTop) + parseFloat(tbody.clientHeight)
+    var scrollH = parseFloat(tbody.scrollHeight)
+
+    if( 1>=scrollH-scrollT && tbody.scrollTop!=0 && tbody.childNodes.length<allRow){
+        var jyzh = $("#zh").val();
+        var jylx =$("#jylx").val();
+        window.page = page += 1
+
+        var type = ""
+        if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+            type="dfzh"
+        }else{
+            type="jylx"
+        }
+        var url = "/SINOFAITH/cftzzxx/getDetails"
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:url,
+            data:{
+                jyzh:jyzh,
+                jylx:jylx,
+                type:type,
+                page:parseInt(window.page)
+            },
+            success:function (msg) {
+                var data = msg.list
+                var str = ""
+                for (i in data){
+                    str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"+
+                        "<td width=\"4%\">"+data[i].id+"</td>"+
+                        "<td width=\"5%\">"+data[i].name+"</td>"+
+                        "<td width=\"15%\">"+data[i].zh+"</td>"+
+                        "<td width=\"6%\">"+data[i].jdlx+"</td>"+
+                        "<td width=\"10%\">"+data[i].jylx+"</td>"+
+                        "<td width=\"14%\">"+data[i].shmc+"</td>"+
+                        "<td width=\"8%\">"+data[i].jyje+"</td>"+
+                        "<td width=\"13%\">"+data[i].jysj+"</td>"+
+                        "<td width=\"15%\">"+data[i].fsf+"</td>"+
+                        "<td width=\"8%\">"+data[i].fsje+"</td>"+
+                        "<td width=\"15%\">"+data[i].jsf+"</td>"+
+                        "<td width=\"8%\">"+data[i].jsje+"</td>"+
+                        "</tr>";
+                }
+                $("#result").append(str)
+                $("#zh").attr("value",jyzh);
+                $("#jylx").attr("value",jylx);
+                $("#allRow").attr("value",msg.totalRecords)
+                // title.innerText ="<"+jyzh+","+jylx+">"
+            }
+        })
+    }
+}
 
 function getZzDetails(obj) {
     var jyzh = $(obj).closest("tr").find("td:eq(2)").text()
     var jylx = $(obj).closest("tr").find("td:eq(3)").text()
+    window.page = 1
+    var type = ""
+    if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+        type="dfzh"
+    }else{
+        type="jylx"
+    }
     var tbody = window.document.getElementById("result")
-    // var title = window.document.getElementById("title")
     var url = "/SINOFAITH/cftzzxx/getDetails"
-
     $.ajax({
         type:"post",
         dataType:"json",
         url:url,
         data:{
             jyzh:jyzh,
-            jylx:jylx
+            jylx:jylx,
+            type:type,
+            page:parseInt(page)
         },
         success:function (msg) {
+            var data = msg.list
             var str = ""
-            for (i in msg){
-                str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"+
-                    "<td width=\"4%\">"+msg[i].id+"</td>"+
-                    "<td width=\"5%\">"+msg[i].name+"</td>"+
-                    "<td width=\"15%\">"+msg[i].zh+"</td>"+
-                    "<td width=\"6%\">"+msg[i].jdlx+"</td>"+
-                    "<td width=\"10%\">"+msg[i].jylx+"</td>"+
-                    "<td width=\"14%\">"+msg[i].shmc+"</td>"+
-                    "<td width=\"8%\">"+msg[i].jyje+"</td>"+
-                    "<td width=\"13%\">"+msg[i].jysj+"</td>"+
-                    "<td width=\"15%\">"+msg[i].fsf+"</td>"+
-                    "<td width=\"8%\">"+msg[i].fsje+"</td>"+
-                    "<td width=\"15%\">"+msg[i].jsf+"</td>"+
-                    "<td width=\"8%\">"+msg[i].jsje+"</td>"+
+            for (i in data){
+                if(i%2==0){
+                    str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
+                }else{
+                    str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
+                }
+                    str+="<td width=\"4%\">"+data[i].id+"</td>"+
+                    "<td width=\"5%\">"+data[i].name+"</td>"+
+                    "<td width=\"15%\">"+data[i].zh+"</td>"+
+                    "<td width=\"6%\">"+data[i].jdlx+"</td>"+
+                    "<td width=\"10%\">"+data[i].jylx+"</td>"+
+                    "<td width=\"14%\">"+data[i].shmc+"</td>"+
+                    "<td width=\"8%\">"+data[i].jyje+"</td>"+
+                    "<td width=\"13%\">"+data[i].jysj+"</td>"+
+                    "<td width=\"15%\">"+data[i].fsf+"</td>"+
+                    "<td width=\"8%\">"+data[i].fsje+"</td>"+
+                    "<td width=\"15%\">"+data[i].jsf+"</td>"+
+                    "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
             tbody.innerHTML = str
-            $("#jylx").attr("value",jylx);
             $("#zh").attr("value",jyzh);
+            $("#jylx").attr("value",jylx);
+            $("#allRow").attr("value",msg.totalRecords)
             // title.innerText ="<"+jyzh+","+jylx+">"
         }
     })
 }
+$(function () { $('#myModal').on('hide.bs.modal', function () {
+    var tbody = window.document.getElementById("result")
+    tbody.innerHTML=""
+})
+});
 
 function downDetailJylx(){
   var zh = $("#zh").val();
   var jylx =$("#jylx").val();
-  location="/SINOFAITH/cftzzxx/downDetailJylx?zh="+zh+"&jylx="+jylx
+  var type = ""
+    var tbody = window.document.getElementById("result")
+
+    if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+        type="dfzh"
+    }else{
+        type="jylx"
+    }
+  location="/SINOFAITH/cftzzxx/downDetailJylx?zh="+zh+"&jylx="+jylx+"&type="+type
 }
