@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@include file="../template/sideBar_left.jsp" %>
 <%@include file="../template/newmain.jsp" %>
 
@@ -52,11 +53,11 @@
                                         <td width="8%">交易类型</td>
                                         <td width="15%">商户名称</td>
                                         <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=jyje">交易金额(元)</a></td>
-                                        <td width="15%">交易时间</td>
+                                        <td width="13%">交易时间</td>
                                         <td width="8%">发送方</td>
-                                        <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=fsje">发送金额(元)</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=fsje">发送金额(元)</a></td>
                                         <td width="8%">接收方</td>
-                                        <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=jsje">接收金额(元)</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=jsje">接收金额(元)</a></td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -202,13 +203,18 @@
                             type="file" name="file" webkitdirectory class="file" id="file" size="28"
                             onchange="document.getElementById('textfield').value=this.value;" />
                     <br>
-                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' value="${ajm}">
+                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
                     <input type="submit" name="submit" class="btn" value="上传"
-                           onclick="UpladFile()" />
+                           onclick="UploadCft()" />
+                    <br>
+                    <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">
+                    <label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>
 
                 </div>
             </div>
             <div class="modal-footer">
+                <input type="submit" name="submit" class="btn" value="上传"
+                       onclick="UploadCft()" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
             </div>

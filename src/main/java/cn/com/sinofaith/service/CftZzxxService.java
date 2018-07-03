@@ -91,8 +91,13 @@ public class CftZzxxService {
 //        return page;
 //    }
 
-    public List<CftZzxxEntity> getAll(long ajid){
-        List<CftZzxxEntity> zzs = cftzzd.getAlla(ajid);
+    public List<CftZzxxEntity> getAll(long ajid,long filter){
+        String seach = "";
+        if(filter==1){
+            seach=" and shmc not like '%红包%'";
+        }
+        List<CftZzxxEntity> zzs = cftzzd.getAlla(ajid,seach);
+
         return zzs;
     }
 
@@ -262,13 +267,17 @@ public class CftZzxxService {
 
         String seach ="";
         if("jylx".equals(type)){
-            seach=" and c.zh='"+zh+"' and c.jylx='"+jylx+"' order by c.jysj desc";
+            seach=" and c.zh='"+zh+"' and c.jylx='"+jylx+"' ";
         }else{
-            seach=" and c.zh='"+zh+"' and (c.fsf='"+jylx+"' or c.jsf='"+jylx+"') order by c.jysj desc";
+            seach=" and c.zh='"+zh+"' and (c.fsf='"+jylx+"' or c.jsf='"+jylx+"') ";
             if(zh.equals(jylx)){
-                seach = "and c.fsf = c.jsf and c.zh='"+zh+"' order by c.jysj desc";
+                seach = "and c.fsf = c.jsf and c.zh='"+zh+"' ";
             }
         }
+        if(aj.getFlg()==1){
+            seach +=" and c.shmc not like'%红包%'";
+        }
+        seach += "and aj_id in("+ajid.toString()+") order by c.jysj desc";
 
         int allRow = cftzzd.getAllRowCount(seach);
         List zzList = cftzzd.getDoPage(seach,page,100);

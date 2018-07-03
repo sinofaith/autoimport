@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class AjEntity {
     private long id = -1;
     private String aj ="";
+    private long flg=0;
     private String inserttime;
 
     @Id
@@ -28,6 +29,10 @@ public class AjEntity {
         this.aj = aj;
     }
     @Basic
+    @Column(name="flg",nullable = false,length = 10)
+    public void setFlg(long flg){this.flg = flg;}
+    public long getFlg(){return flg;}
+    @Basic
     @Column(name = "inserttime",length = 19)
     public String getInserttime() {
         return inserttime;
@@ -46,9 +51,10 @@ public class AjEntity {
                 '}';
     }
 
-    public AjEntity(long id, String aj, String inserttime) {
+    public AjEntity(long id, String aj,long flg, String inserttime) {
         this.id = id;
         this.aj = aj;
+        this.flg = flg;
         this.inserttime = inserttime;
     }
 

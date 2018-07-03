@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@include file="../template/sideBar_left.jsp" %>
 <%@include file="../template/newmain.jsp" %>
 
@@ -148,9 +149,9 @@
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-
-                <button class="sideBar_r_button" data-toggle="modal"
-                        data-target="#myModal">财付通数据导入</button>
+                           <c:if test="${!fn:contains(aj.aj, ',')}">
+                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">财付通数据导入</button>
+                           </c:if>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cft/download'" >数据导出</button>
                        </span>
                                     </div>
@@ -193,13 +194,15 @@
                         type="file" name="file" webkitdirectory class="file" id="file" size="28"
                         onchange="document.getElementById('textfield').value=this.value;" />
                 <br>
-                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' value="${aj.aj}">
-                    <input type="submit" name="submit" class="btn" value="上传"
-                           onclick="UploadCft()" />
-
+                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
+                    <br>
+                    <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">
+                    <label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>
                 </div>
             </div>
             <div class="modal-footer">
+                <input type="submit" name="submit" class="btn" value="上传"
+                       onclick="UploadCft()" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
             </div>

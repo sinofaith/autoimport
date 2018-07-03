@@ -30,8 +30,8 @@ public class CftGtzhController {
         httpSession.removeAttribute("gtseachCondition");
         //查询内容
         httpSession.removeAttribute("gtseachCode");
-        httpSession.removeAttribute("gorderby");
-        httpSession.removeAttribute("gdesc");
+        httpSession.setAttribute("gorderby"," dfzh ");
+        httpSession.setAttribute("gdesc"," asc ");
         return mav;
     }
 
@@ -65,7 +65,7 @@ public class CftGtzhController {
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        Page page = cfttjss.queryForPageGt(parseInt(pageNo),10,seach,aj.getId());
+        Page page = cfttjss.queryForPageGt(parseInt(pageNo),10,seach,aj!=null ? aj.getId():-1);
         mav.addObject("page",page);
         mav.addObject("gtseachCode",seachCode);
         mav.addObject("gtseachCondition",seachCondition);

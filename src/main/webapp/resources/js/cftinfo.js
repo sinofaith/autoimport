@@ -8,6 +8,7 @@ $(document).ready(function(){
         $(this).attr('src', '/AMD/resources/img/loadFile.png');
     });
 
+
 // //文件数量限制
 //     var filesCount=2000;
 // //文件夹大小限制 2000M
@@ -380,6 +381,10 @@ function UploadCft() {
         return;
     }
     var aj = $("#aj").val();
+    var checkBox = 0
+    if($("#checkbox1").is(':checked')){
+        checkBox=1
+    }
     if(aj==''){
         alertify.alert('请填写案件名称')
         return
@@ -388,6 +393,7 @@ function UploadCft() {
     // FormData 对象
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
+    form.append("checkBox",checkBox);
     for(i=0;i<fileObj.files.length;i++){
         form.append("file", fileObj.files[i]); // 文件对象
     }
@@ -424,61 +430,64 @@ function progressFunction(evt) {
 }
 
 var page = 1
-
+var is_running = false
 function scrollF() {
-    var tbody = window.document.getElementById("result")
-    var allRow = $("#allRow").val()
-    var scrollT = parseFloat(tbody.scrollTop) + parseFloat(tbody.clientHeight)
-    var scrollH = parseFloat(tbody.scrollHeight)
+        var tbody = window.document.getElementById("result")
+        var allRow = $("#allRow").val()
+        var scrollT = parseFloat(tbody.scrollTop) + parseFloat(tbody.clientHeight)
+        var scrollH = parseFloat(tbody.scrollHeight)
+        if (1 >= scrollH - scrollT && tbody.scrollTop != 0 && tbody.childNodes.length < allRow) {
+            if(is_running==false) {
+                is_running = true
+                var jyzh = $("#zh").val();
+                var jylx = $("#jylx").val();
+                window.page = page += 1
 
-    if( 1>=scrollH-scrollT && tbody.scrollTop!=0 && tbody.childNodes.length<allRow){
-        var jyzh = $("#zh").val();
-        var jylx =$("#jylx").val();
-        window.page = page += 1
-
-        var type = ""
-        if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
-            type="dfzh"
-        }else{
-            type="jylx"
-        }
-        var url = "/SINOFAITH/cftzzxx/getDetails"
-        $.ajax({
-            type:"post",
-            dataType:"json",
-            url:url,
-            data:{
-                jyzh:jyzh,
-                jylx:jylx,
-                type:type,
-                page:parseInt(window.page)
-            },
-            success:function (msg) {
-                var data = msg.list
-                var str = ""
-                for (i in data){
-                    str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"+
-                        "<td width=\"4%\">"+data[i].id+"</td>"+
-                        "<td width=\"5%\">"+data[i].name+"</td>"+
-                        "<td width=\"15%\">"+data[i].zh+"</td>"+
-                        "<td width=\"6%\">"+data[i].jdlx+"</td>"+
-                        "<td width=\"10%\">"+data[i].jylx+"</td>"+
-                        "<td width=\"14%\">"+data[i].shmc+"</td>"+
-                        "<td width=\"8%\">"+data[i].jyje+"</td>"+
-                        "<td width=\"13%\">"+data[i].jysj+"</td>"+
-                        "<td width=\"15%\">"+data[i].fsf+"</td>"+
-                        "<td width=\"8%\">"+data[i].fsje+"</td>"+
-                        "<td width=\"15%\">"+data[i].jsf+"</td>"+
-                        "<td width=\"8%\">"+data[i].jsje+"</td>"+
-                        "</tr>";
+                var type = ""
+                if (/^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)) {
+                    type = "dfzh"
+                } else {
+                    type = "jylx"
                 }
-                $("#result").append(str)
-                $("#zh").attr("value",jyzh);
-                $("#jylx").attr("value",jylx);
-                $("#allRow").attr("value",msg.totalRecords)
-                // title.innerText ="<"+jyzh+","+jylx+">"
-            }
-        })
+                var url = "/SINOFAITH/cftzzxx/getDetails"
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: url,
+                    data: {
+                        jyzh: jyzh,
+                        jylx: jylx,
+                        type: type,
+                        page: parseInt(window.page)
+                    },
+                    success: function (msg) {
+                        var data = msg.list
+                        var str = ""
+                        for (i in data) {
+                            str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>" +
+                                "<td width=\"4%\">" + data[i].id + "</td>" +
+                                "<td width=\"5%\">" + data[i].name + "</td>" +
+                                "<td width=\"15%\">" + data[i].zh + "</td>" +
+                                "<td width=\"6%\">" + data[i].jdlx + "</td>" +
+                                "<td width=\"10%\">" + data[i].jylx + "</td>" +
+                                "<td width=\"14%\">" + data[i].shmc + "</td>" +
+                                "<td width=\"8%\">" + data[i].jyje + "</td>" +
+                                "<td width=\"13%\">" + data[i].jysj + "</td>" +
+                                "<td width=\"15%\">" + data[i].fsf + "</td>" +
+                                "<td width=\"8%\">" + data[i].fsje + "</td>" +
+                                "<td width=\"15%\">" + data[i].jsf + "</td>" +
+                                "<td width=\"8%\">" + data[i].jsje + "</td>" +
+                                "</tr>";
+                        }
+                        $("#result").append(str)
+                        $("#zh").attr("value", jyzh);
+                        $("#jylx").attr("value", jylx);
+                        $("#allRow").attr("value", msg.totalRecords)
+                    // title.innerText ="<"+jyzh+","+jylx+">"
+                    is_running = false
+                }
+            })
+        }
     }
 }
 
@@ -536,8 +545,11 @@ function getZzDetails(obj) {
     })
 }
 $(function () { $('#myModal').on('hide.bs.modal', function () {
+
     var tbody = window.document.getElementById("result")
-    tbody.innerHTML=""
+    if(tbody!=null) {
+        tbody.innerHTML = ""
+    }
 })
 });
 
@@ -553,4 +565,25 @@ function downDetailJylx(){
         type="jylx"
     }
   location="/SINOFAITH/cftzzxx/downDetailJylx?zh="+zh+"&jylx="+jylx+"&type="+type
+}
+
+function ajCount(aj) {
+    var flg = 0
+
+    if($("#checkbox1").is(":checked")){
+        flg=1
+    }
+    var url = "/SINOFAITH/aj/ajCount?ajm="+aj+"&flg="+flg
+    alertify.alert("数据分析中,请等待跳转...");
+    $.get(url,function (data) {
+        if(data==200){
+            alertify.alert("分析完成..正在跳转..");
+            setTimeout(function (){document.getElementById("seachDetail").submit()},1500);
+        }
+        if(data == 303){
+            alertify.alert("数据分析中..请等待跳转")
+            setTimeout(function () {location="/SINOFAITH/cfttjjg/seach?pageNo=1"},10000);
+        }
+    })
+
 }

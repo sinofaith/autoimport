@@ -45,6 +45,7 @@
                                     <tr align="center">
                                         <td width="6%">序号</td>
                                         <td width="7%">案件名</td>
+                                        <td width="7%">是否去除红包记录</td>
                                         <td width="12%">插入时间</td>
                                         <td width="6%">操作</td>
                                     </tr>
@@ -55,6 +56,7 @@
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${item.id} &nbsp;<c:if test="${!fn:contains(item.aj, ',')}"><input type="checkbox" name="ajval" value="${item.aj}"></c:if></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}">${item.aj}</a></td>
+                                            <td align="center">${item.flg==1 ? "是":"否"}</td>
                                             <td align="center">${item.inserttime}</td>
                                             <td align="center">
                                                 <a href="/SINOFAITH/aj/delete?aj=${item.aj}" class="delete">删除</a>

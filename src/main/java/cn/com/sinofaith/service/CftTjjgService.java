@@ -76,7 +76,7 @@ public class CftTjjgService {
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
-                seach.append(" order by s." + orderby + desc +" nulls last");
+                seach.append(" order by s." + orderby + desc +"  nulls last ,c.id");
             }else{
                 seach.append(" order by c." +orderby + desc);
             }

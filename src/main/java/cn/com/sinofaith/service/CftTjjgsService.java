@@ -116,9 +116,9 @@ public class CftTjjgsService {
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
-                seach.append(seach + " order by s." + orderby + desc + " nulls last");
+                seach.append(seach + " order by s." + orderby + desc + " nulls last ,c.jyzcs desc,c.dfzh");
             }else if("num".equals(orderby)){
-              seach.append(seach +" order by a." + orderby + desc + ",a.dfzh  nulls last");
+              seach.append(seach +" order by a." + orderby + desc + " nulls last ,c.jyzcs desc,c.dfzh");
             } else{
                 seach.append(seach + " order by c." +orderby + desc);
             }

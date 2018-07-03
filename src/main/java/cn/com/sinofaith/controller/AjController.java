@@ -98,7 +98,7 @@ public class AjController {
         if(ajs.findByName(aj).size()>0){
             result = "303";
         }else {
-            ajs.save(new AjEntity(0,aj, TimeFormatUtil.getDate("/")));
+            ajs.save(new AjEntity(0,aj, 0,TimeFormatUtil.getDate("/")));
             result = "200";
         }
         return result;
@@ -122,13 +122,30 @@ public class AjController {
     public String ajsCount(@RequestParam("ajm") String ajm){
         List<AjEntity> ajlist = ajs.findByName(ajm);
         if(ajlist.size()<1) {
-            ajs.save(new AjEntity(0, ajm, TimeFormatUtil.getDate("/")));
+            ajs.save(new AjEntity(0, ajm,0, TimeFormatUtil.getDate("/")));
             AjEntity aje = ajs.findByName(ajm).get(0);
             List<CftZzxxEntity> listZz = ajs.getCftList(aje);
             tjs.count(listZz, aje.getId());
             tjss.count(listZz, aje.getId());
             return "200";
         }else{
+            return "303";
+        }
+    }
+    @RequestMapping(value = "/ajCount",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String ajCount(@RequestParam("ajm") String ajm,@RequestParam("flg") int flg,HttpServletRequest req){
+        AjEntity aje = ajs.findByName(ajm).get(0);
+        if(aje.getFlg()!=flg) {
+            aje.setFlg(flg);
+            ajs.updateAj(aje);
+            aje = ajs.findByName(ajm).get(0);
+            req.getSession().setAttribute("aj",aje);
+            List<CftZzxxEntity> listZz = ajs.getCftList(aje);
+            tjs.count(listZz, aje.getId());
+            tjss.count(listZz, aje.getId());
+            return "200";
+        }else {
             return "303";
         }
     }

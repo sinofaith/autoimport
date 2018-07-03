@@ -2,6 +2,7 @@ package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.service.AjServices;
 import cn.com.sinofaith.service.CftTjjgsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ import static java.lang.Integer.parseInt;
 public class CftTjjgsController {
     @Autowired
     private CftTjjgsService cfttjss;
+    @Autowired
+    private AjServices ajs;
 
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
@@ -72,7 +75,9 @@ public class CftTjjgsController {
         mav.addObject("tjsseachCode",seachCode);
         mav.addObject("tjsseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
-        mav.addObject("ajm",aj);
+        if(ajs.findByName(aj!=null ? aj.getAj():"").size()>0) {
+            mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
+        }
         return mav;
     }
 

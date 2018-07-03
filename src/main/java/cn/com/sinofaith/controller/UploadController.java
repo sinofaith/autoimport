@@ -38,7 +38,8 @@ public class UploadController {
 
     @RequestMapping(value = "/uploadCft",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj, HttpSession httpSession,HttpServletRequest request){
+    public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+                                   @RequestParam("checkBox") long checkBox,HttpServletRequest request){
         String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+TimeFormatUtil.getDate("")+"/";
         String filePath ="";
         String fileName="";
@@ -61,22 +62,23 @@ public class UploadController {
                 e.printStackTrace();
             }
         }
-        List<AjEntity> aje = ajs.findByName(aj);
-        if(aje.size()==0){
-            ajs.save(new AjEntity(0L,aj,TimeFormatUtil.getDate("/")));
-            aje = ajs.findByName(aj);
+        AjEntity aje = ajs.findByName(aj).get(0);
+        if(aje.getFlg() != checkBox){
+            aje.setFlg(checkBox);
+            ajs.updateAj(aje);
+            aje = ajs.findByName(aj).get(0);
         }
 
-        int a = us.insertZcxx(uploadPath,"info.txt",aje.get(0).getId());
-        int b = us.insertZzxx(uploadPath,"trades.txt",aje.get(0).getId());
+        int a = us.insertZcxx(uploadPath,"info.txt",aje.getId());
+        int b = us.insertZzxx(uploadPath,"trades.txt",aje.getId());
         if(a+b>0){
             us.deleteAll(uploadPath);
             uploadPathd.delete();
         }
-        List<CftZzxxEntity> listZzxx = zzs.getAll(aje.get(0).getId());
+        List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(),checkBox);
 
-        int c = tjs.count(listZzxx,aje.get(0).getId());
-        int d = tjss.count(listZzxx,aje.get(0).getId());
+        int c = tjs.count(listZzxx,aje.getId());
+        int d = tjss.count(listZzxx,aje.getId());
 
 
         if(a+b+c+d>0){
@@ -84,7 +86,7 @@ public class UploadController {
         }else {
             result = "";
         }
-
+        request.getSession().setAttribute("aj",aje);
         return result;
     }
 }

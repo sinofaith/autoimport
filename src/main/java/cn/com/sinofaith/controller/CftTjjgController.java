@@ -3,6 +3,7 @@ package cn.com.sinofaith.controller;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.service.AjServices;
 import cn.com.sinofaith.service.CftTjjgService;
 import cn.com.sinofaith.service.CftTjjgsService;
 import cn.com.sinofaith.service.CftZzxxService;
@@ -33,6 +34,8 @@ public class CftTjjgController {
     private CftTjjgsService tjss;
     @Autowired
     private CftZzxxService zzs;
+    @Autowired
+    private AjServices ajs;
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
         ModelAndView mav = new ModelAndView("redirect:/cfttjjg/seach?pageNo=1");
@@ -79,7 +82,9 @@ public class CftTjjgController {
         mav.addObject("tjseachCode",seachCode);
         mav.addObject("tjseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
-        mav.addObject("aj",aj);
+        if(ajs.findByName(aj!=null ? aj.getAj():"").size()>0) {
+            mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
+        }
         return mav;
     }
 
