@@ -46,14 +46,14 @@
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="5%">序号</td>
+                                        <td width="4%">序号</td>
                                         <td width="5%">姓名</td>
-                                        <td width="8%">微信账户</td>
-                                        <td width="7%">借贷类型</td>
+                                        <td width="7%">微信账户</td>
+                                        <td width="6%">借贷类型</td>
                                         <td width="8%">交易类型</td>
-                                        <td width="15%">商户名称</td>
-                                        <td width="7%"><a href="/SINOFAITH/cftzzxx/order?orderby=jyje">交易金额(元)</a></td>
-                                        <td width="13%">交易时间</td>
+                                        <td width="14%">商户名称</td>
+                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=jyje">交易金额(元)</a></td>
+                                        <td width="15%">交易时间</td>
                                         <td width="8%">发送方</td>
                                         <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=fsje">发送金额(元)</a></td>
                                         <td width="8%">接收方</td>

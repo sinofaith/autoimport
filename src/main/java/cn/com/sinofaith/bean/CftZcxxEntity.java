@@ -2,6 +2,7 @@ package cn.com.sinofaith.bean;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Me. on 2018/5/21
@@ -160,19 +161,20 @@ public class CftZcxxEntity {
                 '}';
     }
 
-    public static CftZcxxEntity listToObj(List<String> s){
+    public static CftZcxxEntity listToObj(List<String> s, Map map){
         CftZcxxEntity a = new CftZcxxEntity();
         try{
-            a.setZhzt(s.get(0));
-            a.setZh(s.get(1));
-            a.setXm(s.get(2));
-            a.setZcsj(s.get(3));
-            a.setSfzhm(s.get(4).replace("[","").replace("]",""));
-            a.setBdsj(s.get(5));
-            a.setKhh(s.get(6));
-            a.setYhzh(s.get(7).replace("[","").replace("]",""));
+            a.setZhzt(s.get((int)map.get("zhzt")));
+            a.setZh(s.get((int)map.get("zh")));
+            a.setXm(s.get((int)map.get("xm")));
+            a.setZcsj(s.get((int)map.get("zcsj")));
+            a.setSfzhm(s.get((int)map.get("sfzhm")).replace("[","").replace("]",""));
+            a.setBdsj(s.get((int)map.get("bdsj")));
+            a.setKhh(s.get((int)map.get("khh")));
+            a.setYhzh(s.get((int)map.get("yhzh")).replace("[","").replace("]",""));
         }catch (Exception e){
             e.getMessage();
+            System.out.println(e.getMessage());
         }
         return a;
     }

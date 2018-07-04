@@ -29,6 +29,8 @@ public class CftZcxxService {
     private CftZcxxDao czd;
     @Autowired
     private AJDao ad;
+    @Autowired
+    private CftZzxxService cfts;
 
 
     public Page queryForPage(int currentPage,int pageSize,String seach){
@@ -141,19 +143,7 @@ public class CftZcxxService {
 
     public String getSeach(String seachCode, String seachCondition, AjEntity aj){
         StringBuffer seach = new StringBuffer();
-        String[] ajm = new String[]{};
-        StringBuffer ajid = new StringBuffer();
-        if(aj.getAj().contains(",")) {
-            ajm = aj.getAj().split(",");
-            for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
-                if (i != ajm.length - 1) {
-                    ajid.append(",");
-                }
-            }
-        }else{
-            ajid.append(aj.getId());
-        }
+        String ajid = cfts.getAjidByAjm(aj);
 
         if(seachCode!=null){
             seachCode =seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");

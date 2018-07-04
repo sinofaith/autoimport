@@ -1,6 +1,7 @@
 package cn.com.sinofaith.form;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public class CftZzxxForm {
     private long id;
@@ -172,5 +173,21 @@ public class CftZzxxForm {
 
     public void setInserttime(String inserttime) {
         this.inserttime = inserttime;
+    }
+
+    public  CftZzxxForm mapToForm(Map map){
+        CftZzxxForm zzf = new CftZzxxForm();
+        zzf.setName((String)map.get("XM"));
+        zzf.setZh((String)map.get("ZH"));
+        zzf.setJdlx((String)map.get("JDLX"));
+        zzf.setJylx((String)map.get("JYLX"));
+        zzf.setShmc((String)map.get("SHMC"));
+        zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
+        zzf.setJysj((String)map.get("JYSJ"));
+        zzf.setFsf((String)map.get("FSF"));
+        zzf.setFsje(new BigDecimal(map.get("FSJE").toString()));
+        zzf.setJsf((String)map.get("JSF"));
+        zzf.setJsje(new BigDecimal(map.get("JSJE").toString()));
+        return zzf;
     }
 }

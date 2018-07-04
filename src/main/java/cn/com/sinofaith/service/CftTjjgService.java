@@ -6,7 +6,7 @@ import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.dao.CftTjjgDao;
 import cn.com.sinofaith.form.CftTjjgForm;
 import cn.com.sinofaith.page.Page;
-import cn.com.sinofaith.util.TimeFormatUtil;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,23 +32,16 @@ public class CftTjjgService {
         //总记录数
         int allRow = cfttjd.getAllRowCount(seach);
         List<CftTjjgForm> cfttjs = new ArrayList<CftTjjgForm>();
-        CftTjjgForm cftForm = null;
+        CftTjjgForm tjjgForm = new CftTjjgForm();;
         List cftList = cfttjd.getDoPage(seach,currentPage,pageSize);
         if(allRow != 0) {
             int xh = 1;
             for(int i=0;i<cftList.size();i++){
                 Map map = (Map)cftList.get(i);
-                cftForm = new CftTjjgForm();
-                cftForm.setId(xh+(currentPage-1)*pageSize);
-                cftForm.setName((String) map.get("XM"));
-                cftForm.setJyzh((String) map.get("JYZH"));
-                cftForm.setJylx((String) map.get("JYLX"));
-                cftForm.setJyzcs( new BigDecimal(map.get("JYZCS").toString()));
-                cftForm.setJzzcs( new BigDecimal(map.get("JZZCS").toString()));
-                cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
-                cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
-                cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
-                cfttjs.add(cftForm);
+                tjjgForm = tjjgForm.mapToForm(map);
+                tjjgForm.setId(xh+(currentPage-1)*pageSize);
+
+                cfttjs.add(tjjgForm);
                 xh++;
             }
 

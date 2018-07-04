@@ -82,7 +82,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
 
         listZzxx = new ArrayList<>(map.values());
 
-        Connection  con = DBUtil.getConn();
+        Connection  con = DBUtil.getConnection();
         String sql  = "insert into cft_zzxx(zh,jydh,jdlx,jylx,jyje,jysj,zhye,yhlx,jysm,shmc,fsf,fsje,jsf,jssj,jsje,inserttime,aj_id) " +
                 "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         int a = 1;
@@ -112,14 +112,15 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
                 pstm.setString(16,TimeFormatUtil.getDate("/"));
                 pstm.setLong(17,aj);
                 pstm.addBatch();
-                if ((i+1) % 1000 == 0) {
+                if ((i+1) % 50000 == 0) {
                     pstm.executeBatch();
                     con.commit();
                 }
             }
             pstm.executeBatch();
             con.commit();
-            pstm.close();
+            DBUtil.closeStatement(pstm);
+            DBUtil.closeConnection(con);
 //            con.close();
             listZzxx = null;
             map = null;

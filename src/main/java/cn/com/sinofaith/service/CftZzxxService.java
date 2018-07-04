@@ -1,7 +1,6 @@
 package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.CftZcxxEntity;
 import cn.com.sinofaith.bean.CftZzxxEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.CftZzxxDao;
@@ -9,7 +8,6 @@ import cn.com.sinofaith.form.CftZzxxForm;
 import cn.com.sinofaith.page.Page;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -41,25 +39,14 @@ public class CftZzxxService {
         Page page = new Page();
         int allRow = cftzzd.getAllRowCount(seach);
         List<CftZzxxForm> zzFs = new ArrayList<>();
-        CftZzxxForm zzf = null;
+        CftZzxxForm zzf = new CftZzxxForm();
         List zzList = cftzzd.getDoPage(seach,currentPage,pageSize);
         if(allRow>0){
             int xh =1;
             for(int i=0;i<zzList.size();i++){
                 Map map = (Map)zzList.get(i);
-                zzf = new CftZzxxForm();
+                zzf = zzf.mapToForm(map);
                 zzf.setId(xh+(currentPage-1)*pageSize);
-                zzf.setName((String)map.get("XM"));
-                zzf.setZh((String)map.get("ZH"));
-                zzf.setJdlx((String)map.get("JDLX"));
-                zzf.setJylx((String)map.get("JYLX"));
-                zzf.setShmc((String)map.get("SHMC"));
-                zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
-                zzf.setJysj((String)map.get("JYSJ"));
-                zzf.setFsf((String)map.get("FSF"));
-                zzf.setFsje(new BigDecimal(map.get("FSJE").toString()));
-                zzf.setJsf((String)map.get("JSF"));
-                zzf.setJsje(new BigDecimal(map.get("JSJE").toString()));
                 zzFs.add(zzf);
                 xh++;
             }
@@ -213,19 +200,7 @@ public class CftZzxxService {
     }
 
     public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj){
-        String[] ajm = new String[]{};
-        StringBuffer ajid = new StringBuffer();
-        if(aj.getAj().contains(",")) {
-            ajm = aj.getAj().split(",");
-            for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
-                if (i != ajm.length - 1) {
-                    ajid.append(",");
-                }
-            }
-        }else{
-            ajid.append(aj.getId());
-        }
+       String ajid = getAjidByAjm(aj);
         StringBuffer seach = new StringBuffer(" and aj_id in ("+ajid+") ");
 
         if(seachCode!=null){
@@ -251,19 +226,7 @@ public class CftZzxxService {
     public String getByJyzhlx(String zh,String jylx,String type,AjEntity aj,int page){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String[] ajm = new String[]{};
-        StringBuffer ajid = new StringBuffer();
-        if(aj.getAj().contains(",")) {
-            ajm = aj.getAj().split(",");
-            for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
-                if (i != ajm.length - 1) {
-                    ajid.append(",");
-                }
-            }
-        }else{
-            ajid.append(aj.getId());
-        }
+        String ajid = getAjidByAjm(aj);
 
         String seach ="";
         if("jylx".equals(type)){
@@ -277,7 +240,7 @@ public class CftZzxxService {
         if(aj.getFlg()==1){
             seach +=" and c.shmc not like'%红包%'";
         }
-        seach += "and aj_id in("+ajid.toString()+") order by c.jysj desc";
+        seach += "and aj_id in("+ajid+") order by c.jysj desc";
 
         int allRow = cftzzd.getAllRowCount(seach);
         List zzList = cftzzd.getDoPage(seach,page,100);
@@ -285,22 +248,11 @@ public class CftZzxxService {
 
 
         List<CftZzxxForm> zzFs = new ArrayList<>();
-        CftZzxxForm zzf = null;
+        CftZzxxForm zzf = new CftZzxxForm();
         for(int i=0;i<zzList.size();i++){
             Map map = (Map)zzList.get(i);
-            zzf = new CftZzxxForm();
+            zzf = zzf.mapToForm(map);
             zzf.setId(i+1+(page-1)*100);
-            zzf.setName((String)map.get("XM"));
-            zzf.setZh((String)map.get("ZH"));
-            zzf.setJdlx((String)map.get("JDLX"));
-            zzf.setJylx((String)map.get("JYLX"));
-            zzf.setShmc((String)map.get("SHMC"));
-            zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
-            zzf.setJysj((String)map.get("JYSJ"));
-            zzf.setFsf((String)map.get("FSF"));
-            zzf.setFsje(new BigDecimal(map.get("FSJE").toString()));
-            zzf.setJsf((String)map.get("JSF"));
-            zzf.setJsje(new BigDecimal(map.get("JSJE").toString()));
             zzFs.add(zzf);
         }
         pages.setTotalRecords(allRow);
@@ -308,5 +260,22 @@ public class CftZzxxService {
         pages.setPageNo(page);
         pages.setList(zzFs);
         return gson.toJson(pages);
+    }
+
+    public String getAjidByAjm(AjEntity aj){
+        String[] ajm = new String[]{};
+        StringBuffer ajid = new StringBuffer();
+        if(aj.getAj().contains(",")) {
+            ajm = aj.getAj().split(",");
+            for (int i = 0; i < ajm.length; i++) {
+                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                if (i != ajm.length - 1) {
+                    ajid.append(",");
+                }
+            }
+        }else{
+            ajid.append(aj.getId());
+        }
+        return ajid.toString();
     }
 }

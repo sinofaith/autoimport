@@ -126,6 +126,7 @@
                                         <select name="seachCondition" id = "seachCondition" onchange="seachChange()" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="jyzh"<c:if test="${tjseachCondition=='jyzh'}">selected="selected"</c:if>>微信账户</option>
                                             <option value="xm"<c:if test="${tjseachCondition=='xm'}">selected="selected"</c:if>>姓名</option>
+                                            <option value="jylx"<c:if test="${tjseachCondition=='jylx'}">selected="selected"</c:if>>交易类型</option>
                                             <option value="jzzje"<c:if test="${tjseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${tjseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <%--<option value="xm" <c:if test="${seachCondition=='xm'}">selected="selected"</c:if> >姓名</option>--%>

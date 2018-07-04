@@ -20,7 +20,8 @@ function addAj() {
         alertify.alert('请填写案件名称')
         return
     }
-    var Controller = "/SINOFAITH/aj/add"; // 接收上传文件的后台地址
+    $(".btn").attr("disabled","true")
+    var Controller = "/SINOFAITH/aj/add"; // 接收后台地址
     // FormData 对象
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
@@ -38,6 +39,7 @@ function addAj() {
         if(xhr.responseText==404){
             alertify.alert("添加失败")
         }
+        $(".btn").removeAttr("disabled","disabled");
     };
     xhr.send(form);
 }

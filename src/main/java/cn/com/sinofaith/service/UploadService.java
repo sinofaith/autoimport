@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Me. on 2018/5/23
@@ -76,7 +74,7 @@ public class UploadService {
                     String txtStr="";
                     List<String> zzxxStr = new ArrayList<>();
                     while ((txtStr=br.readLine())!=null){
-                        if (txtStr.startsWith("用户ID")) {
+                        if (txtStr.contains("用户ID")) {
                             continue;
                         }
                         String[] s = txtStr.split("\t");
@@ -85,8 +83,6 @@ public class UploadService {
                             zzxxs.add(CftZzxxEntity.listToObj(zzxxStr));
                         }
                     }
-                    fis.close();
-                    isr.close();
                     br.close();
                     file.delete();
                 }catch (IOException e){
@@ -94,8 +90,6 @@ public class UploadService {
                 }finally {
                     if(br != null){
                         try {
-                            fis.close();
-                            isr.close();
                             br.close();
                             file.delete();
                         }catch (IOException e){
@@ -125,16 +119,36 @@ public class UploadService {
                      fis = new FileInputStream(file);
                      isr = new InputStreamReader(fis,"UTF-8");
                     br = new BufferedReader(isr);
+                    Map<String,Integer> map = new HashMap<>();
                     String txtString = "";
                     listZcxx = new ArrayList<CftZcxxEntity>();
                     line = 0;
                     while ((txtString = br.readLine()) != null){
-                        if (txtString.startsWith("账户状态")) {
+                        String[] s = txtString.split("\t");
+                        zcxxStr= Arrays.asList(s);
+                        if (txtString.contains("账户状态")) {
+                            for (int j=0;j<zcxxStr.size();j++) {
+                                if(zcxxStr.get(j).contains("账户状态")){
+                                    map.put("zhzt",j);
+                                }else if(zcxxStr.get(j).contains("账号")&&!zcxxStr.get(j).contains("银行")){
+                                    map.put("zh",j);
+                                }else if(zcxxStr.get(j).contains("注册姓名")){
+                                    map.put("xm",j);
+                                }else if(zcxxStr.get(j).contains("注册时间")){
+                                    map.put("zcsj",j);
+                                }else if(zcxxStr.get(j).contains("注册身份证号")){
+                                    map.put("sfzhm",j);
+                                }else if(zcxxStr.get(j).contains("绑定手机")){
+                                    map.put("bdsj",j);
+                                }else if(zcxxStr.get(j).contains("开户行信息")){
+                                    map.put("khh",j);
+                                }else if(zcxxStr.get(j).contains("银行账号")){
+                                    map.put("yhzh",j);
+                                }
+                            }
                             line++;
                             continue;
                         }
-                        String[] s = txtString.split("\t");
-                        zcxxStr= Arrays.asList(s);
                         if(line>1){
                             if(zcxxStr.get(0).isEmpty()){
                                 zcxxStr.set(0,listZcxx.get(0).getZhzt());
@@ -156,18 +170,16 @@ public class UploadService {
                             }
                         }
                         if(zcxxStr.size()>7){
-                            listZcxx.add(CftZcxxEntity.listToObj(zcxxStr));
+                            listZcxx.add(CftZcxxEntity.listToObj(zcxxStr,map));
                         }
                         cp = CftPersonEntity.listToObj(zcxxStr);
-                        if(cp.getXm().length()>0){
+                        if(cp.getXm().length()>0&&cp.getZh().length()>0){
                             cpd.insert(cp);
                         }
                         line++;
                     }
                     zcxxs.addAll(listZcxx);
                     br.close();
-                    isr.close();
-                    fis.close();
                     file.delete();
                 }catch (IOException e){
                     e.printStackTrace();
@@ -175,11 +187,9 @@ public class UploadService {
                     if(br!=null){
                         try {
                             br.close();
-                            isr.close();
-                            fis.close();
                             file.delete();
                         }catch (IOException e){
-
+                            e.printStackTrace();
                         }
                     }
                 }

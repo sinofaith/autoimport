@@ -81,7 +81,7 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
     }
 
     public void save(List<CftTjjgsEntity> tjjgs){
-        Connection con = DBUtil.getConn();
+        Connection con = DBUtil.getConnection();
         String sql = "insert into cft_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id) " +
                 "values(?,?,?,?,?,?,?,?,?)";
         PreparedStatement st ;
@@ -101,14 +101,15 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity>{
                 st.setString(8, TimeFormatUtil.getDate("/"));
                 st.setLong(9,tjjg.getAj_id());
                 st.addBatch();
-                if((i+1)%1000 == 0){
+                if((i+1)%50000 == 0){
                     st.executeBatch();
                     con.commit();
                 }
             }
             st.executeBatch();
             con.commit();
-            st.close();
+            DBUtil.closeStatement(st);
+            DBUtil.closeConnection(con);
         }catch (Exception e){
             e.getMessage();
         }

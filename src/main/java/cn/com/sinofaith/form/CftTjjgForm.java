@@ -1,6 +1,7 @@
 package cn.com.sinofaith.form;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public class CftTjjgForm {
     private long id;
@@ -86,5 +87,17 @@ public class CftTjjgForm {
         this.czzje = czzje;
     }
 
+    public CftTjjgForm mapToForm(Map map){
+        CftTjjgForm cftForm = new CftTjjgForm();
+        cftForm.setName((String) map.get("XM"));
+        cftForm.setJyzh((String) map.get("JYZH"));
+        cftForm.setJylx((String) map.get("JYLX"));
+        cftForm.setJyzcs( new BigDecimal(map.get("JYZCS").toString()));
+        cftForm.setJzzcs( new BigDecimal(map.get("JZZCS").toString()));
+        cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
+        cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
+        cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
+        return cftForm;
+    }
 
 }

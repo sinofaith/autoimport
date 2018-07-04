@@ -114,6 +114,7 @@ public class CftZzxxController {
                                @RequestParam("type") String type, HttpServletRequest req,HttpServletResponse rep)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach ="";
+        String ajid=cftzzs.getAjidByAjm(aj);
         if("jylx".equals(type)) {
             seach = " and c.zh ='" + zh + "' and c.jylx='" + jylx + "' ";
         }else{
@@ -125,7 +126,7 @@ public class CftZzxxController {
         if(aj.getFlg()==1){
             seach +=" and c.shmc not like'%红包%'";
         }
-        seach+="order by c.jysj desc";
+        seach+=" and c.aj_id in("+ajid+") order by c.jysj desc ";
         cftzzs.downloadFile(seach,rep, aj.getAj());
     }
 }

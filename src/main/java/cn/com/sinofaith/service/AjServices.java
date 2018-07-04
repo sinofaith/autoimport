@@ -63,7 +63,7 @@ public class AjServices {
         return page;
     }
     public void deleteByAj(long ajid){
-        Connection con = DBUtil.getConn();
+        Connection con = DBUtil.getConnection();
         String sql = "delete  aj where id ="+ajid;
         Statement st;
         try {
@@ -75,8 +75,10 @@ public class AjServices {
             st.addBatch("delete  cft_tjjg where aj_id="+ajid);
             st.addBatch("delete  cft_tjjgs where aj_id="+ajid);
             st.executeBatch();
-            st.close();
             con.commit();
+
+            DBUtil.closeStatement(st);
+            DBUtil.closeConnection(con);
         }catch (SQLException e){
             e.getMessage();
         }
