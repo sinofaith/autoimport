@@ -62,7 +62,9 @@
                                                 <td align="center">${item.name}</td>
                                                 <td align="center">${item.jyzh}</td>
                                                 <td align="center">${item.dfzh}</td>
-                                                <td align="center">${item.count}</td>
+                                                <td align="center">
+                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzGtlxr(this)">${item.count}</button>
+                                                </td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
@@ -104,7 +106,7 @@
                                         </c:choose>
                                         <a href="/SINOFAITH/cftgtzh/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
-                                        <input type="button" value="跳转" onclick="gtzhSkip()">
+                                        <input type="button" value="跳转" onclick="cftSkip('gtzh')">
                                     </div>
 
                                 </c:when>
@@ -175,5 +177,48 @@
             </div>
         </div>
     </ul>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="7%">序号</td>
+                        <td width="7%">姓名</td>
+                        <td width="9%">微信账户</td>
+                        <td width="9%">对方账户</td>
+                        <td width="8%">共同联系人数</td>
+                        <td width="8%">交易总次数</td>
+                        <td width="8%">进账总次数</td>
+                        <td width="10%">进账总金额(元)</td>
+                        <td width="8%">出账总次数</td>
+                        <td width="10%">出账总金额(元)</td>
+                    </tr>
+                    <input name="label" id="dfzh" hidden="hidden" value="">
+                    <input name="label" id="allRow" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF()">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="downGtlxr()">导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
 </div>
 <%@include file="../template/newfooter.jsp" %>

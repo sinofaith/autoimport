@@ -1,9 +1,11 @@
 package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.CftZzxxEntity;
+import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.*;
+import cn.com.sinofaith.service.cftServices.CftTjjgService;
+import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

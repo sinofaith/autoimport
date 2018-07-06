@@ -100,7 +100,7 @@
                                         </c:choose>
                                         <a href="/SINOFAITH/cft/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
-                                        <input type="button" value="跳转" onclick="zcxxSkip()">
+                                        <input type="button" value="跳转" onclick="cftSkip('')">
                                     </div>
 
                                 </c:when>
@@ -188,7 +188,7 @@
                 <span id="percentage" style="color:blue;"></span> <br>
                 <br>
                 <div class="file-box">
-                    文件夹:<input type='text' name='textfield' id='textfield' class='txt' />
+                    文件夹:<input type='text' name='textfield' id='textfield' class='txt'/>
                     <input type='button' class='btn' value='浏览...' />
                     <input
                         type="file" name="file" webkitdirectory class="file" id="file" size="28"

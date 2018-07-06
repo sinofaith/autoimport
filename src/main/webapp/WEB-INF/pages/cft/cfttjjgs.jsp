@@ -106,7 +106,7 @@
                                         </c:choose>
                                         <a href="/SINOFAITH/cfttjjgs/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
-                                        <input type="button" value="跳转" onclick="tjjgsSkip()">
+                                        <input type="button" value="跳转" onclick="cftSkip('tjjgs')">
                                     </div>
 
                                 </c:when>

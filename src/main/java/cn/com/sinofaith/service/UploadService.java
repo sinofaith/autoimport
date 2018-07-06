@@ -1,11 +1,11 @@
 package cn.com.sinofaith.service;
 
-import cn.com.sinofaith.bean.CftPersonEntity;
-import cn.com.sinofaith.bean.CftZcxxEntity;
-import cn.com.sinofaith.bean.CftZzxxEntity;
-import cn.com.sinofaith.dao.CftPersonDao;
-import cn.com.sinofaith.dao.CftZcxxDao;
-import cn.com.sinofaith.dao.CftZzxxDao;
+import cn.com.sinofaith.bean.cftBean.CftPersonEntity;
+import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
+import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.dao.cftDao.CftPersonDao;
+import cn.com.sinofaith.dao.cftDao.CftZcxxDao;
+import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -185,9 +185,10 @@
                 <span id="percentage" style="color:blue;"></span> <br>
                 <div class="file-box">
 
-                    案件名:<input type="text" name = 'aj' id ='aj' class='txt'>
+                    案件名:<input type="text" name = 'aj' id ='aj'
+                               class='txt'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" >
                     <input type="submit" name="submit" class="btn" value="确定"
-                           onclick="addAj()" />
+                           onclick="addAj()"/>
 
                 </div>
             </div>

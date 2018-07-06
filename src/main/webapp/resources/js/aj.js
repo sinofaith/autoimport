@@ -17,7 +17,7 @@ function addAj() {
 
     var aj = $("#aj").val();
     if(aj==''){
-        alertify.alert('请填写案件名称')
+        $(".txt").attr('title',"案件名不能为空").tooltip('show');
         return
     }
     $(".btn").attr("disabled","true")
@@ -34,7 +34,7 @@ function addAj() {
             setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
         }
         if(xhr.responseText==303){
-            alertify.alert("案件名已存在")
+            $(".txt").attr('title',"案件名重复").tooltip('show');
         }
         if(xhr.responseText==404){
             alertify.alert("添加失败")
@@ -70,6 +70,10 @@ $(function () {
         return false;
     })
 })
+
+function destroyTooltip() {
+    $(".txt").tooltip('destroy');
+}
 
 function ajsCount() {
     obj = document.getElementsByName("ajval");

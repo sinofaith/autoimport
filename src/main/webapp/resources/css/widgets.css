@@ -136,16 +136,16 @@ input[type="text"],input[type="password"]{
     background-color: #BD2242;
 }
 
-.tooltip {
-    width: 200px;
-    height: 270px;
-    border: 2px solid #EFEFEF;
-    border-radius: 15px;
-    background: wheat;
-    -moz-box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
-    -webkit-box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
-    box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);
-}
+/*.tooltip {*/
+    /*width: 200px;*/
+    /*height: 270px;*/
+    /*border: 2px solid #EFEFEF;*/
+    /*border-radius: 15px;*/
+    /*background: wheat;*/
+    /*-moz-box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);*/
+    /*-webkit-box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);*/
+    /*box-shadow:4px 4px 12px 4px rgba(20%,20%,40%,0.5);*/
+/*}*/
 
 .myTable {
     width: 100%;

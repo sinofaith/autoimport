@@ -19,7 +19,7 @@
  <span>
     <a href="/SINOFAITH/aj" ><i class=" icon-untitled26 "></i>案件</a>
     <a href="/SINOFAITH/cft" class="sidebar_left_addative"><i class="icon-untitled54"></i>财付通</a>
-    <%--<a href="http://10.1.6.41:9000/matrix2.html"><i class="icon-untitled47"></i>支付宝</a>--%>
+    <a href="/SINOFAITH/bank"><i class="icon-untitled47"></i>银行卡</a>
     <%--<a href="/AMD/criteriaquery"><i class="icon-search"></i>资金</a>--%>
  </span>
 </aside>

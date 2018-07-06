@@ -1,9 +1,11 @@
 package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.CftZzxxEntity;
+import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.service.*;
-import cn.com.sinofaith.util.DBUtil;
+import cn.com.sinofaith.service.cftServices.CftTjjgService;
+import cn.com.sinofaith.service.cftServices.CftTjjgsService;
+import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 

@@ -1,17 +1,15 @@
 package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.CftZzxxEntity;
+import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.dao.AJDao;
-import cn.com.sinofaith.dao.CftTjjgDao;
-import cn.com.sinofaith.dao.CftZzxxDao;
+import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.DBUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -52,7 +50,7 @@ public class AjServices {
         if(allRow>0){
             ajlist = ad.getDoPage(seach,currentPage,pageSize);
             for(int i=0; i<ajlist.size();i++){
-                ajlist.get(i).setId(xh+(currentPage-1)*10);
+                ajlist.get(i).setId(xh+(currentPage-1)*pageSize);
                 xh++;
             }
         }
