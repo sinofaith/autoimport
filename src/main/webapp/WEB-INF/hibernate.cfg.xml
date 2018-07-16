@@ -6,16 +6,12 @@
     <session-factory>
         <property name="current_session_context_class">thread</property>
         <property name="show_sql">true</property>
-        <property name="connection.url">jdbc:oracle:thin:@192.168.85.132:1521:orcl</property>
-        <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-        <!--<mapping class="cn.com.ieven.model.entity.AmdSetdefEntity"/>-->
             <mapping class="cn.com.sinofaith.bean.cftBean.CftZcxxEntity"/>
             <mapping class="cn.com.sinofaith.bean.cftBean.CftZzxxEntity"/>
             <mapping class="cn.com.sinofaith.bean.cftBean.CftTjjgEntity"/>
             <mapping class="cn.com.sinofaith.bean.cftBean.CftTjjgsEntity"/>
             <mapping class="cn.com.sinofaith.bean.cftBean.CftPersonEntity"/>
             <mapping class="cn.com.sinofaith.bean.AjEntity"/>
-
             <mapping class="cn.com.sinofaith.bean.bankBean.BankZcxxEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->

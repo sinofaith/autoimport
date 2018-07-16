@@ -117,6 +117,15 @@ public class CftZzxxController {
         String ajid=cftzzs.getAjidByAjm(aj);
         if("jylx".equals(type)) {
             seach = " and c.zh ='" + zh + "' and c.jylx='" + jylx + "' ";
+            if(jylx.equals("提现")){
+                seach = " and c.zh ='" + zh + "' and (c.jylx='" + jylx + "' or c.jylx='微信提现手续费') ";
+            }
+            if(jylx.equals("转帐(有对手账户)")){
+                seach=" and c.zh='"+zh+"' and c.fsf is not null and c.jsf is not null ";
+            }
+            if(jylx.equals("转帐(无对手账户)")){
+                seach=" and c.zh='"+zh+"' and c.fsf is null and c.jsf is null ";
+            }
         }else{
             seach = " and c.zh ='"+zh+"' and ( c.fsf ='"+jylx+"' or c.jsf='"+jylx+"'"+") ";
             if(zh.equals(jylx)){

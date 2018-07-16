@@ -86,7 +86,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
         Connection  con = DBUtil.getConnection();
         String sql  = "insert into cft_zzxx(zh,jydh,jdlx,jylx,jyje,jysj,zhye,yhlx,jysm,shmc,fsf,fsje,jsf,jssj,jsje,inserttime,aj_id) " +
                 "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int a = 1;
+        int a = 0;
         PreparedStatement pstm ;
 
         CftZzxxEntity zzxx = null;

@@ -328,8 +328,14 @@ function UploadCft() {
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
     form.append("checkBox",checkBox);
-    for(i=0;i<fileObj.files.length;i++){
-        form.append("file", fileObj.files[i]); // 文件对象
+    for(var i=0;i<fileObj.files.length;i++){
+        var fileName = fileObj.files[i].name;
+        var index1=fileName.lastIndexOf(".");
+        var index2=fileName.length;
+        var suffix=fileName.substring(index1,index2);
+        if(suffix==".txt"||suffix==".doc"||suffix==".docx") {
+            form.append("file", fileObj.files[i]); // 文件对象
+        }
     }
     var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
     xhr.open("post", FileController, true);
@@ -402,8 +408,12 @@ function scrollF() {
                         var data = msg.list
                         var str = ""
                         for (i in data) {
-                            str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>" +
-                                "<td width=\"4%\">" + data[i].id + "</td>" +
+                            if (i % 2 == 0) {
+                                str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
+                            } else {
+                                str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
+                            }
+                                str+="<td width=\"4%\">" + data[i].id + "</td>" +
                                 "<td width=\"5%\">" + data[i].name + "</td>" +
                                 "<td width=\"15%\">" + data[i].zh + "</td>" +
                                 "<td width=\"6%\">" + data[i].jdlx + "</td>" +

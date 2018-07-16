@@ -69,7 +69,7 @@ public class CftTjjgService {
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
-                seach.append(" order by s." + orderby + desc +"  nulls last ,c.id");
+                seach.append(" order by s." + orderby + desc +"  nulls last ,c.jylx");
             }else{
                 seach.append(" order by c." +orderby + desc);
             }
@@ -84,41 +84,153 @@ public class CftTjjgService {
         CftZzxxEntity zzxx = null;
         for(int i=0;i<listZzxx.size();i++){
             zzxx = listZzxx.get(i);
-            if(map.containsKey(zzxx.getZh()+zzxx.getJylx())){
-                if("出".equals(zzxx.getJdlx())){
-                    tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
-                    tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
-                    tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
-                    tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+            if(zzxx.getJylx().equals("微信提现手续费")){
+                zzxx.setJylx("提现");
+            }
+
+            if("出".equals(zzxx.getJdlx())){
+                if(!zzxx.getJylx().equals("转帐")) {
+                    if (map.containsKey(zzxx.getZh() + zzxx.getJylx())) {
+                        tjjg = map.get(zzxx.getZh() + zzxx.getJylx());
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgEntity tj1 = new CftTjjgEntity();
+                        tj1.setJyzh(zzxx.getZh());
+                        tj1.setJylx(zzxx.getJylx());
+                        tj1.setJyzcs(new BigDecimal(1));
+                        tj1.setCzzcs(new BigDecimal(1));
+                        tj1.setCzzje(zzxx.getJyje());
+                        tj1.setAj_id(aj);
+                        map.put(zzxx.getZh() + zzxx.getJylx(), tj1);
+                    }
                 }
-                if("入".equals(zzxx.getJdlx())){
-                    tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
-                    tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
-                    tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
-                    tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+
+                if(zzxx.getJsf()!=null&&zzxx.getFsf()!=null){
+                    if (map.containsKey(zzxx.getZh() + "转帐(有对手账户)")) {
+                        tjjg = map.get(zzxx.getZh() + "转帐(有对手账户)");
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgEntity tj1 = new CftTjjgEntity();
+                        tj1.setJyzh(zzxx.getZh());
+                        tj1.setJylx("转帐(有对手账户)");
+                        tj1.setJyzcs(new BigDecimal(1));
+                        tj1.setCzzcs(new BigDecimal(1));
+                        tj1.setCzzje(zzxx.getJyje());
+                        tj1.setAj_id(aj);
+                        map.put(zzxx.getZh() + "转帐(有对手账户)", tj1);
+                    }
+                }else {
+                    if (map.containsKey(zzxx.getZh() + "转帐(无对手账户)")) {
+                        tjjg = map.get(zzxx.getZh() + "转帐(无对手账户)");
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgEntity tj1 = new CftTjjgEntity();
+                        tj1.setJyzh(zzxx.getZh());
+                        tj1.setJylx("转帐(无对手账户)");
+                        tj1.setJyzcs(new BigDecimal(1));
+                        tj1.setCzzcs(new BigDecimal(1));
+                        tj1.setCzzje(zzxx.getJyje());
+                        tj1.setAj_id(aj);
+                        map.put(zzxx.getZh() + "转帐(无对手账户)", tj1);
+                    }
                 }
-            }else{
-                if("出".equals(zzxx.getJdlx())){
-                    CftTjjgEntity tj1 = new CftTjjgEntity();
-                    tj1.setJyzh(zzxx.getZh());
-                    tj1.setJylx(zzxx.getJylx());
-                    tj1.setJyzcs(new BigDecimal(1));
-                    tj1.setCzzcs(new BigDecimal(1));
-                    tj1.setCzzje(zzxx.getJyje());
-                    tj1.setAj_id(aj);
-                    map.put(zzxx.getZh()+zzxx.getJylx(),tj1);
+
+            }
+            if("入".equals(zzxx.getJdlx())){
+                if(!zzxx.getJylx().equals("转帐")) {
+                    if (map.containsKey(zzxx.getZh() + zzxx.getJylx())) {
+                        tjjg = map.get(zzxx.getZh() + zzxx.getJylx());
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgEntity tj2 = new CftTjjgEntity();
+                        tj2.setJyzh(zzxx.getZh());
+                        tj2.setJylx(zzxx.getJylx());
+                        tj2.setJyzcs(new BigDecimal(1));
+                        tj2.setJzzcs(new BigDecimal(1));
+                        tj2.setJzzje(zzxx.getJyje());
+                        tj2.setAj_id(aj);
+                        map.put(zzxx.getZh() + zzxx.getJylx(), tj2);
+                    }
                 }
-                if("入".equals(zzxx.getJdlx())){
-                    CftTjjgEntity tj2 = new CftTjjgEntity();
-                    tj2.setJyzh(zzxx.getZh());
-                    tj2.setJylx(zzxx.getJylx());
-                    tj2.setJyzcs(new BigDecimal(1));
-                    tj2.setJzzcs(new BigDecimal(1));
-                    tj2.setJzzje(zzxx.getJyje());
-                    tj2.setAj_id(aj);
-                    map.put(zzxx.getZh()+zzxx.getJylx(),tj2);
+
+                if(zzxx.getJsf()!=null&&zzxx.getFsf()!=null){
+                    if (map.containsKey(zzxx.getZh() + "转帐(有对手账户)")) {
+                        tjjg = map.get(zzxx.getZh() + "转帐(有对手账户)");
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgEntity tj2 = new CftTjjgEntity();
+                        tj2.setJyzh(zzxx.getZh());
+                        tj2.setJylx("转帐(有对手账户)");
+                        tj2.setJyzcs(new BigDecimal(1));
+                        tj2.setJzzcs(new BigDecimal(1));
+                        tj2.setJzzje(zzxx.getJyje());
+                        tj2.setAj_id(aj);
+                        map.put(zzxx.getZh() + "转帐(有对手账户)", tj2);
+                    }
+                }else {
+                    if (map.containsKey(zzxx.getZh() + "转帐(无对手账户)")) {
+                        tjjg = map.get(zzxx.getZh() + "转帐(无对手账户)");
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgEntity tj1 = new CftTjjgEntity();
+                        tj1.setJyzh(zzxx.getZh());
+                        tj1.setJylx("转帐(无对手账户)");
+                        tj1.setJyzcs(new BigDecimal(1));
+                        tj1.setJzzcs(new BigDecimal(1));
+                        tj1.setJzzje(zzxx.getJyje());
+                        tj1.setAj_id(aj);
+                        map.put(zzxx.getZh() + "转帐(无对手账户)", tj1);
+                    }
                 }
             }
+
+//            if(map.containsKey(zzxx.getZh()+zzxx.getJylx())){
+//                if("出".equals(zzxx.getJdlx())){
+//                    tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
+//                    tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+//                    tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
+//                    tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+//                }
+//                if("入".equals(zzxx.getJdlx())){
+//                    tjjg = map.get(zzxx.getZh()+zzxx.getJylx());
+//                    tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+//                    tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+//                    tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+//                }
+//            }else{
+//                if("出".equals(zzxx.getJdlx())){
+//                    CftTjjgEntity tj1 = new CftTjjgEntity();
+//                    tj1.setJyzh(zzxx.getZh());
+//                    tj1.setJylx(zzxx.getJylx());
+//                    tj1.setJyzcs(new BigDecimal(1));
+//                    tj1.setCzzcs(new BigDecimal(1));
+//                    tj1.setCzzje(zzxx.getJyje());
+//                    tj1.setAj_id(aj);
+//                    map.put(zzxx.getZh()+zzxx.getJylx(),tj1);
+//                }
+//                if("入".equals(zzxx.getJdlx())){
+//                    CftTjjgEntity tj2 = new CftTjjgEntity();
+//                    tj2.setJyzh(zzxx.getZh());
+//                    tj2.setJylx(zzxx.getJylx());
+//                    tj2.setJyzcs(new BigDecimal(1));
+//                    tj2.setJzzcs(new BigDecimal(1));
+//                    tj2.setJzzje(zzxx.getJyje());
+//                    tj2.setAj_id(aj);
+//                    map.put(zzxx.getZh()+zzxx.getJylx(),tj2);
+//                }
+//            }
         }
         listTjjg = new ArrayList<>(map.values());
         int i = 0;

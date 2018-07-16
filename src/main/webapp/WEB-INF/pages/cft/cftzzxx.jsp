@@ -79,7 +79,7 @@
                                         <c:choose>
                                             <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                                 <tr>
-                                                    <td colspan="11" align="center"> 无数据 </td>
+                                                    <td colspan="12" align="center"> 无数据 </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -183,7 +184,7 @@ public class CftZzxxService {
 
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            if("khxm".equals(seachCondition)){
+            if("xm".equals(seachCondition)){
                 seach.append(" and s."+seachCondition + " like "+"'"+seachCode+"'");
             }else {
                 seach.append(" and c." + seachCondition + " like " + "'" + seachCode + "'");
@@ -192,7 +193,7 @@ public class CftZzxxService {
             seach.append(" and ( 1=1 ) ");
         }
         if(orderby != null){
-            seach .append(" order by "+orderby).append(desc);
+            seach .append(" order by c."+orderby).append(desc).append(",c.id");
         }
         return seach.toString();
     }
@@ -209,6 +210,15 @@ public class CftZzxxService {
         String seach ="";
         if("jylx".equals(type)){
             seach=" and c.zh='"+zh+"' and c.jylx='"+jylx+"' ";
+            if(jylx.equals("提现")){
+                seach=" and c.zh='"+zh+"' and (c.jylx='"+jylx+"' or c.jylx = '微信提现手续费') ";
+            }
+            if(jylx.equals("转帐(有对手账户)")){
+                seach=" and c.zh='"+zh+"' and c.fsf is not null and c.jsf is not null ";
+            }
+            if(jylx.equals("转帐(无对手账户)")){
+                seach=" and c.zh='"+zh+"' and c.fsf is null and c.jsf is null ";
+            }
         }else{
             seach=" and c.zh='"+zh+"' and (c.fsf='"+jylx+"' or c.jsf='"+jylx+"') ";
             if(zh.equals(jylx)){

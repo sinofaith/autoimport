@@ -146,40 +146,42 @@ public class CftTjjgsService {
         Map<String,CftTjjgsEntity> map = new HashMap();
         CftTjjgsEntity tjjgs = null;
         CftZzxxEntity zzxx = null;
-        for(int i=0;i<listZzxx.size();i++){
+        for(int i=0;i<listZzxx.size();i++) {
             zzxx = listZzxx.get(i);
-            if(zzxx.getZh().equals(zzxx.getFsf()) && "出".equals(zzxx.getJdlx())){
-                if(map.containsKey(zzxx.getZh()+zzxx.getJsf())){
-                    tjjgs = map.get(zzxx.getZh()+zzxx.getJsf());
-                    tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
-                    tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
-                    tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
-                }else {
-                    CftTjjgsEntity tjs1 = new CftTjjgsEntity();
-                    tjs1.setJyzh(zzxx.getZh());
-                    tjs1.setDfzh(zzxx.getJsf());
-                    tjs1.setJyzcs(new BigDecimal(1));
-                    tjs1.setCzzcs(new BigDecimal(1));
-                    tjs1.setCzzje(zzxx.getJyje());
-                    tjs1.setAj_id(aj);
-                    map.put(zzxx.getZh()+zzxx.getJsf(),tjs1);
+            if (zzxx.getFsf()!=null && zzxx.getJsf()!=null) {
+                if (zzxx.getZh().equals(zzxx.getFsf()) && "出".equals(zzxx.getJdlx())) {
+                    if (map.containsKey(zzxx.getZh() + zzxx.getJsf())) {
+                        tjjgs = map.get(zzxx.getZh() + zzxx.getJsf());
+                        tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
+                        tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
+                        tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgsEntity tjs1 = new CftTjjgsEntity();
+                        tjs1.setJyzh(zzxx.getZh());
+                        tjs1.setDfzh(zzxx.getJsf());
+                        tjs1.setJyzcs(new BigDecimal(1));
+                        tjs1.setCzzcs(new BigDecimal(1));
+                        tjs1.setCzzje(zzxx.getJyje());
+                        tjs1.setAj_id(aj);
+                        map.put(zzxx.getZh() + zzxx.getJsf(), tjs1);
+                    }
                 }
-            }
-            if(zzxx.getZh().equals(zzxx.getJsf()) && "入".equals(zzxx.getJdlx())){
-                if(map.containsKey(zzxx.getZh()+zzxx.getFsf())){
-                    tjjgs = map.get(zzxx.getZh()+zzxx.getFsf());
-                    tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
-                    tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
-                    tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
-                }else{
-                    CftTjjgsEntity tjs2 = new CftTjjgsEntity();
-                    tjs2.setJyzh(zzxx.getZh());
-                    tjs2.setDfzh(zzxx.getFsf());
-                    tjs2.setJyzcs(new BigDecimal(1));
-                    tjs2.setJzzcs(new BigDecimal(1));
-                    tjs2.setJzzje(zzxx.getJyje());
-                    tjs2.setAj_id(aj);
-                    map.put(zzxx.getZh()+zzxx.getFsf(),tjs2);
+                if (zzxx.getZh().equals(zzxx.getJsf()) && "入".equals(zzxx.getJdlx())) {
+                    if (map.containsKey(zzxx.getZh() + zzxx.getFsf())) {
+                        tjjgs = map.get(zzxx.getZh() + zzxx.getFsf());
+                        tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
+                        tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
+                        tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
+                    } else {
+                        CftTjjgsEntity tjs2 = new CftTjjgsEntity();
+                        tjs2.setJyzh(zzxx.getZh());
+                        tjs2.setDfzh(zzxx.getFsf());
+                        tjs2.setJyzcs(new BigDecimal(1));
+                        tjs2.setJzzcs(new BigDecimal(1));
+                        tjs2.setJzzje(zzxx.getJyje());
+                        tjs2.setAj_id(aj);
+                        map.put(zzxx.getZh() + zzxx.getFsf(), tjs2);
+                    }
                 }
             }
         }
@@ -195,20 +197,22 @@ public class CftTjjgsService {
         if("共同".equals(lx)){
             AjEntity aje = (AjEntity) req.getSession().getAttribute("aj");
             if(seach.contains("order by")) {
-                listTjjg = cfttjsd.findBySQL("select s.xm,c.*,a.num from cft_tjjgs c right join (" +
+                listTjjg = cfttjsd.findBySQL("select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
                         "  select t.dfzh,count(1) as num from cft_tjjgs t " +
                         " where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +aje.getId()+
                         " group by dfzh " +
                         "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
                         " left join cft_person s on c.jyzh = s.zh " +
+                        " left join cft_person n on c.dfzh = n.zh "+
                         "  where a.num is not null " + seach +",c.dfzh");
             }else{
-                listTjjg = cfttjsd.findBySQL("select s.xm,c.*,a.num from cft_tjjgs c right join (" +
+                listTjjg = cfttjsd.findBySQL("select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
                         "  select t.dfzh,count(1) as num from cft_tjjgs t " +
                         " where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +aje.getId()+
                         " group by dfzh " +
                         "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
                         " left join cft_person s on c.jyzh = s.zh " +
+                        " left join cft_person n on c.dfzh = n.zh "+
                         "  where a.num is not null " + seach +" order by c.dfzh");
             }
 
@@ -261,18 +265,20 @@ public class CftTjjgsService {
             cell = row.createCell(3);
             cell.setCellValue("对手账户");
             cell = row.createCell(4);
-            cell.setCellValue("共同联系人数");
+            cell.setCellValue("对手姓名");
             cell = row.createCell(5);
-            cell.setCellValue("交易总次数");
+            cell.setCellValue("共同联系人数");
             cell = row.createCell(6);
-            cell.setCellValue("进账总次数");
+            cell.setCellValue("交易总次数");
             cell = row.createCell(7);
-            cell.setCellValue("进账总金额(元)");
+            cell.setCellValue("进账总次数");
             cell = row.createCell(8);
-            cell.setCellValue("出账总次数");
+            cell.setCellValue("进账总金额(元)");
             cell = row.createCell(9);
+            cell.setCellValue("出账总次数");
+            cell = row.createCell(10);
             cell.setCellValue("出账总金额(元)");
-            for (int a = 0; a < 11; a++) {
+            for (int a = 0; a < 12; a++) {
                 sheet.autoSizeColumn(a);
             }
         }
@@ -310,16 +316,18 @@ public class CftTjjgsService {
                     cell = row.createCell(3);
                     cell.setCellValue("对手账户");
                     cell = row.createCell(4);
-                    cell.setCellValue("共同联系人数");
+                    cell.setCellValue("对手姓名");
                     cell = row.createCell(5);
-                    cell.setCellValue("交易总次数");
+                    cell.setCellValue("共同联系人数");
                     cell = row.createCell(6);
-                    cell.setCellValue("进账总次数");
+                    cell.setCellValue("交易总次数");
                     cell = row.createCell(7);
-                    cell.setCellValue("进账总金额(元)");
+                    cell.setCellValue("进账总次数");
                     cell = row.createCell(8);
-                    cell.setCellValue("出账总次数");
+                    cell.setCellValue("进账总金额(元)");
                     cell = row.createCell(9);
+                    cell.setCellValue("出账总次数");
+                    cell = row.createCell(10);
                     cell.setCellValue("出账总金额(元)");
                     b += 1;
                 }
@@ -366,19 +374,23 @@ public class CftTjjgsService {
                     cell.setCellValue(map.get("DFZH").toString());
                 }
                 cell = row.createCell(4);
-                cell.setCellValue(map.get("NUM").toString());
+                if (map.get("DFXM") != null && map.get("DFXM").toString().length() > 0) {
+                    cell.setCellValue(map.get("DFXM").toString());
+                }
                 cell = row.createCell(5);
-                cell.setCellValue(map.get("JYZCS").toString());
+                cell.setCellValue(map.get("NUM").toString());
                 cell = row.createCell(6);
-                cell.setCellValue(map.get("JZZCS").toString());
+                cell.setCellValue(map.get("JYZCS").toString());
                 cell = row.createCell(7);
-                cell.setCellValue(map.get("JZZJE").toString());
+                cell.setCellValue(map.get("JZZCS").toString());
                 cell = row.createCell(8);
-                cell.setCellValue(map.get("CZZCS").toString());
+                cell.setCellValue(map.get("JZZJE").toString());
                 cell = row.createCell(9);
+                cell.setCellValue(map.get("CZZCS").toString());
+                cell = row.createCell(10);
                 cell.setCellValue(map.get("CZZJE").toString());
                 if (i % 65536 == 0) {
-                    for (int a = 0; a < 11; a++) {
+                    for (int a = 0; a < 12; a++) {
                         sheet.autoSizeColumn(a);
                     }
                 }

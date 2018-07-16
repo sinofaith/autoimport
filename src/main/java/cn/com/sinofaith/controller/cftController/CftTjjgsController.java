@@ -36,8 +36,10 @@ public class CftTjjgsController {
         httpSession.removeAttribute("tjsseachCondition");
         //查询内容
         httpSession.removeAttribute("tjsseachCode");
-        httpSession.removeAttribute("sorderby");
-        httpSession.removeAttribute("sdesc");
+
+        httpSession.setAttribute("sorderby","jyzcs");
+        httpSession.setAttribute("slastOrder","jyzcs");
+        httpSession.setAttribute("sdesc"," desc ");
         return mav;
     }
 

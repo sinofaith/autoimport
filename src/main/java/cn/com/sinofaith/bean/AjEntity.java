@@ -29,9 +29,9 @@ public class AjEntity {
         this.aj = aj;
     }
     @Basic
-    @Column(name="flg",nullable = false,length = 10)
-    public void setFlg(long flg){this.flg = flg;}
+    @Column(name="flg",nullable = false,precision = 0)
     public long getFlg(){return flg;}
+    public void setFlg(long flg){this.flg = flg;}
     @Basic
     @Column(name = "inserttime",length = 19)
     public String getInserttime() {

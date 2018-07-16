@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 
 public class CftTjjgsForm {
     private long id;
-    private String name;
+    private String name="";
     private String jyzh;
     private String dfzh;
+    private String dfxm="";
     private BigDecimal jyzcs = new BigDecimal(0);
     private BigDecimal jzzcs = new BigDecimal(0);
     private BigDecimal jzzje = new BigDecimal(0);
@@ -27,6 +28,9 @@ public class CftTjjgsForm {
     }
 
     public void setName(String name) {
+        if(name==null){
+            name="";
+        }
         this.name = name;
     }
 
@@ -92,5 +96,13 @@ public class CftTjjgsForm {
 
     public void setCount(BigDecimal count) {
         this.count = count;
+    }
+
+    public String getDfxm() {
+        return dfxm;
+    }
+
+    public void setDfxm(String dfxm) {
+        this.dfxm = dfxm;
     }
 }

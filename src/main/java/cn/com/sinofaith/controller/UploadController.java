@@ -53,37 +53,39 @@ public class UploadController {
         for(int i=0;i<file.size();i++){
             fileName =TimeFormatUtil.getDate("") +file.get(i).getOriginalFilename();
              filePath = uploadPath + fileName;
-            if(!fileName.endsWith(".txt")){
-                continue;
-            }
-            uploadFile = new File(filePath);
-            try {
-                file.get(i).transferTo(uploadFile);
-            }catch (IOException e){
-                e.printStackTrace();
+            if(fileName.endsWith(".txt")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
             }
         }
-        AjEntity aje = ajs.findByName(aj).get(0);
-        if(aje.getFlg() != checkBox){
-            aje.setFlg(checkBox);
-            ajs.updateAj(aje);
-            aje = ajs.findByName(aj).get(0);
-        }
+        int a = 0;
+        int b = 0;
 
-        int a = us.insertZcxx(uploadPath,"info.txt",aje.getId());
-        int b = us.insertZzxx(uploadPath,"trades.txt",aje.getId());
-        if(a+b>0){
+        AjEntity aje = ajs.findByName(aj).get(0);
+        if(uploadPathd.listFiles()!=null) {
+            if (aje.getFlg() != checkBox) {
+                aje.setFlg(checkBox);
+                ajs.updateAj(aje);
+                aje = ajs.findByName(aj).get(0);
+            }
+
+            a= us.insertZcxx(uploadPath, "info.txt", aje.getId());
+            b=us.insertZzxx(uploadPath, "trades.txt", aje.getId());
+
             us.deleteAll(uploadPath);
             uploadPathd.delete();
+
+            List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(),checkBox);
+            tjs.count(listZzxx,aje.getId());
+            tjss.count(listZzxx,aje.getId());
         }
-        List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(),checkBox);
 
-        int c = tjs.count(listZzxx,aje.getId());
-        int d = tjss.count(listZzxx,aje.getId());
-
-
-        if(a+b+c+d>0){
-            result = String.valueOf(a+b+c+d);
+        if(a+b>0){
+            result = String.valueOf(a+b);
         }else {
             result = "";
         }

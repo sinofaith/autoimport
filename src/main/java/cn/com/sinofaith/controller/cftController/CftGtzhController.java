@@ -33,8 +33,9 @@ public class CftGtzhController {
         //查询内容
         httpSession.removeAttribute("gtseachCode");
 
-        httpSession.removeAttribute("gorderby");
-        httpSession.removeAttribute("gdesc");
+        httpSession.setAttribute("gorderby","num");
+        httpSession.setAttribute("glastOrder","num");
+        httpSession.setAttribute("gdesc"," desc ");
         return mav;
     }
 
@@ -108,7 +109,7 @@ public class CftGtzhController {
     public String getDetails(@RequestParam("dfzh") String dfzh,@RequestParam("page")int page, HttpServletRequest req){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId();
+        String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId() + " order by jyzcs desc ";
         return gson.toJson(cfttjss.queryForPageGt(page,100,seach,aj!=null ? aj.getId():-1));
     }
     @RequestMapping("/downgtlxr")

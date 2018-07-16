@@ -38,7 +38,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>财付通共同账户信息(${aj.aj})</strong>
                                             </div>
@@ -49,6 +49,7 @@
                                         <td width="7%"><a href="/SINOFAITH/cftgtzh/order?orderby=xm">姓名</a></td>
                                         <td width="9%">微信账户</td>
                                         <td width="9%">对方账户</td>
+                                        <td width="7%">对方姓名</td>
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=jzzcs">进账总次数</a></td>
@@ -62,6 +63,7 @@
                                                 <td align="center">${item.name}</td>
                                                 <td align="center">${item.jyzh}</td>
                                                 <td align="center">${item.dfzh}</td>
+                                                <td align="center">${item.dfxm}</td>
                                                 <td align="center">
                                                     <button  data-toggle="modal" data-target="#myModal" onclick="getZzGtlxr(this)">${item.count}</button>
                                                 </td>
@@ -75,7 +77,7 @@
                                         <c:choose>
                                             <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                                 <tr>
-                                                    <td colspan="10" align="center"> 无数据 </td>
+                                                    <td colspan="11" align="center"> 无数据 </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>

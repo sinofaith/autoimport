@@ -39,8 +39,9 @@ public class CftTjjgController {
         ModelAndView mav = new ModelAndView("redirect:/cfttjjg/seach?pageNo=1");
         httpSession.removeAttribute("tjseachCondition"); //查询条件
         httpSession.removeAttribute("tjseachCode");//查询内容
-        httpSession.removeAttribute("orderby");
-        httpSession.removeAttribute("desc");
+        httpSession.setAttribute("orderby","xm");
+        httpSession.setAttribute("lastOrder","xm");
+        httpSession.setAttribute("desc"," desc ");
         return mav;
     }
 
@@ -50,10 +51,10 @@ public class CftTjjgController {
         String desc = (String) ses.getAttribute("desc");
         String lastOrder = (String) ses.getAttribute("lastOrder");
         if(orderby.equals(lastOrder)){
-            if(desc==null||" ,c.id ".equals(desc)){
+            if(desc==null||" ,c.jylx ".equals(desc)){
                 desc = " desc";
             }else{
-                desc = " ,c.id ";
+                desc = " ,c.jylx ";
             }
         }else{
             desc = " desc ";
