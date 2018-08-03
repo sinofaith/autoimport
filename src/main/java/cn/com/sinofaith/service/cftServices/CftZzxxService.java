@@ -184,7 +184,7 @@ public class CftZzxxService {
 
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            if("xm".equals(seachCondition)){
+            if("khxm".equals(seachCondition)){
                 seach.append(" and s."+seachCondition + " like "+"'"+seachCode+"'");
             }else {
                 seach.append(" and c." + seachCondition + " like " + "'" + seachCode + "'");

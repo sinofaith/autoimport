@@ -1,5 +1,7 @@
 package cn.com.sinofaith.util;
-
+/**
+    去除乱码
+ */
 public class RemoveMessy {
     public static String rMessy(String str_VarMboxRead) {
         StringBuffer str_Result = new StringBuffer();String str_OneStr = "";

@@ -78,7 +78,7 @@ public class BankZzxxServices {
             cell = row.createCell(1);
             cell.setCellValue(zzf.getJyxm());
             cell = row.createCell(2);
-            cell.setCellValue(zzf.getJyzkh());
+            cell.setCellValue(zzf.getYhkkh());
             cell = row.createCell(3);
             cell.setCellValue(zzf.getJysj());
             cell = row.createCell(4);
@@ -90,7 +90,7 @@ public class BankZzxxServices {
             cell = row.createCell(7);
             cell.setCellValue(zzf.getDsxm());
             cell = row.createCell(8);
-            cell.setCellValue(zzf.getDszh());
+            cell.setCellValue(zzf.getDskh());
             cell = row.createCell(9);
             cell.setCellValue(zzf.getZysm());
             cell = row.createCell(10);

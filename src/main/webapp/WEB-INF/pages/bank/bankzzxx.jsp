@@ -62,13 +62,13 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.jyxm}</td>
-                                                <td align="center">${item.jyzkh}</td>
+                                                <td align="center">${item.yhkkh}</td>
                                                 <td align="center">${item.jysj}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.sfbz}</td>
                                                 <td align="center">${item.dsxm}</td>
-                                                <td align="center">${item.dszh}</td>
+                                                <td align="center">${item.dskh}</td>
                                                 <td align="center">${item.zysm}</td>
                                                 <td align="center">${item.jysfcg}</td>
                                             </tr>
@@ -124,24 +124,10 @@
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="khxm"<c:if test="${bzzseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>
-                                            <option value="jyzkh" <c:if test="${bzzseachCondition=='jyzkh'}">selected="selected"</c:if> >交易账卡号</option>
-                                            <option value="dszh" <c:if test="${bzzseachCondition=='dszh'}">selected="selected"</c:if> >对手账卡号</option>
+                                            <option value="yhkkh" <c:if test="${bzzseachCondition=='yhkkh'}">selected="selected"</c:if> >交易账卡号</option>
+                                            <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手账卡号</option>
                                             <option value="dsxm" <c:if test="${bzzseachCondition=='dsxm'}">selected="selected"</c:if> >对手户名</option>
-                                            <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>
-                                            <%--<option value="gsmc" <c:if test="${seachCondition=='gsmc'}">selected="selected"</c:if> >公司名称</option>--%>
-                                            <%--<option value="bdsj" <c:if test="${zcseachCondition=='bdsj'}">selected="selected"</c:if> >手机号</option>--%>
-                                            <%--<option value="yhzh" <c:if test="${zcseachCondition=='yhzh'}">selected="selected"</c:if> >银行账号</option>--%>
 
-                                            <%--<option value="zfb" <c:if test="${seachCondition=='zfb'}">selected="selected"</c:if> >支付宝账号</option>--%>
-                                            <%--<option value="zh" <c:if test="${seachCondition=='zh'}">selected="selected"</c:if> >财付通账号</option>--%>
-                                            <%--<option value="tbmemberid" <c:if test="${seachCondition=='tb'}">selected="selected"</c:if> >淘宝账号</option>--%>
-                                            <%--<option value="wxh" <c:if test="${seachCondition=='wxh'}">selected="selected"</c:if> >微信号</option>--%>
-                                            <%--<option value="qqh" <c:if test="${seachCondition=='qqh'}">selected="selected"</c:if> >QQ号</option>--%>
-                                            <%--<option value="js" <c:if test="${seachCondition=='js'}">selected="selected"</c:if> >角色</option>--%>
-                                            <%--<option value="zt" <c:if test="${seachCondition=='zt'}">selected="selected"</c:if> >状态</option>--%>
-                                            <%--<option value="gzd" <c:if test="${seachCondition=='gzd'}">selected="selected"</c:if> >关注度</option>--%>
-                                            <%--<option value="ssypz" <c:if test="${seachCondition=='ssypz'}">selected="selected"</c:if> >所属研判组</option>--%>
-                                            <%--<option value="sfbsdfhc" <c:if test="${seachCondition=='sfbsdfhc'}">selected="selected"</c:if> >是否部署地方核查</option>--%>
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
                                         <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${bzzseachCode}</textarea>

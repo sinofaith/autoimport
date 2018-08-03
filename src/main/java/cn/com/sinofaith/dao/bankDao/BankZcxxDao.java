@@ -2,6 +2,7 @@ package cn.com.sinofaith.dao.bankDao;
 
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.dao.BaseDao;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,18 @@ public class BankZcxxDao extends BaseDao<BankZcxxEntity>{
     }
 
     public List<BankZcxxEntity> getDoPage(String seachCode, int offset, int length){
-        List<BankZcxxEntity> result = doPage("from BankZcxxEntity  where 1=1" +seachCode +"order by id desc,khxm ",offset,length);
+        List<BankZcxxEntity> result = doPage("from BankZcxxEntity  where 1=1" +seachCode +"order by inserttime desc, khzjh nulls last ",offset,length);
         return result;
+    }
+
+    public int saveZcxx(List<BankZcxxEntity> listZcxx,long aj_id){
+        int i = 0;
+        for(BankZcxxEntity zc:listZcxx){
+            zc.setAj_id(aj_id);
+            zc.setInserttime(TimeFormatUtil.getDate("/"));
+            save(zc);
+            i++;
+        }
+        return i;
     }
 }

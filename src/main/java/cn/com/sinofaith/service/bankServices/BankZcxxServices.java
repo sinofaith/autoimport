@@ -32,9 +32,8 @@ public class BankZcxxServices {
         String ajid = cfts.getAjidByAjm(aj);
 
         if(seachCode!=null){
-            seachCode =seachCode.replace("\r\n","").replace("，","").
-                    replace(" ","").replace(" ","").replace("\t","");
-            seach = seach.append(" and aj_id in ("+ajid.toString()+") and "+ seachCondition+" like "+"'"+ seachCode +"'");
+            seachCode =seachCode.trim().replace("\r\n","").replace("，","").replace("\t","");
+            seach = seach.append(" and aj_id in ("+ajid.toString()+") and "+ seachCondition+" like "+"'%"+ seachCode +"%'");
         }else{
             seach = seach.append(" and aj_id in ("+ajid.toString()+") ");
         }
@@ -92,17 +91,23 @@ public class BankZcxxServices {
             cell = row.createCell(1);
             cell.setCellValue(zcxx.getZhzt());
             cell = row.createCell(2);
-            cell.setCellValue(zcxx.getYhkzh());
+            cell.setCellValue(zcxx.getYhkkh());
             cell = row.createCell(3);
-            cell.setCellValue(zcxx.getKhxm());
+            cell.setCellValue(zcxx.getYhkzh());
             cell = row.createCell(4);
-            cell.setCellValue(zcxx.getKhzjh());
+            cell.setCellValue(zcxx.getKhxm());
             cell = row.createCell(5);
-            cell.setCellValue(zcxx.getKhsj());
+            cell.setCellValue(zcxx.getKhzjh());
             cell = row.createCell(6);
+            cell.setCellValue(zcxx.getZhye().toString());
+            cell = row.createCell(7);
+            cell.setCellValue(zcxx.getKyye().toString());
+            cell = row.createCell(8);
+            cell.setCellValue(zcxx.getKhsj());
+            cell = row.createCell(9);
             cell.setCellValue(zcxx.getKhh());
             if(i%65536==0) {
-                for (int a = 0; a < 9; a++) {
+                for (int a = 0; a < 20; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
@@ -118,14 +123,20 @@ public class BankZcxxServices {
         cell = row.createCell(1);
         cell.setCellValue("账户状态");
         cell = row.createCell(2);
-        cell.setCellValue("银行卡账户");
+        cell.setCellValue("交易卡号");
         cell = row.createCell(3);
-        cell.setCellValue("开户姓名");
+        cell.setCellValue("交易帐号");
         cell = row.createCell(4);
-        cell.setCellValue("开户证件号");
+        cell.setCellValue("开户姓名");
         cell = row.createCell(5);
-        cell.setCellValue("开户时间");
+        cell.setCellValue("开户证件号");
         cell = row.createCell(6);
+        cell.setCellValue("账户余额");
+        cell = row.createCell(7);
+        cell.setCellValue("可用余额");
+        cell = row.createCell(8);
+        cell.setCellValue("开户时间");
+        cell = row.createCell(9);
         cell.setCellValue("开户行");
         return row;
     }

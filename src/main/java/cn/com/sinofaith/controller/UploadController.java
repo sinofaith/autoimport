@@ -41,7 +41,7 @@ public class UploadController {
     @ResponseBody
     public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                                    @RequestParam("checkBox") long checkBox,HttpServletRequest request){
-        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+TimeFormatUtil.getDate("")+"/";
+        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
         String filePath ="";
         String fileName="";
         String result = "";
@@ -51,8 +51,8 @@ public class UploadController {
             uploadPathd.mkdirs();
         }
         for(int i=0;i<file.size();i++){
-            fileName =TimeFormatUtil.getDate("") +file.get(i).getOriginalFilename();
-             filePath = uploadPath + fileName;
+            fileName =System.currentTimeMillis() +file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
             if(fileName.endsWith(".txt")){
                 uploadFile = new File(filePath);
                 try {
@@ -89,6 +89,48 @@ public class UploadController {
         }else {
             result = "";
         }
+        request.getSession().setAttribute("aj",aje);
+        return result;
+    }
+
+    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String uploadBank(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+                             HttpServletRequest request) {
+        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
+        String filePath ="";
+        String fileName="";
+        String result = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if(!uploadPathd.exists()){
+            uploadPathd.mkdirs();
+        }
+        for(int i=0;i<file.size();i++){
+            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        int a = 0;
+        int b = 0;
+
+        AjEntity aje = ajs.findByName(aj).get(0);
+        if(uploadPathd.listFiles()!=null) {
+            us.insertBankZcxx(uploadPath,aje.getId());
+//            us.insertBankZzxx(uploadPath,aje.getId());
+        }
+
+
+        us.deleteAll(uploadPath);
+        uploadPathd.delete();
+
         request.getSession().setAttribute("aj",aje);
         return result;
     }

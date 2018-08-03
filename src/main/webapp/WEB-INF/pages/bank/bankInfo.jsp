@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@include file="../template/sideBar_left.jsp" %>
 <%@include file="../template/newmain.jsp" %>
 
@@ -47,19 +48,25 @@
                                     <tr align="center">
                                         <td width="6%">序号</td>
                                         <td width="7%">账户状态</td>
-                                        <td width="12%">银行卡账号</td>
+                                        <td width="12%">交易卡号</td>
+                                        <td width="12%">交易账号</td>
                                         <td width="6%">开户姓名</td>
-                                        <td width="14%">开户证件号</td>
-                                        <td width="14%">开户时间</td>
+                                        <td width="12%">开户证件号</td>
+                                        <td width="6%">账户余额</td>
+                                        <td width="6%">可用余额</td>
+                                        <td width="12%">开户时间</td>
                                         <td width="18%">开户行</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.zhzt}</td>
+                                                <td align="center">${item.yhkkh}</td>
                                                 <td align="center">${item.yhkzh}</td>
                                                 <td align="center">${item.khxm}</td>
                                                 <td align="center">${item.khzjh}</td>
+                                                <td align="center">${item.zhye}</td>
+                                                <td align="center">${item.kyye}</td>
                                                 <td align="center">${item.khsj}</td>
                                                 <td align="center">${item.khh}</td>
                                             </tr>
@@ -114,7 +121,8 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="yhkzh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>银行卡账号</option>
+                                            <option value="yhkkh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易卡号</option>
+                                            <option value="yhkzh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易帐号</option>
                                             <option value="khxm" <c:if test="${bzcseachCondition=='khxm'}">selected="selected"</c:if> >开户姓名</option>
                                             <option value="khzjh" <c:if test="${bzcseachCondition=='khzjh'}">selected="selected"</c:if> >开户证件号</option>
                                             <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>

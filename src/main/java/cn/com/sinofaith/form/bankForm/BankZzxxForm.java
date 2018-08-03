@@ -6,15 +6,22 @@ import java.util.Map;
 public class BankZzxxForm {
     private long id;
     private String jyxm;
-    private String jyzkh;
+    private String yhkkh;
     private String jysj;
-    private BigDecimal jyje;
-    private BigDecimal jyye;
+    private BigDecimal jyje = new BigDecimal(0);
+    private BigDecimal jyye = new BigDecimal(0);
     private String sfbz;
     private String dszh;
+    private String dskh;
     private String dsxm;
+    private String dssfzh;
+    private String dskhh;
     private String zysm;
     private String jysfcg;
+    private String jywdmc;
+    private BigDecimal dsjyye;
+    private BigDecimal dsye;
+    private String bz;
 
     public long getId() {
         return id;
@@ -32,12 +39,12 @@ public class BankZzxxForm {
         this.jyxm = jyxm;
     }
 
-    public String getJyzkh() {
-        return jyzkh;
+    public String getYhkkh() {
+        return yhkkh;
     }
 
-    public void setJyzkh(String jyzkh) {
-        this.jyzkh = jyzkh;
+    public void setYhkkh(String yhkkh) {
+        this.yhkkh = yhkkh;
     }
 
     public String getJysj() {
@@ -80,12 +87,36 @@ public class BankZzxxForm {
         this.dszh = dszh;
     }
 
+    public String getDskh() {
+        return dskh;
+    }
+
+    public void setDskh(String dskh) {
+        this.dskh = dskh;
+    }
+
     public String getDsxm() {
         return dsxm;
     }
 
     public void setDsxm(String dsxm) {
         this.dsxm = dsxm;
+    }
+
+    public String getDssfzh() {
+        return dssfzh;
+    }
+
+    public void setDssfzh(String dssfzh) {
+        this.dssfzh = dssfzh;
+    }
+
+    public String getDskhh() {
+        return dskhh;
+    }
+
+    public void setDskhh(String dskhh) {
+        this.dskhh = dskhh;
     }
 
     public String getZysm() {
@@ -104,10 +135,42 @@ public class BankZzxxForm {
         this.jysfcg = jysfcg;
     }
 
+    public String getJywdmc() {
+        return jywdmc;
+    }
+
+    public void setJywdmc(String jywdmc) {
+        this.jywdmc = jywdmc;
+    }
+
+    public BigDecimal getDsjyye() {
+        return dsjyye;
+    }
+
+    public void setDsjyye(BigDecimal dsjyye) {
+        this.dsjyye = dsjyye;
+    }
+
+    public BigDecimal getDsye() {
+        return dsye;
+    }
+
+    public void setDsye(BigDecimal dsye) {
+        this.dsye = dsye;
+    }
+
+    public String getBz() {
+        return bz;
+    }
+
+    public void setBz(String bz) {
+        this.bz = bz;
+    }
+
     public BankZzxxForm mapToForm(Map map){
         BankZzxxForm zzf = new BankZzxxForm();
         zzf.setJyxm((String) map.get("JYXM"));
-        zzf.setJyzkh((String) map.get("JYZKH"));
+        zzf.setYhkkh((String) map.get("YHKKH"));
         zzf.setJysj((String)map.get("JYSJ"));
         zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
         zzf.setJyye(new BigDecimal(map.get("JYYE").toString()));

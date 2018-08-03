@@ -1,11 +1,17 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
+import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftPersonEntity;
 import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
+import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.dao.cftDao.CftPersonDao;
 import cn.com.sinofaith.dao.cftDao.CftZcxxDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
+import cn.com.sinofaith.util.ExcelReader;
+import cn.com.sinofaith.util.ReadExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +32,12 @@ public class UploadService {
 
     @Autowired
     private CftPersonDao cpd;
+
+    @Autowired
+    private BankZcxxDao bzcd;
+
+    @Autowired
+    private BankZzxxDao bzzd;
 
     public int deleteAll(String uploadPath){
         try {
@@ -196,6 +208,103 @@ public class UploadService {
             }
         }
         return zcxxs;
+    }
+
+    public int insertBankZzxx(String filePath,long aj_id){
+        List<String> listPath = getFileLists(filePath,"交易明细");
+        List<BankZzxxEntity> listZzxx = getBzzxxByExcel(listPath);
+//        int i = bzzd.insertZzxx(listZzxx,aj_id);
+        return 0;
+    }
+
+    public List<BankZzxxEntity> getBzzxxByExcel(List<String> listPath){
+        List<BankZzxxEntity> zzxxs = new ArrayList<>();
+        for(String path:listPath){
+            if(path.endsWith(".xls")){
+
+            }
+            if(path.endsWith(".xlsx")){
+
+                try {
+                }catch (Exception e){
+                    e.getStackTrace();
+                }
+            }
+        }
+        return zzxxs;
+    }
+
+    public int insertBankZcxx(String filePath,long aj_id){
+        List<String> listPath = getFileLists(filePath,"开户");
+        List<BankZcxxEntity> listZcxx = getBzcxxByExcel(listPath);
+        int i = bzcd.saveZcxx(listZcxx,aj_id);
+        return i;
+    }
+
+    public List<BankZcxxEntity> getBzcxxByExcel(List<String> listPath){
+        List<BankZcxxEntity> zcxxs = new ArrayList<>();
+        for(String path:listPath){
+            try {
+                ReadExcelUtils excelReader = new ReadExcelUtils(path);
+                String[] titles = excelReader.readExcelTitle();
+                List<String> strTitle = new ArrayList<>(Arrays.asList(titles));
+                Map<String,Integer> title = new HashMap<>();
+                for(int i=0;i<strTitle.size();i++){
+                    String str=strTitle.get(i);
+                    String lb = "";
+                    if(str!=null&&str.length()>0) {
+                        if (str.contains("账户开户名称")) {
+                            lb = "khxm";
+                        } else if (str.contains("开户人证件号码")) {
+                            lb = "khzjh";
+                        } else if (str.contains("交易卡号")) {
+                            lb = "yhkkh";
+                        } else if (str.contains("交易账号")){
+                            lb = "yhkzh";
+                        } else if (str.contains("账号开户时间")) {
+                            lb = "khsj";
+                        } else if (str.contains("开户网点")) {
+                            lb = "khh";
+                        } else if (str.contains("账户状态")) {
+                            lb = "zhzt";
+                        } else if(str.contains("账户余额")) {
+                            lb = "zhye";
+                        } else if(str.contains("可用余额")) {
+                            lb = "kyye";
+                        }
+                        if(!"".endsWith(lb)) {
+                            title.put(lb, i);
+                        }
+                    }
+                }
+
+                Map<Integer, Map<Integer,Object>> map = excelReader.readExcelContent();
+                for(int i=1;i<=map.size();i++){
+                    if(!zcxxs.contains(BankZcxxEntity.mapToObj(map.get(i),title))){
+                        zcxxs.add(BankZcxxEntity.mapToObj(map.get(i),title));
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("未找到指定路径的文件!");
+                e.printStackTrace();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return  zcxxs;
+    }
+
+    public static List<String> getFileLists(String filePath,String filter){
+        List<String> listPath = new ArrayList<String>();
+        File dir = new File(filePath);
+        File[] files = dir.listFiles();
+        for(File file:files){
+            if(file.getName().contains(filter)){
+                listPath.add(file.getAbsolutePath());
+            }
+        }
+        return listPath;
     }
 
 
