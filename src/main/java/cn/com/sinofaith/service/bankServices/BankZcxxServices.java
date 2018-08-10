@@ -62,10 +62,10 @@ public class BankZcxxServices {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
-        List<BankZcxxEntity> listZcxx = bzcd.find("from BankZcxxEntity where 1=1"+seach+" order by id desc");
+        List<BankZcxxEntity> listZcxx = bzcd.find("from BankZcxxEntity where 1=1"+seach+" order by inserttime,khzjh nulls last desc");
         HSSFWorkbook wb = createExcel(listZcxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-Disposition","attachment;filename="+new String(("银行卡信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-Disposition","attachment;filename="+new String(("银行卡开户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -99,15 +99,15 @@ public class BankZcxxServices {
             cell = row.createCell(5);
             cell.setCellValue(zcxx.getKhzjh());
             cell = row.createCell(6);
-            cell.setCellValue(zcxx.getZhye().toString());
+            cell.setCellValue(zcxx.getZhye()==null? "":zcxx.getZhye().toString());
             cell = row.createCell(7);
-            cell.setCellValue(zcxx.getKyye().toString());
+            cell.setCellValue(zcxx.getKyye()==null?"":zcxx.getKyye().toString());
             cell = row.createCell(8);
             cell.setCellValue(zcxx.getKhsj());
             cell = row.createCell(9);
             cell.setCellValue(zcxx.getKhh());
             if(i%65536==0) {
-                for (int a = 0; a < 20; a++) {
+                for (int a = 0; a < 11; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }

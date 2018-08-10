@@ -1,8 +1,11 @@
 package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.service.*;
+import cn.com.sinofaith.service.bankServices.BankTjjgServices;
+import cn.com.sinofaith.service.bankServices.BankZzxxServices;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
@@ -34,6 +37,10 @@ public class UploadController {
     private CftTjjgsService tjss;
     @Autowired
     private CftZzxxService zzs;
+    @Autowired
+    private BankZzxxServices bzs;
+    @Autowired
+    private BankTjjgServices btjss;
     @Autowired
     private AjServices ajs;
 
@@ -124,13 +131,21 @@ public class UploadController {
         AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
             us.insertBankZcxx(uploadPath,aje.getId());
-//            us.insertBankZzxx(uploadPath,aje.getId());
+            us.insertBankZzxx(uploadPath,aje.getId());
+            us.deleteAll(uploadPath);
+            uploadPathd.delete();
+
+            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
+            btjss.count(listZzxx,aje.getId());
         }
 
 
-        us.deleteAll(uploadPath);
-        uploadPathd.delete();
 
+        if(a+b>0){
+            result = String.valueOf(a+b);
+        }else {
+            result = "";
+        }
         request.getSession().setAttribute("aj",aje);
         return result;
     }

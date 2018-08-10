@@ -22,6 +22,8 @@ public class BankZzxxForm {
     private BigDecimal dsjyye;
     private BigDecimal dsye;
     private String bz;
+    private String jyzjh;
+    private String inserttime;
 
     public long getId() {
         return id;
@@ -36,7 +38,7 @@ public class BankZzxxForm {
     }
 
     public void setJyxm(String jyxm) {
-        this.jyxm = jyxm;
+        if(jyxm==null){jyxm ="";} this.jyxm = jyxm;
     }
 
     public String getYhkkh() {
@@ -44,7 +46,7 @@ public class BankZzxxForm {
     }
 
     public void setYhkkh(String yhkkh) {
-        this.yhkkh = yhkkh;
+        if(yhkkh==null){yhkkh="";}this.yhkkh = yhkkh;
     }
 
     public String getJysj() {
@@ -52,6 +54,9 @@ public class BankZzxxForm {
     }
 
     public void setJysj(String jysj) {
+        if(jysj==null) {
+            jysj="";
+        }
         this.jysj = jysj;
     }
 
@@ -91,7 +96,7 @@ public class BankZzxxForm {
         return dskh;
     }
 
-    public void setDskh(String dskh) {
+    public void setDskh(String dskh) {if(dskh==null){dskh="";}
         this.dskh = dskh;
     }
 
@@ -100,7 +105,7 @@ public class BankZzxxForm {
     }
 
     public void setDsxm(String dsxm) {
-        this.dsxm = dsxm;
+        if(dsxm==null){dsxm="";}this.dsxm = dsxm;
     }
 
     public String getDssfzh() {
@@ -124,6 +129,7 @@ public class BankZzxxForm {
     }
 
     public void setZysm(String zysm) {
+        if(zysm==null){zysm="";}
         this.zysm = zysm;
     }
 
@@ -132,6 +138,7 @@ public class BankZzxxForm {
     }
 
     public void setJysfcg(String jysfcg) {
+        if(jysfcg==null){jysfcg="";}
         this.jysfcg = jysfcg;
     }
 
@@ -164,19 +171,23 @@ public class BankZzxxForm {
     }
 
     public void setBz(String bz) {
+        if(bz==null){bz="";}
+
         this.bz = bz;
     }
 
+
+
     public BankZzxxForm mapToForm(Map map){
         BankZzxxForm zzf = new BankZzxxForm();
-        zzf.setJyxm((String) map.get("JYXM"));
+        zzf.setJyxm(map.get("JYXM") != null? (String)map.get("JYXM"):(String) map.get("JYXMS"));
         zzf.setYhkkh((String) map.get("YHKKH"));
         zzf.setJysj((String)map.get("JYSJ"));
         zzf.setJyje(new BigDecimal(map.get("JYJE").toString()));
         zzf.setJyye(new BigDecimal(map.get("JYYE").toString()));
         zzf.setSfbz((String) map.get("SFBZ"));
-        zzf.setDszh((String) map.get("DSZH"));
-        zzf.setDsxm(map.get("DSXM") != null? (String)map.get("DSXM"):(String) map.get("DFXM"));
+        zzf.setDskh((String) map.get("DSKH"));
+        zzf.setDsxm(map.get("DSXM") != null? (String)map.get("DSXM"):(String) map.get("DFXMS"));
         zzf.setZysm((String) map.get("ZYSM"));
         zzf.setJysfcg((String)map.get("JYSFCG"));
         return zzf;

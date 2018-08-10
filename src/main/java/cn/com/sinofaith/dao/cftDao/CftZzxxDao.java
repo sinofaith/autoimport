@@ -122,6 +122,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
             con.commit();
             DBUtil.closeStatement(pstm);
             DBUtil.closeConnection(con);
+            a=listZzxx.size();
 //            con.close();
             listZzxx = null;
             map = null;

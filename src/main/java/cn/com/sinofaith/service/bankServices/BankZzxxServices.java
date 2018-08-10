@@ -1,9 +1,15 @@
 package cn.com.sinofaith.service.bankServices;
 
 
+import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
+import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.form.bankForm.BankZzxxForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.ExcelReader;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,14 +19,51 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BankZzxxServices {
     @Autowired
     private BankZzxxDao bankzzd;
+    @Autowired
+    private AJDao ad;
+
+    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj){
+        String ajid = getAjidByAjm(aj);
+        StringBuffer seach = new StringBuffer(" and c.aj_id in ("+ajid+") ");
+
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            if("khxm".equals(seachCondition)){
+                seach.append(" and (s."+seachCondition + " like '"+seachCode+"' or c.jyxm like '"+seachCode+"')");
+            } else {
+                seach.append(" and c." + seachCondition + " like " + "'" + seachCode + "'");
+            }
+        }else{
+            seach.append(" and ( 1=1 ) ");
+        }
+        if(orderby != null){
+            seach .append(" order by c."+orderby).append(desc).append(",c.id");
+        }
+        return seach.toString();
+    }
+
+    public String getAjidByAjm(AjEntity aj){
+        String[] ajm = new String[]{};
+        StringBuffer ajid = new StringBuffer();
+        if(aj.getAj().contains(",")) {
+            ajm = aj.getAj().split(",");
+            for (int i = 0; i < ajm.length; i++) {
+                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                if (i != ajm.length - 1) {
+                    ajid.append(",");
+                }
+            }
+        }else{
+            ajid.append(aj.getId());
+        }
+        return ajid.toString();
+    }
     public Page queryForPage(int currentPage,int pageSize,String seach){
         Page page = new Page();
         List<BankZzxxForm> zzFs = new ArrayList<>();
@@ -45,12 +88,12 @@ public class BankZzxxServices {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
-        List listZzxx = bankzzd.findBySQL("SELECT  s.khxm jyxm,d.khxm dfxm,c.* FROM  bank_zzxx c " +
-                "left join bank_zcxx s on c.jyzkh=s.yhkzh " +
-                "left join bank_zcxx d on c.dszh=d.yhkzh  where 1=1 "+seach);
+        List listZzxx = bankzzd.findBySQL("SELECT  s.khxm jyxms,d.khxm dfxms,c.* FROM  bank_zzxx c " +
+                "left join bank_person s on c.yhkkh=s.yhkkh  " +
+                "left join bank_person d on c.dskh=d.yhkkh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡转账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -130,4 +173,49 @@ public class BankZzxxServices {
         cell.setCellValue("交易状态");
         return row;
     }
+
+    public String getByYhkkh(String zh,String jylx,String type,AjEntity aj,int page){
+        Page pages = new Page();
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        String ajid = getAjidByAjm(aj);
+
+        String seach ="";
+        if("tjjg".equals(type)){
+            seach=" and c.yhkkh='"+zh+"'";
+        }else{
+            seach=" and c.zh='"+zh+"' and (c.fsf='"+jylx+"' or c.jsf='"+jylx+"') ";
+            if(zh.equals(jylx)){
+                seach = "and c.fsf = c.jsf and c.zh='"+zh+"' ";
+            }
+        }
+//        if(aj.getFlg()==1){
+//            seach +=" and c.shmc not like'%红包%'";
+//        }
+        seach += "and aj_id in("+ajid+") ";
+
+        int allRow = bankzzd.getAllRowCount(seach);
+        List zzList = bankzzd.getDoPage(seach,page,100);
+
+
+
+        List<BankZzxxForm> zzFs = new ArrayList<>();
+        BankZzxxForm zzf = new BankZzxxForm();
+        for(int i=0;i<zzList.size();i++){
+            Map map = (Map)zzList.get(i);
+            zzf = zzf.mapToForm(map);
+            zzf.setId(i+1+(page-1)*100);
+            zzFs.add(zzf);
+        }
+        pages.setTotalRecords(allRow);
+        pages.setPageSize(100);
+        pages.setPageNo(page);
+        pages.setList(zzFs);
+        return gson.toJson(pages);
+    }
+
+    public List<BankZzxxEntity> getAll(long aj_id){
+       List<BankZzxxEntity> zz = bankzzd.find(" from BankZzxxEntity where aj_id = "+aj_id);
+       return zz;
+    }
+
 }

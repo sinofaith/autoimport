@@ -31,6 +31,10 @@ public class BankZzxxController {
         ModelAndView mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
         httpSession.removeAttribute("bzzseachCondition"); //查询条件
         httpSession.removeAttribute("bzzseachCode");//查询内容
+
+        httpSession.removeAttribute("bzorderby");
+        httpSession.removeAttribute("bzlastOrder");
+        httpSession.removeAttribute("bzdesc");
         return mav;
     }
 
@@ -42,7 +46,7 @@ public class BankZzxxController {
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
+        String seach = bankzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
         Page page = bankzzs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("seachCode",seachCode);
@@ -97,6 +101,15 @@ public class BankZzxxController {
         String desc = (String) req.getSession().getAttribute("bzdesc");
         String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
         bankzzs.downloadFile(seach,rep,aj.getAj());
+    }
+
+
+    @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getDetails(@RequestParam("yhkkh") String yhkkh,@RequestParam("dfkh")String dfkh,
+                             @RequestParam("type") String type,@RequestParam("page")int page, HttpServletRequest req){
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        return bankzzs.getByYhkkh(yhkkh,dfkh,type,aj!=null ? aj:new AjEntity(),page);
     }
 
 }

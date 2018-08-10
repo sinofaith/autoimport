@@ -15,8 +15,8 @@ public class BankZcxxEntity {
     private String khzjh;
     private String khsj;
     private String khh;
-    private BigDecimal zhye;
-    private BigDecimal kyye;
+    private BigDecimal zhye = new BigDecimal(0);
+    private BigDecimal kyye = new BigDecimal(0);
     private long aj_id;
     private String inserttime;
 
@@ -168,15 +168,12 @@ public class BankZcxxEntity {
 
         BankZcxxEntity that = (BankZcxxEntity) o;
 
-        if (aj_id != that.aj_id) return false;
-        return yhkzh != null ? yhkzh.equals(that.yhkzh) : that.yhkzh == null;
+        return yhkkh != null ? yhkkh.equals(that.yhkkh) : that.yhkkh == null;
     }
 
     @Override
     public int hashCode() {
-        int result = yhkzh != null ? yhkzh.hashCode() : 0;
-        result = 31 * result + (int) (aj_id ^ (aj_id >>> 32));
-        return result;
+        return yhkkh != null ? yhkkh.hashCode() : 0;
     }
 
     public static BankZcxxEntity mapToObj(Map<Integer,Object> map, Map<String,Integer> title){

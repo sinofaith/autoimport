@@ -48,12 +48,12 @@
                                     <tr align="center">
                                         <td width="6%">序号</td>
                                         <td width="6%">交易户名</td>
-                                        <td width="15%">交易账卡号</td>
-                                        <td width="15%">交易时间</td>
+                                        <td width="12%">交易账卡号</td>
+                                        <td width="12%">交易时间</td>
                                         <td width="10%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额(元)</a></td>
                                         <td width="10%">交易余额(元)</td>
                                         <td width="6%">收付标志</td>
-                                        <td width="6%">对手户名</td>
+                                        <td width="10%">对手户名</td>
                                         <td width="15%">对手账卡号</td>
                                         <td width="6%">摘要说明</td>
                                         <td width="6%">交易状态</td>
@@ -125,8 +125,8 @@
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="khxm"<c:if test="${bzzseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>
                                             <option value="yhkkh" <c:if test="${bzzseachCondition=='yhkkh'}">selected="selected"</c:if> >交易账卡号</option>
-                                            <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手账卡号</option>
                                             <option value="dsxm" <c:if test="${bzzseachCondition=='dsxm'}">selected="selected"</c:if> >对手户名</option>
+                                            <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手账卡号</option>
 
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>

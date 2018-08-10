@@ -1,5 +1,6 @@
 package cn.com.sinofaith.util;
 
+import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
@@ -59,6 +60,8 @@ public abstract class ExcelReader extends DefaultHandler {
             parser.parse(sheetSource);
             sheet.close();
         }
+        pkg.flush();
+        pkg.close();
     }
 
     /**
@@ -78,6 +81,8 @@ public abstract class ExcelReader extends DefaultHandler {
         InputSource sheetSource = new InputSource(sheet2);
         parser.parse(sheetSource);
         sheet2.close();
+        pkg.flush();
+        pkg.close();
     }
 
     public XMLReader fetchSheetParser(SharedStringsTable sst)
@@ -159,7 +164,7 @@ public abstract class ExcelReader extends DefaultHandler {
                 // 日期格式处理
                 if (dateFlag) {
                     Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     value = dateFormat.format(date);
                 }
                 // 数字类型处理
@@ -202,27 +207,70 @@ public abstract class ExcelReader extends DefaultHandler {
      * 测试方法
      */
     public static void main(String[] args) throws Exception {
-        String file = "D:\\work\\数据模型\\资金\\银行账单合集\\3208332220160818101525\\任务管理.xlsx";
-        final Map<String,Integer> map=new HashMap();
-        final Map content = new HashMap();
+        long start = System.currentTimeMillis();
+        String file = "D:\\work\\数据模型\\资金\\银行账单合集\\3208332220160830101127\\账户交易明细表.xlsx";
+        final Map<String,Integer> title=new HashMap();
+        final List<BankZzxxEntity> listB = new ArrayList<>();
 
         ExcelReader reader = new ExcelReader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
                 if(curRow==0){
                     for(int i = 0;i<rowList.size(); i++){
-                        if(rowList.get(i).contains("银行名称")){
-                            map.put("yhmc",i);
+                        String temp = rowList.get(i);
+                        if(temp.contains("交易账卡号")){
+                            title.put("yhkkh",i);
+                        }else if(temp.contains("交易账号")){
+                            title.put("yhkzh",i);
+                        }else if(rowList.get(i).contains("交易户名")){
+                            title.put("jyxm",i);
+                        }else if(temp.contains("交易证件号")){
+                            title.put("jyzjh",i);
+                        }else if(temp.contains("交易日期")){
+                            title.put("jysj",i);
+                        }else if(temp.contains("交易金额")){
+                            title.put("jyje",i);
+                        }else if(temp.contains("交易余额")&&!temp.contains("对手")){
+                            title.put("jyye",i);
+                        }else if(temp.contains("收付标志")){
+                            title.put("sfbz",i);
+                        }else if(temp.contains("对手账号")){
+                            title.put("dskh",i);
+                        }else if(temp.contains("对手卡号")){
+                            title.put("dszh",i);
+                        }else if(temp.contains("对手户名")){
+                            title.put("dsxm",i);
+                        }else if(temp.contains("对手身份证号")){
+                            title.put("dssfzh",i);
+                        }else if(temp.contains("对手开户银行")){
+                            title.put("dskhh",i);
+                        }else if(temp.contains("摘要说明")){
+                            title.put("zysm",i);
+                        }else if(temp.contains("交易网点名称")){
+                            title.put("jywdmc",i);
+                        }else if(temp.contains("交易发生地")){
+                            title.put("jyfsd",i);
+                        }else if(temp.contains("交易是否成功")){
+                            title.put("jysfcg",i);
+                        }else if(temp.contains("对手交易余额")){
+                            title.put("dsjyye",i);
+                        }else if(temp.contains("对手余额")){
+                            title.put("dsye",i);
+                        }else if(temp.contains("备注")){
+                            title.put("bz",i);
                         }
                     }
                 }
-                content.put(sheetIndex+""+curRow,rowList.get(map.get("yhmc")));
-                System.out.println("Sheet:" + sheetIndex + ", Row:" + curRow + ", Data:" +rowList);
+                if(!rowList.get(0).equals("交易账卡号")) {
+                    listB.add(BankZzxxEntity.listToObj(rowList, title));
+                }
             }
         };
 
         reader.process(file);
-
-        System.out.println(content.size());
-        System.out.println(content.values());
+        Set<BankZzxxEntity> setB = new HashSet<>(listB);
+        System.out.println(listB.size());
+        System.out.println(setB.size());
+        long end = System.currentTimeMillis();
+        System.out.println(end-start);
     }
 }

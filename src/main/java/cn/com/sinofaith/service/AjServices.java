@@ -72,6 +72,9 @@ public class AjServices {
             st.addBatch("delete  cft_zzxx where aj_id="+ajid);
             st.addBatch("delete  cft_tjjg where aj_id="+ajid);
             st.addBatch("delete  cft_tjjgs where aj_id="+ajid);
+            st.addBatch("delete bank_zcxx where aj_id="+ajid);
+            st.addBatch("delete bank_zzxx where aj_id="+ajid);
+            st.addBatch("delete bank_tjjg where aj_id="+ajid);
             st.executeBatch();
             con.commit();
 
