@@ -245,6 +245,20 @@ public class BaseDao<T>{
         return list;
     }
 
+    public int updateBySql(String sql){
+        Session session = getSession();
+        int num = 0;
+        try {
+            session.beginTransaction();
+            num = session.createSQLQuery(sql).executeUpdate();
+            session.getTransaction().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return num;
+    }
+
     public  Session getSession() {
         return sessionFactory.getCurrentSession();
     }

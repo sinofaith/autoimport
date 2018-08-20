@@ -84,6 +84,49 @@ function progressFunction(evt) {
     }
 }
 
+function getZzGtlxr(obj) {
+    var dfkh = $(obj).closest("tr").find("td:eq(3)").text()
+    window.page = 1
+    var tbody = window.document.getElementById("result")
+    var url = "/SINOFAITH/bankgtzh/getDetails"
+    $.ajax({
+        type:"post",
+        dataType:"json",
+        url:url,
+        data:{
+            dfzh:dfkh,
+            page:page
+        },
+        success:function (msg) {
+            var data = msg.list
+            var str = ""
+            for (i in data) {
+                if (i % 2 == 0) {
+                    str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
+                } else {
+                    str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
+                }
+                str += "<td width=\"5%\">" + data[i].id + "</td>" +
+                    "<td width=\"5%\">" + data[i].name + "</td>" +
+                    "<td width=\"10%\">" + data[i].jyzh + "</td>" +
+                    "<td width=\"10%\">" + data[i].dfzh + "</td>" +
+                    "<td width=\"5%\">" + data[i].dfxm + "</td>" +
+                    "<td width=\"8%\">" + data[i].count + "</td>" +
+                    "<td width=\"7%\">" + data[i].jyzcs + "</td>" +
+                    "<td width=\"7%\">" + data[i].jzzcs + "</td>" +
+                    "<td width=\"10%\">" + data[i].jzzje + "</td>" +
+                    "<td width=\"7%\">" + data[i].czzcs + "</td>" +
+                    "<td width=\"10%\">" + data[i].czzje + "</td>" +
+                    "</tr>";
+            }
+            tbody.innerHTML = str
+            $("#dfkh").attr("value", dfkh);
+            $("#allRow").attr("value", msg.totalRecords)
+        }
+    })
+}
+
+
 function getZzDetails(obj,type) {
     var yhkkh = $(obj).closest("tr").find("td:eq(2)").text()
     var dfkh = $(obj).closest("tr").find("td:eq(3)").text()
@@ -118,11 +161,11 @@ function getZzDetails(obj,type) {
                     "<td width=\"5%\">"+data[i].jyxm+"</td>"+
                     "<td width=\"12%\">"+data[i].yhkkh+"</td>"+
                     "<td width=\"12%\">"+data[i].jysj+"</td>"+
-                    "<td width=\"8%\">"+data[i].jyje+"</td>"+
-                    "<td width=\"8%\">"+data[i].jyye+"</td>"+
-                    "<td width=\"8%\">"+data[i].sfbz+"</td>"+
+                    "<td width=\"7%\">"+data[i].jyje+"</td>"+
+                    "<td width=\"7%\">"+data[i].jyye+"</td>"+
+                    "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                     "<td width=\"13%\">"+data[i].dsxm+"</td>"+
-                    "<td width=\"12%\">"+data[i].dskh+"</td>"+
+                    "<td width=\"16%\">"+data[i].dskh+"</td>"+
                     "<td width=\"8%\">"+data[i].zysm+"</td>"+
                     "<td width=\"5%\">"+data[i].jysfcg+"</td>"+
                     // "<td width=\"8%\">"+data[i].jsje+"</td>"+
@@ -157,7 +200,7 @@ function scrollF(type) {
         if(is_running==false) {
             is_running = true
             var yhkkh = $("#yhkkh").val();
-            var dfkh = $("#dskh").val();
+            var dfkh = $("#dfkh").val();
             window.page = page += 1
 
             if(type=="tjjg"){
@@ -187,11 +230,11 @@ function scrollF(type) {
                             "<td width=\"5%\">"+data[i].jyxm+"</td>"+
                             "<td width=\"12%\">"+data[i].yhkkh+"</td>"+
                             "<td width=\"12%\">"+data[i].jysj+"</td>"+
-                            "<td width=\"8%\">"+data[i].jyje+"</td>"+
-                            "<td width=\"8%\">"+data[i].jyye+"</td>"+
-                            "<td width=\"8%\">"+data[i].sfbz+"</td>"+
+                            "<td width=\"7%\">"+data[i].jyje+"</td>"+
+                            "<td width=\"7%\">"+data[i].jyye+"</td>"+
+                            "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                             "<td width=\"13%\">"+data[i].dsxm+"</td>"+
-                            "<td width=\"12%\">"+data[i].dskh+"</td>"+
+                            "<td width=\"16%\">"+data[i].dskh+"</td>"+
                             "<td width=\"8%\">"+data[i].zysm+"</td>"+
                             "<td width=\"5%\">"+data[i].jysfcg+"</td>"+
                             // "<td width=\"8%\">"+data[i].jsje+"</td>"+
@@ -206,4 +249,16 @@ function scrollF(type) {
             })
         }
     }
+}
+
+
+function downDetailZh(){
+    var yhkkh = $("#yhkkh").val();
+    var dskh =$("#dfkh").val();
+
+    location="/SINOFAITH/bankzzxx/downDetailZh?yhkkh="+yhkkh+"&dskh="+dskh
+}
+function downGtlxr(){
+    var dfkh = $("#dfkh").val();
+    location="/SINOFAITH/bankgtzh/downgtlxr?dfzh="+dfkh
 }

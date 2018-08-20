@@ -5,6 +5,7 @@ import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
+import cn.com.sinofaith.service.bankServices.BankTjjgsService;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
@@ -40,7 +41,9 @@ public class UploadController {
     @Autowired
     private BankZzxxServices bzs;
     @Autowired
-    private BankTjjgServices btjss;
+    private BankTjjgServices btjs;
+    @Autowired
+    private BankTjjgsService btjss;
     @Autowired
     private AjServices ajs;
 
@@ -134,8 +137,9 @@ public class UploadController {
             us.insertBankZzxx(uploadPath,aje.getId());
             us.deleteAll(uploadPath);
             uploadPathd.delete();
-
+            us.updateBySql(aje);
             List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
+            btjs.count(listZzxx,aje.getId());
             btjss.count(listZzxx,aje.getId());
         }
 

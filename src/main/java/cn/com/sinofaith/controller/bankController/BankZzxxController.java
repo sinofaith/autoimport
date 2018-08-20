@@ -112,4 +112,16 @@ public class BankZzxxController {
         return bankzzs.getByYhkkh(yhkkh,dfkh,type,aj!=null ? aj:new AjEntity(),page);
     }
 
+    @RequestMapping(value = "/downDetailZh")
+    public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,
+                             HttpServletRequest req,HttpServletResponse rep)throws Exception{
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String ajid=cftzzs.getAjidByAjm(aj);
+        String seach = " and (c.yhkkh = '"+yhkkh+"' or c.dskh='"+yhkkh+"')";
+        if(!"".equals(dskh)){
+             seach += " and (c.yhkkh = '"+dskh+"' or c.dskh='"+dskh+"')";
+        }
+        seach+=" and c.aj_id in("+ajid+") order by c.jysj desc ";
+        bankzzs.downloadFile(seach,rep, aj.getAj());
+    }
 }

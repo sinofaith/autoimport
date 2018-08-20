@@ -181,17 +181,14 @@ public class BankZzxxServices {
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach=" and c.yhkkh='"+zh+"'";
+            seach=" and c.yhkkh='"+zh+"' ";
         }else{
-            seach=" and c.zh='"+zh+"' and (c.fsf='"+jylx+"' or c.jsf='"+jylx+"') ";
-            if(zh.equals(jylx)){
-                seach = "and c.fsf = c.jsf and c.zh='"+zh+"' ";
-            }
+            seach+=" and c.dskh = '"+jylx+"' ";
         }
 //        if(aj.getFlg()==1){
 //            seach +=" and c.shmc not like'%红包%'";
 //        }
-        seach += "and aj_id in("+ajid+") ";
+        seach += "and aj_id in("+ajid+") order by c.jysj desc ";
 
         int allRow = bankzzd.getAllRowCount(seach);
         List zzList = bankzzd.getDoPage(seach,page,100);

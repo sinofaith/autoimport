@@ -1,5 +1,6 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
@@ -391,5 +392,25 @@ public class UploadService {
             }
         }
         return listPath;
+    }
+
+    public void updateBySql(AjEntity aje){
+
+         bzzd.updateBySql(" update bank_zzxx t " +
+                " set t.dskh=t.yhkkh||'-'||t.dsxm " +
+                " where t.dskh is null and t.dsxm is not null and aj_id ="+aje.getId());
+
+         bzzd.updateBySql("update bank_zzxx t " +
+                 " set t.dskh=t.yhkkh||'-'||t.zysm " +
+                 " where t.dskh is null and t.zysm is not null and aj_id ="+aje.getId());
+
+         bzzd.updateBySql("update bank_zzxx t " +
+                 " set t.dskh=t.yhkkh||'-'||t.bz " +
+                 " where t.dskh is null and t.bz is not null and aj_id="+aje.getId());
+
+         bzzd.updateBySql("update bank_zzxx t " +
+                 " set t.dskh=t.yhkkh||'-'||'空账户' " +
+                 " where t.dskh is null and aj_id="+aje.getId());
+
     }
 }

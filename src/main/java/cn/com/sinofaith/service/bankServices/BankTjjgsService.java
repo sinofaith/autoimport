@@ -1,8 +1,11 @@
-package cn.com.sinofaith.service.cftServices;
+package cn.com.sinofaith.service.bankServices;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.bankBean.BankTjjgsEntity;
+import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftTjjgsEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.dao.bankDao.BankTjjgsDao;
 import cn.com.sinofaith.dao.cftDao.CftTjjgsDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
@@ -26,17 +29,17 @@ import java.util.Map;
  * Created by Me. on 2018/5/23
  */
 @Service
-public class CftTjjgsService {
+public class BankTjjgsService {
     @Autowired
-    private CftTjjgsDao cfttjsd;
+    private BankTjjgsDao banktjsd;
 
     public Page queryForPage(int currentPage, int pageSize, String seach){
         Page page = new Page();
         //总记录数
-        int allRow = cfttjsd.getAllRowCount(seach);
+        int allRow = banktjsd.getAllRowCount(seach);
         List<CftTjjgsForm> cfttjs = new ArrayList<CftTjjgsForm>();
         CftTjjgsForm cftForm = null;
-        List cftList = cfttjsd.getDoPage(seach,currentPage,pageSize);
+        List cftList = banktjsd.getDoPage(seach,currentPage,pageSize);
         if(allRow != 0) {
             int xh = 1;
             for(int i=0;i<cftList.size();i++){
@@ -66,10 +69,10 @@ public class CftTjjgsService {
     public Page queryForPageGt(int currentPage, int pageSize, String seach,long ajid){
         Page page = new Page();
         //总记录数
-        int allRow = cfttjsd.getGtCount(seach,ajid);
+        int allRow = banktjsd.getGtCount(seach,ajid);
         List<CftTjjgsForm> cfttjs = new ArrayList<CftTjjgsForm>();
         CftTjjgsForm cftForm = null;
-        List cftList = cfttjsd.getDoPageGt(seach,currentPage,pageSize,ajid);
+        List cftList = banktjsd.getDoPageGt(seach,currentPage,pageSize,ajid);
         if(allRow != 0) {
             int xh = 1;
             for(int i=0;i<cftList.size();i++){
@@ -104,17 +107,17 @@ public class CftTjjgsService {
             seachCode=seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                  seach.append(" and c."+ seachCondition + " >= "+seachCode);
-            }else if("xm".equals(seachCondition)){
-                seach.append(" and s."+ seachCondition+" like "+"'"+ seachCode+"'");
+            }else if("khxm".equals(seachCondition)){
+                seach.append(" and s."+ seachCondition+" like "+"'%"+ seachCode+"%'");
             }
             else{
-                seach.append(" and c."+ seachCondition+" like "+"'"+ seachCode +"'");
+                seach.append(" and c."+ seachCondition+" like "+"'%"+ seachCode +"%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
         }
         if(orderby!=null){
-            if("xm".equals(orderby)){
+            if("khxm".equals(orderby)){
                 seach.append(" order by s." + orderby + desc + " nulls last ,c.jyzcs desc,c.dfzh");
             }else if("num".equals(orderby)){
               seach.append(" order by a." + orderby + desc + ",c.dfzh,c.jyzh");
@@ -143,53 +146,51 @@ public class CftTjjgsService {
 //        return page;
 //    }
 
-    public int count(List<CftZzxxEntity> listZzxx,long aj){
-        Map<String,CftTjjgsEntity> map = new HashMap();
-        CftTjjgsEntity tjjgs = null;
-        CftZzxxEntity zzxx = null;
+    public int count(List<BankZzxxEntity> listZzxx, long aj){
+        Map<String,BankTjjgsEntity> map = new HashMap();
+        BankTjjgsEntity tjjgs = null;
+        BankZzxxEntity zzxx = null;
         for(int i=0;i<listZzxx.size();i++) {
             zzxx = listZzxx.get(i);
-            if (zzxx.getFsf()!=null && zzxx.getJsf()!=null) {
-                if (zzxx.getZh().equals(zzxx.getFsf()) && "出".equals(zzxx.getJdlx())) {
-                    if (map.containsKey(zzxx.getZh() + zzxx.getJsf())) {
-                        tjjgs = map.get(zzxx.getZh() + zzxx.getJsf());
+                if ("出".equals(zzxx.getSfbz())) {
+                    if (map.containsKey(zzxx.getYhkkh() + zzxx.getDskh())) {
+                        tjjgs = map.get(zzxx.getYhkkh() + zzxx.getDskh());
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
                     } else {
-                        CftTjjgsEntity tjs1 = new CftTjjgsEntity();
-                        tjs1.setJyzh(zzxx.getZh());
-                        tjs1.setDfzh(zzxx.getJsf());
+                        BankTjjgsEntity tjs1 = new BankTjjgsEntity();
+                        tjs1.setJyzh(zzxx.getYhkkh());
+                        tjs1.setDfzh(zzxx.getDskh());
                         tjs1.setJyzcs(new BigDecimal(1));
                         tjs1.setCzzcs(new BigDecimal(1));
                         tjs1.setCzzje(zzxx.getJyje());
                         tjs1.setAj_id(aj);
-                        map.put(zzxx.getZh() + zzxx.getJsf(), tjs1);
+                        map.put(zzxx.getYhkkh() + zzxx.getDskh(), tjs1);
                     }
                 }
-                if (zzxx.getZh().equals(zzxx.getJsf()) && "入".equals(zzxx.getJdlx())) {
-                    if (map.containsKey(zzxx.getZh() + zzxx.getFsf())) {
-                        tjjgs = map.get(zzxx.getZh() + zzxx.getFsf());
+                if ( "进".equals(zzxx.getSfbz())) {
+                    if (map.containsKey(zzxx.getYhkkh() + zzxx.getDskh())) {
+                        tjjgs = map.get(zzxx.getYhkkh() + zzxx.getDskh());
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
                     } else {
-                        CftTjjgsEntity tjs2 = new CftTjjgsEntity();
-                        tjs2.setJyzh(zzxx.getZh());
-                        tjs2.setDfzh(zzxx.getFsf());
+                        BankTjjgsEntity tjs2 = new BankTjjgsEntity();
+                        tjs2.setJyzh(zzxx.getYhkkh());
+                        tjs2.setDfzh(zzxx.getDskh());
                         tjs2.setJyzcs(new BigDecimal(1));
                         tjs2.setJzzcs(new BigDecimal(1));
                         tjs2.setJzzje(zzxx.getJyje());
                         tjs2.setAj_id(aj);
-                        map.put(zzxx.getZh() + zzxx.getFsf(), tjs2);
+                        map.put(zzxx.getYhkkh() + zzxx.getDskh(), tjs2);
                     }
-                }
             }
         }
-        List<CftTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
+        List<BankTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
         int i =0;
-        cfttjsd.delAll(aj);
-        cfttjsd.save(listTjjgs);
+        banktjsd.delAll(aj);
+        banktjsd.save(listTjjgs);
         return i;
     }
 
@@ -198,32 +199,32 @@ public class CftTjjgsService {
         if("共同".equals(lx)){
             AjEntity aje = (AjEntity) req.getSession().getAttribute("aj");
             if(seach.contains("order by")) {
-                listTjjg = cfttjsd.findBySQL("select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
-                        "  select t.dfzh,count(1) as num from cft_tjjgs t " +
-                        " where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +aje.getId()+
+                listTjjg = banktjsd.findBySQL("select s.khxm,n.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+                        "  select t.dfzh,count(1) as num from bank_tjjgs t " +
+                        " where t.dfzh not in( select distinct t1.jyzh from bank_tjjgs t1) and t.aj_id=" +aje.getId()+
                         " group by dfzh " +
                         "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
-                        " left join cft_person s on c.jyzh = s.zh " +
-                        " left join cft_person n on c.dfzh = n.zh "+
+                        " left join bank_person s on c.jyzh = s.yhkkh " +
+                        " left join bank_person n on c.dfzh = n.yhkkh "+
                         "  where a.num is not null " + seach +",c.dfzh");
             }else{
-                listTjjg = cfttjsd.findBySQL("select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
-                        "  select t.dfzh,count(1) as num from cft_tjjgs t " +
-                        " where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +aje.getId()+
+                listTjjg = banktjsd.findBySQL("select s.khxm,n.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+                        "  select t.dfzh,count(1) as num from bank_tjjgs t " +
+                        " where t.dfzh not in( select distinct t1.jyzh from bank_tjjgs t1) and t.aj_id=" +aje.getId()+
                         " group by dfzh " +
                         "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
-                        " left join cft_person s on c.jyzh = s.zh " +
-                        " left join cft_person n on c.dfzh = n.zh "+
+                        " left join bank_person s on c.jyzh = s.yhkkh " +
+                        " left join bank_person n on c.dfzh = n.yhkkh "+
                         "  where a.num is not null " + seach +" order by c.dfzh");
             }
 
         }else {
-            listTjjg = cfttjsd.findBySQL("select s.xm,c.* from cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
+            listTjjg = banktjsd.findBySQL("select s.khxm,c.* from bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh where 1=1 "+seach);
         }
 
         HSSFWorkbook wb = createExcel(listTjjg,lx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("财付通"+lx+"账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡"+lx+"账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -233,7 +234,7 @@ public class CftTjjgsService {
 
     public HSSFWorkbook createExcel(List listTjjg,String lx){
         HSSFWorkbook wb = new HSSFWorkbook();
-        Sheet sheet = wb.createSheet("财付通"+lx+"账户信息");
+        Sheet sheet = wb.createSheet("银行卡"+lx+"账户信息");
         Row row = sheet.createRow(0);
         Cell cell = row.createCell(0);
         if(!"共同".equals(lx)) {
@@ -286,7 +287,7 @@ public class CftTjjgsService {
         int b = 1;
         for(int i=0;i<listTjjg.size();i++){
             if(i>=65535&& i%65535==0){
-                sheet = wb.createSheet("财付通"+lx+"对手账户信息("+b+")");
+                sheet = wb.createSheet("银行卡"+lx+"对手账户信息("+b+")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
                 if(!"共同".equals(lx)) {
@@ -339,8 +340,8 @@ public class CftTjjgsService {
             cell.setCellValue(i+1);
             if(!"共同".equals(lx)) {
                 cell = row.createCell(1);
-                if (map.get("XM") != null && map.get("XM").toString().length() > 0) {
-                    cell.setCellValue(map.get("XM").toString());
+                if (map.get("KHXM") != null && map.get("KHXM").toString().length() > 0) {
+                    cell.setCellValue(map.get("KHXM").toString());
                 }
                 cell = row.createCell(2);
                 cell.setCellValue(map.get("JYZH").toString());
@@ -365,8 +366,8 @@ public class CftTjjgsService {
                 }
             }else{
                 cell = row.createCell(1);
-                if (map.get("XM") != null && map.get("XM").toString().length() > 0) {
-                    cell.setCellValue(map.get("XM").toString());
+                if (map.get("KHXM") != null && map.get("KHXM").toString().length() > 0) {
+                    cell.setCellValue(map.get("KHXM").toString());
                 }
                 cell = row.createCell(2);
                 cell.setCellValue(map.get("JYZH").toString());
@@ -400,6 +401,6 @@ public class CftTjjgsService {
         return wb;
     }
     public void deleteByAjid(long id){
-        cfttjsd.delAll(id);
+        banktjsd.delAll(id);
     }
 }

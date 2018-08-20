@@ -1,7 +1,8 @@
-package cn.com.sinofaith.controller.cftController;
+package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.service.bankServices.BankTjjgsService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,14 +21,14 @@ import javax.servlet.http.HttpSession;
 import static java.lang.Integer.parseInt;
 
 @Controller
-@RequestMapping("/cftgtzh")
-public class CftGtzhController {
+@RequestMapping("/bankgtzh")
+public class BankGtzhController {
     @Autowired
-    private CftTjjgsService cfttjss;
+    private BankTjjgsService banktjss;
 
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
-        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
+        ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");
         //查询条件
         httpSession.removeAttribute("gtseachCondition");
         //查询内容
@@ -41,7 +42,7 @@ public class CftGtzhController {
 
     @RequestMapping(value = "/order")
     public ModelAndView order(@RequestParam("orderby") String orderby, HttpSession ses){
-        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
+        ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");
         String desc = (String) ses.getAttribute("gdesc");
         String lastOrder = (String) ses.getAttribute("glastOrder");
         if(orderby.equals(lastOrder)){
@@ -62,14 +63,14 @@ public class CftGtzhController {
 
     @RequestMapping(value = "/seach")
     public ModelAndView getcfttj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
-        ModelAndView mav = new ModelAndView("cft/cftgtzh");
+        ModelAndView mav = new ModelAndView("bank/bankgtzh");
         String seachCondition = (String) req.getSession().getAttribute("gtseachCondition");
         String seachCode = (String) req.getSession().getAttribute("gtseachCode");
         String orderby = (String) req.getSession().getAttribute("gorderby");
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        Page page = cfttjss.queryForPageGt(parseInt(pageNo),10,seach,aj!=null ? aj.getId():-1);
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        Page page = banktjss.queryForPageGt(parseInt(pageNo),10,seach,aj!=null ? aj.getId():-1);
         mav.addObject("page",page);
         mav.addObject("gtseachCode",seachCode);
         mav.addObject("gtseachCondition",seachCondition);
@@ -81,7 +82,7 @@ public class CftGtzhController {
     @RequestMapping(value = "/SeachCode" , method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView seachCode(String seachCode,String seachCondition,HttpSession httpSession){
-        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
+        ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");
         if(seachCode == null || seachCode.isEmpty()){
             httpSession.removeAttribute("gtseachCode");
             httpSession.removeAttribute("gtseachCondition");
@@ -101,8 +102,8 @@ public class CftGtzhController {
         String orderby = (String) req.getSession().getAttribute("gorderby");
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        cfttjss.downloadFile(seach, rep,aj.getAj(),"共同",req);
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        banktjss.downloadFile(seach, rep,aj.getAj(),"共同",req);
     }
     @RequestMapping("/getDetails")
     @ResponseBody
@@ -110,12 +111,12 @@ public class CftGtzhController {
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         Gson gson = new GsonBuilder().serializeNulls().create();
         String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId() + " order by jyzcs desc ";
-        return gson.toJson(cfttjss.queryForPageGt(page,300,seach,aj!=null ? aj.getId():-1));
+        return gson.toJson(banktjss.queryForPageGt(page,300,seach,aj!=null ? aj.getId():-1)).replace("null","\"\" ");
     }
     @RequestMapping("/downgtlxr")
     public void downGtlxr(@RequestParam("dfzh") String dfzh,HttpServletRequest req,HttpServletResponse rep)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId();
-        cfttjss.downloadFile(seach,rep,aj.getAj(),"共同",req);
+        banktjss.downloadFile(seach,rep,aj.getAj(),"共同",req);
     }
 }

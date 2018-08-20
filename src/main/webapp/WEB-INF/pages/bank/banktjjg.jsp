@@ -255,11 +255,11 @@
                                 <td width="5%">交易户名</td>
                                 <td width="12%">交易账卡号</td>
                                 <td width="12%">交易时间</td>
-                                <td width="8%">交易金额(元)</td>
-                                <td width="8%">交易余额(元)</td>
-                                <td width="8%">收付标志</td>
+                                <td width="7%">交易金额(元)</td>
+                                <td width="7%">交易余额(元)</td>
+                                <td width="7%">收付标志</td>
                                 <td width="13%">对手户名</td>
-                                <td width="12%">对手账卡号</td>
+                                <td width="15%">对手账卡号</td>
                                 <td width="8%">摘要说明</td>
                                 <td width="5%">交易状态</td>
                                 <%--<td width="8%">接收金额(元)</td>--%>
@@ -275,7 +275,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" onclick="downDetailJylx()">导出</button>
+                        <button type="button" class="btn btn-default" onclick="downDetailZh()">导出</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
                 </div>

@@ -46,14 +46,14 @@
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="6%">序号</td>
+                                        <td width="5%">序号</td>
                                         <td width="6%">交易户名</td>
                                         <td width="12%">交易账卡号</td>
                                         <td width="12%">交易时间</td>
                                         <td width="10%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额(元)</a></td>
                                         <td width="10%">交易余额(元)</td>
                                         <td width="6%">收付标志</td>
-                                        <td width="10%">对手户名</td>
+                                        <td width="8%">对手户名</td>
                                         <td width="15%">对手账卡号</td>
                                         <td width="6%">摘要说明</td>
                                         <td width="6%">交易状态</td>
