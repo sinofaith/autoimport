@@ -24,6 +24,7 @@ public class BankZzxxForm {
     private String bz;
     private String jyzjh;
     private String inserttime;
+    private String jyfsd;
 
     public long getId() {
         return id;
@@ -147,6 +148,7 @@ public class BankZzxxForm {
     }
 
     public void setJywdmc(String jywdmc) {
+        if(jywdmc==null){jywdmc="";}
         this.jywdmc = jywdmc;
     }
 
@@ -176,7 +178,14 @@ public class BankZzxxForm {
         this.bz = bz;
     }
 
+    public String getJyfsd() {
+        return jyfsd;
+    }
 
+    public void setJyfsd(String jyfsd) {
+        if(jyfsd==null){jyfsd="";}
+        this.jyfsd = jyfsd;
+    }
 
     public BankZzxxForm mapToForm(Map map){
         BankZzxxForm zzf = new BankZzxxForm();
@@ -189,8 +198,9 @@ public class BankZzxxForm {
         zzf.setDskh((String) map.get("DSKH"));
         zzf.setDsxm(map.get("DSXM") != null? (String)map.get("DSXM"):(String) map.get("DFXMS"));
         zzf.setZysm((String) map.get("ZYSM"));
-        zzf.setJysfcg((String)map.get("JYSFCG"));
         zzf.setBz((String)map.get("BZ"));
+        zzf.setJyfsd((String)map.get("JYFSD"));
+        zzf.setJywdmc((String)map.get("JYWDMC"));
         return zzf;
     }
 }

@@ -119,9 +119,9 @@ public class BankZzxxServices {
             cell = row.createCell(0);
             cell.setCellValue(i + 1);
             cell = row.createCell(1);
-            cell.setCellValue(zzf.getJyxm());
-            cell = row.createCell(2);
             cell.setCellValue(zzf.getYhkkh());
+            cell = row.createCell(2);
+            cell.setCellValue(zzf.getJyxm());
             cell = row.createCell(3);
             cell.setCellValue(zzf.getJysj());
             cell = row.createCell(4);
@@ -131,15 +131,19 @@ public class BankZzxxServices {
             cell = row.createCell(6);
             cell.setCellValue(zzf.getSfbz());
             cell = row.createCell(7);
-            cell.setCellValue(zzf.getDsxm());
-            cell = row.createCell(8);
             cell.setCellValue(zzf.getDskh());
+            cell = row.createCell(8);
+            cell.setCellValue(zzf.getDsxm());
             cell = row.createCell(9);
-            cell.setCellValue(zzf.getZysm());
+            cell.setCellValue(zzf.getJyfsd());
             cell = row.createCell(10);
+            cell.setCellValue(zzf.getJywdmc());
+            cell = row.createCell(11);
+            cell.setCellValue(zzf.getZysm());
+            cell = row.createCell(12);
             cell.setCellValue(zzf.getBz());
             if(i%65536==0){
-                for (int a = 0; a < 12; a++) {
+                for (int a = 0; a < 15; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
@@ -152,9 +156,9 @@ public class BankZzxxServices {
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
         cell = row.createCell(1);
-        cell.setCellValue("交易户名");
-        cell = row.createCell(2);
         cell.setCellValue("交易账卡号");
+        cell = row.createCell(2);
+        cell.setCellValue("交易户名");
         cell = row.createCell(3);
         cell.setCellValue("交易时间");
         cell = row.createCell(4);
@@ -164,12 +168,16 @@ public class BankZzxxServices {
         cell = row.createCell(6);
         cell.setCellValue("收付标志");
         cell = row.createCell(7);
-        cell.setCellValue("对手户名");
-        cell = row.createCell(8);
         cell.setCellValue("对手账卡号");
+        cell = row.createCell(8);
+        cell.setCellValue("对手户名");
         cell = row.createCell(9);
-        cell.setCellValue("摘要说明");
+        cell.setCellValue("交易发生地");
         cell = row.createCell(10);
+        cell.setCellValue("交易网点名称");
+        cell = row.createCell(11);
+        cell.setCellValue("摘要说明");
+        cell = row.createCell(12);
         cell.setCellValue("备注");
         return row;
     }

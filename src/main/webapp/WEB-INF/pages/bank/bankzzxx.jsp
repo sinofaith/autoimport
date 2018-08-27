@@ -39,7 +39,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="13"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>银行卡开户信息(${aj.aj})</strong>
                                             </div>
@@ -53,10 +53,12 @@
                                         <td width="10%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额(元)</a></td>
                                         <td width="10%">交易余额(元)</td>
                                         <td width="6%">收付标志</td>
-                                        <td width="15%">对手账卡号</td>
-                                        <td width="12%">对手户名</td>
-                                        <td width="6%">摘要说明</td>
-                                        <td width="6%">备注</td>
+                                        <td width="12%">对手账卡号</td>
+                                        <td width="6%">对手户名</td>
+                                        <td width="5%">交易发生地</td>
+                                        <td width="5%">交易网点名称</td>
+                                        <td width="5%">摘要说明</td>
+                                        <td width="5%">备注</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -68,9 +70,11 @@
                                                 <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.sfbz}</td>
                                                 <td align="center" title="${item.dskh}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dskh}</div></td>
-                                                <td align="center" title="${item.dsxm}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsxm}</div></td>
-                                                <td align="center" title="${item.zysm}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zysm}</div></td>
-                                                <td align="center" title="${item.bz}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.bz}</div></td>
+                                                <td align="center" title="${item.dsxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsxm}</div></td>
+                                                <td align="center" title="${item.jyfsd}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyfsd}</div></td>
+                                                <td align="center" title="${item.jywdmc}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jywdmc}</div></td>
+                                                <td align="center" title="${item.zysm}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zysm}</div></td>
+                                                <td align="center" title="${item.bz}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.bz}</div></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
