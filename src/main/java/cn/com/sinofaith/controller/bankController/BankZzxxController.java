@@ -119,7 +119,7 @@ public class BankZzxxController {
         String ajid=cftzzs.getAjidByAjm(aj);
         String seach = " and (c.yhkkh = '"+yhkkh+"' or c.dskh='"+yhkkh+"')";
         if(!"".equals(dskh)){
-             seach += " and (c.yhkkh = '"+dskh+"' or c.dskh='"+dskh+"')";
+             seach += " and (c.yhkkh = '"+dskh+"' or c.dskh='"+dskh+"' or c.bcsm = '"+dskh+"')";
         }
         seach+=" and c.aj_id in("+ajid+") order by c.jysj desc ";
         bankzzs.downloadFile(seach,rep, aj.getAj());
