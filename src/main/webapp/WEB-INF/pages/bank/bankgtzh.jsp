@@ -185,7 +185,7 @@
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
@@ -198,8 +198,8 @@
                     <tr align="center">
                         <td width="5%">序号</td>
                         <td width="5%">姓名</td>
-                        <td width="10%">交易账卡号</td>
-                        <td width="10%">对方账户</td>
+                        <td width="12%">交易账卡号</td>
+                        <td width="12%">对方账户</td>
                         <td width="5%">对方姓名</td>
                         <td width="8%">共同联系人数</td>
                         <td width="7%">交易总次数</td>

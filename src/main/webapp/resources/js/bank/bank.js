@@ -108,8 +108,8 @@ function getZzGtlxr(obj) {
                 }
                 str += "<td width=\"5%\">" + data[i].id + "</td>" +
                     "<td width=\"5%\">" + data[i].name + "</td>" +
-                    "<td width=\"10%\">" + data[i].jyzh + "</td>" +
-                    "<td width=\"10%\">" + data[i].dfzh + "</td>" +
+                    "<td width=\"12%\">" + data[i].jyzh + "</td>" +
+                    "<td width=\"12%\">" + data[i].dfzh + "</td>" +
                     "<td width=\"5%\">" + data[i].dfxm + "</td>" +
                     "<td width=\"8%\">" + data[i].count + "</td>" +
                     "<td width=\"7%\">" + data[i].jyzcs + "</td>" +
@@ -159,15 +159,15 @@ function getZzDetails(obj,type) {
                 }
                 str+="<td width=\"4%\">"+data[i].id+"</td>"+
                     "<td width=\"5%\">"+data[i].jyxm+"</td>"+
-                    "<td width=\"12%\">"+data[i].yhkkh+"</td>"+
-                    "<td width=\"12%\">"+data[i].jysj+"</td>"+
+                    "<td width=\"14%\">"+data[i].yhkkh+"</td>"+
+                    "<td width=\"10%\">"+data[i].jysj+"</td>"+
                     "<td width=\"7%\">"+data[i].jyje+"</td>"+
                     "<td width=\"7%\">"+data[i].jyye+"</td>"+
                     "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                     "<td width=\"13%\">"+data[i].dsxm+"</td>"+
-                    "<td width=\"16%\">"+data[i].dskh+"</td>"+
-                    "<td width=\"8%\">"+data[i].zysm+"</td>"+
-                    "<td width=\"5%\">"+data[i].jysfcg+"</td>"+
+                    "<td width=\"14%\">"+data[i].dskh+"</td>"+
+                    "<td width=\"7%\" title="+data[i].zysm+"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
+                    "<td width=\"7%\" title="+data[i].bz+"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
@@ -228,15 +228,15 @@ function scrollF(type) {
                         }
                         str+="<td width=\"4%\">"+data[i].id+"</td>"+
                             "<td width=\"5%\">"+data[i].jyxm+"</td>"+
-                            "<td width=\"12%\">"+data[i].yhkkh+"</td>"+
-                            "<td width=\"12%\">"+data[i].jysj+"</td>"+
+                            "<td width=\"14%\">"+data[i].yhkkh+"</td>"+
+                            "<td width=\"10%\">"+data[i].jysj+"</td>"+
                             "<td width=\"7%\">"+data[i].jyje+"</td>"+
                             "<td width=\"7%\">"+data[i].jyye+"</td>"+
                             "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                             "<td width=\"13%\">"+data[i].dsxm+"</td>"+
-                            "<td width=\"16%\">"+data[i].dskh+"</td>"+
-                            "<td width=\"8%\">"+data[i].zysm+"</td>"+
-                            "<td width=\"5%\">"+data[i].jysfcg+"</td>"+
+                            "<td width=\"14%\">"+data[i].dskh+"</td>"+
+                            "<td width=\"7%\" title=" +data[i].zysm+ "> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
+                            "<td width=\"7%\" title=" +data[i].bz+ "> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                             // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                             "</tr>";
                     }

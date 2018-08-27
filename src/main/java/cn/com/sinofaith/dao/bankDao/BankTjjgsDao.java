@@ -90,6 +90,9 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
             st = con.prepareStatement(sql);
             for (int i = 0; i < tjjgs.size(); i++) {
                 tjjg = tjjgs.get(i);
+                if(tjjg.getJyzh()==null || tjjg.getDfzh()==null){
+                    continue;
+                }
                 st.setString(1,tjjg.getJyzh());
                 st.setString(2,tjjg.getDfzh());
                 st.setBigDecimal(3,tjjg.getJyzcs());

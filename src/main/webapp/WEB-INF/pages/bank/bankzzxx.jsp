@@ -47,30 +47,30 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="5%">序号</td>
-                                        <td width="6%">交易户名</td>
                                         <td width="12%">交易账卡号</td>
-                                        <td width="12%">交易时间</td>
+                                        <td width="6%">交易户名</td>
+                                        <td width="15%">交易时间</td>
                                         <td width="10%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额(元)</a></td>
                                         <td width="10%">交易余额(元)</td>
                                         <td width="6%">收付标志</td>
-                                        <td width="8%">对手户名</td>
                                         <td width="15%">对手账卡号</td>
+                                        <td width="12%">对手户名</td>
                                         <td width="6%">摘要说明</td>
-                                        <td width="6%">交易状态</td>
+                                        <td width="6%">备注</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <td align="center">${item.jyxm}</td>
                                                 <td align="center">${item.yhkkh}</td>
+                                                <td align="center">${item.jyxm}</td>
                                                 <td align="center">${item.jysj}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0.0#"/></td>
                                                 <td align="center">${item.sfbz}</td>
-                                                <td align="center">${item.dsxm}</td>
-                                                <td align="center">${item.dskh}</td>
-                                                <td align="center">${item.zysm}</td>
-                                                <td align="center">${item.jysfcg}</td>
+                                                <td align="center" title="${item.dskh}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dskh}</div></td>
+                                                <td align="center" title="${item.dsxm}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsxm}</div></td>
+                                                <td align="center" title="${item.zysm}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zysm}</div></td>
+                                                <td align="center" title="${item.bz}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.bz}</div></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>

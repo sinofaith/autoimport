@@ -23,7 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Me. on 2018/5/23
@@ -133,12 +136,16 @@ public class UploadController {
 
         AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
+            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
             us.insertBankZcxx(uploadPath,aje.getId());
-            us.insertBankZzxx(uploadPath,aje.getId());
+            us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
             us.deleteAll(uploadPath);
             uploadPathd.delete();
             us.updateBySql(aje);
-            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
+            listZzxx = bzs.getAll(aje.getId());
+            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+            listZzxx = new ArrayList<>(setB);
+            setB = null;
             btjs.count(listZzxx,aje.getId());
             btjss.count(listZzxx,aje.getId());
         }

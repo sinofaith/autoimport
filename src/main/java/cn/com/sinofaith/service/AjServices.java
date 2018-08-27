@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
+import cn.com.sinofaith.form.AjForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.DBUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AjServices {
@@ -45,12 +47,16 @@ public class AjServices {
     public Page  queryForPage(int currentPage,int pageSize,String seach){
         Page page = new Page();
         int allRow = ad.getAllRowCount(seach);
-        List<AjEntity> ajlist = null;
-        int xh =1;
+        List<AjForm> ajlist = new ArrayList<>();
         if(allRow>0){
-            ajlist = ad.getDoPage(seach,currentPage,pageSize);
-            for(int i=0; i<ajlist.size();i++){
-                ajlist.get(i).setId(xh+(currentPage-1)*pageSize);
+            AjForm aj = new AjForm();
+            List zzList = ad.getDoPage(seach,currentPage,pageSize);
+            int xh = 1;
+            for(int i=0;i<zzList.size();i++) {
+                Map map = (Map) zzList.get(i);
+                aj = aj.mapToForm(map);
+                aj.setXh(xh+(currentPage-1)*pageSize);
+                ajlist.add(aj);
                 xh++;
             }
         }

@@ -1,7 +1,7 @@
 package cn.com.sinofaith.controller;
 
-import cn.com.sinofaith.bean.CftZzxxEntity;
-import cn.com.sinofaith.service.CftZzxxService;
+import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;

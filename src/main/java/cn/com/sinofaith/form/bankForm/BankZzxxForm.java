@@ -190,6 +190,7 @@ public class BankZzxxForm {
         zzf.setDsxm(map.get("DSXM") != null? (String)map.get("DSXM"):(String) map.get("DFXMS"));
         zzf.setZysm((String) map.get("ZYSM"));
         zzf.setJysfcg((String)map.get("JYSFCG"));
+        zzf.setBz((String)map.get("BZ"));
         return zzf;
     }
 }

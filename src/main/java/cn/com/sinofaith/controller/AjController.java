@@ -83,8 +83,15 @@ public class AjController {
     }
 
     @RequestMapping(value = "/ajm")
-    public ModelAndView jump(@RequestParam("aj") String aj,HttpSession httpSession){
-        ModelAndView mav = new ModelAndView("redirect:/cft/seach?pageNo=1");
+    public ModelAndView jump(@RequestParam("aj") String aj,@RequestParam("type") long type, HttpSession httpSession){
+        ModelAndView mav = null;
+        if(type==1){
+             mav = new ModelAndView("redirect:/cftzzxx/seach?pageNo=1");
+        } else if(type==2){
+            mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
+        } else{
+            mav = new ModelAndView("redirect:/zfb/seach?pageNo=1");
+        }
 
         httpSession.removeAttribute("zcseachCode");
         httpSession.removeAttribute("zcseachCondition");

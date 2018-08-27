@@ -137,7 +137,7 @@ public class BankZzxxServices {
             cell = row.createCell(9);
             cell.setCellValue(zzf.getZysm());
             cell = row.createCell(10);
-            cell.setCellValue(zzf.getJysfcg());
+            cell.setCellValue(zzf.getBz());
             if(i%65536==0){
                 for (int a = 0; a < 12; a++) {
                     sheet.autoSizeColumn(a);
@@ -170,7 +170,7 @@ public class BankZzxxServices {
         cell = row.createCell(9);
         cell.setCellValue("摘要说明");
         cell = row.createCell(10);
-        cell.setCellValue("交易状态");
+        cell.setCellValue("备注");
         return row;
     }
 
@@ -183,7 +183,8 @@ public class BankZzxxServices {
         if("tjjg".equals(type)){
             seach=" and c.yhkkh='"+zh+"' ";
         }else{
-            seach+=" and c.dskh = '"+jylx+"' ";
+            seach=" and c.yhkkh='"+zh+"' ";
+            seach+=" and c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"' ";
         }
 //        if(aj.getFlg()==1){
 //            seach +=" and c.shmc not like'%红包%'";

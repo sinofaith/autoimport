@@ -27,7 +27,7 @@ public class BankTjjgEntity {
     }
 
     @Id
-    @Column(name = "jyzh", nullable = false, length = 30)
+    @Column(name = "jyzh", nullable = false, length = 100)
     public String getJyzh() {
         return jyzh;
     }

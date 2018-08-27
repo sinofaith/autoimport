@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +18,9 @@ import java.util.Map;
 @Repository
 public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
     public int getAllRowCount(String seachCode) {
-        String sql = "select to_char(count(1)) num from bank_zzxx c " +
-                "left join bank_person s on c.yhkkh = s.yhkkh  " +
-                "left join bank_person d on c.dskh = d.yhkkh where 1=1 " + seachCode;
+        String sql = "select to_char(count(c.id)) num from bank_zzxx c " +
+                " left join bank_person s on c.yhkkh = s.yhkkh  " +
+                " left join bank_person d on c.dskh = d.yhkkh where 1=1 " + seachCode;
         List list = findBySQL(sql);
         Map map = (Map) list.get(0);
         return Integer.parseInt((String) map.get("NUM"));
@@ -41,12 +42,10 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         return listZzxx;
     }
 
-    public int insertZzxx(List<BankZzxxEntity> list, long aj_id) {
-        int max = (getAllRowCount(" and aj_id="+aj_id )+200000-1)/200000;
-        String hql = "from BankZzxxEntity where aj_id = "+aj_id;
+    public int insertZzxx(List<BankZzxxEntity> list, long aj_id,List<BankZzxxEntity> all) {
+//        int max = (getAllRowCount(" and aj_id="+aj_id )+200000-1)/200000;
+//        String hql = "from BankZzxxEntity where aj_id = "+aj_id;
         Map<String,BankZzxxEntity> map1 = new HashMap<>();
-        for(int l=0;l<max;l++) {
-            List<BankZzxxEntity> all = doPage(hql, l+1, 200000);
             for (int i = 0; i < all.size(); i++) {
                 BankZzxxEntity x = all.get(i);
                 map1.put((x.getYhkkh() + x.getJysj() + x.getJyje() + x.getJyye() +
@@ -54,10 +53,9 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                         x.getDskhh() + x.getZysm() + x.getBz() + x.getJyzjh() + x.getJyxm() + x.getJyfsd())
                         .replace("null", ""), null);
             }
-        }
         Map<String,BankZzxxEntity> map = new HashMap<>();
         List<BankZzxxEntity> b = null;
-        if(max!=0) {
+        if(all.size()!=0) {
             for (int j = 0; j < list.size(); j++) {
                 BankZzxxEntity x = list.get(j);
                 map.put((x.getYhkkh() + x.getJysj() + x.getJyje() + x.getJyye() +
@@ -65,6 +63,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                         x.getDskhh() + x.getZysm() + x.getBz() + x.getJyzjh() + x.getJyxm() + x.getJyfsd())
                         .replace("null", ""), x);
             }
+
             List<String> str = new ArrayList<>();
             for (String o : map.keySet()) {
                 if (map1.containsKey(o)) {
@@ -72,13 +71,14 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                 }
             }
             map1 = null;
-
-            for (int i = 0; i < str.size(); i++) {
-                map.remove(str.get(i));
+            if(map.size()==str.size()){
+                return -1;
             }
+//            for (int i = 0; i < str.size(); i++) {
+//                map.remove(str.get(i));
+//            }
             b = new ArrayList<>(map.values());
-        }
-        else{
+        } else{
             b=list;
             list=null;
         }
@@ -95,7 +95,11 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                 con.setAutoCommit(false);
                 pstm = con.prepareStatement(sql);
                 for (int j = 0; j < b.size(); j++) {
+
                     zzxx = b.get(j);
+//                    zzxx.setAj_id(aj_id);
+//                    zzxx.setInserttime(TimeFormatUtil.getDate("/"));
+//                    save(zzxx);
                     pstm.setString(1, zzxx.getYhkkh());
                     pstm.setString(2, zzxx.getJysj());
                     pstm.setBigDecimal(3, zzxx.getJyje());

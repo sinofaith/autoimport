@@ -208,7 +208,7 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-        String file = "D:\\work\\数据模型\\资金\\银行账单合集\\3208332220160830101127\\账户交易明细表.xlsx";
+        String file = "D:\\work\\数据模型\\资金\\二局张煜-资金数据\\5月29日结果\\2301760420180522094319\\账户交易明细表.xlsx";
         final Map<String,Integer> title=new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 
@@ -261,6 +261,7 @@ public abstract class ExcelReader extends DefaultHandler {
                     }
                 }
                 if(!rowList.get(0).equals("交易账卡号")) {
+                    System.out.println(rowList);
                     listB.add(BankZzxxEntity.listToObj(rowList, title));
                 }
             }

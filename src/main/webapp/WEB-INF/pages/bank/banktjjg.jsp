@@ -238,7 +238,7 @@
 
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
              aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+            <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"
@@ -253,15 +253,15 @@
                             <tr align="center">
                                 <td width="4%">序号</td>
                                 <td width="5%">交易户名</td>
-                                <td width="12%">交易账卡号</td>
-                                <td width="12%">交易时间</td>
+                                <td width="14%">交易账卡号</td>
+                                <td width="10%">交易时间</td>
                                 <td width="7%">交易金额(元)</td>
                                 <td width="7%">交易余额(元)</td>
                                 <td width="7%">收付标志</td>
                                 <td width="13%">对手户名</td>
-                                <td width="15%">对手账卡号</td>
-                                <td width="8%">摘要说明</td>
-                                <td width="5%">交易状态</td>
+                                <td width="14%">对手账卡号</td>
+                                <td width="7%">摘要说明</td>
+                                <td width="7%">备注</td>
                                 <%--<td width="8%">接收金额(元)</td>--%>
                             </tr>
                             <input name="label" id="yhkkh" hidden="hidden" value="">

@@ -153,8 +153,12 @@ public class BankTjjgsService {
         for(int i=0;i<listZzxx.size();i++) {
             zzxx = listZzxx.get(i);
                 if ("出".equals(zzxx.getSfbz())) {
-                    if (map.containsKey(zzxx.getYhkkh() + zzxx.getDskh())) {
-                        tjjgs = map.get(zzxx.getYhkkh() + zzxx.getDskh());
+                    String temp = zzxx.getYhkkh()+zzxx.getDskh();
+                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                        temp = zzxx.getYhkkh()+zzxx.getBcsm();
+                    }
+                    if (map.containsKey(temp)) {
+                        tjjgs = map.get(temp);
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
@@ -162,16 +166,23 @@ public class BankTjjgsService {
                         BankTjjgsEntity tjs1 = new BankTjjgsEntity();
                         tjs1.setJyzh(zzxx.getYhkkh());
                         tjs1.setDfzh(zzxx.getDskh());
+                        if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                            tjs1.setDfzh(zzxx.getBcsm());
+                        }
                         tjs1.setJyzcs(new BigDecimal(1));
                         tjs1.setCzzcs(new BigDecimal(1));
                         tjs1.setCzzje(zzxx.getJyje());
                         tjs1.setAj_id(aj);
-                        map.put(zzxx.getYhkkh() + zzxx.getDskh(), tjs1);
+                        map.put(temp, tjs1);
                     }
                 }
                 if ( "进".equals(zzxx.getSfbz())) {
-                    if (map.containsKey(zzxx.getYhkkh() + zzxx.getDskh())) {
-                        tjjgs = map.get(zzxx.getYhkkh() + zzxx.getDskh());
+                    String temp = zzxx.getYhkkh()+zzxx.getDskh();
+                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                        temp = zzxx.getYhkkh()+zzxx.getBcsm();
+                    }
+                    if (map.containsKey(temp)) {
+                        tjjgs = map.get(temp);
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
@@ -179,11 +190,14 @@ public class BankTjjgsService {
                         BankTjjgsEntity tjs2 = new BankTjjgsEntity();
                         tjs2.setJyzh(zzxx.getYhkkh());
                         tjs2.setDfzh(zzxx.getDskh());
+                        if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                            tjs2.setDfzh(zzxx.getBcsm());
+                        }
                         tjs2.setJyzcs(new BigDecimal(1));
                         tjs2.setJzzcs(new BigDecimal(1));
                         tjs2.setJzzje(zzxx.getJyje());
                         tjs2.setAj_id(aj);
-                        map.put(zzxx.getYhkkh() + zzxx.getDskh(), tjs2);
+                        map.put(temp, tjs2);
                     }
             }
         }

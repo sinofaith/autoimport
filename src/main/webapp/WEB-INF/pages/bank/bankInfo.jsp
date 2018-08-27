@@ -47,7 +47,6 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="6%">序号</td>
-                                        <td width="7%">账户状态</td>
                                         <td width="12%">交易卡号</td>
                                         <td width="12%">交易账号</td>
                                         <td width="6%">开户姓名</td>
@@ -55,12 +54,12 @@
                                         <td width="6%">账户余额</td>
                                         <td width="6%">可用余额</td>
                                         <td width="12%">开户时间</td>
-                                        <td width="18%">开户行</td>
+                                        <td width="7%">账户状态</td>
+                                        <td width="8%">开户行</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <td align="center">${item.zhzt}</td>
                                                 <td align="center">${item.yhkkh}</td>
                                                 <td align="center">${item.yhkzh}</td>
                                                 <td align="center">${item.khxm}</td>
@@ -68,7 +67,9 @@
                                                 <td align="center">${item.zhye}</td>
                                                 <td align="center">${item.kyye}</td>
                                                 <td align="center">${item.khsj}</td>
-                                                <td align="center">${item.khh}</td>
+                                                <td align="center">${item.zhzt}</td>
+                                                <td align="center" title="${item.khh}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.khh}</div></td>
+
                                             </tr>
                                         </c:forEach>
                                         <c:choose>

@@ -32,7 +32,7 @@ public class BankTjjgsEntity implements Serializable {
         this.id = id;
     }
     @Id
-    @Column(name = "jyzh",nullable = false,length = 30)
+    @Column(name = "jyzh",nullable = false,length = 200)
     public String getJyzh() {
         return jyzh;
     }
@@ -42,7 +42,7 @@ public class BankTjjgsEntity implements Serializable {
     }
 
     @Id
-    @Column(name="dfzh",nullable = false,length = 30)
+    @Column(name="dfzh",nullable = false,length = 200)
     public String getDfzh() { return dfzh; }
 
     public void setDfzh(String dfzh) { this.dfzh = dfzh; }

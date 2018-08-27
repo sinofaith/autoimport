@@ -57,6 +57,9 @@ public class BankTjjgDao extends BaseDao<BankTjjgEntity>{
             st = con.prepareStatement(sql);
             for (int i = 0; i < tjjgs.size(); i++) {
                 tjjg = tjjgs.get(i);
+                if (tjjg.getJyzh()==null){
+                    continue;
+                }
 //                tjjg.setInserttime(TimeFormatUtil.getDate("/"));
 //                save(tjjg);
                 st.setString(1,tjjg.getJyzh());
