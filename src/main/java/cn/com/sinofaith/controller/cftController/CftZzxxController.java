@@ -104,15 +104,43 @@ public class CftZzxxController {
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getDetails(@RequestParam("jyzh") String jyzh,@RequestParam("jylx")String jylx,
-                             @RequestParam("type") String type,@RequestParam("page")int page, HttpServletRequest req){
+                             @RequestParam("type") String type,@RequestParam("page")int page,
+                             @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        return cftzzs.getByJyzhlx(jyzh,jylx,type,aj!=null ? aj:new AjEntity(),page);
+
+        String desc = (String) ses.getAttribute("xqdesc");
+        String lastOrder = (String) ses.getAttribute("xqlastOrder");
+        String orders ="";
+        if(!"xx".equals(order)) {
+            if (order.equals(lastOrder)) {
+                if (desc == null || " ,c.id ".equals(desc)) {
+                    desc = " desc ";
+                } else {
+                    desc = " ,c.id ";
+                }
+            } else {
+                desc = " desc ";
+            }
+            orders = " order by c." + order + desc+" nulls last,c.jysj desc ";
+        }else{
+            orders = " order by c."+lastOrder+desc + " nulls last,c.jysj desc ";
+            order=lastOrder;
+        }
+        ses.setAttribute("xqOrder",order);
+        ses.setAttribute("xqlastOrder",order);
+        ses.setAttribute("xqdesc",desc);
+
+
+        return cftzzs.getByJyzhlx(jyzh,jylx,type,aj!=null ? aj:new AjEntity(),page,orders);
     }
 
     @RequestMapping(value = "/downDetailJylx")
     public void downDetailJylx(@RequestParam("zh") String zh,@RequestParam("jylx") String jylx,
-                               @RequestParam("type") String type, HttpServletRequest req,HttpServletResponse rep)throws Exception{
+                               @RequestParam("type") String type, HttpServletRequest req,HttpServletResponse rep,
+                               HttpSession ses)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String lastOrder = (String) ses.getAttribute("xqlastOrder");
+        String desc = (String) ses.getAttribute("xqdesc");
         String seach ="";
         String ajid=cftzzs.getAjidByAjm(aj);
         if("jylx".equals(type)) {
@@ -135,7 +163,8 @@ public class CftZzxxController {
         if(aj.getFlg()==1){
             seach +=" and c.shmc not like'%红包%'";
         }
-        seach+=" and c.aj_id in("+ajid+") order by c.jysj desc ";
+        seach+=" and c.aj_id in("+ajid+") ";
+        seach+=" order by c."+lastOrder+desc+" nulls last,c.jysj desc ";
         cftzzs.downloadFile(seach,rep, aj.getAj());
     }
 }

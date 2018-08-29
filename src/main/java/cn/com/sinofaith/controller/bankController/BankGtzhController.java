@@ -34,9 +34,9 @@ public class BankGtzhController {
         //查询内容
         httpSession.removeAttribute("gtseachCode");
 
-        httpSession.setAttribute("gorderby","num");
-        httpSession.setAttribute("glastOrder","num");
-        httpSession.setAttribute("gdesc"," desc ");
+//        httpSession.setAttribute("gorderby","num");
+//        httpSession.setAttribute("glastOrder","num");
+//        httpSession.setAttribute("gdesc"," desc ");
         return mav;
     }
 

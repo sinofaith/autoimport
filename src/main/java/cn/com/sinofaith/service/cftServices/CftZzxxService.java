@@ -202,7 +202,7 @@ public class CftZzxxService {
         cftzzd.deleteByAjid(id);
     }
 
-    public String getByJyzhlx(String zh,String jylx,String type,AjEntity aj,int page){
+    public String getByJyzhlx(String zh,String jylx,String type,AjEntity aj,int page,String orders){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
         String ajid = getAjidByAjm(aj);
@@ -228,7 +228,7 @@ public class CftZzxxService {
         if(aj.getFlg()==1){
             seach +=" and c.shmc not like'%红包%'";
         }
-        seach += "and aj_id in("+ajid+") order by c.jysj desc";
+        seach += "and aj_id in("+ajid+") "+orders;
 
         int allRow = cftzzd.getAllRowCount(seach);
         List zzList = cftzzd.getDoPage(seach,page,100);

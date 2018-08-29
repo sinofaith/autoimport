@@ -196,15 +196,31 @@
                         <td width="4%">序号</td>
                         <td width="5%">姓名</td>
                         <td width="15%">微信账户</td>
-                        <td width="6%">借贷类型</td>
-                        <td width="10%">交易类型</td>
+                        <td width="6%">
+                            <button onclick="orderByFilter('jdlx')">借贷类型</button>
+                        </td>
+                        <td width="10%">
+                            <button onclick="orderByFilter('jylx')">交易类型</button>
+                        </td>
                         <td width="14%">商户名称</td>
-                        <td width="8%">交易金额(元)</td>
-                        <td width="13%">交易时间</td>
-                        <td width="15%">发送方</td>
-                        <td width="8%">发送金额(元)</td>
-                        <td width="15%">接收方</td>
-                        <td width="8%">接收金额(元)</td>
+                        <td width="8%">
+                            <button onclick="orderByFilter('jyje')">交易金额(元)</button>
+                        </td>
+                        <td width="13%">
+                            <button onclick="orderByFilter('jysj')">交易时间</button>
+                        </td>
+                        <td width="15%">
+                            <button onclick="orderByFilter('fsf')">发送方</button>
+                        </td>
+                        <td width="8%">
+                            <button onclick="orderByFilter('fsje')">发送金额(元)</button>
+                        </td>
+                        <td width="15%">
+                            <button onclick="orderByFilter('jsf')">接收方</button>
+                        </td>
+                        <td width="8%">
+                            <button onclick="orderByFilter('jsje')">接收金额(元)</button>
+                        </td>
                     </tr>
                     <input name="label" id="zh" hidden="hidden" value="">
                     <input name="label" id="jylx" hidden="hidden" value="">

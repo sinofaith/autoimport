@@ -373,6 +373,8 @@ function progressFunction(evt) {
     }
 }
 
+
+
 var page = 1
 var is_running = false
 function scrollF() {
@@ -401,6 +403,7 @@ function scrollF() {
                     data: {
                         jyzh: jyzh,
                         jylx: jylx,
+                        order:'xx',
                         type: type,
                         page: parseInt(window.page)
                     },
@@ -485,6 +488,64 @@ function downGtlxr(){
     location="/SINOFAITH/cftgtzh/downgtlxr?dfzh="+dfzh
 }
 
+function orderByFilter(filter) {
+    var tbody = window.document.getElementById("result")
+    if(tbody!=null) {
+        tbody.innerHTML = ""
+    }
+    var jyzh = $("#zh").val();
+    var jylx = $("#jylx").val();
+    window.page = 1
+    var type = ""
+    if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+        type="dfzh"
+    }else{
+        type="jylx"
+    }
+    var url = "/SINOFAITH/cftzzxx/getDetails"
+    $.ajax({
+        type:"post",
+        dataType:"json",
+        url:url,
+        data:{
+            jyzh:jyzh,
+            jylx:jylx,
+            order:filter,
+            type:type,
+            page:parseInt(page)
+        },
+        success:function (msg) {
+            var data = msg.list
+            var str = ""
+            for (i in data){
+                if(i%2==0){
+                    str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
+                }else{
+                    str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
+                }
+                str+="<td width=\"4%\">"+data[i].id+"</td>"+
+                    "<td width=\"5%\">"+data[i].name+"</td>"+
+                    "<td width=\"15%\">"+data[i].zh+"</td>"+
+                    "<td width=\"6%\">"+data[i].jdlx+"</td>"+
+                    "<td width=\"10%\">"+data[i].jylx+"</td>"+
+                    "<td width=\"14%\">"+data[i].shmc+"</td>"+
+                    "<td width=\"8%\">"+data[i].jyje+"</td>"+
+                    "<td width=\"13%\">"+data[i].jysj+"</td>"+
+                    "<td width=\"15%\">"+data[i].fsf+"</td>"+
+                    "<td width=\"8%\">"+data[i].fsje+"</td>"+
+                    "<td width=\"15%\">"+data[i].jsf+"</td>"+
+                    "<td width=\"8%\">"+data[i].jsje+"</td>"+
+                    "</tr>";
+            }
+            tbody.innerHTML = str
+            $("#zh").attr("value",jyzh);
+            $("#jylx").attr("value",jylx);
+            $("#allRow").attr("value",msg.totalRecords)
+            // title.innerText ="<"+jyzh+","+jylx+">"
+        }
+    })
+}
+
 function getZzDetails(obj) {
     var jyzh = $(obj).closest("tr").find("td:eq(2)").text()
     var jylx = $(obj).closest("tr").find("td:eq(3)").text()
@@ -504,6 +565,7 @@ function getZzDetails(obj) {
         data:{
             jyzh:jyzh,
             jylx:jylx,
+            order:'jysj',
             type:type,
             page:parseInt(page)
         },
@@ -544,6 +606,7 @@ $(function () { $('#myModal').on('hide.bs.modal', function () {
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
+    $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
 })
 });
 
