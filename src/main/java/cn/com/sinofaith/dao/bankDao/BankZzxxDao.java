@@ -26,6 +26,16 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         return Integer.parseInt((String) map.get("NUM"));
     }
 
+    public int getCount(String seachCode){
+        String sql ="select to_char(count(1)) num from( " +
+                "select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj) su from bank_zzxx c " +
+                "where 1=1 " +seachCode+ ") where su=1 ";
+
+        List list = findBySQL(sql);
+        Map map = (Map) list.get(0);
+        return Integer.parseInt((String)map.get("NUM"));
+    }
+
     public List getDoPage(String seach, int offset, int length) {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
@@ -34,6 +44,21 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         sql.append("FROM  bank_zzxx c left join bank_person s on c.yhkkh=s.yhkkh ");
         sql.append("left join bank_person d on c.dskh=d.yhkkh  where 1=1 " + seach + ") a ");
         sql.append("WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
+        return findBySQL(sql.toString());
+    }
+
+    //去重分页查询
+    public List getDoPageDis(String seach,int offset, int length){
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT * ");
+        sql.append("FROM (SELECT a.*, ROWNUM rn from ( ");
+        sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
+        sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");
+        sql.append("  where 1=1"+seach+" nulls last ) c ");
+        sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
+        sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
+        sql.append(" where su=1");
+        sql.append(") a WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
         return findBySQL(sql.toString());
     }
 

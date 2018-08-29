@@ -128,7 +128,7 @@ function getZzGtlxr(obj) {
 
 
 function getZzDetails(obj,type) {
-    var yhkkh = $(obj).closest("tr").find("td:eq(2)").text()
+    var yhkkh = $(obj).closest("tr").find("td:eq(1)").text()
     var dfkh = $(obj).closest("tr").find("td:eq(3)").text()
     window.page = 1
 
@@ -145,6 +145,7 @@ function getZzDetails(obj,type) {
         data:{
             yhkkh:yhkkh,
             dfkh:dfkh,
+            order:"jysj",
             type:type,
             page:parseInt(page)
         },
@@ -165,11 +166,11 @@ function getZzDetails(obj,type) {
                     "<td width=\"7%\">"+data[i].jyye+"</td>"+
                     "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                     "<td width=\"13%\">"+data[i].dskh+"</td>"+
-                    "<td width=\"13%\">"+data[i].dsxm+"</td>"+
+                    "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jywdmc+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jywdmc+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
-                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
@@ -188,8 +189,69 @@ $(function () { $('#myModal').on('hide.bs.modal', function () {
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
+    $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
 })
 });
+
+function orderByFilter(type,filter) {
+    var tbody = window.document.getElementById("result")
+    if(tbody!=null) {
+        tbody.innerHTML = ""
+    }
+    var yhkkh = $("#yhkkh").val();
+    var dfkh = $("#dfkh").val();
+    window.page = 1
+
+    if(type=="tjjg"){
+        dfkh=""
+    }
+    var url = "/SINOFAITH/bankzzxx/getDetails"
+    $.ajax({
+        type:"post",
+        dataType:"json",
+        url:url,
+        data:{
+            yhkkh:yhkkh,
+            dfkh:dfkh,
+            order:filter,
+            type:type,
+            page:parseInt(page)
+        },
+        success:function (msg) {
+            var data = msg.list
+            var str = ""
+            for (i in data){
+                if(i%2==0){
+                    str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
+                }else{
+                    str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
+                }
+                str+="<td width=\"4%\">"+data[i].id+"</td>"+
+                    "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
+                    "<td width=\"5%\">"+data[i].jyxm+"</td>"+
+                    "<td width=\"10%\">"+data[i].jysj+"</td>"+
+                    "<td width=\"7%\">"+data[i].jyje+"</td>"+
+                    "<td width=\"7%\">"+data[i].jyye+"</td>"+
+                    "<td width=\"7%\">"+data[i].sfbz+"</td>"+
+                    "<td width=\"13%\">"+data[i].dskh+"</td>"+
+                    "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].jywdmc+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jywdmc+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
+                    // "<td width=\"8%\">"+data[i].jsje+"</td>"+
+                    "</tr>";
+            }
+            tbody.innerHTML = str
+            $("#yhkkh").attr("value",yhkkh);
+            $("#dfkh").attr("value",dfkh);
+            $("#allRow").attr("value",msg.totalRecords)
+            // title.innerText ="<"+jyzh+","+jylx+">"
+        }
+    })
+
+
+}
 
 var page = 1
 var is_running = false
@@ -216,6 +278,7 @@ function scrollF(type) {
                 data: {
                     yhkkh:yhkkh,
                     dfkh:dfkh,
+                    order:"xx",
                     type:type,
                     page: parseInt(window.page)
                 },
@@ -236,11 +299,11 @@ function scrollF(type) {
                             "<td width=\"7%\">"+data[i].jyye+"</td>"+
                             "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                             "<td width=\"13%\">"+data[i].dskh+"</td>"+
-                            "<td width=\"13%\">"+data[i].dsxm+"</td>"+
+                            "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
+                            "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].jywdmc+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jywdmc+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
-                            "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                             // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                             "</tr>";
                     }

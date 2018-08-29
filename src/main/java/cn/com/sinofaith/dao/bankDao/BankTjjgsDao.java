@@ -29,8 +29,9 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (SELECT  s.khxm as xm,c.* ");
-        sql.append("FROM  bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh where 1=1 "+seachCode+") a ");
+        sql.append("FROM (SELECT  s.khxm as xm,d.khxm dfxms,c.* ");
+        sql.append("FROM  bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh ");
+        sql.append(" left join bank_person d on c.dfzh = d.yhkkh where 1=1 "+seachCode+") a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
 
         return findBySQL(sql.toString());
@@ -43,7 +44,7 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
                 "       group by dfzh " +
                 "       having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
                 "       left join bank_person s on c.jyzh = s.yhkkh" +
-                "       where a.num is not null").append(seachCode);
+                "       where a.num is not null ").append(seachCode);
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt(String.valueOf(map.get("NUM")));

@@ -88,9 +88,14 @@ public class BankZzxxServices {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
-        List listZzxx = bankzzd.findBySQL("SELECT  s.khxm jyxms,d.khxm dfxms,c.* FROM  bank_zzxx c " +
-                "left join bank_person s on c.yhkkh=s.yhkkh  " +
-                "left join bank_person d on c.dskh=d.yhkkh where 1=1 "+seach);
+        StringBuffer sql = new StringBuffer();
+        sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
+        sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");
+        sql.append("  where 1=1"+seach+" nulls last ) c ");
+        sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
+        sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
+        sql.append(" where su=1");
+        List listZzxx = bankzzd.findBySQL(sql.toString());
         HSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡转账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
@@ -135,13 +140,14 @@ public class BankZzxxServices {
             cell = row.createCell(8);
             cell.setCellValue(zzf.getDsxm());
             cell = row.createCell(9);
-            cell.setCellValue(zzf.getJyfsd());
-            cell = row.createCell(10);
-            cell.setCellValue(zzf.getJywdmc());
-            cell = row.createCell(11);
-            cell.setCellValue(zzf.getZysm());
-            cell = row.createCell(12);
             cell.setCellValue(zzf.getBz());
+            cell = row.createCell(10);
+            cell.setCellValue(zzf.getJyfsd());
+            cell = row.createCell(11);
+            cell.setCellValue(zzf.getJywdmc());
+            cell = row.createCell(12);
+            cell.setCellValue(zzf.getZysm());
+
             if(i%65536==0){
                 for (int a = 0; a < 15; a++) {
                     sheet.autoSizeColumn(a);
@@ -172,35 +178,36 @@ public class BankZzxxServices {
         cell = row.createCell(8);
         cell.setCellValue("对手户名");
         cell = row.createCell(9);
-        cell.setCellValue("交易发生地");
-        cell = row.createCell(10);
-        cell.setCellValue("交易网点名称");
-        cell = row.createCell(11);
-        cell.setCellValue("摘要说明");
-        cell = row.createCell(12);
         cell.setCellValue("备注");
+        cell = row.createCell(10);
+        cell.setCellValue("交易发生地");
+        cell = row.createCell(11);
+        cell.setCellValue("交易网点名称");
+        cell = row.createCell(12);
+        cell.setCellValue("摘要说明");
         return row;
     }
 
-    public String getByYhkkh(String zh,String jylx,String type,AjEntity aj,int page){
+    public String getByYhkkh(String zh,String jylx,String type,AjEntity aj,int page,String order){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
         String ajid = getAjidByAjm(aj);
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach=" and c.yhkkh='"+zh+"' ";
+            seach=" and (c.yhkkh='"+zh+"') ";
         }else{
-            seach=" and c.yhkkh='"+zh+"' ";
-            seach+=" and c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"' ";
+            seach=" and (c.yhkkh='"+zh+"') ";
+            seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";
         }
 //        if(aj.getFlg()==1){
 //            seach +=" and c.shmc not like'%红包%'";
 //        }
-        seach += "and aj_id in("+ajid+") order by c.jysj desc ";
+        seach += "and c.aj_id in("+ajid+") "+order;
 
-        int allRow = bankzzd.getAllRowCount(seach);
-        List zzList = bankzzd.getDoPage(seach,page,100);
+
+        int allRow = bankzzd.getCount(seach);
+        List zzList = bankzzd.getDoPageDis(seach,page,100);
 
 
 

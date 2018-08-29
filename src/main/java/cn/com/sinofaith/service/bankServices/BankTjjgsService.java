@@ -54,6 +54,7 @@ public class BankTjjgsService {
                 cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
                 cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
                 cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
+                cftForm.setDfxm((String) map.get("DFXMS"));
                 cfttjs.add(cftForm);
                 xh++;
             }

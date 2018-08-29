@@ -64,8 +64,8 @@
                                             </tr>
                                             <tr align="center">
                                                 <td width="7%">序号</td>
-                                                <td width="7%"><a href="/SINOFAITH/banktjjg/order?orderby=khxm">姓名</a></td>
                                                 <td width="8%">交易账卡号	</td>
+                                                <td width="7%"><a href="/SINOFAITH/banktjjg/order?orderby=khxm">交易户名</a></td>
                                                 <td width="9%"><a
                                                         href="/SINOFAITH/banktjjg/order?orderby=jyzcs">交易总次数</a></td>
                                                 <td width="8%"><a
@@ -81,8 +81,8 @@
                                             <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                                 <tr class="${st.index%2==1 ? '':'odd' }">
                                                     <td align="center">${item.id}</td>
-                                                    <td align="center">${item.name}</td>
                                                     <td align="center">${item.jyzh}</td>
+                                                    <td align="center">${item.name}</td>
                                                     <td align="center">${item.jyzcs}</td>
                                                     <td align="center">${item.jzzcs}</td>
                                                     <td align="center"><fmt:formatNumber value="${item.jzzje}"
@@ -254,16 +254,27 @@
                                 <td width="4%">序号</td>
                                 <td width="13%">交易账卡号</td>
                                 <td width="5%">交易户名</td>
-                                <td width="10%">交易时间</td>
-                                <td width="7%">交易金额(元)</td>
+                                <td width="10%">
+                                    <button onclick="orderByFilter('tjjg','jysj')">交易时间</button>
+                                </td>
+                                <td width="7%">
+                                    <button onclick="orderByFilter('tjjg','jyje')">交易金额(元)</button>
+                                </td>
                                 <td width="7%">交易余额(元)</td>
-                                <td width="7%">收付标志</td>
-                                <td width="13%">对手账卡号</td>
-                                <td width="13%">对手户名</td>
+                                <td width="7%">
+                                    <button onclick="orderByFilter('tjjg','sfbz')">收付标志</button>
+
+                                </td>
+                                <td width="13%">
+                                    <button onclick="orderByFilter('tjjg','dskh')">对手账卡号</button>
+                                </td>
+                                <td width="13%">
+                                    <button onclick="orderByFilter('tjjg','dsxm')">对手户名</button>
+                                </td>
+                                <td width="7%">备注</td>
                                 <td width="7%">交易发生地</td>
                                 <td width="7%">交易网点名称</td>
                                 <td width="7%">摘要说明</td>
-                                <td width="7%">备注</td>
                                 <%--<td width="8%">接收金额(元)</td>--%>
                             </tr>
                             <input name="label" id="yhkkh" hidden="hidden" value="">

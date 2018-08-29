@@ -39,7 +39,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>银行卡对手账户信息(${aj.aj})</strong>
                                             </div>
@@ -47,22 +47,24 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="5%">序号</td>
-                                        <td width="5%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">姓名</a></td>
                                         <td width="9%">交易账卡号</td>
-                                        <td width="14%">对方账号</td>
+                                        <td width="5%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">交易户名</a></td>
+                                        <td width="15%">对方账号</td>
+                                        <%--<td width="5%">对方户名</td>--%>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进账总次数</a></td>
                                         <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzje">进账总金额(元)</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzcs">出账总次数</a></td>
                                         <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzje">出账总金额(元)</a></td>
-                                        <td width="5%">详情</td>
+                                        <td width="4%">详情</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <td align="center">${item.name}</td>
                                                 <td align="center">${item.jyzh}</td>
+                                                <td align="center">${item.name}</td>
                                                 <td align="center">${item.dfzh}</td>
+                                                <%--<td align="center">${item.dfxm}</td>--%>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
@@ -198,16 +200,22 @@
                         <td width="4%">序号</td>
                         <td width="13%">交易账卡号</td>
                         <td width="5%">交易户名</td>
-                        <td width="10%">交易时间</td>
-                        <td width="7%">交易金额(元)</td>
+                        <td width="10%">
+                            <button onclick="orderByFilter('tjjgs','jysj')">交易时间</button>
+                        </td>
+                        <td width="7%">
+                            <button onclick="orderByFilter('tjjgs','jyje')">交易金额(元)</button>
+                        </td>
                         <td width="7%">交易余额(元)</td>
-                        <td width="7%">收付标志</td>
+                        <td width="7%">
+                            <button onclick="orderByFilter('tjjgs','sfbz')">收付标志</button>
+                        </td>
                         <td width="13%">对手账卡号</td>
                         <td width="13%">对手户名</td>
+                        <td width="7%">备注</td>
                         <td width="7%">交易发生地</td>
                         <td width="7%">交易网点名称</td>
                         <td width="7%">摘要说明</td>
-                        <td width="7%">备注</td>
                         <%--<td width="8%">接收金额(元)</td>--%>
                     </tr>
                     <input name="label" id="yhkkh" hidden="hidden" value="">

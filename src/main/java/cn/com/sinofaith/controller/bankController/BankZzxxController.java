@@ -103,25 +103,57 @@ public class BankZzxxController {
         bankzzs.downloadFile(seach,rep,aj.getAj());
     }
 
+    @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String removeDesc(HttpSession ses){
+        ses.removeAttribute("xqdesc");
+        return "200";
+    }
+
 
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getDetails(@RequestParam("yhkkh") String yhkkh,@RequestParam("dfkh")String dfkh,
-                             @RequestParam("type") String type,@RequestParam("page")int page, HttpServletRequest req){
+                             @RequestParam("type") String type, @RequestParam("page")int page,
+                             @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        return bankzzs.getByYhkkh(yhkkh,dfkh,type,aj!=null ? aj:new AjEntity(),page);
+        String desc = (String) ses.getAttribute("xqdesc");
+        String lastOrder = (String) ses.getAttribute("xqlastOrder");
+        String orders ="";
+        if(!"xx".equals(order)) {
+            if (order.equals(lastOrder)) {
+                if (desc == null || " ,c.id ".equals(desc)) {
+                    desc = " desc ";
+                } else {
+                    desc = " ,c.id ";
+                }
+            } else {
+                desc = " desc ";
+            }
+             orders = " order by c." + order + desc;
+        }else{
+            orders = " order by c."+lastOrder+desc;
+            order=lastOrder;
+        }
+        ses.setAttribute("xqOrder",order);
+        ses.setAttribute("xqlastOrder",order);
+        ses.setAttribute("xqdesc",desc);
+        return bankzzs.getByYhkkh(yhkkh,dfkh,type,aj!=null ? aj:new AjEntity(),page,orders);
     }
 
     @RequestMapping(value = "/downDetailZh")
     public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,
-                             HttpServletRequest req,HttpServletResponse rep)throws Exception{
+                             HttpServletRequest req,HttpServletResponse rep,HttpSession ses)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String ajid=cftzzs.getAjidByAjm(aj);
-        String seach = " and (c.yhkkh = '"+yhkkh+"' or c.dskh='"+yhkkh+"')";
+        String seach = " and (c.yhkkh = '"+yhkkh+"' )";
+        String lastOrder = (String) ses.getAttribute("xqlastOrder");
+        String desc = (String) ses.getAttribute("xqdesc");
         if(!"".equals(dskh)){
-             seach += " and (c.yhkkh = '"+dskh+"' or c.dskh='"+dskh+"' or c.bcsm = '"+dskh+"')";
+            seach += " and ( c.dskh='"+dskh+"' or c.bcsm = '"+dskh+"')";
         }
-        seach+=" and c.aj_id in("+ajid+") order by c.jysj desc ";
+        seach+=" and c.aj_id in("+ajid+") ";
+        seach+=" order by c."+lastOrder+desc;
         bankzzs.downloadFile(seach,rep, aj.getAj());
     }
 }
