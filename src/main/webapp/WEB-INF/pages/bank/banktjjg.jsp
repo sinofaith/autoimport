@@ -271,10 +271,10 @@
                                 <td width="13%">
                                     <button onclick="orderByFilter('tjjg','dsxm')">对手户名</button>
                                 </td>
-                                <td width="7%">备注</td>
+                                <td width="7%">摘要说明</td>
                                 <td width="7%">交易发生地</td>
                                 <td width="7%">交易网点名称</td>
-                                <td width="7%">摘要说明</td>
+                                <td width="7%">备注</td>
                                 <%--<td width="8%">接收金额(元)</td>--%>
                             </tr>
                             <input name="label" id="yhkkh" hidden="hidden" value="">

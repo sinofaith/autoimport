@@ -364,7 +364,7 @@ public class WuliuEntity {
         // 件数
         wl.setNumber_cases("".equals(list.get(title.get("number_cases")).trim()) ? null:list.get(title.get("number_cases")).trim());
         // 运费
-        wl.setFreight("".equals(list.get(title.get("freight")).trim()) ? null:list.get(title.get("Freight")).trim());
+        wl.setFreight("".equals(list.get(title.get("freight")).trim()) ? null:list.get(title.get("freight")).trim());
         return wl;
     }
 }

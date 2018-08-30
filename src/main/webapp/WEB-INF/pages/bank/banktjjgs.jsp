@@ -63,7 +63,7 @@
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.jyzh}</td>
                                                 <td align="center">${item.name}</td>
-                                                <td align="center">${item.dfzh}</td>
+                                                <td align="center" title="${item.dfzh}"><div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfzh}</div></td>
                                                 <%--<td align="center">${item.dfxm}</td>--%>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
@@ -212,10 +212,10 @@
                         </td>
                         <td width="13%">对手账卡号</td>
                         <td width="13%">对手户名</td>
-                        <td width="7%">备注</td>
+                        <td width="7%">摘要说明</td>
                         <td width="7%">交易发生地</td>
                         <td width="7%">交易网点名称</td>
-                        <td width="7%">摘要说明</td>
+                        <td width="7%">备注</td>
                         <%--<td width="8%">接收金额(元)</td>--%>
                     </tr>
                     <input name="label" id="yhkkh" hidden="hidden" value="">

@@ -323,7 +323,7 @@ public class UploadService {
         final Map<String, Integer> title = new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 
-        ExcelReader reader = new ExcelReader() {
+        Excel2007Reader reader = new Excel2007Reader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
                 if (curRow == 0) {
                     for (int i = 0; i < rowList.size(); i++) {
@@ -377,7 +377,7 @@ public class UploadService {
                 }
             }
         };
-        
+
         for (int i = 0; i < filepath.size(); i++) {
             try {
                 reader.process(filepath.get(i));
@@ -502,29 +502,9 @@ public class UploadService {
         File dir = new File(uploadPath);
         File[] files = dir.listFiles();
         for (File file : files) {
-           listPath.add(file.getAbsolutePath());
+            listPath.add(file.getAbsolutePath());
         }
         return listPath;
-    }
-
-    public void updateBySql(AjEntity aje) {
-
-        bzzd.updateBySql(" update bank_zzxx t " +
-                " set t.bcsm=t.yhkkh||'-'||t.dsxm " +
-                " where t.dskh is null and t.dsxm is not null and aj_id =" + aje.getId());
-
-        bzzd.updateBySql("update bank_zzxx t " +
-                " set t.bcsm=t.yhkkh||'-'||t.zysm " +
-                " where t.dskh is null and t.zysm is not null and aj_id =" + aje.getId());
-
-        bzzd.updateBySql("update bank_zzxx t " +
-                " set t.bcsm=t.yhkkh||'-'||t.bz " +
-                " where t.dskh is null and t.bz is not null and aj_id=" + aje.getId());
-
-        bzzd.updateBySql("update bank_zzxx t " +
-                " set t.bcsm=t.yhkkh||'-'||'空账户' " +
-                " where t.dskh is null and aj_id=" + aje.getId());
-
     }
 
 }

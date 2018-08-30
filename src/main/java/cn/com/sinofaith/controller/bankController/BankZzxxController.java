@@ -132,7 +132,7 @@ public class BankZzxxController {
             }
              orders = " order by c." + order + desc;
         }else{
-            orders = " order by c."+lastOrder+desc;
+            orders = " order by c."+lastOrder+desc+" nulls last";
             order=lastOrder;
         }
         ses.setAttribute("xqOrder",order);
@@ -153,7 +153,7 @@ public class BankZzxxController {
             seach += " and ( c.dskh='"+dskh+"' or c.bcsm = '"+dskh+"')";
         }
         seach+=" and c.aj_id in("+ajid+") ";
-        seach+=" order by c."+lastOrder+desc;
+        seach+=" order by c."+lastOrder+desc +" nulls last ";
         bankzzs.downloadFile(seach,rep, aj.getAj());
     }
 }

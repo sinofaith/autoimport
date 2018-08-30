@@ -109,8 +109,8 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         }
         Connection con = DBUtil.getConnection();
         String sql = "insert into Bank_zzxx(yhkkh,jysj,jyje,jyye,sfbz,dskh,dsxm,dssfzh,zysm,jysfcg,aj_id,inserttime" +
-                " ,yhkzh,dszh,dskhh,jywdmc,dsjyye,dsye,bz,jyzjh,jyfsd,jyxm) " +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                " ,yhkzh,dszh,dskhh,jywdmc,dsjyye,dsye,bz,jyzjh,jyfsd,jyxm,bcsm) " +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         int a = 0;
         PreparedStatement pstm = null;
         BankZzxxEntity zzxx = new BankZzxxEntity();
@@ -147,6 +147,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                     pstm.setString(20, zzxx.getJyzjh());
                     pstm.setString(21, zzxx.getJyfsd());
                     pstm.setString(22, zzxx.getJyxm());
+                    pstm.setString(23, zzxx.getBcsm());
                     pstm.addBatch();
                     a++;
                     if ((j + 1) % 50000 == 0) {

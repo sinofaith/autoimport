@@ -382,6 +382,19 @@ public class BankZzxxEntity {
         b.setJyzjh("".equals(list.get(title.get("jyzjh")).trim())? null:list.get(title.get("jyzjh")).trim());
         b.setJyxm("".equals(list.get(title.get("jyxm")).trim())? null:list.get(title.get("jyxm")).trim());
         b.setJyfsd("".equals(list.get(title.get("jyfsd")).trim())? null:list.get(title.get("jyfsd")).trim());
+        if(b.getDskh()==null){
+            String bcsm = b.getYhkkh()+"-";
+            if(b.getDsxm()!=null){
+                bcsm+=b.getDsxm();
+            }else if(b.getZysm()!=null){
+                bcsm+=b.getZysm();
+            }else if(b.getBz()!=null){
+                bcsm+=b.getBz();
+            }else {
+                bcsm += "空账户";
+            }
+            b.setBcsm(bcsm);
+        }
         return b;
     }
 }

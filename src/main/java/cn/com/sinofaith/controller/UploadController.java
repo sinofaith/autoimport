@@ -147,7 +147,6 @@ public class UploadController {
             us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
             us.deleteAll(uploadPath);
             uploadPathd.delete();
-            us.updateBySql(aje);
             listZzxx = bzs.getAll(aje.getId());
             Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
             listZzxx = new ArrayList<>(setB);
@@ -155,8 +154,6 @@ public class UploadController {
             btjs.count(listZzxx,aje.getId());
             btjss.count(listZzxx,aje.getId());
         }
-
-
 
         if(a+b>0){
             result = String.valueOf(a+b);

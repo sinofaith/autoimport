@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
+import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
@@ -216,7 +217,7 @@ public abstract class Excel2007Reader extends DefaultHandler {
             //当某个单元格的数据为空时，其后边连续的单元格也可能为空
             if(isSkipCeil == true) {
                 for(int i = 0; i < (flag-1); i++) {
-                    rowlist.add(curCol + i, "***");
+                    rowlist.add(curCol + i, "");
                 }
                 curCol += (flag-1);
             }
@@ -246,21 +247,66 @@ public abstract class Excel2007Reader extends DefaultHandler {
 
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-        String file = "C:\\Users\\zheng\\Desktop\\物流\\第二起假表情况\\45a24d4a99c967ba4d9e52499a8cad4e.xlsx";
-        final Map<String,Integer> title=new HashMap();
-        final List<BankZzxxEntity> listB = new ArrayList<>();
+        String file = "D:\\work\\数据模型\\物流\\第二起假表情况\\7afedb300ecdff14ed8fcae41b552f98.xlsx";
+        final Map<String,Integer> title = new HashMap<>();
+        final List<WuliuEntity> wls = new ArrayList<>();
 
         Excel2007Reader reader = new Excel2007Reader() {
             @Override
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
-                System.out.println(rowList);
+                // 第一行
+                if (curRow == 0) {
+                    for(int i =0;i<rowList.size();i++){
+                        // 获取每一列的标题
+                        String temp = rowList.get(i);
+                        // 进行筛选
+                        if (temp.contains("运单号") || temp.contains("单号")) {
+                            title.put("waybill_id",i);
+                        } else if (temp.contains("寄件时间") || temp.contains("寄时间")) {
+                            title.put("ship_time",i);
+                        } else if (temp.contains("寄件地址") || temp.contains("寄地址")) {
+                            title.put("ship_address",i);
+                        } else if (temp.contains("寄件人") || temp.contains("寄件联系人")) {
+                            title.put("sender",i);
+                        } else if (temp.contains("寄件电话") || temp.contains("寄电话")) {
+                            title.put("ship_phone",i);
+                        } else if (temp.contains("寄件手机") || temp.contains("寄客户编码") || temp.contains("寄方客户编码")) {
+                            title.put("ship_mobilephone",i);
+                        } else if (temp.contains("收件地址") || temp.contains("收地址")) {
+                            title.put("sj_address",i);
+                        } else if (temp.contains("收件人") || temp.contains("收件联系人")) {
+                            title.put("addressee",i);
+                        } else if (temp.contains("收件电话") || temp.contains("收电话")) {
+                            title.put("sj_phone",i);
+                        } else if (temp.contains("收件手机") || temp.contains("到客户编码") || temp.contains("派方客户编码")) {
+                            title.put("sj_mobilephone",i);
+                        } else if (temp.contains("收件员")) {
+                            title.put("collector",i);
+                        } else if (temp.contains("托寄物") || temp.contains("托寄内容") || temp.contains("托物")) {
+                            title.put("tjw",i);
+                        } else if (temp.contains("付款方式") || temp.contains("付款")) {
+                            title.put("payment",i);
+                        } else if (temp.contains("代收货款金额") || temp.contains("代收货款")) {
+                            title.put("dshk",i);
+                        } else if (temp.contains("计费重量") || temp.contains("重量")) {
+                            title.put("weight",i);
+                        } else if (temp.contains("件数")) {
+                            title.put("number_cases",i);
+                        } else if (temp.contains("运费") || temp.contains("费用")) {
+                            title.put("freight",i);
+                        }
+                    }
+                } else {
+                    WuliuEntity wl = WuliuEntity.listToObj(rowList, title);
+                    if(wl!=null){
+                        wls.add(wl);
+                    }
+                }
             }
         };
 
         reader.process(file);
-        Set<BankZzxxEntity> setB = new HashSet<>(listB);
-        System.out.println(listB.size());
-        System.out.println(setB.size());
+        System.out.println(wls.size());
         long end = System.currentTimeMillis();
         System.out.println(end-start);
     }

@@ -91,7 +91,7 @@ public class BankZzxxServices {
         StringBuffer sql = new StringBuffer();
         sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
         sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");
-        sql.append("  where 1=1"+seach+" nulls last ) c ");
+        sql.append("  where 1=1"+seach+" ) c ");
         sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
         sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
         sql.append(" where su=1");
@@ -140,13 +140,13 @@ public class BankZzxxServices {
             cell = row.createCell(8);
             cell.setCellValue(zzf.getDsxm());
             cell = row.createCell(9);
-            cell.setCellValue(zzf.getBz());
+            cell.setCellValue(zzf.getZysm());
             cell = row.createCell(10);
             cell.setCellValue(zzf.getJyfsd());
             cell = row.createCell(11);
             cell.setCellValue(zzf.getJywdmc());
             cell = row.createCell(12);
-            cell.setCellValue(zzf.getZysm());
+            cell.setCellValue(zzf.getBz());
 
             if(i%65536==0){
                 for (int a = 0; a < 15; a++) {
@@ -178,13 +178,13 @@ public class BankZzxxServices {
         cell = row.createCell(8);
         cell.setCellValue("对手户名");
         cell = row.createCell(9);
-        cell.setCellValue("备注");
+        cell.setCellValue("摘要说明");
         cell = row.createCell(10);
         cell.setCellValue("交易发生地");
         cell = row.createCell(11);
         cell.setCellValue("交易网点名称");
         cell = row.createCell(12);
-        cell.setCellValue("摘要说明");
+        cell.setCellValue("备注");
         return row;
     }
 
