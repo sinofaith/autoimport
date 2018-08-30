@@ -3,6 +3,7 @@ package cn.com.sinofaith.controller;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
 import cn.com.sinofaith.service.bankServices.BankTjjgsService;
@@ -10,8 +11,10 @@ import cn.com.sinofaith.service.bankServices.BankZzxxServices;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
+import cn.com.sinofaith.service.wlService.WuliuJjxxService;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +51,8 @@ public class UploadController {
     private BankTjjgServices btjs;
     @Autowired
     private BankTjjgsService btjss;
+    @Autowired
+    private WuliuJjxxService wjs;
     @Autowired
     private AjServices ajs;
 
@@ -158,6 +164,59 @@ public class UploadController {
             result = "";
         }
         request.getSession().setAttribute("aj",aje);
+        return result;
+    }
+
+    @RequestMapping(value = "/uploadWuliu",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String uploadWuliu(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+                              HttpServletRequest req) {
+        // 创建一个路径
+        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
+        String filePath = "";
+        String fileName = "";
+        String result = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if (!uploadPathd.exists()) {
+            uploadPathd.mkdirs();
+        }
+
+        // 将文件上传到服务器
+        for(int i=0;i<file.size();i++) {
+            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        int a = 0;
+        int b = 0;
+
+        AjEntity aje = ajs.findByName(aj).get(0);
+        if(uploadPathd.listFiles()!=null) {
+            List<WuliuEntity> listJjxx = wjs.getAll(aje.getId());
+            //us.insertWuliuJjxx(uploadPath,aje.getId());
+            us.insertWuliuJjxx(uploadPath,aje.getId(),listJjxx);
+            us.deleteAll(uploadPath);
+            uploadPathd.delete();
+            //-----------写到这里-------------------
+//            listZzxx = bzs.getAll(aje.getId());
+//            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+//            listZzxx = new ArrayList<>(setB);
+//            setB = null;
+        }
+        if(a+b>0){
+            result = String.valueOf(a+b);
+        }else {
+            result = "";
+        }
+        req.getSession().setAttribute("aj",aje);
         return result;
     }
 }

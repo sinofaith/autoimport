@@ -7,17 +7,21 @@ import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftPersonEntity;
 import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.dao.bankDao.BankPersonDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.dao.cftDao.CftPersonDao;
 import cn.com.sinofaith.dao.cftDao.CftZcxxDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
+import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
+import cn.com.sinofaith.util.Excel2007Reader;
 import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.ReadExcelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.border.TitledBorder;
 import java.io.*;
 import java.util.*;
 
@@ -41,6 +45,10 @@ public class UploadService {
 
     @Autowired
     private BankZzxxDao bzzd;
+
+    @Autowired
+    private WuliuJjxxDao wljjd;
+
     @Autowired
     private BankPersonDao bpd;
 
@@ -122,6 +130,7 @@ public class UploadService {
     public List<CftZcxxEntity> getZcxxByTxt(List<String> listPath) {
         List<CftZcxxEntity> zcxxs = new ArrayList<CftZcxxEntity>();
         File file = null;
+        //输入缓冲区
         BufferedReader br = null;
         FileInputStream fis = null;
         InputStreamReader isr = null;
@@ -166,6 +175,7 @@ public class UploadService {
                             line++;
                             continue;
                         }
+                        //---------------------------------
                         if (line > 1) {
                             if (zcxxStr.get(0).isEmpty()) {
                                 zcxxStr.set(0, listZcxx.get(0).getZhzt());
@@ -220,6 +230,93 @@ public class UploadService {
         List<BankZzxxEntity> listZzxx = getByExcel(listPath);
         int i = bzzd.insertZzxx(listZzxx, aj_id, all);
         return i;
+    }
+
+    /**
+     * 物流寄件添加数据
+     * @param uploadPath
+     * @param id
+     */
+    public int insertWuliuJjxx(String uploadPath, long aj_id, List<WuliuEntity> all) {
+        List<String> listPath = getWlFileList(uploadPath);
+        List<WuliuEntity> listJjxx = getByJjxxExcel(listPath);
+        int i = wljjd.insertJjxx(listJjxx, aj_id, all);
+        return i;
+    }
+
+    /**
+     * 解析excel
+     * @param listPath
+     * @return
+     */
+    private List<WuliuEntity> getByJjxxExcel(List<String> listPath) {
+        // 用于存放表格中列号
+        final Map<String,Integer> title = new HashMap<>();
+        final List<WuliuEntity> wls = new ArrayList<>();
+
+        Excel2007Reader reader = new Excel2007Reader() {
+            @Override
+            public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                // 第一行
+                if (curRow == 0) {
+                    for(int i =0;i<rowList.size();i++){
+                        // 获取每一列的标题
+                        String temp = rowList.get(i);
+                        // 进行筛选
+                        if (temp.contains("运单号") || temp.contains("单号")) {
+                            title.put("waybill_id",i);
+                        } else if (temp.contains("寄件时间") || temp.contains("寄时间")) {
+                            title.put("ship_time",i);
+                        } else if (temp.contains("寄件地址") || temp.contains("寄地址")) {
+                            title.put("ship_address",i);
+                        } else if (temp.contains("寄件人") || temp.contains("寄件联系人")) {
+                            title.put("sender",i);
+                        } else if (temp.contains("寄件电话") || temp.contains("寄电话")) {
+                            title.put("ship_phone",i);
+                        } else if (temp.contains("寄件手机") || temp.contains("寄客户编码") || temp.contains("寄方客户编码")) {
+                            title.put("ship_mobilephone",i);
+                        } else if (temp.contains("收件地址") || temp.contains("收地址")) {
+                            title.put("sj_address",i);
+                        } else if (temp.contains("收件人") || temp.contains("收件联系人")) {
+                            title.put("addressee",i);
+                        } else if (temp.contains("收件电话") || temp.contains("收电话")) {
+                            title.put("sj_phone",i);
+                        } else if (temp.contains("收件手机") || temp.contains("到客户编码") || temp.contains("派方客户编码")) {
+                            title.put("sj_mobilephone",i);
+                        } else if (temp.contains("收件员")) {
+                            title.put("collector",i);
+                        } else if (temp.contains("托寄物") || temp.contains("托寄内容") || temp.contains("托物")) {
+                            title.put("tjw",i);
+                        } else if (temp.contains("付款方式") || temp.contains("付款")) {
+                            title.put("payment",i);
+                        } else if (temp.contains("代收货款金额") || temp.contains("代收货款")) {
+                            title.put("dshk",i);
+                        } else if (temp.contains("计费重量") || temp.contains("重量")) {
+                            title.put("weight",i);
+                        } else if (temp.contains("件数")) {
+                            title.put("number_cases",i);
+                        } else if (temp.contains("运费") || temp.contains("费用")) {
+                            title.put("freight",i);
+                        }
+                    }
+                } else {
+                    WuliuEntity wl = WuliuEntity.listToObj(rowList, title);
+                    if(wl!=null){
+                        wls.add(wl);
+                    }
+                }
+            }
+        };
+
+        for (int i = 0; i < listPath.size(); i++) {
+            try {
+                reader.process(listPath.get(i));
+                new File(listPath.get(i)).delete();
+            } catch (Exception e) {
+                e.getStackTrace();
+            }
+        }
+        return wls;
     }
 
     public List<BankZzxxEntity> getByExcel(List<String> filepath) {
@@ -280,10 +377,10 @@ public class UploadService {
                 }
             }
         };
+        
         for (int i = 0; i < filepath.size(); i++) {
             try {
                 reader.process(filepath.get(i));
-
                 new File(filepath.get(i)).delete();
             } catch (Exception e) {
                 e.getStackTrace();
@@ -379,18 +476,33 @@ public class UploadService {
 
     public static List<String> getFileList(String filepath, String filter) {
         List<String> listPath = new ArrayList<String>();
-        File dir = new File(filepath);
+        File dir = new File(filepath);//获取到D:/tomcat/webapps/SINOFAITH/upload/temp/1535376809258目录下
         File[] files = dir.listFiles();//获取文件夹下所有文件
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 String fileName = files[i].getName();
-                if (files[i].isDirectory()) {
+                if (files[i].isDirectory()) {//如果是一个目录则返回true
                     getFileList(files[i].getAbsolutePath(), filter);
                 } else if (fileName.endsWith(filter)) {
                     String strFileName = files[i].getAbsolutePath();
                     listPath.add(strFileName);
                 }
             }
+        }
+        return listPath;
+    }
+
+    /**
+     * 获取文件
+     * @param uploadPath
+     * @return
+     */
+    private static List<String> getWlFileList(String uploadPath) {
+        List<String> listPath = new ArrayList<String>();
+        File dir = new File(uploadPath);
+        File[] files = dir.listFiles();
+        for (File file : files) {
+           listPath.add(file.getAbsolutePath());
         }
         return listPath;
     }
@@ -414,4 +526,5 @@ public class UploadService {
                 " where t.dskh is null and aj_id=" + aje.getId());
 
     }
+
 }
