@@ -196,7 +196,7 @@ public class BankZzxxForm {
         zzf.setJyye(new BigDecimal(map.get("JYYE").toString()));
         zzf.setSfbz((String) map.get("SFBZ"));
         zzf.setDskh((String) map.get("DSKH"));
-        zzf.setDsxm(map.get("DSXM") != null? (String)map.get("DSXM"):(String) map.get("DFXMS"));
+        zzf.setDsxm((String)map.get("DSXM"));
         zzf.setZysm((String) map.get("ZYSM"));
         zzf.setBz((String)map.get("BZ"));
         zzf.setJyfsd((String)map.get("JYFSD"));
