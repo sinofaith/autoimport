@@ -54,7 +54,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         sql.append("FROM (SELECT a.*, ROWNUM rn from ( ");
         sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
         sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");
-        sql.append("  where 1=1"+seach+" nulls last ) c ");
+        sql.append("  where 1=1"+seach+" ) c ");
         sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
         sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
         sql.append(" where su=1");

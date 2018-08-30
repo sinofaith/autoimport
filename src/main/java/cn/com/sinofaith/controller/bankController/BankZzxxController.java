@@ -130,7 +130,7 @@ public class BankZzxxController {
             } else {
                 desc = " desc ";
             }
-             orders = " order by c." + order + desc;
+             orders = " order by c." + order + desc+" nulls last ";
         }else{
             orders = " order by c."+lastOrder+desc+" nulls last";
             order=lastOrder;
