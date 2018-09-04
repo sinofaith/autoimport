@@ -229,13 +229,51 @@ public class UploadService {
         List<String> listPath = getFileLists(filePath, "交易明细");
         List<BankZzxxEntity> listZzxx = getByExcel(listPath);
         int i = bzzd.insertZzxx(listZzxx, aj_id, all);
+
+        List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
+        Map<String,String> allBp = new HashMap<>();
+        for(int j=0;j<allbp.size();j++){
+            allBp.put((allbp.get(j).getYhkkh()).replace("null",""),null);
+        }
+        Map<String,BankPersonEntity> mapZ= new HashMap<>();
+            for (int g = 0; g < listZzxx.size(); g++) {
+                BankPersonEntity bp = new BankPersonEntity();
+                bp.setYhkkh(listZzxx.get(g).getDskh());
+                bp.setYhkzh(String.valueOf(aj_id));
+                bp.setXm(listZzxx.get(g).getDsxm());
+                if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
+                    if (bp.getXm().contains("支付宝")) {
+                        bp.setXm("支付宝（中国）网络技术有限公司");
+                    } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
+                        bp.setXm("财付通支付科技有限公司");
+                    }
+                    mapZ.put((bp.getYhkkh()).replace("null", ""), bp);
+                } else {
+                    continue;
+                }
+            }
+        List<String> str = new ArrayList<>();
+        for (String o : mapZ.keySet()) {
+            if (allBp.containsKey(o)) {
+                str.add(o);
+            }
+        }
+        for (int s = 0; s < str.size();s++) {
+                mapZ.remove(str.get(s));
+            }
+        allbp=new ArrayList<>(mapZ.values());
+
+
+        bpd.add(allbp,String.valueOf(aj_id));
+
+
+
         return i;
     }
 
     /**
      * 物流寄件添加数据
      * @param uploadPath
-     * @param id
      */
     public int insertWuliuJjxx(String uploadPath, long aj_id, List<WuliuEntity> all) {
         List<String> listPath = getWlFileList(uploadPath);
@@ -323,7 +361,7 @@ public class UploadService {
         final Map<String, Integer> title = new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 
-        Excel2007Reader reader = new Excel2007Reader() {
+        ExcelReader reader = new ExcelReader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
                 if (curRow == 0) {
                     for (int i = 0; i < rowList.size(); i++) {

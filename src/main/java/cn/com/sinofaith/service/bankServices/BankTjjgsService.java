@@ -123,7 +123,7 @@ public class BankTjjgsService {
             }else if("num".equals(orderby)){
               seach.append(" order by a." + orderby + desc + ",c.dfzh,c.jyzh");
             } else{
-                seach.append( " order by c." +orderby + desc);
+                seach.append( " order by c." +orderby + desc+",c.id");
             }
         }
         return seach.toString();

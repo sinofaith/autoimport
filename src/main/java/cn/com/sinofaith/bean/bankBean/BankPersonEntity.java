@@ -21,7 +21,7 @@ public class BankPersonEntity {
     }
 
     @Basic
-    @Column(name="yhkkh",nullable = false,length = 50)
+    @Column(name="yhkkh",nullable = false,length = 200)
     public String getYhkkh() {
         return yhkkh;
     }
@@ -30,7 +30,7 @@ public class BankPersonEntity {
         this.yhkkh = yhkkh;
     }
     @Basic
-    @Column(name="yhkzh",nullable = true,length = 50)
+    @Column(name="yhkzh",nullable = true,length = 200)
     public String getYhkzh() {
         return yhkzh;
     }
@@ -39,12 +39,30 @@ public class BankPersonEntity {
         this.yhkzh = yhkzh;
     }
     @Basic
-    @Column(name="khxm",nullable = true,length = 50)
+    @Column(name="khxm",nullable = true,length = 200)
     public String getXm() {
         return xm;
     }
 
     public void setXm(String xm) {
         this.xm = xm;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BankPersonEntity that = (BankPersonEntity) o;
+
+        if (yhkkh != null ? !yhkkh.equals(that.yhkkh) : that.yhkkh != null) return false;
+        return xm != null ? xm.equals(that.xm) : that.xm == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = yhkkh != null ? yhkkh.hashCode() : 0;
+        result = 31 * result + (xm != null ? xm.hashCode() : 0);
+        return result;
     }
 }
