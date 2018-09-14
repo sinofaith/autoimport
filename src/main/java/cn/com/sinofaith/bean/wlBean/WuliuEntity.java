@@ -292,9 +292,8 @@ public class WuliuEntity {
         wl.setShip_time("".equals(list.get(title.get("ship_time")).trim()) ? null:list.get(title.get("ship_time")).trim());
         // 寄件地址
         wl.setShip_address("".equals(list.get(title.get("ship_address")).trim()) ? null:list.get(title.get("ship_address")).trim());
-        if(list.get(title.get("ship_address")).trim().equals("0")){
-            wl.setShip_address("");
-        }
+        // 寄件人
+        wl.setSender("".equals(list.get(title.get("sender")).trim())? null:list.get(title.get("sender")).trim());
         // 寄件电话  为0时
         if("0".equals(list.get(title.get("ship_phone")).trim())){
             // 手机不为0时
@@ -305,23 +304,17 @@ public class WuliuEntity {
             // 手机为null时
             if("".equals(list.get(title.get("ship_mobilephone")).trim())){
                 // 电话=寄件人
-                wl.setShip_phone(list.get(title.get("sender")).trim());
+                wl.setShip_phone(wl.getSender());
             }
         }else{
             wl.setShip_phone(list.get(title.get("ship_phone")).trim());
-        }
-        // 寄件人
-        wl.setSender("".equals(list.get(title.get("sender")).trim())? null:list.get(title.get("sender")).trim());
-        if(list.get(title.get("sender")).trim().equals("0")){
-            wl.setSender(wl.getShip_phone());
         }
         // 寄件手机
         wl.setShip_mobilephone("".equals(list.get(title.get("ship_mobilephone")).trim()) ? null:list.get(title.get("ship_mobilephone")).trim());
         // 收件地址
         wl.setSj_address("".equals(list.get(title.get("sj_address")).trim()) ? null:list.get(title.get("sj_address")).trim());
-        if(list.get(title.get("sj_address")).trim().equals("0")){
-            wl.setSj_address("");
-        }
+        // 收件人
+        wl.setAddressee("".equals(list.get(title.get("addressee")).trim()) ? null:list.get(title.get("addressee")).trim());
         // 收件电话 为0时
         if("0".equals(list.get(title.get("sj_phone")).trim())){
             // 手机 不为0时
@@ -332,7 +325,7 @@ public class WuliuEntity {
             // 手机为null
             if("".equals(list.get(title.get("sj_mobilephone")).trim())){
                 // 电话=收件人
-                wl.setSj_phone(list.get(title.get("addressee")).trim());
+                wl.setSj_phone(wl.getAddressee());
             }
         }
         // 电话<11位
@@ -348,13 +341,12 @@ public class WuliuEntity {
         }else{
             wl.setSj_phone(list.get(title.get("sj_phone")).trim());
         }
-        // 收件人
-        wl.setAddressee("".equals(list.get(title.get("addressee")).trim()) ? null:list.get(title.get("addressee")).trim());
-        if(list.get(title.get("addressee")).trim().equals("0")){
-            wl.setAddressee(wl.getSj_phone());
-        }
+
+
         // 收件手机
         wl.setSj_mobilephone("".equals(list.get(title.get("sj_mobilephone")).trim()) ? null:list.get(title.get("sj_mobilephone")).trim());
+
+
         // 收件员collector
         if(title.keySet().contains("collector")){
             wl.setCollector("".equals(list.get(title.get("collector")).trim()) ? null:list.get(title.get("collector")).trim());
@@ -366,11 +358,7 @@ public class WuliuEntity {
         // 付款方式
         wl.setPayment("".equals(list.get(title.get("payment")).trim()) ? null:list.get(title.get("payment")).trim());
         // 代收货款
-        if(title.keySet().contains("dshk")){
-            wl.setDshk("".equals(list.get(title.get("dshk")).trim()) ? null:list.get(title.get("dshk")).trim());
-        }else{
-            wl.setDshk(null);
-        }
+        wl.setDshk("".equals(list.get(title.get("dshk")).trim()) ? null:list.get(title.get("dshk")).trim());
         // 计费重量
         wl.setWeight("".equals(list.get(title.get("weight")).trim()) ? null:list.get(title.get("weight")).trim());
         // 件数

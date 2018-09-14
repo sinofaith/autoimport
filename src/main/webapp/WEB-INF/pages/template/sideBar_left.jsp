@@ -20,7 +20,7 @@
     <a href="/SINOFAITH/aj" ><i class=" icon-untitled26 "></i>案件</a>
     <a href="/SINOFAITH/cft" class="sidebar_left_addative"><i class="icon-untitled54"></i>财付通</a>
     <a href="/SINOFAITH/bank"><i class="icon-untitled47"></i>银行卡</a>
-    <a href="/SINOFAITH/wuliu"><i class="icon-search"></i>物流</a>
+    <%--<a href="/AMD/criteriaquery"><i class="icon-search"></i>资金</a>--%>
  </span>
 </aside>
 </body>
