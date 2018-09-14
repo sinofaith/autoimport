@@ -277,97 +277,17 @@ public class UploadService {
      */
     public int insertWuliuJjxx(String uploadPath, long aj_id, List<WuliuEntity> all) {
         List<String> listPath = getWlFileList(uploadPath);
-        List<WuliuEntity> listJjxx = null;
-        int i = 0;
-        for (String list : listPath) {
-            if(list.endsWith(".xlsx")){
-                listJjxx = getByJjxxExcel(list);
-            }else{
-                listJjxx = getBy2003Excel(list);
-            }
-            i = wljjd.insertJjxx(listJjxx, aj_id, all);
-        }
+        List<WuliuEntity> listJjxx = getByJjxxExcel(listPath);
+        int i = wljjd.insertJjxx(listJjxx, aj_id, all);
         return i;
     }
 
-    private  List<WuliuEntity> getBy2003Excel(String listPath){
-        List<WuliuEntity> wls = new ArrayList<>();
-        try {
-            ReadExcelUtils excelReader = new ReadExcelUtils(listPath);
-            String[] titles = excelReader.readExcelTitle();
-            titles = excelReader.readExcelTitle();
-            List<String> strTitle = new ArrayList<>(Arrays.asList(titles));
-            Map<String,Integer> title = new HashMap<>();
-            for(int i=0;i<strTitle.size();i++){
-                String temp=strTitle.get(i);
-                String lb = "";
-                if(temp!=null&&temp.length()>0) {
-                    // 进行筛选
-                    if (temp.contains("运单号") || temp.contains("单号")) {
-                        title.put("waybill_id",i);
-                    } else if (temp.contains("寄件时间") || temp.contains("寄时间")) {
-                        title.put("ship_time",i);
-                    } else if (temp.contains("寄件地址") || temp.contains("寄地址")) {
-                        title.put("ship_address",i);
-                    } else if (temp.contains("寄件人") || temp.contains("寄件联系人")) {
-                        title.put("sender",i);
-                    } else if (temp.contains("寄件电话") || temp.contains("寄电话")) {
-                        title.put("ship_phone",i);
-                    } else if (temp.contains("寄件手机") || temp.contains("寄客户编码") || temp.contains("寄方客户编码")) {
-                        title.put("ship_mobilephone",i);
-                    } else if (temp.contains("收件地址") || temp.contains("收地址")) {
-                        title.put("sj_address",i);
-                    } else if (temp.contains("收件人") || temp.contains("收件联系人")) {
-                        title.put("addressee",i);
-                    } else if (temp.contains("收件电话") || temp.contains("收电话")) {
-                        title.put("sj_phone",i);
-                    } else if (temp.contains("收件手机") || temp.contains("到客户编码") || temp.contains("派方客户编码")) {
-                        title.put("sj_mobilephone",i);
-                    } else if (temp.contains("收件员")) {
-                        title.put("collector",i);
-                    } else if (temp.contains("托寄物") || temp.contains("托寄内容") || temp.contains("托物")) {
-                        title.put("tjw",i);
-                    } else if (temp.contains("付款方式") || temp.contains("付款")) {
-                        title.put("payment",i);
-                    } else if (temp.contains("代收货款金额") || temp.contains("代收货款")) {
-                        title.put("dshk",i);
-                    } else if (temp.contains("计费重量") || temp.contains("重量")) {
-                        title.put("weight",i);
-                    } else if (temp.contains("件数")) {
-                        title.put("number_cases",i);
-                    } else if (temp.contains("运费") || temp.contains("费用")) {
-                        title.put("freight",i);
-                    }
-                    title.put(lb, i);
-                }
-            }
-            Map<Integer, Map<Integer,Object>> map = excelReader.readExcelContent();
-            Iterator<Integer> iterator = map.keySet().iterator();
-            while (iterator.hasNext()) {
-                List<String> list = new ArrayList<>();
-                Integer key1 = iterator.next();
-                Map<Integer, Object> map2 = map.get(key1);
-                Iterator<Integer> iterator1 = map2.keySet().iterator();
-                while(iterator1.hasNext()){
-                    Integer key2 = iterator1.next();
-                    String value = (String) map2.get(key2);
-                    list.add(value);
-                }
-                WuliuEntity wuliuEntity = WuliuEntity.listToObj(list, title);
-                wls.add(wuliuEntity);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return wls;
-    }
     /**
-     * 解析2007excel
+     * 解析excel
      * @param listPath
      * @return
      */
-    private List<WuliuEntity>  getByJjxxExcel(String listPath) {
+    private List<WuliuEntity> getByJjxxExcel(List<String> listPath) {
         // 用于存放表格中列号
         final Map<String,Integer> title = new HashMap<>();
         final List<WuliuEntity> wls = new ArrayList<>();
@@ -426,13 +346,14 @@ public class UploadService {
             }
         };
 
-        try {
-            reader.process(listPath);
-            new File(listPath).delete();
-        } catch (Exception e) {
-            e.getStackTrace();
+        for (int i = 0; i < listPath.size(); i++) {
+            try {
+                reader.process(listPath.get(i));
+                new File(listPath.get(i)).delete();
+            } catch (Exception e) {
+                e.getStackTrace();
+            }
         }
-
         return wls;
     }
 
@@ -623,9 +544,5 @@ public class UploadService {
         }
         return listPath;
     }
-
-    /**
-     *
-     */
 
 }

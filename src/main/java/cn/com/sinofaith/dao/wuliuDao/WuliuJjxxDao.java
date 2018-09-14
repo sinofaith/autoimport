@@ -1,22 +1,10 @@
 package cn.com.sinofaith.dao.wuliuDao;
 
-import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
-import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.dao.BaseDao;
-import cn.com.sinofaith.form.wlForm.WuliuRelationForm;
 import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.TimeFormatUtil;
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
-import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -31,65 +19,6 @@ import java.util.Map;
 public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
 
     /**
-     * 获取所有条目
-     * @return
-     */
-    public int getRowAll(DetachedCriteria dc, AjEntity aj) {
-        Session session = getSession();
-        Long rowAll = 0l;
-        try {
-            Transaction tx = session.beginTransaction();
-            Criteria criteria = dc.getExecutableCriteria(session);
-            // 设置聚合查询函数
-            if(aj.getFlg()==1){
-                rowAll = (Long) criteria.setProjection(Projections.countDistinct ("waybill_id")).uniqueResult();
-            }else{
-                criteria.setProjection(Projections.rowCount());
-                rowAll = (Long) criteria.uniqueResult();
-            }
-            // 将条件清空，用于dc查询分页数据
-            criteria.setProjection(null);
-            tx.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-            session.close();
-        }
-        return rowAll.intValue();
-    }
-
-    /**
-     * 分页查询
-     * @param currentPage
-     * @param pageSize
-     * @param dc
-     * @return
-     */
-    public List<WuliuEntity> getDoPage(int currentPage, int pageSize, DetachedCriteria dc, AjEntity aj) {
-        Session session = getSession();
-        List<WuliuEntity> zhxxs = null;
-        try {
-            // 开启事务
-            Transaction tx = session.beginTransaction();
-            // 关联session
-            Criteria criteria = dc.getExecutableCriteria(session);
-            if(aj.getFlg()==1){
-                criteria.add(Restrictions.sqlRestriction("id in (select  min(id) from wuliu group by waybill_id,ship_time,ship_address,sender,ship_phone,ship_mobilephone," +
-                        "sj_address,addressee,sj_phone,sj_mobilephone," +
-                        "tjw,dshk,number_cases,aj_id)"));
-            }
-            criteria.setFirstResult((currentPage-1)*pageSize);
-            criteria.setMaxResults(pageSize);
-            // 创建对象
-            zhxxs = criteria.list();
-            tx.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-            session.close();
-        }
-        return zhxxs;
-    }
-
-    /**
      * 物流数据导入
      * @param listJjxx
      * @param aj_id
@@ -100,44 +29,44 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
         List<WuliuEntity> w = null;
         // 数据去重
         // 根据运单号+寄件时间去重
-//        if(all!=null && all.size()>0){
-//            Map<String,WuliuEntity> map1 = new HashMap<>();
-//            for (int i=0;i<all.size();i++){
-//                WuliuEntity wuliu = all.get(i);
-//                map1.put(wuliu.getWaybill_id()+wuliu.getShip_time().replace("null", ""),null);
-//            }
-//            Map<String,WuliuEntity> map = new HashMap<>();
-//            for(int i=0;i<listJjxx.size();i++){
-//                WuliuEntity wuliu = listJjxx.get(i);
-//                map.put(wuliu.getWaybill_id()+wuliu.getShip_time().replace("null", ""),wuliu);
-//            }
-//
-//            // 将相同key添加
-//            List<String> str = new ArrayList<>();
-//            for(String key : map.keySet()){
-//                if(map1.containsKey(key)){
-//                    str.add(key);
-//                }
-//            }
-//            map1 = null;
-//            if(map.size()==str.size()){
-//                return -1;
-//            }
-//
-//            for(int i=0;i<str.size();i++){
-//                // 去重
-//                map.remove(str.get(i));
-//            }
-//            w = new ArrayList<>(map.values());
-//            map = null;
-//        }else{
+        if(all!=null && all.size()>0){
+            Map<String,WuliuEntity> map1 = new HashMap<>();
+            for (int i=0;i<all.size();i++){
+                WuliuEntity wuliu = all.get(i);
+                map1.put(wuliu.getWaybill_id()+wuliu.getShip_time().replace("null", ""),null);
+            }
+            Map<String,WuliuEntity> map = new HashMap<>();
+            for(int i=0;i<listJjxx.size();i++){
+                WuliuEntity wuliu = listJjxx.get(i);
+                map.put(wuliu.getWaybill_id()+wuliu.getShip_time().replace("null", ""),wuliu);
+            }
+
+            // 将相同key添加
+            List<String> str = new ArrayList<>();
+            for(String key : map.keySet()){
+                if(map1.containsKey(key)){
+                    str.add(key);
+                }
+            }
+            map1 = null;
+            if(map.size()==str.size()){
+                return -1;
+            }
+
+            for(int i=0;i<str.size();i++){
+                // 去重
+                map.remove(str.get(i));
+            }
+            w = new ArrayList<>(map.values());
+            map = null;
+        }else{
             w = listJjxx;
-//        }
+        }
 
         // 使用原生sql
         Connection conn = DBUtil.getConnection();
         String sql = "insert into wuliu(waybill_id,ship_time,ship_address,sender,ship_phone,ship_mobilephone,sj_address," +
-                "addressee,sj_phone,sj_mobilephone,collector,tjw,payment,dshk,weight,number_cases,freight,insert_time,aj_id) " +
+                "addressee,sj_phone,sj_mobilephone,collector,tjw,payment,dshk,weightm,number_cases,freight,insert_time,aj_id) " +
                 "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         int a = 0;
         PreparedStatement pstm = null;
@@ -187,39 +116,5 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
         }
         listJjxx = null;
         return a;
-    }
-
-    /**
-     *
-     * @param id
-     * @return
-     */
-    public List<WuliuRelationEntity> insertRelation(long id) {
-        StringBuffer sql = new StringBuffer();
-        sql.append("select t.ship_phone,t.sj_phone,count(*) num,max(t.aj_id) aj_id from (select * from (select t.*,row_number() ");
-        sql.append(" over(partition by t.waybill_id,substr(trim(t.ship_time),1,19), ");
-        sql.append(" t.ship_address,t.sender,t.ship_phone,t.ship_mobilephone, ");
-        sql.append(" t.sj_address,t.addressee,t.sj_phone,t.sj_mobilephone, ");
-        sql.append(" t.tjw,t.dshk,t.number_cases order by t.id) su from wuliu t) where su=1 and aj_id="+id+") t ");
-        sql.append(" group by t.ship_phone,t.sj_phone order by num desc");
-        List<WuliuRelationEntity> list = null;
-        // 获得当前session
-        Session session = getSession();
-        // 开启事务
-        try{
-            Transaction tx = session.beginTransaction();
-            list = session.createSQLQuery(sql.toString())
-                    .addScalar("ship_phone")
-                    .addScalar("sj_phone")
-                    .addScalar("num", StandardBasicTypes.LONG)
-                    .addScalar("aj_id",StandardBasicTypes.LONG)
-                    .setResultTransformer(Transformers.aliasToBean(WuliuRelationEntity.class)).list();
-            tx.commit();
-        }catch (Exception e){
-            session.close();
-            e.printStackTrace();
-        }
-
-        return list;
     }
 }

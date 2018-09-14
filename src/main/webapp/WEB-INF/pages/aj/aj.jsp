@@ -47,7 +47,6 @@
                                         <td width="7%">案件名</td>
                                         <td width="7%">财付通交易数据</td>
                                         <td width="7%">银行卡交易数据</td>
-                                        <td width="7%">物流寄件数据</td>
                                         <td width="12%">案件创建时间</td>
                                         <td width="6%">操作</td>
                                     </tr>
@@ -60,7 +59,6 @@
                                             <td align="center">${item.aj}</td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=1">${item.cftnum}</a></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=2">${item.banknum}</a></td>
-                                            <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=3">${item.wuliunum}</a></td>
                                             <td align="center">${item.inserttime}</td>
                                             <td align="center">
                                                 <a href="/SINOFAITH/aj/delete?aj=${item.aj}" class="delete">删除</a>

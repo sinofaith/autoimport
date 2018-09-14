@@ -40,13 +40,11 @@ public class AJDao extends BaseDao<AjEntity>{
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (SELECT  zc.*,b.bankNum,c.cftNum,d.wuliuNum from aj zc ");
+        sql.append("FROM (SELECT  zc.*,b.bankNum,c.cftNum from aj zc ");
         sql.append(" left join (select aj_id,to_char(count(id)) as bankNum from bank_zzxx group by aj_id) b " +
                 " on zc.id = b.aj_id  ");
         sql.append("  left join (select aj_id,to_char(count(id)) as cftNum from cft_zzxx group by aj_id) c " +
                 " on zc.id = c.aj_id ");
-        sql.append("  left join (select aj_id,to_char(count(id)) as wuliuNum from wuliu group by aj_id) d " +
-                " on zc.id = d.aj_id ");
         sql.append(" where 1=1 "+seachCode+" order by zc.inserttime desc ) a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
 
