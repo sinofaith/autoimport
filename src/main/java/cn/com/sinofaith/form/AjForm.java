@@ -10,7 +10,16 @@ public class AjForm {
     private long flg;
     private String cftnum;
     private String banknum;
+    private String wuliunum;
     private String inserttime;
+
+    public String getWuliunum() {
+        return wuliunum;
+    }
+
+    public void setWuliunum(String wuliunum) {
+        this.wuliunum = wuliunum;
+    }
 
     public long getXh() {
         return xh;
@@ -75,6 +84,7 @@ public class AjForm {
         af.setAj((String)map.get("AJ"));
         af.setCftnum(map.get("CFTNUM")!=null ? (String)map.get("CFTNUM"):"0");
         af.setBanknum(map.get("BANKNUM")!=null ? (String) map.get("BANKNUM"):"0");
+        af.setWuliunum(map.get("WULIUNUM")!=null ? (String) map.get("WULIUNUM"):"0");
         af.setInserttime((String)map.get("INSERTTIME"));
         return af;
     }

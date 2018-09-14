@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
+import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
 import cn.com.sinofaith.service.bankServices.BankTjjgsService;
@@ -200,13 +201,9 @@ public class UploadController {
             List<WuliuEntity> listJjxx = wjs.getAll(aje.getId());
             //us.insertWuliuJjxx(uploadPath,aje.getId());
             us.insertWuliuJjxx(uploadPath,aje.getId(),listJjxx);
+            wjs.insertRelation(aje.getId());
             us.deleteAll(uploadPath);
             uploadPathd.delete();
-            //-----------写到这里-------------------
-//            listZzxx = bzs.getAll(aje.getId());
-//            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
-//            listZzxx = new ArrayList<>(setB);
-//            setB = null;
         }
         if(a+b>0){
             result = String.valueOf(a+b);
