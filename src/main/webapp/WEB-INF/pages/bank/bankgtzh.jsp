@@ -61,10 +61,12 @@
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <td align="center">${item.name}</td>
+                                                <td align="center" >${item.name}</td>
                                                 <td align="center">${item.jyzh}</td>
                                                 <td align="center">${item.dfzh}</td>
-                                                <td align="center">${item.dfxm}</td>
+                                                <td align="center" title="${item.dfxm}">
+                                                    <div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div>
+                                                </td>
                                                 <td align="center">
                                                     <button  data-toggle="modal" data-target="#myModal" onclick="getZzGtlxr(this)">${item.count}</button>
                                                 </td>

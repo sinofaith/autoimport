@@ -107,7 +107,7 @@ public class CftTjjgsController {
         String desc = (String) req.getSession().getAttribute("sdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        cfttjss.downloadFile(seach, rep,aj.getAj(),"对手",req);
+        cfttjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","对手",req);
     }
 
 

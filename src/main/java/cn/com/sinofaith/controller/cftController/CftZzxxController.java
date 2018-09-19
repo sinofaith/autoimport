@@ -77,7 +77,7 @@ public class CftZzxxController {
         String orderby = (String) req.getSession().getAttribute("zorderby");
         String desc = (String) req.getSession().getAttribute("zdesc");
         String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
-        cftzzs.downloadFile(seach,rep,aj.getAj());
+        cftzzs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 
     @RequestMapping(value = "/order")
@@ -165,6 +165,6 @@ public class CftZzxxController {
         }
         seach+=" and c.aj_id in("+ajid+") ";
         seach+=" order by c."+lastOrder+desc+" nulls last,c.jysj desc ";
-        cftzzs.downloadFile(seach,rep, aj.getAj());
+        cftzzs.downloadFile(seach,rep, aj.getAj()!=null?aj.getAj():"");
     }
 }

@@ -109,6 +109,6 @@ public class BankTjjgController {
             AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
             seach = tjs.getSeach(seachCondition, seachCode, orderby, desc, aj != null ? aj : new AjEntity());
 
-            tjs.downloadFile(seach, rep, aj.getAj());
+            tjs.downloadFile(seach, rep, aj!=null?aj.getAj():"");
         }
 }

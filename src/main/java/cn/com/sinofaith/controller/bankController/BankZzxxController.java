@@ -100,7 +100,7 @@ public class BankZzxxController {
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
         String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
-        bankzzs.downloadFile(seach,rep,aj.getAj());
+        bankzzs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
@@ -154,6 +154,6 @@ public class BankZzxxController {
         }
         seach+=" and c.aj_id in("+ajid+") ";
         seach+=" order by c."+lastOrder+desc +" nulls last ";
-        bankzzs.downloadFile(seach,rep, aj.getAj());
+        bankzzs.downloadFile(seach,rep, aj!=null?aj.getAj():"");
     }
 }

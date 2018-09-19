@@ -113,7 +113,7 @@ public class CftTjjgController {
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         seach = cfttjs.getSeach(seachCondition,seachCode,orderby,desc,aj!=null? aj : new AjEntity());
 
-        cfttjs.downloadFile(seach, rep,aj.getAj());
+        cfttjs.downloadFile(seach, rep,aj!=null?aj.getAj():"");
     }
 
 }

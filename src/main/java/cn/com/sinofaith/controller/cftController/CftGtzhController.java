@@ -116,6 +116,6 @@ public class CftGtzhController {
     public void downGtlxr(@RequestParam("dfzh") String dfzh,HttpServletRequest req,HttpServletResponse rep)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId();
-        cfttjss.downloadFile(seach,rep,aj.getAj(),"共同",req);
+        cfttjss.downloadFile(seach,rep,aj!=null?aj.getAj():"","共同",req);
     }
 }

@@ -103,7 +103,7 @@ public class BankGtzhController {
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        banktjss.downloadFile(seach, rep,aj.getAj(),"共同",req);
+        banktjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","共同",req);
     }
     @RequestMapping("/getDetails")
     @ResponseBody

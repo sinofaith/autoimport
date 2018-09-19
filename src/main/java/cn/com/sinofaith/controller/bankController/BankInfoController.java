@@ -68,6 +68,6 @@ public class BankInfoController {
         String seachCode = (String) req.getSession().getAttribute("bzcseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = bankzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
-        bankzcs.downloadFile(seach,rep,aj.getAj());
+        bankzcs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 }

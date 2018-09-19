@@ -108,7 +108,7 @@ public class BankTjjgsController {
         String desc = (String) req.getSession().getAttribute("sdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
-        banktjss.downloadFile(seach, rep,aj.getAj(),"对手",req);
+        banktjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","对手",req);
     }
 
 

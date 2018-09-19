@@ -74,6 +74,6 @@ public class CftInfoController {
         String seachCode = (String) req.getSession().getAttribute("zcseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = cftzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
-        cftzcs.downloadFile(seach,rep,aj.getAj());
+        cftzcs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 }
