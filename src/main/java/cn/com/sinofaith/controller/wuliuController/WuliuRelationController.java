@@ -133,30 +133,61 @@ public class WuliuRelationController {
         // 创建离线查询对象
         DetachedCriteria dc = DetachedCriteria.forClass(WuliuEntity.class);
         // 添加查询条件
-//        dc.setProjection(Projections.distinct(Projections.property("waybill_id")));
+        String seach = "";
         dc.add(Restrictions.eq("ship_phone",ship_phone));
+        seach = " and ship_phone='"+ship_phone+"'";
         dc.add(Restrictions.eq("sj_phone",sj_phone));
+        seach += " and sj_phone='"+sj_phone+"'";
         // 从session域中取出数据
         AjEntity aj = (AjEntity) session.getAttribute("aj");
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
+        // 查询哪一个案件
+        seach += " and aj_id="+aj.getId();
         String lastOrder = (String) session.getAttribute("xqlastOrder");
         String desc = (String) session.getAttribute("xqdesc");
-        // 查询哪一个案件
-        dc.add(Restrictions.eq("aj_id",aj.getId()));
-        if(order.equals(lastOrder)){
-            if(desc==null || desc.equals("desc")){
-                dc.addOrder(Order.desc(order));
-                desc = "";
+        if("xxx".equals(order)){
+            if("".equals(desc)){
+                dc.addOrder(Order.desc("ship_time"));
+                seach += " order by ship_time desc";
             }else{
-                dc.addOrder(Order.asc(order));
-                desc = "desc";
+                dc.addOrder(Order.asc("ship_time"));
+                seach += " order by ship_time";
             }
         }else{
-            dc.addOrder(Order.asc(order));
-            desc = "desc";
+            if(order.equals(lastOrder)){
+                if(desc==null || desc.equals("desc")){
+                    dc.addOrder(Order.desc(order));
+                    seach += " order by ship_time desc";
+                    desc = "";
+                }else{
+                    dc.addOrder(Order.asc(order));
+                    seach += " order by ship_time";
+                    desc = "desc";
+                }
+            }else{
+                dc.addOrder(Order.asc(order));
+                seach += " order by ship_time";
+                desc = "desc";
+            }
         }
+
         session.setAttribute("xqdesc", desc);
-        session.setAttribute("xqlastOrder", order);
-        String json = wlRService.getWuliuRelation(page, 100, dc);
+        if(!order.equals("xxx")){
+            session.setAttribute("xqlastOrder", order);
+        }
+        String json = wlRService.getWuliuRelation(page, 20, dc, seach);
         return json;
+    }
+
+    /**
+     * 删除desc
+     * @param ses
+     * @return
+     */
+    @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String removeDesc(HttpSession ses){
+        ses.removeAttribute("xqdesc");
+        return "200";
     }
 }

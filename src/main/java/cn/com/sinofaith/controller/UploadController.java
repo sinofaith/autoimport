@@ -13,6 +13,8 @@ import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.service.wlService.WuliuJjxxService;
+import cn.com.sinofaith.service.wlService.WuliuShipService;
+import cn.com.sinofaith.service.wlService.WuliuSjService;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -54,6 +56,10 @@ public class UploadController {
     private BankTjjgsService btjss;
     @Autowired
     private WuliuJjxxService wjs;
+    @Autowired
+    private WuliuShipService wlsService;
+    @Autowired
+    private WuliuSjService wlsjService;
     @Autowired
     private AjServices ajs;
 
@@ -199,9 +205,14 @@ public class UploadController {
         AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
             List<WuliuEntity> listJjxx = wjs.getAll(aje.getId());
-            //us.insertWuliuJjxx(uploadPath,aje.getId());
+            // wuliu表添加数据
             us.insertWuliuJjxx(uploadPath,aje.getId(),listJjxx);
+            // wuliu_relation表添加数据
             wjs.insertRelation(aje.getId());
+            // wuliu_ship表添加数据
+            wlsService.insertShip(aje.getId());
+            // wuliu_sj表添加数据
+            wlsjService.insertSj(aje.getId());
             us.deleteAll(uploadPath);
             uploadPathd.delete();
         }

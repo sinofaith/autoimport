@@ -2,6 +2,7 @@ package cn.com.sinofaith.bean.wlBean;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -214,7 +215,7 @@ public class WuliuEntity {
     }
 
     @Basic
-    @Column(name = "inserttime",nullable = true,length = 100)
+    @Column(name = "insert_time",nullable = true,length = 100)
     public String getInsertTime() {
         return insertTime;
     }
@@ -301,6 +302,9 @@ public class WuliuEntity {
             if(!"0".equals(list.get(title.get("ship_mobilephone")).trim())){
                 // 电话=手机
                 wl.setShip_phone(list.get(title.get("ship_mobilephone")).trim());
+            }else{
+                // 电话=寄件人
+                wl.setShip_phone(list.get(title.get("sender")).trim());
             }
             // 手机为null时
             if("".equals(list.get(title.get("ship_mobilephone")).trim())){
@@ -328,12 +332,17 @@ public class WuliuEntity {
             if(!"0".equals(list.get(title.get("sj_mobilephone")).trim())){
                 // 电话=手机
                 wl.setSj_phone(list.get(title.get("sj_mobilephone")).trim());
+            }else{
+                // 电话=收件人
+                wl.setSj_phone(list.get(title.get("addressee")).trim());
             }
             // 手机为null
             if("".equals(list.get(title.get("sj_mobilephone")).trim())){
                 // 电话=收件人
                 wl.setSj_phone(list.get(title.get("addressee")).trim());
             }
+        }else{
+            wl.setSj_phone(list.get(title.get("sj_phone")).trim());
         }
         // 电话<11位
         if(list.get(title.get("sj_phone")).trim().length()<11){
@@ -378,5 +387,66 @@ public class WuliuEntity {
         // 运费
         wl.setFreight("".equals(list.get(title.get("freight")).trim()) ? null:list.get(title.get("freight")).trim());
         return wl;
+    }
+
+
+
+    /**
+     * 将list装成wulius
+     * @param list
+     */
+    public static List<WuliuEntity> listToWulius(List<Object[]> list) {
+        List<WuliuEntity> wls = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            WuliuEntity wuliu = new WuliuEntity();
+            Object[] str = list.get(i);
+            if(str[0]!=null && str[0].toString()!=null){
+                wuliu.setWaybill_id(str[0].toString());
+            }
+            if(str[1]!=null && str[1].toString()!=null){
+                wuliu.setShip_time(str[1].toString());
+            }
+            if(str[2]!=null && str[2].toString()!=null){
+                wuliu.setShip_address(str[2].toString());
+            }
+            if(str[3]!=null && str[3].toString()!=null){
+                wuliu.setSender(str[3].toString());
+            }
+            if(str[4]!=null && str[4].toString()!=null){
+                wuliu.setShip_phone(str[4].toString());
+            }
+            if(str[5]!=null && str[5].toString()!=null){
+                wuliu.setShip_mobilephone(str[5].toString());
+            }
+            if(str[6]!=null && str[6].toString()!=null){
+                wuliu.setSj_address(str[6].toString());
+            }
+            if(str[7]!=null && str[7].toString()!=null){
+                wuliu.setAddressee(str[7].toString());
+            }
+            if(str[8]!=null && str[8].toString()!=null){
+                wuliu.setSj_phone(str[8].toString());
+            }
+            if(str[9]!=null && str[9].toString()!=null){
+                wuliu.setSj_mobilephone(str[9].toString());
+            }
+            if(str[10]!=null && str[10].toString()!=null){
+                wuliu.setTjw(str[10].toString());
+            }
+            if(str[11]!=null && str[11].toString()!=null){
+                wuliu.setDshk(str[11].toString());
+            }
+            if(str[12]!=null && str[12].toString()!=null){
+                wuliu.setNumber_cases(str[12].toString());
+            }
+            if(str[13]!=null && str[13].toString()!=null){
+                wuliu.setPayment(str[13].toString());
+            }
+            if(str[14]!=null && str[14].toString()!=null){
+                wuliu.setFreight(str[14].toString());
+            }
+            wls.add(wuliu);
+        }
+        return wls;
     }
 }

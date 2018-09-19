@@ -38,12 +38,12 @@ public class WuliuRelationService {
         // 当查询内容不为空时
         if(seachCode!=null) {
             seachCode = seachCode.replace("\r\n", "").replace("，", "").replace(" ", "").replace(" ", "").replace("\t", "");
-            seach.append(" and b." + seachCondition + " like '" + seachCode + "'");
+            seach.append(" and " + seachCondition + " like '" + seachCode + "'");
         }else{
             seach.append(" and ( 1=1 )");
         }
         if(orderby!=null){
-            seach .append(" order by b."+orderby).append(desc);
+            seach .append(" order by "+orderby).append(desc);
         }
         return seach.toString();
     }
@@ -104,11 +104,11 @@ public class WuliuRelationService {
      * @param dc
      * @return
      */
-    public String getWuliuRelation(int currentPage, int pageSize, DetachedCriteria dc) {
+    public String getWuliuRelation(int currentPage, int pageSize, DetachedCriteria dc, String seach) {
         Gson gson = new Gson();
         Page page = new Page();
         List<WuliuEntity> wls = null;
-        int rowAll = wlrDao.getRowAll(dc);
+        int rowAll = wlrDao.getRowAll(seach);
         if(rowAll>0){
            wls = wlrDao.getPage(currentPage, pageSize, dc);
             for (int i = 0; i < wls.size(); i++) {

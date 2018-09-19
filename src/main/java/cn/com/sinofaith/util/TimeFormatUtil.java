@@ -35,10 +35,13 @@ public class TimeFormatUtil {
         return df.format(date);
     }
     public static void main(String[] args) {
-        String time = "2018/01/01";
+        String date = TimeFormatUtil.getDate("-");
+        System.out.println(date);
+
+        /*String time = "2018/01/01";
         Date data = new Date(time);
         System.out.println(data);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(df.format(data));
+        System.out.println(df.format(data));*/
     }
 }

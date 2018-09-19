@@ -8,14 +8,13 @@ function relationSkip(code) {
     if(parseInt(onPage)>parseInt(totalPage)){
         $("#num").val(totalPage);
     } else {
-        location="/SINOFAITH/wuliu"+code+"/seach?pageNo="+onPage;
+        location="/SINOFAITH/"+code+"/seach?pageNo="+onPage;
     }
 }
 
 // 弹出框
 function getZzDetails(obj) {
     var ship_phone = $(obj).closest("tr").find("td:eq(2)").text()
-    var sj_phone = $(obj).closest("tr").find("td:eq(5)").text()
     window.page = 1
     /*var type = ""
     if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
@@ -24,14 +23,13 @@ function getZzDetails(obj) {
         type="jylx"
     }*/
     var tbody = window.document.getElementById("result")
-    var url = "/SINOFAITH/wuliuRelation/getDetails"
+    var url = "/SINOFAITH/wuliuShip/getDetails"
     $.ajax({
         type:"post",
         dataType:"json",
         url:url,
         data:{
             ship_phone:ship_phone,
-            sj_phone:sj_phone,
             order:'ship_time',
             page:parseInt(page)
         },
@@ -66,7 +64,6 @@ function getZzDetails(obj) {
             }
             tbody.innerHTML = str
             $("#ship_phone").attr("value",ship_phone);
-            $("#sj_phone").attr("value",sj_phone);
             $("#allRow").attr("value",msg.totalRecords)
         }
     })
@@ -79,7 +76,7 @@ $(function () { $('#myModal').on('hide.bs.modal', function () {
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
-    $.ajax({url:"/SINOFAITH/wuliuRelation/removeDesc"})
+    $.ajax({url:"/SINOFAITH/wuliuShip/removeDesc"})
 })
 });
 
@@ -90,7 +87,6 @@ function orderByFilter(filter) {
         tbody.innerHTML = ""
     }
     var ship_phone = $("#ship_phone").val();
-    var sj_phone = $("#sj_phone").val();
     window.page = 1
     // var type = ""
     // if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
@@ -98,14 +94,13 @@ function orderByFilter(filter) {
     // }else{
     //     type="jylx"
     // }
-    var url = "/SINOFAITH/wuliuRelation/getDetails"
+    var url = "/SINOFAITH/wuliuShip/getDetails"
     $.ajax({
         type:"post",
         dataType:"json",
         url:url,
         data:{
             ship_phone:ship_phone,
-            sj_phone:sj_phone,
             order:filter,
             page:parseInt(page)
         },
@@ -140,7 +135,6 @@ function orderByFilter(filter) {
             }
             tbody.innerHTML = str
             $("#ship_phone").attr("value",ship_phone);
-            $("#sj_phone").attr("value",sj_phone);
             $("#allRow").attr("value",msg.totalRecords)
             // title.innerText ="<"+jyzh+","+jylx+">"
         }
@@ -158,16 +152,14 @@ function scrollF() {
     if (1 >= scrollH - scrollT && tbody.scrollTop != 0 && tbody.childNodes.length < allRow) {
         if (is_running == false) {
             var ship_phone = $("#ship_phone").val();
-            var sj_phone = $("#sj_phone").val();
             window.page = page += 1;
-            var url = "/SINOFAITH/wuliuRelation/getDetails"
+            var url = "/SINOFAITH/wuliuShip/getDetails"
             $.ajax({
                 type:"post",
                 dataType:"json",
                 url:url,
                 data:{
                     ship_phone:ship_phone,
-                    sj_phone:sj_phone,
                     order:"xxx",
                     page:parseInt(window.page)
                 },
@@ -202,7 +194,6 @@ function scrollF() {
                     }
                     $("#result").append(str)
                     $("#ship_phone").attr("value",ship_phone);
-                    $("#sj_phone").attr("value",sj_phone);
                     $("#allRow").attr("value",msg.totalRecords);
                 }
             })

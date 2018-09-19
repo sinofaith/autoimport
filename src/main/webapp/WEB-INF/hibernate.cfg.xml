@@ -19,6 +19,8 @@
             <mapping class="cn.com.sinofaith.bean.bankBean.BankTjjgsEntity"/>
             <mapping class="cn.com.sinofaith.bean.wlBean.WuliuEntity"/>
             <mapping class="cn.com.sinofaith.bean.wlBean.WuliuRelationEntity"/>
+            <mapping class="cn.com.sinofaith.bean.wlBean.WuliuShipEntity"/>
+            <mapping class="cn.com.sinofaith.bean.wlBean.WuliuSjEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

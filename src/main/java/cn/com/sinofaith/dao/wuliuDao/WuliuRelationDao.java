@@ -7,10 +7,7 @@ import cn.com.sinofaith.dao.BaseDao;
 import cn.com.sinofaith.form.wlForm.WuliuRelationForm;
 import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.TimeFormatUtil;
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -36,7 +33,7 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
     public void insertWuliuRelation(List<WuliuRelationEntity> wls) {
         // 获得连接
         Connection conn = DBUtil.getConnection();
-        String sql = "insert into wuliu_relation(ship_phone,sj_phone,num,aj_id) values(?,?,?,?)";
+        String sql = "insert into wuliu_relation(sender,ship_phone,ship_address,addressee,sj_phone,sj_address,num,aj_id) values(?,?,?,?,?,?,?,?)";
         PreparedStatement pstm = null;
         WuliuRelationEntity wlr = null;
         // 做批处理
@@ -46,10 +43,14 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
             pstm = conn.prepareStatement(sql);
             for(int i=0;i<wls.size();i++){
                 wlr = wls.get(i);
-                pstm.setString(1,wlr.getShip_phone());
-                pstm.setString(2,wlr.getSj_phone());
-                pstm.setLong(3,wlr.getNum());
-                pstm.setLong(4,wlr.getAj_id());
+                pstm.setString(1,wlr.getSender());
+                pstm.setString(2,wlr.getShip_phone());
+                pstm.setString(3,wlr.getShip_address());
+                pstm.setString(4,wlr.getAddressee());
+                pstm.setString(5,wlr.getSj_phone());
+                pstm.setString(6,wlr.getSj_address());
+                pstm.setLong(7,wlr.getNum());
+                pstm.setLong(8,wlr.getAj_id());
                 pstm.addBatch();
                 // 有5000条添加一次
                 if ((i + 1) % 10000 == 0) {
@@ -73,13 +74,8 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
      * @return
      */
     public int getAllRowCount(String seach, long aj_id) {
-        StringBuffer sql = new StringBuffer();
-        sql.append("select count(*) num from wuliu_relation b left join (select * from (select a.sender, ");
-        sql.append(" a.ship_address,a.ship_phone,a.addressee,a.sj_address,a.sj_phone  from (select t.*, ");
-        sql.append(" row_number() over(partition by  t.ship_phone,t.sj_phone order by t.id) su from wuliu t where aj_id="+aj_id+") ");
-        sql.append(" a where su=1)) a on b.ship_phone=a.ship_phone and b.sj_phone=a.sj_phone ");
-        sql.append(" where 1=1 and (sj_address is not null or ship_address is not null) "+seach);
-        List list = findBySQL(sql.toString());
+        String sql = "select count(*) num from wuliu_relation where aj_id="+aj_id+seach;
+        List list = findBySQL(sql);
         Map map = (Map) list.get(0);
         // 转成String
         BigDecimal num = (BigDecimal) map.get("NUM");
@@ -96,10 +92,7 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
         StringBuffer sql = new StringBuffer();
         sql.append(" SELECT * FROM ( ");
         sql.append(" SELECT c.*, ROWNUM rn FROM ( ");
-        sql.append(" select a.sender,a.ship_address,a.addressee,a.sj_address,b.* from wuliu_relation b left join (");
-        sql.append(" select * from (select a.sender,a.ship_address,a.ship_phone,a.addressee,a.sj_address,a.sj_phone ");
-        sql.append(" from (select t.*,row_number() over(partition by ");
-        sql.append(" t.ship_phone,t.sj_phone order by t.id) su from wuliu t where aj_id="+aj_id+" ) a where su=1)) a on b.ship_phone=a.ship_phone and b.sj_phone=a.sj_phone where (sj_address is not null or ship_address is not null) " + seach);
+        sql.append(" select * from wuliu_relation where aj_id="+aj_id+seach);
         sql.append(") c ");
         sql.append(" WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         // 获得当前线程session
@@ -130,26 +123,53 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
 
     /**
      * 物流关系详情去重总条数
-     * @param dc
+     * @param seach
      * @return
      */
-    public int getRowAll(DetachedCriteria dc) {
-        Session session = getSession();
+    public int getRowAll(String seach) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("select count(*) num from (select t.*,row_number() ");
+        sql.append(" over(partition by t.waybill_id,substr(trim(t.ship_time),1,19),");
+        sql.append(" t.ship_address,t.sender,t.ship_phone,t.ship_mobilephone,");
+        sql.append(" t.sj_address,t.addressee,t.sj_phone,t.sj_mobilephone,");
+        sql.append(" t.tjw,t.dshk,t.number_cases order by t.id) su from wuliu t where 1=1 "+seach+") where su=1");
+        List list = findBySQL(sql.toString());
+        Map map = (Map) list.get(0);
+        // 转成String
+        BigDecimal num = (BigDecimal) map.get("NUM");
+        /*Session session = getSession();
         Long rowAll = 0l;
         try {
             Transaction tx = session.beginTransaction();
             // 将离线查询对象与session绑定
             Criteria criteria = dc.getExecutableCriteria(session);
-            // 设置聚合函数
-            rowAll = (Long) criteria.setProjection(Projections.countDistinct ("waybill_id")).uniqueResult();
+            // 去重数据处理
+            ProjectionList proList = Projections.projectionList();
+            proList.add(Projections.property("waybill_id"));
+            proList.add(Projections.property("ship_time"));
+            proList.add(Projections.property("ship_address"));
+            proList.add(Projections.property("sender"));
+            proList.add(Projections.property("ship_phone"));
+            proList.add(Projections.property("ship_mobilephone"));
+            proList.add(Projections.property("sj_address"));
+            proList.add(Projections.property("addressee"));
+            proList.add(Projections.property("sj_phone"));
+            proList.add(Projections.property("sj_mobilephone"));
+            proList.add(Projections.property("tjw"));
+            proList.add(Projections.property("dshk"));
+            proList.add(Projections.property("number_cases"));
+            proList.add(Projections.property("payment"));
+            proList.add(Projections.property("freight"));
+            rowAll = Long.valueOf(criteria.setProjection(Projections.distinct(proList)).list().size());
+            //rowAll = (Long) criteria.setProjection(Projections.countDistinct ("waybill_id")).uniqueResult();
             // 将条件清空
             criteria.setProjection(null);
             tx.commit();
         }catch (Exception e){
             e.printStackTrace();
             session.close();
-        }
-        return rowAll.intValue();
+        }*/
+        return Integer.parseInt(num.toString());
     }
 
     /**
@@ -167,13 +187,32 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
             Transaction tx = session.beginTransaction();
             // 关联session
             Criteria criteria = dc.getExecutableCriteria(session);
+            // 去重数据处理
+            ProjectionList proList = Projections.projectionList();
+            proList.add(Projections.property("waybill_id"));
+            proList.add(Projections.property("ship_time"));
+            proList.add(Projections.property("ship_address"));
+            proList.add(Projections.property("sender"));
+            proList.add(Projections.property("ship_phone"));
+            proList.add(Projections.property("ship_mobilephone"));
+            proList.add(Projections.property("sj_address"));
+            proList.add(Projections.property("addressee"));
+            proList.add(Projections.property("sj_phone"));
+            proList.add(Projections.property("sj_mobilephone"));
+            proList.add(Projections.property("tjw"));
+            proList.add(Projections.property("dshk"));
+            proList.add(Projections.property("number_cases"));
+            proList.add(Projections.property("payment"));
+            proList.add(Projections.property("freight"));
+            criteria.setProjection(Projections.distinct(proList));
             criteria.setFirstResult((currentPage-1)*pageSize);
             criteria.setMaxResults(pageSize);
-            criteria.add(Restrictions.sqlRestriction("id in (select  min(id) from wuliu group by waybill_id,ship_time,ship_address,sender,ship_phone,ship_mobilephone," +
+            /*criteria.add(Restrictions.sqlRestriction("id in (select  min(id) from wuliu group by waybill_id,ship_time,ship_address,sender,ship_phone,ship_mobilephone," +
                     "sj_address,addressee,sj_phone,sj_mobilephone," +
-                    "tjw,dshk,number_cases,aj_id)"));
+                    "tjw,dshk,number_cases,aj_id)"));*/
             // 创建对象
-            wls  = criteria.list();
+            List<Object[]> list = criteria.list();
+            wls = WuliuEntity.listToWulius(list);
             tx.commit();
         }catch (Exception e){
             e.printStackTrace();
@@ -195,7 +234,46 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
             if(wls.get(i).getDshk()==null){
                wls.get(i).setDshk("");
             }
+            if(wls.get(i).getPayment()==null){
+                wls.get(i).setPayment("");
+            }
+            if(wls.get(i).getSj_address()==null){
+                wls.get(i).setSj_address("");
+            }
         }
         return wls;
+    }
+
+    /**
+     * 表中总条数
+     * @param id
+     * @return
+     */
+    public int getRowCount(long id) {
+        String sql = "select count(*) num from wuliu_relation where aj_id="+id;
+        List list = findBySQL(sql);
+        Map map = (Map) list.get(0);
+        // 转成String
+        BigDecimal num = (BigDecimal) map.get("NUM");
+        return Integer.parseInt(num.toString());
+    }
+
+    /**
+     * 删除表中数据
+     */
+    public void deleteWuliuRelation(long id) {
+        // 获得session
+        Session session = getSession();
+        try {
+            Transaction tx = session.beginTransaction();
+            String hql = "Delete From WuliuRelationEntity Where aj_id=?";
+            Query query = session.createQuery(hql);
+            query.setLong(0,id);
+            query.executeUpdate();
+            tx.commit();
+        }catch (Exception e){
+            session.close();
+            e.printStackTrace();
+        }
     }
 }

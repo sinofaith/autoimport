@@ -27,8 +27,10 @@
 
 <div class="tab_div">
     <span class="tab_nav">
-        <a  href="/SINOFAITH/wuliuRelation" class="addactive">物流寄收关系信息</a>
         <a  href="/SINOFAITH/wuliujjxx" >物流寄件信息</a>
+        <a  href="/SINOFAITH/wuliuRelation" class="addactive">物流寄收关系信息</a>
+        <a  href="/SINOFAITH/wuliuShip">物流寄件人信息</a>
+        <a  href="/SINOFAITH/wuliuSj">物流收件人信息</a>
     </span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
@@ -132,14 +134,14 @@
                                 </form>
                             </div>
                             <div class="width100" style="margin-top: 10px;float: left;">
-                                <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">物流数据导入/导出</span>
+                                <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">物流数据导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <c:if test="${!fn:contains(aj.aj, ',')}">
+                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">物流数据导入</button>
-                           </c:if>
+                           </c:if>--%>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/wuliuRelation/download'" >数据导出</button>
                        </span>
                                     </div>
@@ -163,7 +165,7 @@
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
@@ -179,11 +181,11 @@
                         <td width="10%">
                             <button onclick="orderByFilter('ship_time')">寄件时间</button>
                         </td>
-                        <td width="6%">寄件人</td>
-                        <td width="6%">寄件电话</td>
+                        <td width="8%">寄件人</td>
+                        <td width="8%">寄件电话</td>
                         <td width="15%">寄件地址</td>
-                        <td width="6%">收件人</td>
-                        <td width="6%">收件电话</td>
+                        <td width="8%">收件人</td>
+                        <td width="8%">收件电话</td>
                         <td width="12%">收件地址</td>
                         <td width="10%">托寄物</td>
                         <td width="5%">付款方式</td>

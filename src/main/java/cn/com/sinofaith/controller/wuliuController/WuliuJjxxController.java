@@ -5,6 +5,7 @@ import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
 import cn.com.sinofaith.service.wlService.WuliuJjxxService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -18,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -48,7 +52,7 @@ public class WuliuJjxxController {
         httpSession.removeAttribute("JjxxseachCode");//查询内容
 
         httpSession.removeAttribute("JjxxlastOrder");
-        httpSession.removeAttribute("Jjxxdesc");
+        httpSession.removeAttribute("JjxxDesc");
         return mav;
     }
 
@@ -68,15 +72,22 @@ public class WuliuJjxxController {
         String seachCondition = (String) req.getSession().getAttribute("JjxxseachCondition");
         // 查询内容
         String seachCode = (String) req.getSession().getAttribute("JjxxseachCode");
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+        }
+        String seach = "";
         if(seachCode!=null && !seachCode.trim().equals("")){
             dc.add(Restrictions.like(seachCondition,seachCode));
+            seach = "and "+seachCondition+" like '"+seachCode+"'";
         }
         // 所属案件
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         if(aj == null){
             return "wl/wljjxx";
+        }else{
+            dc.add(Restrictions.eq("aj_id",aj.getId()));
+            seach += " and aj_id="+aj.getId();
         }
-        dc.add(Restrictions.eq("aj_id",aj.getId()));
         // 排序条件
         String lastOrder = (String) session.getAttribute("JjxxlastOrder");
         // 排序方式(desc降，asc升)
@@ -85,18 +96,25 @@ public class WuliuJjxxController {
             if(orderby.equals(lastOrder)){
                 if(desc==null || desc.equals("desc")){
                     dc.addOrder(Order.desc(orderby));
+                    seach += " order by "+ orderby +" desc";
                     desc = "";
                 }else{
                     dc.addOrder(Order.asc(orderby));
+                    seach += " order by "+ orderby;
                     desc = "desc";
                 }
             }else{
                 dc.addOrder(Order.desc(orderby));
+                seach += " order by "+ orderby +" desc";
                 desc = "";
             }
+        }else if("".equals(desc)){
+            dc.addOrder(Order.desc(lastOrder));
+        }else if("desc".equals(desc)){
+            dc.addOrder(Order.asc(lastOrder));
         }
         // 获取分页数据
-        Page page = wlService.queryForPage(parseInt(pageNo),7,dc, aj);
+        Page page = wlService.queryForPage(parseInt(pageNo),7,dc, aj, seach);
         // 将数据存入request域中
         model.addAttribute("seachCode", seachCode);
         model.addAttribute("seachCondition", seachCondition);
@@ -104,7 +122,10 @@ public class WuliuJjxxController {
             model.addAttribute("page", page);
             model.addAttribute("detailinfo", page.getList());
         }
-        session.setAttribute("JjxxlastOrder",orderby);
+        if(orderby!=null){
+            session.setAttribute("JjxxlastOrder",orderby);
+        }
+        session.setAttribute("JjxxOrder",orderby);
         session.setAttribute("JjxxDesc",desc);
         return "/wl/wljjxx";
     }
@@ -131,34 +152,6 @@ public class WuliuJjxxController {
     }
 
     /**
-     * 根据某个字段进行排序
-     * @param orderby
-     * @param session
-     * @return
-     */
-    /*@RequestMapping(value = "/order")
-    public String order(String orderby,HttpSession session){
-        String desc = (String) session.getAttribute("JjxxDesc");
-        String lastOrder = (String) session.getAttribute("JjxxlastOrder");
-        // 当不是首次点击时该字段时
-        if(orderby.equals(lastOrder)){
-            if(desc==null || " ,w.id ".equals(desc)){
-                desc = " desc ";
-            }else{
-                desc = " ,w.id ";
-            }
-        }else{
-            desc = " desc ";
-        }
-        // 将数据添加到域中
-        session.setAttribute("JjxxDesc",desc);
-        session.setAttribute("JjxxlastOrder",orderby);
-        session.setAttribute("Jjxxorderby",orderby);
-
-        return "redirect:/wuliujjxx/seach?pageNo=1";
-    }
-*/
-    /**
      * 物流数据去重
      * @param ajm
      * @param flg
@@ -176,5 +169,68 @@ public class WuliuJjxxController {
             req.getSession().setAttribute("aj",aje);
         }
         return "redirect:/wuliujjxx/seach?pageNo=1";
+    }
+
+    /**
+     * 文件导出
+     * @param rep
+     * @param session
+     */
+    @RequestMapping("/download")
+    public void getJjxxDownload(HttpServletResponse rep, HttpSession session) throws IOException {
+        // 创建离线查询对象
+        DetachedCriteria dc = DetachedCriteria.forClass(WuliuEntity.class);
+        // 获取session域中对象
+        String seachCondition = (String) session.getAttribute("JjxxseachCondition");
+        String seachCode = (String) session.getAttribute("JjxxseachCode");
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+        }
+        String seach = "";
+        if(seachCode!=null && !seachCode.equals("")){
+            dc.add(Restrictions.eq(seachCondition,seachCode));
+            seach = "and "+seachCondition+" like '"+seachCode+"'";
+        }
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
+        seach += " and aj_id="+aj.getId();
+        String orderby = (String) session.getAttribute("JjxxOrder");
+        String lastOrder = (String) session.getAttribute("JjxxlastOrder");
+        String desc = (String) session.getAttribute("JjxxDesc");
+        // 是排序的数据
+        if(orderby!=null){
+            if(orderby.equals(lastOrder)){
+                if(desc==null || desc.equals("desc")){
+                    dc.addOrder(Order.desc(orderby));
+                    seach += " order by "+ orderby +" desc";
+                    desc = "";
+                }else{
+                    seach += " order by "+ orderby;
+                    desc = "desc";
+                }
+            }else{
+                dc.addOrder(Order.desc(orderby));
+                seach += " order by "+ orderby +" desc";
+                desc = "";
+            }
+        }
+        // 获取所有数据数据
+        List<WuliuEntity> wls = wlService.getWuliuAll(seach,dc,aj);
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(wls!=null){
+            wb = wlService.createExcel(wls);
+        }
+        rep.setContentType("application/force-download");
+        // 当数据是去重是
+        if(aj.getFlg()==1){
+            rep.setHeader("Content-Disposition","attachment;filename="+new String(("物流寄件去重信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        }else{
+            rep.setHeader("Content-Disposition","attachment;filename="+new String(("物流寄件信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        }
+        OutputStream op = rep.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
     }
 }

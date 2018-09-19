@@ -12,13 +12,12 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,15 +33,54 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
      * 获取所有条目
      * @return
      */
-    public int getRowAll(DetachedCriteria dc, AjEntity aj) {
+    public int getRowAll(String seach, AjEntity aj) {
+        StringBuffer sql = new StringBuffer();
+        int rowAll = 0;
+        if(aj.getFlg()==1){
+            sql.append("select count(*) num from (select t.*,row_number() ");
+            sql.append(" over(partition by t.waybill_id,substr(trim(t.ship_time),1,19),");
+            sql.append(" t.ship_address,t.sender,t.ship_phone,t.ship_mobilephone,");
+            sql.append(" t.sj_address,t.addressee,t.sj_phone,t.sj_mobilephone,");
+            sql.append(" t.tjw,t.dshk,t.number_cases order by t.id) su from wuliu t where 1=1 "+seach+") where su=1");
+        }else{
+            sql.append("select count(*) num from wuliu where 1=1 "+seach);
+        }
+
         Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            List list = session.createSQLQuery(sql.toString()).list();
+            BigDecimal num = (BigDecimal) list.get(0);
+            rowAll = Integer.parseInt(num.toString());
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        /*Session session = getSession();
         Long rowAll = 0l;
         try {
             Transaction tx = session.beginTransaction();
             Criteria criteria = dc.getExecutableCriteria(session);
             // 设置聚合查询函数
             if(aj.getFlg()==1){
-                rowAll = (Long) criteria.setProjection(Projections.countDistinct ("waybill_id")).uniqueResult();
+                ProjectionList proList = Projections.projectionList();
+                proList.add(Projections.property("waybill_id"));
+                proList.add(Projections.property("ship_time"));
+                proList.add(Projections.property("ship_address"));
+                proList.add(Projections.property("sender"));
+                proList.add(Projections.property("ship_phone"));
+                proList.add(Projections.property("ship_mobilephone"));
+                proList.add(Projections.property("sj_address"));
+                proList.add(Projections.property("addressee"));
+                proList.add(Projections.property("sj_phone"));
+                proList.add(Projections.property("sj_mobilephone"));
+                proList.add(Projections.property("tjw"));
+                proList.add(Projections.property("dshk"));
+                proList.add(Projections.property("number_cases"));
+                proList.add(Projections.property("payment"));
+                proList.add(Projections.property("freight"));
+                rowAll = Long.valueOf(criteria.setProjection(Projections.distinct(proList)).list().size());
             }else{
                 criteria.setProjection(Projections.rowCount());
                 rowAll = (Long) criteria.uniqueResult();
@@ -53,8 +91,8 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
         }catch (Exception e){
             e.printStackTrace();
             session.close();
-        }
-        return rowAll.intValue();
+        }*/
+        return rowAll;
     }
 
     /**
@@ -73,14 +111,34 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
             // 关联session
             Criteria criteria = dc.getExecutableCriteria(session);
             if(aj.getFlg()==1){
-                criteria.add(Restrictions.sqlRestriction("id in (select  min(id) from wuliu group by waybill_id,ship_time,ship_address,sender,ship_phone,ship_mobilephone," +
-                        "sj_address,addressee,sj_phone,sj_mobilephone," +
-                        "tjw,dshk,number_cases,aj_id)"));
+                ProjectionList proList = Projections.projectionList();
+                proList.add(Projections.property("waybill_id"));
+                proList.add(Projections.property("ship_time"));
+                proList.add(Projections.property("ship_address"));
+                proList.add(Projections.property("sender"));
+                proList.add(Projections.property("ship_phone"));
+                proList.add(Projections.property("ship_mobilephone"));
+                proList.add(Projections.property("sj_address"));
+                proList.add(Projections.property("addressee"));
+                proList.add(Projections.property("sj_phone"));
+                proList.add(Projections.property("sj_mobilephone"));
+                proList.add(Projections.property("tjw"));
+                proList.add(Projections.property("dshk"));
+                proList.add(Projections.property("number_cases"));
+                proList.add(Projections.property("payment"));
+                proList.add(Projections.property("freight"));
+                criteria.setProjection(Projections.distinct(proList));
+                //criteria.add(Restrictions.sqlRestriction("id in (select  min(id) from wuliu group by waybill_id)"));
             }
             criteria.setFirstResult((currentPage-1)*pageSize);
             criteria.setMaxResults(pageSize);
             // 创建对象
-            zhxxs = criteria.list();
+            if(aj.getFlg()==1){
+                List<Object[]> list = criteria.list();
+                zhxxs = WuliuEntity.listToWulius(list);
+            }else{
+                zhxxs = criteria.list();
+            }
             tx.commit();
         }catch (Exception e){
             e.printStackTrace();
@@ -166,7 +224,7 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
                 pstm.setString(15,wl.getWeight());
                 pstm.setString(16,wl.getNumber_cases());
                 pstm.setString(17,wl.getFreight());
-                pstm.setString(18, TimeFormatUtil.getDate("/"));
+                pstm.setString(18,TimeFormatUtil.getDate("/"));
                 pstm.setLong(19,aj_id);
                 pstm.addBatch();
                 a++;
@@ -196,11 +254,13 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
      */
     public List<WuliuRelationEntity> insertRelation(long id) {
         StringBuffer sql = new StringBuffer();
-        sql.append("select t.ship_phone,t.sj_phone,count(*) num,max(t.aj_id) aj_id from (select * from (select t.*,row_number() ");
+        sql.append("select max(t.sender) sender,t.ship_phone,max(t.ship_address) ship_address,max(t.addressee) addressee, ");
+        sql.append(" t.sj_phone,max(sj_address) sj_address,count(*) num,max(t.aj_id) aj_id ");
+        sql.append(" from (select * from (select t.*,row_number() ");
         sql.append(" over(partition by t.waybill_id,substr(trim(t.ship_time),1,19), ");
         sql.append(" t.ship_address,t.sender,t.ship_phone,t.ship_mobilephone, ");
         sql.append(" t.sj_address,t.addressee,t.sj_phone,t.sj_mobilephone, ");
-        sql.append(" t.tjw,t.dshk,t.number_cases order by t.id) su from wuliu t) where su=1 and aj_id="+id+") t ");
+        sql.append(" t.tjw,t.dshk,t.number_cases order by t.id) su from wuliu t where aj_id="+id+") where su=1) t ");
         sql.append(" group by t.ship_phone,t.sj_phone order by num desc");
         List<WuliuRelationEntity> list = null;
         // 获得当前session
@@ -209,8 +269,12 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
         try{
             Transaction tx = session.beginTransaction();
             list = session.createSQLQuery(sql.toString())
+                    .addScalar("sender")
                     .addScalar("ship_phone")
+                    .addScalar("ship_address")
+                    .addScalar("addressee")
                     .addScalar("sj_phone")
+                    .addScalar("sj_address")
                     .addScalar("num", StandardBasicTypes.LONG)
                     .addScalar("aj_id",StandardBasicTypes.LONG)
                     .setResultTransformer(Transformers.aliasToBean(WuliuRelationEntity.class)).list();
@@ -221,5 +285,53 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
         }
 
         return list;
+    }
+
+    /**
+     * 获取所有信息
+     * @param dc
+     * @param aj
+     * @return
+     */
+    public List<WuliuEntity> getWuliuAll(DetachedCriteria dc, AjEntity aj) {
+        Session session = getSession();
+        List<WuliuEntity> zhxxs = null;
+        try {
+            // 开启事务
+            Transaction tx = session.beginTransaction();
+            // 关联session
+            Criteria criteria = dc.getExecutableCriteria(session);
+            if(aj.getFlg()==1){
+                ProjectionList proList = Projections.projectionList();
+                proList.add(Projections.property("waybill_id"));
+                proList.add(Projections.property("ship_time"));
+                proList.add(Projections.property("ship_address"));
+                proList.add(Projections.property("sender"));
+                proList.add(Projections.property("ship_phone"));
+                proList.add(Projections.property("ship_mobilephone"));
+                proList.add(Projections.property("sj_address"));
+                proList.add(Projections.property("addressee"));
+                proList.add(Projections.property("sj_phone"));
+                proList.add(Projections.property("sj_mobilephone"));
+                proList.add(Projections.property("tjw"));
+                proList.add(Projections.property("dshk"));
+                proList.add(Projections.property("number_cases"));
+                proList.add(Projections.property("payment"));
+                proList.add(Projections.property("freight"));
+                criteria.setProjection(Projections.distinct(proList));
+            }
+            // 创建对象
+            if(aj.getFlg()==1){
+                List<Object[]> list = criteria.list();
+                zhxxs = WuliuEntity.listToWulius(list);
+            }else{
+                zhxxs = criteria.list();
+            }
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return zhxxs;
     }
 }
