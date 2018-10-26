@@ -56,7 +56,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
         List<CftZzxxEntity> all  = getAlla(aj,"");
         for(int i=0;i<all.size();i++){
             CftZzxxEntity x = all.get(i);
-            map1.put((x.getZh()+x.getJydh()+x.getJysm()+x.getShmc()+
+            map1.put((x.getZh()+x.getJydh()+x.getJysm()+x.getShmc()+x.getJylx()+x.getJyje().doubleValue()+
                     x.getFsf()+x.getJssj()+x.getJysj()+x.getJsf()+
                     x.getJsje().doubleValue()).replace("null",""),x);
         }
@@ -65,7 +65,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
 
         for(int i =0;i<listZzxx.size();i++){
             CftZzxxEntity x = listZzxx.get(i);
-            map.put((x.getZh()+x.getJydh()+x.getJysm()+x.getShmc()+
+            map.put((x.getZh()+x.getJydh()+x.getJysm()+x.getShmc()+x.getJylx()+x.getJyje().doubleValue()+
                     x.getFsf()+x.getJssj()+x.getJysj()+x.getJsf()+
                     x.getJsje().doubleValue()).replace("null",""),x);
         }
