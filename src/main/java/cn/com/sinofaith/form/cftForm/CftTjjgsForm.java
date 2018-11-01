@@ -14,6 +14,8 @@ public class CftTjjgsForm {
     private BigDecimal czzcs = new BigDecimal(0);
     private BigDecimal czzje = new BigDecimal(0);
     private BigDecimal count = new BigDecimal(0);
+    private long zhlx;
+
 
     public long getId() {
         return id;
@@ -103,6 +105,17 @@ public class CftTjjgsForm {
     }
 
     public void setDfxm(String dfxm) {
+        if(dfxm==null){
+            dfxm="";
+        }
         this.dfxm = dfxm;
+    }
+
+    public long getZhlx() {
+        return zhlx;
+    }
+
+    public void setZhlx(long zhlx) {
+        this.zhlx = zhlx;
     }
 }

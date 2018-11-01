@@ -82,8 +82,8 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
 
     public void save(List<BankTjjgsEntity> tjjgs){
         Connection con = DBUtil.getConnection();
-        String sql = "insert into bank_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id) " +
-                "values(?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into bank_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id,zhlx) " +
+                "values(?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement st ;
         BankTjjgsEntity tjjg = new BankTjjgsEntity();
         try {
@@ -103,6 +103,7 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
                 st.setBigDecimal(7,tjjg.getCzzje());
                 st.setString(8, TimeFormatUtil.getDate("/"));
                 st.setLong(9,tjjg.getAj_id());
+                st.setLong(10,tjjg.getZhlx());
                 st.addBatch();
                 if((i+1)%50000 == 0){
                     st.executeBatch();

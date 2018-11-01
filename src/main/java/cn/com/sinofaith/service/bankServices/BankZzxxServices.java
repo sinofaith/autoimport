@@ -88,13 +88,15 @@ public class BankZzxxServices {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
+        String order = seach.substring(seach.indexOf("order")-1,seach.length());
+        seach = seach.replace(seach.substring(seach.indexOf("order")-1,seach.length())," ");
         StringBuffer sql = new StringBuffer();
         sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
         sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");
         sql.append("  where 1=1"+seach+" ) c ");
         sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
         sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
-        sql.append(" where su=1");
+        sql.append(" where su=1 "+order);
         List listZzxx = bankzzd.findBySQL(sql.toString());
         HSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
@@ -195,7 +197,7 @@ public class BankZzxxServices {
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach=" and (c.yhkkh='"+zh+"') ";
+            seach=" and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' or c.bcsm='"+zh+"') ";
         }else{
             seach=" and (c.yhkkh='"+zh+"') ";
             seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";

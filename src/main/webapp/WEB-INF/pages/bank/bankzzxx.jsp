@@ -41,7 +41,7 @@
                                     <tr>
                                         <td colspan="13"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>银行卡开户信息(${aj.aj})</strong>
+                                                <strong>银行卡转账信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>

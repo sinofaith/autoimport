@@ -82,7 +82,7 @@
                                                 <tr class="${st.index%2==1 ? '':'odd' }">
                                                     <td align="center">${item.id}</td>
                                                     <td align="center">${item.jyzh}</td>
-                                                    <td align="center">${item.name}</td>
+                                                    <td align="center" title="${item.name}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center">${item.jyzcs}</td>
                                                     <td align="center">${item.jzzcs}</td>
                                                     <td align="center"><fmt:formatNumber value="${item.jzzje}"

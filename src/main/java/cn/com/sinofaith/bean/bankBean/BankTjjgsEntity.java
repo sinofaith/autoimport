@@ -21,6 +21,7 @@ public class BankTjjgsEntity implements Serializable {
     private BigDecimal czzje = new BigDecimal(0);
     private long aj_id;
     private String inserttime;
+    private long zhlx;
 
     @Basic
     @Column(name = "id",nullable = true,precision = 0)
@@ -110,6 +111,15 @@ public class BankTjjgsEntity implements Serializable {
 
     public void setAj_id(long aj_id) {
         this.aj_id = aj_id;
+    }
+    @Basic
+    @Column(name = "zhlx",nullable = false,precision = 0)
+    public long getZhlx() {
+        return zhlx;
+    }
+
+    public void setZhlx(long zhlx) {
+        this.zhlx = zhlx;
     }
 
     @Override

@@ -22,6 +22,11 @@ public class BankZcxxDao extends BaseDao<BankZcxxEntity>{
         return result;
     }
 
+    public List<BankZcxxEntity> getByAjId(String seachCode){
+        List<BankZcxxEntity> result = find("from BankZcxxEntity where 1=1 ");
+        return result;
+    }
+
     public int saveZcxx(List<BankZcxxEntity> listZcxx,long aj_id){
         int i = 0;
         for(BankZcxxEntity zc:listZcxx){

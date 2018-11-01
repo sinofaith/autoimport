@@ -116,6 +116,43 @@ public class BankTjjgServices {
                     map.put(zzxx.getYhkkh(),tj2);
                 }
             }
+            String a = zzxx.getDskh();
+            if(a==null) {
+                a=zzxx.getBcsm();
+            }
+                if (map.containsKey(a)) {
+                    if ("出".equals(zzxx.getSfbz())) {
+                        tjjg = map.get(a);
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                    }
+                    if ("进".equals(zzxx.getSfbz())) {
+                        tjjg = map.get(a);
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                    }
+                } else {
+                    if ("出".equals(zzxx.getSfbz())) {
+                        BankTjjgEntity tj1 = new BankTjjgEntity();
+                        tj1.setJyzh(a);
+                        tj1.setJyzcs(new BigDecimal(1));
+                        tj1.setJzzcs(new BigDecimal(1));
+                        tj1.setJzzje(zzxx.getJyje());
+                        tj1.setAj_id(aj);
+                        map.put(a, tj1);
+                    }
+                    if ("进".equals(zzxx.getSfbz())) {
+                        BankTjjgEntity tj2 = new BankTjjgEntity();
+                        tj2.setJyzh(a);
+                        tj2.setJyzcs(new BigDecimal(1));
+                        tj2.setCzzcs(new BigDecimal(1));
+                        tj2.setCzzje(zzxx.getJyje());
+                        tj2.setAj_id(aj);
+                        map.put(a, tj2);
+                    }
+                }
         }
         listTjjg = new ArrayList<>(map.values());
         int i = 0;

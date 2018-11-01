@@ -138,12 +138,13 @@ public class BankZzxxController {
         ses.setAttribute("xqOrder",order);
         ses.setAttribute("xqlastOrder",order);
         ses.setAttribute("xqdesc",desc);
-        return bankzzs.getByYhkkh(yhkkh,dfkh,type,aj!=null ? aj:new AjEntity(),page,orders);
+        return bankzzs.getByYhkkh(yhkkh,dfkh.replace("\n","").trim(),type,aj!=null ? aj:new AjEntity(),page,orders);
     }
 
     @RequestMapping(value = "/downDetailZh")
     public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,
                              HttpServletRequest req,HttpServletResponse rep,HttpSession ses)throws Exception{
+        dskh = dskh.replace("\n","").trim();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String ajid=cftzzs.getAjidByAjm(aj);
         String seach = " and (c.yhkkh = '"+yhkkh+"' )";

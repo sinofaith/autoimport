@@ -3,8 +3,12 @@ package cn.com.sinofaith.controller.bankController;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
+import cn.com.sinofaith.service.bankServices.BankTjjgServices;
 import cn.com.sinofaith.service.bankServices.BankTjjgsService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.xmlbeans.impl.xb.ltgfmt.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +32,8 @@ public class BankTjjgsController {
     @Autowired
     private BankTjjgsService banktjss;
     @Autowired
+    private BankTjjgServices tjs;
+    @Autowired
     private AjServices ajs;
 
     @RequestMapping()
@@ -37,6 +43,7 @@ public class BankTjjgsController {
         httpSession.removeAttribute("tjsseachCondition");
         //查询内容
         httpSession.removeAttribute("tjsseachCode");
+        httpSession.setAttribute("code",-1);
 
         httpSession.setAttribute("sorderby","jyzcs");
         httpSession.setAttribute("slastOrder","jyzcs");
@@ -71,8 +78,9 @@ public class BankTjjgsController {
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
+        int code = (Integer) req.getSession().getAttribute("code");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),code);
         Page page = banktjss.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("tjsseachCode",seachCode);
@@ -81,6 +89,7 @@ public class BankTjjgsController {
         if(ajs.findByName(aj!=null ? aj.getAj():"").size()>0) {
             mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
         }
+        mav.addObject("code",code);
         return mav;
     }
 
@@ -100,16 +109,31 @@ public class BankTjjgsController {
         return mav;
     }
 
+    @RequestMapping(value = "/getByZhzt")
+    public ModelAndView getByZhzt(int code ,HttpSession httpSession){
+        ModelAndView mav = new ModelAndView("redirect:/banktjjgs/seach?pageNo=1");
+        httpSession.setAttribute("code",code);
+        return mav;
+    }
+
     @RequestMapping("/download")
     public void getTjjgDownload(HttpServletResponse rep, HttpServletRequest req) throws Exception{
         String seachCondition = (String) req.getSession().getAttribute("tjsseachCondition");
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
+        int code = (Integer) req.getSession().getAttribute("code");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),code);
         banktjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","对手",req);
     }
 
-
+    @RequestMapping("/getSeach")
+    @ResponseBody
+    public String getSeach(String zh,String type,HttpServletResponse rep, HttpServletRequest req){
+        Gson gson = new  GsonBuilder().serializeNulls().create();
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String seach = banktjss.getSeach(type,zh.replace("\n","").trim()," jyzcs "," desc ",aj,-1);
+        return gson.toJson(banktjss.queryForPage(1,5000,seach));
+    }
 }

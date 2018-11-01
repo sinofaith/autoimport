@@ -160,7 +160,7 @@ function getZzDetails(obj,type) {
                 }
                 str+="<td width=\"4%\">"+data[i].id+"</td>"+
                     "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
-                    "<td width=\"5%\">"+data[i].jyxm+"</td>"+
+                    "<td width=\"5%\" title=\""+data[i].jyxm+"\"> <div style=\"width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyxm+"</div></td>"+
                     "<td width=\"10%\">"+data[i].jysj+"</td>"+
                     "<td width=\"7%\">"+data[i].jyje+"</td>"+
                     "<td width=\"7%\">"+data[i].jyye+"</td>"+

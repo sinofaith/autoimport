@@ -191,10 +191,10 @@
 
 
 <script type="text/javascript">
-    $(function(){
-    var session_value = ${sessionScope.hasUnread};
-    console.log(session_value);
-        if(session_value)$('#red').css('display', 'block');
-        else $('#red').css('display', 'none');
-    })
+    <%--$(function(){--%>
+    <%--var session_value = ${sessionScope.hasUnread};--%>
+    <%--console.log(session_value);--%>
+        <%--if(session_value)$('#red').css('display', 'block');--%>
+        <%--else $('#red').css('display', 'none');--%>
+    <%--})--%>
 </script>

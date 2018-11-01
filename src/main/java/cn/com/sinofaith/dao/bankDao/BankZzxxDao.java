@@ -49,6 +49,9 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
 
     //去重分页查询
     public List getDoPageDis(String seach,int offset, int length){
+        String order = seach.substring(seach.indexOf("order")-1,seach.length());
+        seach = seach.replace(seach.substring(seach.indexOf("order")-1,seach.length())," ");
+
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn from ( ");
@@ -57,7 +60,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         sql.append("  where 1=1"+seach+" ) c ");
         sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
         sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
-        sql.append(" where su=1");
+        sql.append(" where su=1 "+order);
         sql.append(") a WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
         return findBySQL(sql.toString());
     }
