@@ -102,7 +102,7 @@ $(function () { $('#myModal2').on('hide.bs.modal', function () {
                 location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+-1;
             } else{
                 old = this;
-2                location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+$(this).val();
+                location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+$(this).val();
             }
         }
         // location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+radio;
