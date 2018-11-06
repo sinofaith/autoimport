@@ -73,8 +73,8 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
      * @param seach
      * @return
      */
-    public int getAllRowCount(String seach, long aj_id) {
-        String sql = "select count(*) num from wuliu_relation where aj_id="+aj_id+seach;
+    public int getAllRowCount(String seach) {
+        String sql = "select count(*) num from wuliu_relation where (1=1) "+seach;
         List list = findBySQL(sql);
         Map map = (Map) list.get(0);
         // 转成String
@@ -97,7 +97,6 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
         sql.append(" WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         // 获得当前线程session
         Session session = getSession();
-        SQLQuery query = null;
         List<WuliuRelationForm> wlrs = null;
         try{
             // 开启事务
@@ -275,5 +274,93 @@ public class WuliuRelationDao extends BaseDao<WuliuRelationEntity> {
             session.close();
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取全部数据
+     * @param seach
+     * @return
+     */
+    public List<WuliuRelationEntity> getWuliuRelationAll(String seach) {
+        StringBuffer sql = new StringBuffer();
+        sql.append(" select * from wuliu_relation where (1=1) "+seach);
+        // 获得当前线程session
+        Session session = getSession();
+        List<WuliuRelationEntity> wlrs = null;
+        try{
+            // 开启事务
+            Transaction transaction = session.beginTransaction();
+            wlrs = session.createSQLQuery(sql.toString()).addEntity(WuliuRelationEntity.class).list();
+            transaction.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return wlrs;
+    }
+
+    /**
+     * 详情数据全部
+     * @param dc
+     * @return
+     */
+    public List<WuliuEntity> getPageAll( DetachedCriteria dc) {
+        List<WuliuEntity> wls = null;
+        Session session = getSession();
+        try {
+            // 开启事务
+            Transaction tx = session.beginTransaction();
+            // 关联session
+            Criteria criteria = dc.getExecutableCriteria(session);
+            // 去重数据处理
+            ProjectionList proList = Projections.projectionList();
+            proList.add(Projections.property("waybill_id"));
+            proList.add(Projections.property("ship_time"));
+            proList.add(Projections.property("ship_address"));
+            proList.add(Projections.property("sender"));
+            proList.add(Projections.property("ship_phone"));
+            proList.add(Projections.property("ship_mobilephone"));
+            proList.add(Projections.property("sj_address"));
+            proList.add(Projections.property("addressee"));
+            proList.add(Projections.property("sj_phone"));
+            proList.add(Projections.property("sj_mobilephone"));
+            proList.add(Projections.property("tjw"));
+            proList.add(Projections.property("dshk"));
+            proList.add(Projections.property("number_cases"));
+            proList.add(Projections.property("payment"));
+            proList.add(Projections.property("freight"));
+            criteria.setProjection(Projections.distinct(proList));
+            // 创建对象
+            List<Object[]> list = criteria.list();
+            wls = WuliuEntity.listToWulius(list);
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        for(int i=0;i<wls.size();i++){
+            if(wls.get(i).getShip_address()==null){
+                wls.get(i).setShip_address("");
+            }
+            if(wls.get(i).getSj_address()==null){
+                wls.get(i).setShip_address("");
+            }
+            if(wls.get(i).getTjw()==null){
+                wls.get(i).setTjw("");
+            }
+            if(wls.get(i).getFreight()==null){
+                wls.get(i).setFreight("");
+            }
+            if(wls.get(i).getDshk()==null){
+                wls.get(i).setDshk("");
+            }
+            if(wls.get(i).getPayment()==null){
+                wls.get(i).setPayment("");
+            }
+            if(wls.get(i).getSj_address()==null){
+                wls.get(i).setSj_address("");
+            }
+        }
+        return wls;
     }
 }

@@ -44,7 +44,7 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>物流寄件关系信息(${aj.aj})</strong>
+                                                <strong>物流寄收关系信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
@@ -142,7 +142,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">物流数据导入</button>
                            </c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/wuliuRelation/download'" >数据导出</button>
+                               <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/wuliuRelation/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -202,7 +202,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" onclick="downDetailJylx()">导出</button>
+                <button type="button" class="btn btn-default" onclick="downDetailInfo()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

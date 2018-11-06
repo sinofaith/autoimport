@@ -2,9 +2,11 @@ package cn.com.sinofaith.controller.wuliuController;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
+import cn.com.sinofaith.bean.wlBean.WuliuShipEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuSjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.wlService.WuliuSjService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -16,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 @Controller
 @RequestMapping("/wuliuSj")
@@ -180,5 +186,85 @@ public class WUliuSjController {
     public String removeDesc(HttpSession ses){
         ses.removeAttribute("xqdesc");
         return "200";
+    }
+
+    /**
+     * 数据导出
+     * @param resp
+     * @param session
+     */
+    @RequestMapping("/download")
+    public void download(HttpServletResponse resp, HttpSession session) throws IOException {
+        // 创建离线查询对象
+        DetachedCriteria dc = DetachedCriteria.forClass(WuliuSjEntity.class);
+        // 获得session中对象
+        String seachCondition = (String) session.getAttribute("wuliuSjSeachCondition");
+        String seachCode = (String) session.getAttribute("wuliuSjSeachCode");
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            dc.add(Restrictions.like(seachCondition,seachCode));
+        }
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
+        String lastOrder = (String) session.getAttribute("wuliuSjlastOrder");
+        String desc = (String) session.getAttribute("wuliuSjDesc");
+        String orderby = (String) session.getAttribute("wuliuSjOrder");
+        // 是排序的数据
+        if(orderby!=null){
+            if(orderby.equals(lastOrder)){
+                if(desc==null || desc.equals("desc")){
+                    dc.addOrder(Order.desc(orderby));
+                    desc = "desc";
+                }else{
+                    dc.addOrder(Order.asc(orderby));
+                    desc = "";
+                }
+            }else{
+                dc.addOrder(Order.desc(orderby));
+                desc = "desc";
+            }
+        }
+        // 获取所有数据数据
+        List<WuliuSjEntity> wls = wlsjService.getWuliuAll(dc);
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(wls!=null){
+            wb = wlsjService.createExcel(wls);
+        }
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("物流收件人信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
+    }
+
+    /**
+     * 详情页的数据导出
+     * @param sj_phone
+     * @param resp
+     */
+    @RequestMapping("/downDetailInfo")
+    public void downDetailInfo(String sj_phone, HttpServletResponse resp, HttpSession session) throws IOException {
+        // 创建离线查询对象
+        DetachedCriteria dc = DetachedCriteria.forClass(WuliuEntity.class);
+        // 取出域中数据
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        String seach = " and aj_id="+aj.getId();
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
+        seach += " and sj_phone='"+sj_phone+"'";
+        dc.add(Restrictions.eq("sj_phone",sj_phone));
+        List<WuliuEntity> wls = wlsjService.WuliuAll(dc,seach);
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(wls!=null){
+            wb = wlsjService.createDetailsExcel(wls);
+        }
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("物流收件人详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
     }
 }

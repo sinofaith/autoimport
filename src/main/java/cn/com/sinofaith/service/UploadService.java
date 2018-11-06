@@ -289,13 +289,11 @@ public class UploadService {
         }
         return i;
     }
-
     private  List<WuliuEntity> getBy2003Excel(String listPath){
         List<WuliuEntity> wls = new ArrayList<>();
         try {
             ReadExcelUtils excelReader = new ReadExcelUtils(listPath);
             String[] titles = excelReader.readExcelTitle();
-            titles = excelReader.readExcelTitle();
             List<String> strTitle = new ArrayList<>(Arrays.asList(titles));
             Map<String,Integer> title = new HashMap<>();
             for(int i=0;i<strTitle.size();i++){
@@ -356,10 +354,10 @@ public class UploadService {
                 WuliuEntity wuliuEntity = WuliuEntity.listToObj(list, title);
                 wls.add(wuliuEntity);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        new File(listPath).delete();
         return wls;
     }
     /**
@@ -367,7 +365,7 @@ public class UploadService {
      * @param listPath
      * @return
      */
-    private List<WuliuEntity>  getByJjxxExcel(String listPath) {
+    private List<WuliuEntity> getByJjxxExcel(String listPath) {
         // 用于存放表格中列号
         final Map<String,Integer> title = new HashMap<>();
         final List<WuliuEntity> wls = new ArrayList<>();
@@ -623,9 +621,4 @@ public class UploadService {
         }
         return listPath;
     }
-
-    /**
-     *
-     */
-
 }

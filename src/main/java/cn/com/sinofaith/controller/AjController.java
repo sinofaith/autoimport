@@ -91,6 +91,8 @@ public class AjController {
             mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
         } else if(type==3){
             mav = new ModelAndView("redirect:/wuliujjxx/seach?pageNo=1");
+        } else if(type==4){
+            mav = new ModelAndView("redirect:/pyramidSale/seach?pageNo=1");
         }
 
         httpSession.removeAttribute("zcseachCode");

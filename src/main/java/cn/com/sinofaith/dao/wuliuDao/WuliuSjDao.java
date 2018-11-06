@@ -198,4 +198,24 @@ public class WuliuSjDao extends BaseDao<WuliuSjEntity>{
         BigDecimal num = (BigDecimal) map.get("NUM");
         return Integer.parseInt(num.toString());
     }
+
+    /**
+     * 数据导出
+     * @param dc
+     * @return
+     */
+    public List<WuliuSjEntity> getWuliuSjAll(DetachedCriteria dc) {
+        List<WuliuSjEntity> wls = null;
+        Session session = getSession();
+        try {
+            Transaction tx = session.beginTransaction();
+            Criteria criteria = dc.getExecutableCriteria(session);
+            wls = criteria.list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return wls;
+    }
 }

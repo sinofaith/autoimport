@@ -21,6 +21,7 @@
     <a href="/SINOFAITH/cft" class="sidebar_left_addative"><i class="icon-untitled54"></i>财付通</a>
     <a href="/SINOFAITH/bank"><i class="icon-untitled47"></i>银行卡</a>
     <a href="/SINOFAITH/wuliu"><i class="icon-search"></i>物流</a>
+    <a href="/SINOFAITH/pyramidSale"><i class="icon-untitled44"></i>传销</a>
  </span>
 </aside>
 </body>

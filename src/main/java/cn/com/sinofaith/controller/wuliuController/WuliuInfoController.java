@@ -10,7 +10,7 @@ public class WuliuInfoController {
 
     @RequestMapping()
     public ModelAndView redirectWuliuInfo() {
-        ModelAndView mav = new ModelAndView("redirect:/wuliujjxx/seach?pageNo=1");
+        ModelAndView mav = new ModelAndView("redirect:/wuliujjxx");
         return mav;
     }
 }

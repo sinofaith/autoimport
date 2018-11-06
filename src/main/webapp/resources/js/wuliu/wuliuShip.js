@@ -4,9 +4,11 @@ function relationSkip(code) {
     var onPage = $("#num").val();
     if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
         alert("请输入你要跳转的页数！");
+        return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
         $("#num").val(totalPage);
+        return;
     } else {
         location="/SINOFAITH/"+code+"/seach?pageNo="+onPage;
     }
@@ -199,4 +201,9 @@ function scrollF() {
             })
         }
     }
+}
+// 数据导出
+function downDetailInfo(){
+    var ship_phone = $('#ship_phone').val();
+    location = "/SINOFAITH/wuliuShip/downDetailInfo?ship_phone="+ship_phone;
 }

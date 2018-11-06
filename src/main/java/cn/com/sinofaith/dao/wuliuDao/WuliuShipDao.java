@@ -202,4 +202,23 @@ public class WuliuShipDao extends BaseDao<WuliuShipEntity> {
         BigDecimal num = (BigDecimal) map.get("NUM");
         return Integer.parseInt(num.toString());
     }
+
+    /**
+     * 数据导出
+     * @param dc
+     */
+    public List<WuliuShipEntity> getWuliuShipAll(DetachedCriteria dc) {
+        List<WuliuShipEntity> wls = null;
+        Session session = getSession();
+        try {
+            Transaction tx = session.beginTransaction();
+            Criteria criteria = dc.getExecutableCriteria(session);
+            wls = criteria.list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return wls;
+    }
 }

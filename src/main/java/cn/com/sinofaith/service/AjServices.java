@@ -87,6 +87,8 @@ public class AjServices {
             st.addBatch("DELETE wuliu_relation where aj_id="+ajid);
             st.addBatch("DELETE wuliu_ship where aj_id="+ajid);
             st.addBatch("DELETE wuliu_sj where aj_id="+ajid);
+            st.addBatch("DELETE pyramidsale where aj_id="+ajid);
+            st.addBatch("DELETE ps_hierarchy where aj_id="+ajid);
             st.executeBatch();
             con.commit();
 

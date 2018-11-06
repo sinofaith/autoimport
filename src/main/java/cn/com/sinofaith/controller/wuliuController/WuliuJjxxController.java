@@ -29,7 +29,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 /**
- *   物流寄件信息  Controller
+ *  物流寄件信息  Controller
  */
 @Controller
 @RequestMapping("/wuliujjxx")
@@ -201,17 +201,18 @@ public class WuliuJjxxController {
         if(orderby!=null){
             if(orderby.equals(lastOrder)){
                 if(desc==null || desc.equals("desc")){
+                    dc.addOrder(Order.asc(orderby));
+                    seach += " order by "+ orderby ;
+                    desc = "desc";
+                }else{
                     dc.addOrder(Order.desc(orderby));
                     seach += " order by "+ orderby +" desc";
                     desc = "";
-                }else{
-                    seach += " order by "+ orderby;
-                    desc = "desc";
                 }
             }else{
                 dc.addOrder(Order.desc(orderby));
                 seach += " order by "+ orderby +" desc";
-                desc = "";
+                desc = "desc";
             }
         }
         // 获取所有数据数据

@@ -4,9 +4,11 @@ function relationSkip(code) {
     var onPage = $("#num").val();
     if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
         alert("请输入你要跳转的页数！");
+        return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
         $("#num").val(totalPage);
+        return;
     } else {
         location="/SINOFAITH/wuliu"+code+"/seach?pageNo="+onPage;
     }
@@ -53,10 +55,10 @@ function getZzDetails(obj) {
                     "</td>"+
                     "<td width=\"15%\">"+data[i].ship_address+"</td>"+
                     "<td width=\"8%\">"+data[i].addressee+"</td>"+
-                    "<td width=\"8%\" title="+data[i].sj_phone+">"+
+                    "<td width=\"8%\" title='+data[i].sj_phone+'>"+
                     "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].sj_phone+"</div>"+
                     "<td width=\"12%\">"+data[i].sj_address+"</td>"+
-                    "<td width=\"10%\" title="+data[i].tjw+">"+
+                    "<td width=\"10%\" title='+data[i].tjw+'>"+
                     "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].tjw+"</div>"+
                     "</td>"+
                     "<td width=\"5%\">"+data[i].payment+"</td>"+
@@ -208,4 +210,11 @@ function scrollF() {
             })
         }
     }
+}
+
+// 数据导出
+function downDetailInfo(){
+    var ship_phone = $('#ship_phone').val();
+    var sj_phone = $('#sj_phone').val();
+    location = "/SINOFAITH/wuliuRelation/downDetailInfo?ship_phone="+ship_phone+'&sj_phone='+sj_phone;
 }

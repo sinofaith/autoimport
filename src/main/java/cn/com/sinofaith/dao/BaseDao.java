@@ -10,9 +10,9 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -261,5 +261,55 @@ public class BaseDao<T>{
 
     public  Session getSession() {
         return sessionFactory.getCurrentSession();
+    }
+
+    /**
+     * 获取所有条目
+     * @return
+     */
+    public int getRowAll(DetachedCriteria dc1) {
+        Session session = getSession();
+        Long rowAll = 0l;
+        try {
+            Transaction tx = session.beginTransaction();
+            Criteria criteria = dc1.getExecutableCriteria(session);
+            // 设置聚合查询函数
+            criteria.setProjection(Projections.rowCount());
+            rowAll = (Long) criteria.uniqueResult();
+            // 将条件清空，用于dc查询分页数据
+            criteria.setProjection(null);
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return rowAll.intValue();
+    }
+
+    /**
+     * 分页查询
+     * @param currentPage
+     * @param pageSize
+     * @param dc
+     * @return
+     */
+    public List<T> getDoPage(int currentPage, int pageSize, DetachedCriteria dc) {
+        Session session = getSession();
+        List<T> zhxxs = null;
+        try {
+            // 开启事务
+            Transaction tx = session.beginTransaction();
+            // 关联session
+            Criteria criteria = dc.getExecutableCriteria(session);
+            criteria.setFirstResult((currentPage-1)*pageSize);
+            criteria.setMaxResults(pageSize);
+            // 创建对象
+            zhxxs = criteria.list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return zhxxs;
     }
 }

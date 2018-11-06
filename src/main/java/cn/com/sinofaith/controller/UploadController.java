@@ -4,8 +4,8 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
-import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.service.*;
+import cn.com.sinofaith.service.PyramidSaleService.PyramidSaleService;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
 import cn.com.sinofaith.service.bankServices.BankTjjgsService;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
@@ -15,25 +15,22 @@ import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.service.wlService.WuliuJjxxService;
 import cn.com.sinofaith.service.wlService.WuliuShipService;
 import cn.com.sinofaith.service.wlService.WuliuSjService;
-import cn.com.sinofaith.util.TimeFormatUtil;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+
 
 /**
  * Created by Me. on 2018/5/23
@@ -61,12 +58,14 @@ public class UploadController {
     @Autowired
     private WuliuSjService wlsjService;
     @Autowired
+    private PyramidSaleService pyramidSaleService;
+    @Autowired
     private AjServices ajs;
 
     @RequestMapping(value = "/uploadCft",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
-                                   @RequestParam("checkBox") long checkBox,HttpServletRequest request){
+                                   @RequestParam("checkBox") long checkBox, HttpServletRequest request){
         String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
         String filePath ="";
         String fileName="";
@@ -201,7 +200,6 @@ public class UploadController {
         }
         int a = 0;
         int b = 0;
-
         AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
             List<WuliuEntity> listJjxx = wjs.getAll(aje.getId());
@@ -223,5 +221,73 @@ public class UploadController {
         }
         req.getSession().setAttribute("aj",aje);
         return result;
+    }
+
+    /**
+     * 读取Excel字段与表映射
+     * @param file
+     * @param aj
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/uploadPyramidSale", method = RequestMethod.POST)
+    public @ResponseBody Map<String,List<String>> uploadPyramidSale(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+                              HttpServletRequest req) {
+        // 设置服务器文件上传路径
+        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
+        String filePath = "";
+        String fileName = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if (!uploadPathd.exists()) {
+            uploadPathd.mkdirs();
+        }
+        // 将文件上传到服务器
+        for(int i=0;i<file.size();i++) {
+            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        req.getSession().setAttribute("path",uploadPath);
+        // 读取服务器的excel表
+        Map<String,List<String>> excelMap = pyramidSaleService.readExcel(uploadPath);
+        if(excelMap!=null){
+            return excelMap;
+        }
+        return null;
+    }
+
+    /**
+     * 将数据存入数据库
+     * @param field
+     * @return
+     */
+    @RequestMapping(value = "/uploadPsSheet",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public @ResponseBody String uploadPsSheet(@RequestBody ArrayList<String> field, HttpSession session){
+        // 读取域中数据
+        String path = (String) session.getAttribute("path");
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 将数据插入数据库
+        int sum = pyramidSaleService.insertPyramidSale(path,field,aj.getId());
+        // 插入计算会员当前层级和推荐路径数据
+        int sum1 = pyramidSaleService.insertPsHierarchy(aj.getId());
+        // 删除文件
+        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(uploadPath);
+        pyramidSaleService.deleteFile(uploadPathd);
+        if(sum>0 && sum1>0){
+            return "200";
+        }if(sum>0 && sum1==0){
+            return "403";
+        }else{
+            return "404";
+        }
     }
 }
