@@ -23,7 +23,7 @@ public class BankZcxxDao extends BaseDao<BankZcxxEntity>{
     }
 
     public List<BankZcxxEntity> getByAjId(String seachCode){
-        List<BankZcxxEntity> result = find("from BankZcxxEntity where 1=1 ");
+        List<BankZcxxEntity> result = find("from BankZcxxEntity where 1=1 "+seachCode);
         return result;
     }
 

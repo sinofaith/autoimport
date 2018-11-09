@@ -138,7 +138,7 @@ public class BankZzxxController {
         ses.setAttribute("xqOrder",order);
         ses.setAttribute("xqlastOrder",order);
         ses.setAttribute("xqdesc",desc);
-        return bankzzs.getByYhkkh(yhkkh,dfkh.replace("\n","").trim(),type,aj!=null ? aj:new AjEntity(),page,orders);
+        return bankzzs.getByYhkkh(yhkkh.replace("\n","").trim(),dfkh.replace("\n","").trim(),type,aj!=null ? aj:new AjEntity(),page,orders);
     }
 
     @RequestMapping(value = "/downDetailZh")

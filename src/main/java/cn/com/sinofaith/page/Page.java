@@ -20,6 +20,8 @@ public class Page {
     // 第几页
     private int pageNo;
 
+    private Object result;
+
     /**
      * @return 总页数
      * */
@@ -102,5 +104,13 @@ public class Page {
 
     public void setPageNo(int pageNo) {
         this.pageNo = pageNo;
+    }
+
+    public Object getResult() {
+        return result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
     }
 }

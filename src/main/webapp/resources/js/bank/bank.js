@@ -1,3 +1,16 @@
+
+$(function () {
+    $('#myModal').on('hide.bs.modal', function () {
+
+        var tbody = window.document.getElementById("result")
+        if(tbody!=null) {
+            tbody.innerHTML = ""
+        }
+        $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
+    })
+});
+
+
 function bankSkip(code) {
     var totalPage = $("#totalPage").text();
     var onPage = $("#num").val();
@@ -110,7 +123,7 @@ function getZzGtlxr(obj) {
                     "<td width=\"5%\">" + data[i].name + "</td>" +
                     "<td width=\"12%\">" + data[i].jyzh + "</td>" +
                     "<td width=\"12%\">" + data[i].dfzh + "</td>" +
-                    "<td width=\"5%\">" + data[i].dfxm + "</td>" +
+                    "<td width=\"5%\" title=\""+data[i].dfxm+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfxm+"</div></td>"+
                     "<td width=\"8%\">" + data[i].count + "</td>" +
                     "<td width=\"7%\">" + data[i].jyzcs + "</td>" +
                     "<td width=\"7%\">" + data[i].jzzcs + "</td>" +
@@ -183,15 +196,6 @@ function getZzDetails(obj,type) {
     })
 }
 
-$(function () { $('#myModal').on('hide.bs.modal', function () {
-
-    var tbody = window.document.getElementById("result")
-    if(tbody!=null) {
-        tbody.innerHTML = ""
-    }
-    $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
-})
-});
 
 function orderByFilter(type,filter) {
     var tbody = window.document.getElementById("result")

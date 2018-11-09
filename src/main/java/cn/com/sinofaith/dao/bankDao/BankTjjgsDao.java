@@ -19,7 +19,7 @@ import java.util.Map;
 public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
     public int getAllRowCount(String seachCode){
         StringBuffer sql = new StringBuffer("select to_char(Count(1)) num from bank_tjjgs c left join " +
-                " bank_person s on c.jyzh = s.yhkkh where 1=1 ").append(seachCode);
+                " bank_person s on c.jyzh = s.yhkkh left join bank_person d on c.dfzh=d.yhkkh where 1=1 ").append(seachCode);
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));

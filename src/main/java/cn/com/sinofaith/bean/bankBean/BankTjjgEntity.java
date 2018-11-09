@@ -15,6 +15,8 @@ public class BankTjjgEntity {
     private BigDecimal czzje = new BigDecimal(0);
     private long aj_id;
     private String inserttime;
+    private long zhlx;
+    private String zhlb;
 
     @Basic
     @Column(name = "id", nullable = true, precision = 0)
@@ -104,6 +106,24 @@ public class BankTjjgEntity {
 
     public void setAj_id(long aj_id) {
         this.aj_id = aj_id;
+    }
+    @Basic
+    @Column(name = "zhlx",nullable = false,precision = 0)
+    public long getZhlx() {
+        return zhlx;
+    }
+
+    public void setZhlx(long zhlx) {
+        this.zhlx = zhlx;
+    }
+    @Basic
+    @Column(name = "zhlb",nullable = false,length = 20)
+    public String getZhlb() {
+        return zhlb;
+    }
+
+    public void setZhlb(String zhlb) {
+        this.zhlb = zhlb;
     }
 
     @Override

@@ -38,6 +38,8 @@ public class BankTjjgController {
             httpSession.setAttribute("borderby", "khxm");
             httpSession.setAttribute("blastOrder", "khxm");
             httpSession.setAttribute("bdesc", " desc ");
+            httpSession.setAttribute("code",-1);
+            httpSession.setAttribute("hcode",0);
             return mav;
         }
 
@@ -71,7 +73,9 @@ public class BankTjjgController {
             String orderby = (String) req.getSession().getAttribute("borderby");
             String desc = (String) req.getSession().getAttribute("bdesc");
             AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-            seach = tjs.getSeach(seachCondition, seachCode, orderby, desc, aj != null ? aj : new AjEntity());
+            int code = (Integer) req.getSession().getAttribute("code");
+            int hcode = (Integer) req.getSession().getAttribute("hcode");
+            seach = tjs.getSeach(seachCondition, seachCode, orderby, desc, aj != null ? aj : new AjEntity(),code,hcode);
             Page page = tjs.queryForPage(parseInt(pageNo), 10, seach);
             mav.addObject("page", page);
             mav.addObject("btjseachCode", seachCode);
@@ -80,6 +84,8 @@ public class BankTjjgController {
             if (ajs.findByName(aj != null ? aj.getAj() : "").size() > 0) {
                 mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
             }
+            mav.addObject("code",code);
+            mav.addObject("hcode",hcode);
             return mav;
         }
 
@@ -99,6 +105,20 @@ public class BankTjjgController {
             return mav;
         }
 
+        @RequestMapping(value = "/getByZhzt")
+        public ModelAndView getByZhzt(int code ,HttpSession httpSession){
+            ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
+            httpSession.setAttribute("code",code);
+            return mav;
+        }
+
+        @RequestMapping(value = "/hiddenZfbCft")
+        public ModelAndView hiddenZfbCft(int code ,HttpSession httpSession){
+            ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
+            httpSession.setAttribute("hcode",code);
+            return mav;
+        }
+
         @RequestMapping("/download")
         public void getTjjgDownload(HttpServletResponse rep, HttpServletRequest req) throws Exception {
             String seachCondition = (String) req.getSession().getAttribute("btjseachCondition");
@@ -107,7 +127,9 @@ public class BankTjjgController {
             String orderby = (String) req.getSession().getAttribute("borderby");
             String desc = (String) req.getSession().getAttribute("bdesc");
             AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-            seach = tjs.getSeach(seachCondition, seachCode, orderby, desc, aj != null ? aj : new AjEntity());
+            int code = (Integer) req.getSession().getAttribute("code");
+            int hcode = (Integer) req.getSession().getAttribute("hcode");
+            seach = tjs.getSeach(seachCondition, seachCode, orderby, desc, aj != null ? aj : new AjEntity(),code,hcode);
 
             tjs.downloadFile(seach, rep, aj!=null?aj.getAj():"");
         }

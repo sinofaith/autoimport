@@ -9,6 +9,7 @@ import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.dao.bankDao.BankTjjgsDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.dao.cftDao.CftTjjgsDao;
+import cn.com.sinofaith.form.bankForm.BankTjForm;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -99,7 +100,6 @@ public class BankTjjgsService {
                 cfttjs.add(cftForm);
                 xh++;
             }
-
         }
         page.setList(cfttjs);
         page.setPageNo(currentPage);
@@ -108,23 +108,26 @@ public class BankTjjgsService {
         return page;
     }
 
-    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj,int code){
+    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj,int code,int hcode){
         StringBuffer seach = new StringBuffer(" and aj_id ="+aj.getId());
         if(seachCode!=null){
             seachCode=seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                  seach.append(" and c."+ seachCondition + " >= "+seachCode);
             }else if("khxm".equals(seachCondition)){
-                seach.append(" and s."+ seachCondition+" like "+"'%"+ seachCode+"%'");
+                seach.append(" and s."+ seachCondition+" = "+"'"+ seachCode+"'");
             }
             else{
-                seach.append(" and c."+ seachCondition+" like "+"'%"+ seachCode +"%'");
+                seach.append(" and c."+ seachCondition+" = "+"'"+ seachCode +"'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
         }
         if(code!=-1) {
             seach.append(" and c.zhlx=" + code);
+        }
+        if(hcode!=0){
+            seach.append(" and (d.khxm not like '%财付通%' and d.khxm not like '%支付宝%' or d.khxm is null) ");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -259,8 +262,8 @@ public class BankTjjgsService {
             }
 
         }else {
-            listTjjg = banktjsd.findBySQL("select s.khxm,c.*,n.khxm dfxm from bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh" +
-                    " left join bank_person n on c.dfzh = n.yhkkh  where 1=1 "+seach);
+            listTjjg = banktjsd.findBySQL("select s.khxm,c.*,d.khxm dfxm from bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh" +
+                    " left join bank_person d on c.dfzh = d.yhkkh  where 1=1 "+seach);
         }
 
         HSSFWorkbook wb = createExcel(listTjjg,lx);

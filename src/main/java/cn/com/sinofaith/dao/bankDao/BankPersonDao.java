@@ -30,7 +30,7 @@ public class BankPersonDao extends BaseDao<BankPersonEntity>{
             for (int j = 0; j < listbp.size(); j++) {
 
                 bpe = listbp.get(j);
-                pstm.setString(1, bpe.getYhkkh());
+                pstm.setString(1, bpe.getYhkkh().replace("_156_1","").trim());
                 pstm.setString(2, aj_id);
                 pstm.setString(3, bpe.getXm());
                 pstm.addBatch();

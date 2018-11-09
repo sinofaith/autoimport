@@ -24,6 +24,7 @@
         <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
         <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
         <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
+        <script src="<c:url value="/resources/js/bank/banktjjg.js"/> "></script>
         <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
         <%--详情模块脚本--%>
         <script type="text/javascript">
@@ -64,7 +65,13 @@
                                             </tr>
                                             <tr align="center">
                                                 <td width="7%">序号</td>
-                                                <td width="8%">交易账卡号	</td>
+                                                <td width="22%">交易账卡号<br>
+                                                    <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
+                                                    <label for="checkbox1">去除支付宝、财付通账户</label>
+                                                    <br>
+                                                    <label style="color:#0a36e9;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
+                                                    <label style="color:red;"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
+                                                </td>
                                                 <td width="7%"><a href="/SINOFAITH/banktjjg/order?orderby=khxm">交易户名</a></td>
                                                 <td width="9%"><a
                                                         href="/SINOFAITH/banktjjg/order?orderby=jyzcs">交易总次数</a></td>
@@ -76,12 +83,24 @@
                                                         href="/SINOFAITH/banktjjg/order?orderby=czzcs">出账总次数</a></td>
                                                 <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=czzje">出账总金额(元)</a>
                                                 </td>
+                                                <td width="10%">账户类别
+                                                </td>
                                                 <td width="7%">详情</td>
                                             </tr>
                                             <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                                 <tr class="${st.index%2==1 ? '':'odd' }">
                                                     <td align="center">${item.id}</td>
-                                                    <td align="center">${item.jyzh}</td>
+                                                    <td align="center"  title="${item.jyzh}">
+                                                        <div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
+                                                            <c:if test="${item.zhlx eq 1}">
+                                                                <button data-toggle="modal" data-target="#myModal2" style="color: red">${item.jyzh}</button>
+                                                            </c:if>
+
+                                                            <c:if test="${item.zhlx eq 0}">
+                                                                <button data-toggle="modal" data-target="#myModal2" style="color: #0a36e9">${item.jyzh}</button>
+                                                            </c:if>
+                                                        </div>
+                                                    </td>
                                                     <td align="center" title="${item.name}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center">${item.jyzcs}</td>
                                                     <td align="center">${item.jzzcs}</td>
@@ -90,6 +109,7 @@
                                                     <td align="center">${item.czzcs}</td>
                                                     <td align="center"><fmt:formatNumber value="${item.czzje}"
                                                                                          pattern="#,##0.0#"/></td>
+                                                    <td align="center">${item.zhlb}</td>
                                                     <td align="center">
                                                         <button data-toggle="modal" data-target="#myModal"
                                                                 onclick="getZzDetails(this,'tjjg')">详情

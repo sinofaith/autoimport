@@ -197,7 +197,7 @@ public class BankZzxxServices {
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach=" and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' or c.bcsm='"+zh+"') ";
+            seach=" and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' or c.bcsm like '"+zh+"') ";
         }else{
             seach=" and (c.yhkkh='"+zh+"') ";
             seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";

@@ -117,14 +117,15 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         int a = 0;
         PreparedStatement pstm = null;
         BankZzxxEntity zzxx = new BankZzxxEntity();
-
-
             try {
                 con.setAutoCommit(false);
                 pstm = con.prepareStatement(sql);
                 for (int j = 0; j < b.size(); j++) {
 
                     zzxx = b.get(j);
+                    if(zzxx.getYhkkh()==null){
+                        continue;
+                    }
 //                    zzxx.setAj_id(aj_id);
 //                    zzxx.setInserttime(TimeFormatUtil.getDate("/"));
 //                    save(zzxx);

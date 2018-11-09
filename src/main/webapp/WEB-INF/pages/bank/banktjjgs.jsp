@@ -13,6 +13,7 @@
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
+<script src="<c:url value="/resources/js/bank/echarts.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
 <script src="<c:url value="/resources/js/bank/banktjjgs.js"/> "></script>
@@ -51,9 +52,12 @@
                                         <td width="9%">交易账卡号</td>
                                         <td width="7%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">交易户名</a></td>
                                         <td width="15%">对方账号<br>
-                                            <label style="color:orange;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
+                                            <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
+                                            <label for="checkbox1">去除支付宝、财付通账户</label>
+                                            <br>
+                                            <label style="color:#0a36e9;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
                                             <label style="color:red;"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
-                                            <label style="color: #0a36e9;"><input name="zhzt" type="radio"  value="2" <c:if test="${code == 2 }">checked='checked'</c:if>/>人为设计 </label> </td>
+                                            <label style="color: #FF00FE;"><input name="zhzt" type="radio"  value="2" <c:if test="${code == 2 }">checked='checked'</c:if>/>人为设计 </label> </td>
                                         <td width="7%">对方户名</td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进账总次数</a></td>
@@ -67,18 +71,17 @@
                                                 <td align="center">${item.id}</td>
                                                 <td align="center"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>
                                                 <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
-
                                                     <td align="center"  title="${item.dfzh}">
                                                         <div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
                                                             <c:if test="${item.zhlx eq 2}">
-                                                                <button data-toggle="modal" data-target="#myModal2" style="color: #0a36e9" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
+                                                                <button data-toggle="modal" data-target="#myModal2" style="color: #FF00FE" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
                                                             </c:if>
                                                             <c:if test="${item.zhlx eq 1}">
                                                                 <button data-toggle="modal" data-target="#myModal2" style="color: red" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
                                                             </c:if>
 
                                                             <c:if test="${item.zhlx eq 0}">
-                                                                <button data-toggle="modal" data-target="#myModal2" style="color: orange" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
+                                                                <button data-toggle="modal" data-target="#myModal2" style="color: #0a36e9" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
                                                             </c:if>
                                                         </div>
                                                     </td>
@@ -250,32 +253,34 @@
                         aria-hidden="true">×</button>
                 <h4 class="modal-title" id="myModalLabela">对手账户统计<span id="titlea"></span></h4>
             </div>
-            <div class="modal-body">
-                <table class="table  table-hover table_style table_list1 "
-                       style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
-                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
-                    <tr align="center">
-                        <td width="4%">序号</td>
-                        <td width="5%">交易总次数</td>
-                        <td width="13%">流入账卡号</td>
-                        <td width="7%">流入户名</td>
-                        <td width="8%">流入总次数</td>
-                        <td width="8%">流入总金额(元)</td>
-                        <td width="13%">交易账卡号</td>
-                        <td width="7%">交易户名</td>
-                        <td width="8%">流出总次数</td>
-                        <td width="8%">流出总金额(元)</td>
-                        <td width="13%">流出账卡号</td>
-                        <td width="7%">流出户名</td>
-                    </tr>
-                    <input name="label" id="yhkkh1" hidden="hidden" value="">
-                    <input name="label" id="dfkh1" hidden="hidden" value="">
-                    <input name="label" id="allRow1" hidden="hidden" value="">
-                    </thead>
-                    <tbody id="result2" style="display:block;height:340px;overflow-y:scroll;"
-                           <%--onscroll="scrollF('tjjgs')">--%>
-                    </tbody>
-                </table>
+            <div class="modal-body" >
+                <div id="main" style="width: 1450px;height:590px;">
+                </div>
+            <%--<table class="table  table-hover table_style table_list1 "--%>
+                       <%--style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">--%>
+                    <%--<thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">--%>
+                    <%--<tr align="center">--%>
+                        <%--<td width="4%">序号</td>--%>
+                        <%--<td width="5%">交易总次数</td>--%>
+                        <%--<td width="13%">流入账卡号</td>--%>
+                        <%--<td width="7%">流入户名</td>--%>
+                        <%--<td width="8%">流入总次数</td>--%>
+                        <%--<td width="8%">流入总金额(元)</td>--%>
+                        <%--<td width="13%">交易账卡号</td>--%>
+                        <%--<td width="7%">交易户名</td>--%>
+                        <%--<td width="8%">流出总次数</td>--%>
+                        <%--<td width="8%">流出总金额(元)</td>--%>
+                        <%--<td width="13%">流出账卡号</td>--%>
+                        <%--<td width="7%">流出户名</td>--%>
+                    <%--</tr>--%>
+                    <%--<input name="label" id="yhkkh1" hidden="hidden" value="">--%>
+                    <%--<input name="label" id="dfkh1" hidden="hidden" value="">--%>
+                    <%--<input name="label" id="allRow1" hidden="hidden" value="">--%>
+                    <%--</thead>--%>
+                    <%--<tbody id="result2" style="display:block;height:340px;overflow-y:scroll;"--%>
+                           <%--&lt;%&ndash;onscroll="scrollF('tjjgs')">&ndash;%&gt;--%>
+                    <%--</tbody>--%>
+                <%--</table>--%>
             </div>
             <div class="modal-footer">
                 <%--<button type="button" class="btn btn-default" onclick="downDetailZh()">导出</button>--%>
