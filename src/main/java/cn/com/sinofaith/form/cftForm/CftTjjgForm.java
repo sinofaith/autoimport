@@ -13,7 +13,7 @@ public class CftTjjgForm {
     private BigDecimal jzzje = new BigDecimal(0);
     private BigDecimal czzcs = new BigDecimal(0);
     private BigDecimal czzje = new BigDecimal(0);
-    private long zhlx = -1;
+    private long zhlx;
     private String zhlb;
 
     public long getId() {
@@ -118,7 +118,7 @@ public class CftTjjgForm {
         cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
         cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
         cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
-        cftForm.setZhlx(new BigDecimal(map.get("ZHLX")!=null?map.get("ZHLX").toString():"-1").longValue());
+        cftForm.setZhlx(new BigDecimal(map.get("ZHLX").toString()).longValue());
         cftForm.setZhlb((String) map.get("ZHLB"));
         return cftForm;
     }
