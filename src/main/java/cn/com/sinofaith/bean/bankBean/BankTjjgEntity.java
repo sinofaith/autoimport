@@ -17,7 +17,7 @@ public class BankTjjgEntity {
     private String inserttime;
     private long zhlx;
     private String zhlb;
-    private String khh="";
+    private String khh;
 
     @Basic
     @Column(name = "id", nullable = true, precision = 0)

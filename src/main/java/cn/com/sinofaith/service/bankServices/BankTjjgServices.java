@@ -463,6 +463,13 @@ public class BankTjjgServices {
                 "and c.zhlb != '第三方账户' and c.khh is null");
 
         String sfzhmList= "";
+
+        File fileDir = new File(downPath+"/temp/");
+        //创建文件夹
+        if (!fileDir.exists() && !fileDir.isDirectory()) {
+            fileDir.mkdirs();
+        }
+
         int num = 1;
         List<String> listPath = new ArrayList<String>();
         for (String key : map.keySet()) {
