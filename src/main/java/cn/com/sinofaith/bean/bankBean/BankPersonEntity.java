@@ -9,6 +9,7 @@ public class BankPersonEntity {
     private String yhkkh;
     private String yhkzh;
     private String xm;
+//    private String khh;
 
     @Id
     @Column(name="id",nullable = false,precision = 0)
@@ -47,6 +48,15 @@ public class BankPersonEntity {
     public void setXm(String xm) {
         this.xm = xm;
     }
+//    @Basic
+//    @Column(name="khh",nullable = true,length = 200)
+//    public String getKhh() {
+//        return khh;
+//    }
+//
+//    public void setKhh(String khh) {
+//        this.khh = khh;
+//    }
 
     @Override
     public boolean equals(Object o) {

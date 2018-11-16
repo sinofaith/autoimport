@@ -89,6 +89,12 @@ public class AjController {
              mav = new ModelAndView("redirect:/cftzzxx/seach?pageNo=1");
         } else if(type==2){
             mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
+            httpSession.removeAttribute("bzzseachCondition"); //查询条件
+            httpSession.removeAttribute("bzzseachCode");//查询内容
+
+            httpSession.removeAttribute("bzorderby");
+            httpSession.removeAttribute("bzlastOrder");
+            httpSession.removeAttribute("bzdesc");
         } else if(type==3){
             mav = new ModelAndView("redirect:/wuliujjxx/seach?pageNo=1");
         } else if(type==4){

@@ -3,8 +3,11 @@ package cn.com.sinofaith.controller.bankController;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
+import cn.com.sinofaith.service.UploadService;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +32,6 @@ public class BankTjjgController {
         private BankZzxxServices zzs;
         @Autowired
         private AjServices ajs;
-
         @RequestMapping()
         public ModelAndView redirectCftinfo(HttpSession httpSession) {
             ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
@@ -105,6 +107,19 @@ public class BankTjjgController {
             return mav;
         }
 
+        @RequestMapping(value = "/getZhxx",method = RequestMethod.GET)
+        @ResponseBody
+        public String getZhxx(long czje,long jzje,int page,HttpServletRequest req){
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+            StringBuffer seach = new StringBuffer();
+            seach.append(" and c.aj_id=").append(aj.getId());
+            seach.append(" and (c.czzje >=").append(czje).append(" or c.jzzje >=").append(jzje).append(") ");
+            seach.append(" and c.zhlb != '第三方账户'");
+            seach.append(" order by c.jyzcs desc ");
+            return gson.toJson(tjs.queryForPage(page,100,seach.toString()));
+        }
+
         @RequestMapping(value = "/getByZhzt")
         public ModelAndView getByZhzt(int code ,HttpSession httpSession){
             ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
@@ -132,5 +147,12 @@ public class BankTjjgController {
             seach = tjs.getSeach(seachCondition, seachCode, orderby, desc, aj != null ? aj : new AjEntity(),code,hcode);
 
             tjs.downloadFile(seach, rep, aj!=null?aj.getAj():"");
+        }
+
+        @RequestMapping("/downWs")
+        public void downWs(HttpServletRequest req,long czje,long jzje,String wstitle,HttpServletResponse rep){
+            String downPath = req.getSession().getServletContext().getRealPath("/");
+            AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+            tjs.downWs(czje,jzje,wstitle,downPath+"download/",aj != null ? aj : new AjEntity(),rep);
         }
 }

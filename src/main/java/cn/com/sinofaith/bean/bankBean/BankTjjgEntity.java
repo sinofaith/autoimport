@@ -17,6 +17,7 @@ public class BankTjjgEntity {
     private String inserttime;
     private long zhlx;
     private String zhlb;
+    private String khh="";
 
     @Basic
     @Column(name = "id", nullable = true, precision = 0)
@@ -124,6 +125,15 @@ public class BankTjjgEntity {
 
     public void setZhlb(String zhlb) {
         this.zhlb = zhlb;
+    }
+    @Basic
+    @Column(name="khh",nullable = true,length = 30)
+    public String getKhh() {
+        return khh;
+    }
+
+    public void setKhh(String khh) {
+        this.khh = khh;
     }
 
     @Override

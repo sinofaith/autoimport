@@ -88,8 +88,11 @@ public class BankZzxxServices {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
-        String order = seach.substring(seach.indexOf("order")-1,seach.length());
-        seach = seach.replace(seach.substring(seach.indexOf("order")-1,seach.length())," ");
+        String order = "";
+        if(seach.contains("order")){
+            seach.substring(seach.indexOf("order")-1,seach.length());
+            seach = seach.replace(seach.substring(seach.indexOf("order")-1,seach.length())," ");
+        }
         StringBuffer sql = new StringBuffer();
         sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
         sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");

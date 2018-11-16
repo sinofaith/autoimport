@@ -20,7 +20,7 @@ public class BankPersonServices {
 
     public List<String> getByFilter(){
         List<String> result = new ArrayList<>();
-        List<BankPersonEntity> listbp = bpd.find("from BankPersonEntity where xm like '%财付通%' or xm like '%支付宝%'");
+        List<BankPersonEntity> listbp = bpd.find("from BankPersonEntity where xm like '%财付通%' or xm like '%支付宝%' or xm like '%清算%'");
         for (BankPersonEntity bp : listbp){
             result.add(bp.getYhkkh());
         }

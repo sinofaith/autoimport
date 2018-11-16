@@ -22,7 +22,7 @@ public class BankZzxxEntity {
     private String dszh;
     private String dsxm;
     private String dssfzh;
-    private String dskhh;
+    private String dskhh="";
     private String zysm;
     private String jysfcg;
     private String jywdmc;

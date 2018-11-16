@@ -1,6 +1,5 @@
 package cn.com.sinofaith.service;
 
-import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
@@ -18,10 +17,10 @@ import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
 import cn.com.sinofaith.util.Excel2007Reader;
 import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.ReadExcelUtils;
+import cn.com.sinofaith.util.GetBank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.border.TitledBorder;
 import java.io.*;
 import java.util.*;
 
@@ -241,6 +240,8 @@ public class UploadService {
                 bp.setYhkkh(listZzxx.get(g).getDskh());
                 bp.setYhkzh(String.valueOf(aj_id));
                 bp.setXm(listZzxx.get(g).getDsxm());
+//                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
+
                 if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
                     if (bp.getXm().contains("支付宝")) {
                         bp.setXm("支付宝（中国）网络技术有限公司");
@@ -270,6 +271,7 @@ public class UploadService {
 
         return i;
     }
+
 
     /**
      * 物流寄件添加数据

@@ -233,6 +233,9 @@
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <button type="button" class="sideBar_r_button"
                                    onclick="location.href='/SINOFAITH/banktjjg/download'">数据导出</button>
+                           <button type="button" class="sideBar_r_button"
+                                   data-toggle="modal" data-target="#myModal1"
+                           onclick="getZhxx()">协助调查文书导出</button>
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件导入</button>--%>
                        </span>
                                             </div>
@@ -316,5 +319,68 @@
             </div>
             <!-- /.modal -->
         </div>
+
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 96%;left: 2%;right: 2%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="myModalLabel1">银行卡账户信息</h4>
+                出账总金额阀值:<input type="number" min="50000" style="width:120px" class="txt" id="czje">
+                进账总金额阀值:<input type="number" min="50000" style="width:120px"  class="txt" id="jzje">
+                <input type="button" class="btn btn-default" value="预览数据" onclick="getZhxxByFilter()">
+
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 "
+                       style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="4%">序号</td>
+                        <td width="13%">交易账卡号</td>
+                        <td width="12%">交易户名</td>
+                        <td width="10%">
+                            交易总次数
+                        </td>
+                        <td width="7%">
+                            进账总次数
+                        </td>
+                        <td width="7%">进账总金额(元)</td>
+                        <td width="7%">
+                            出账总次数
+                        </td>
+                        <td width="7%">
+                            出账总金额(元)
+                        </td>
+                        <td width="7%">
+                            账户类型
+                        </td>
+                        <%--<td width="7%">开户行</td>--%>
+                    </tr>
+                    <input name="label" id="allRow1" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result1" style="display:block;height:340px;overflow-y:scroll;"
+                           onscroll="scrollD()">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <p style="text-align: left">
+                    总条数:<span id="test"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    文书抬头:<input type="text"style="width:120px"  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" class="txt" id="wstitle">
+                </p>
+                <button type="button" class="btn btn-default" onclick="downWs()">导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
         <%@include file="../template/newfooter.jsp" %>
 

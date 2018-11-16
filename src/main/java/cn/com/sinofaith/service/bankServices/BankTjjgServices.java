@@ -1,26 +1,35 @@
 package cn.com.sinofaith.service.bankServices;
 
+
+import cn.afterturn.easypoi.word.WordExportUtil;
+import cn.afterturn.easypoi.word.entity.WordImageEntity;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.*;
 import cn.com.sinofaith.dao.bankDao.BankTjjgDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.GetBank;
+import cn.com.sinofaith.util.TimeFormatUtil;
+import cn.com.sinofaith.util.ZipFile;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static cn.com.sinofaith.util.ZipFile.ZipFiles;
 import static java.math.BigDecimal.ROUND_UP;
 
 @Service
@@ -100,6 +109,22 @@ public class BankTjjgServices {
         return seach.toString();
     }
 
+    public String bankName(String khh,String dskhh){
+        String temp ="";
+        if("".equals(khh)){
+            if(dskhh!=null&&dskhh.contains("银行")){
+                temp = dskhh.substring(0,dskhh.indexOf("银行")+2);
+            }else if(dskhh!=null&&dskhh.contains("信用社")){
+                temp = dskhh.substring(0,dskhh.indexOf("信用社")+3);
+            }else {
+                temp = "";
+            }
+        }else{
+            temp = khh;
+        }
+        return temp;
+    }
+
     public int count(List<BankZzxxEntity> listZzxx, long aj){
         List<BankTjjgEntity> listTjjg = null;
         Map<String,BankTjjgEntity> map = new HashMap();
@@ -117,6 +142,9 @@ public class BankTjjgServices {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                         tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                        if(tjjg.getKhh()==null){
+                            tjjg.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                        }
                     } else {
                         BankTjjgEntity tj1 = new BankTjjgEntity();
                         tj1.setJyzh(zzxx.getYhkkh());
@@ -124,6 +152,9 @@ public class BankTjjgServices {
                         tj1.setCzzcs(new BigDecimal(1));
                         tj1.setCzzje(zzxx.getJyje());
                         tj1.setAj_id(aj);
+                        if(tj1.getKhh()==null){
+                            tj1.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                        }
                         map.put(zzxx.getYhkkh(), tj1);
                     }
                     if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh())) {
@@ -132,6 +163,9 @@ public class BankTjjgServices {
                             tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                             tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                             tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                            if(tjjg.getKhh()==null){
+                                tjjg.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                            }
                         } else {
                             BankTjjgEntity tj1 = new BankTjjgEntity();
                             tj1.setJyzh(zzxx.getDskh());
@@ -139,6 +173,9 @@ public class BankTjjgServices {
                             tj1.setJzzcs(new BigDecimal(1));
                             tj1.setJzzje(zzxx.getJyje());
                             tj1.setAj_id(aj);
+                            if(tj1.getKhh()==null){
+                                tj1.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                            }
                             map.put(zzxx.getDskh(), tj1);
                         }
 
@@ -160,6 +197,9 @@ public class BankTjjgServices {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                         tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                        if(tjjg.getKhh()==null){
+                            tjjg.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                        }
                     } else {
                         BankTjjgEntity tj2 = new BankTjjgEntity();
                         tj2.setJyzh(zzxx.getYhkkh());
@@ -167,6 +207,9 @@ public class BankTjjgServices {
                         tj2.setJzzcs(new BigDecimal(1));
                         tj2.setJzzje(zzxx.getJyje());
                         tj2.setAj_id(aj);
+                        if(tj2.getKhh()==null) {
+                            tj2.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                        }
                         map.put(zzxx.getYhkkh(), tj2);
                     }
                     if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh())) {
@@ -175,6 +218,9 @@ public class BankTjjgServices {
                             tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                             tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                             tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                            if(tjjg.getKhh()==null){
+                                tjjg.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                            }
                         } else {
                             BankTjjgEntity tj2 = new BankTjjgEntity();
                             tj2.setJyzh(zzxx.getDskh());
@@ -182,6 +228,9 @@ public class BankTjjgServices {
                             tj2.setCzzcs(new BigDecimal(1));
                             tj2.setCzzje(zzxx.getJyje());
                             tj2.setAj_id(aj);
+                            if(tj2.getKhh()==null) {
+                                tj2.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0], zzxx.getDskhh()));
+                            }
                             map.put(zzxx.getDskh(), tj2);
                         }
 
@@ -396,5 +445,105 @@ public class BankTjjgServices {
 
 
         return wb;
+    }
+
+    public void downWs(long czje,long jzje,String wstitle,String downPath,AjEntity aj,HttpServletResponse rep){
+        String[] time = TimeFormatUtil.getDate("/").split("/");
+
+        StringBuffer seach = new StringBuffer();
+        seach.append(" from BankTjjgEntity where 1=1 and aj_id=").append(aj.getId());
+        seach.append(" and (czzje >=").append(czje).append(" or jzzje >=").append(jzje).append(") ");
+        seach.append(" and zhlb != '第三方账户'");
+        List<BankTjjgEntity> list = tjjd.find(seach.toString());
+        list = list.stream().filter(u -> u.getKhh()!=null).collect(Collectors.toList());
+        Map<String,List<BankTjjgEntity>> map = list.stream().collect(Collectors.groupingBy(BankTjjgEntity::getKhh));
+
+        List listNull = tjjd.findBySQL(" select c.*,p.khxm from bank_tjjg c " +
+                " left join bank_person p on c.jyzh=p.yhkkh where 1=1 and aj_id="+aj.getId()+" and (c.czzje>="+czje+" or c.jzzje>="+jzje+") " +
+                "and c.zhlb != '第三方账户' and c.khh is null");
+
+        String sfzhmList= "";
+        int num = 1;
+        List<String> listPath = new ArrayList<String>();
+        for (String key : map.keySet()) {
+            List<BankTjjgEntity> r = map.get(key);
+            for(int i=0;i<r.size();i++){
+                sfzhmList+=r.get(i).getJyzh().trim()+"、";
+                if((i+1)%5==0 || (i+1)==r.size()){
+                    Map<String,Object> mapWord = new HashMap<>();
+//                    WordImageEntity image = new WordImageEntity();
+//                    image.setHeight((int)(551/2.6));
+//                    image.setWidth((int)(1378/2.6));
+//                    image.setUrl(downPath+"model/model.png");
+//                    image.setType(WordImageEntity.URL);
+//                    mapWord.put("wordImg", image);
+                    mapWord.put("title", wstitle);
+                    mapWord.put("title1", key);
+                    mapWord.put("y",time[0]);
+                    mapWord.put("m",time[1]);
+                    mapWord.put("d",time[2].substring(0,time[2].indexOf(" ")));
+                    mapWord.put("sfzhmList",sfzhmList.substring(0,sfzhmList.length()-1));
+                    try {
+                        String fileName = downPath+"temp/协助查询财产通知书"+num+".docx";
+                        XWPFDocument doc = WordExportUtil.exportWord07(
+                                downPath+"model/model.docx", mapWord);
+                        FileOutputStream fos = new FileOutputStream(fileName);
+                        doc.write(fos);
+                        fos.flush();
+                        fos.close();
+                        listPath.add(fileName);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    sfzhmList="";
+                    num+=1;
+                }
+            }
+        }
+
+        HSSFWorkbook wb = createExcel(listNull);
+        try {
+            FileOutputStream fos = new FileOutputStream(downPath+"temp/未知开户行账户.xls");
+            wb.write(fos);
+            fos.flush();
+            fos.close();
+            listPath.add(downPath+"temp/未知开户行账户.xls");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        File zip = new File(downPath+"temp/协助调查文书.zip");
+        File srcfile[] = new File[listPath.size()];
+        for (int j = 0, n1 = listPath.size(); j < n1; j++) {
+            srcfile[j] = new File(listPath.get(j));
+        }
+        ZipFiles(srcfile, zip);
+        try {
+            rep.setContentType("application/zip");
+            rep.setHeader("Location",zip.getName());
+            rep.setHeader("Content-Disposition", "attachment; filename=" +new String(("协助调查文书.zip").getBytes(), "ISO8859-1"));
+            OutputStream outputStream = rep.getOutputStream();
+            InputStream inputStream = new FileInputStream(downPath+"temp/协助调查文书.zip");
+            byte[] buffer = new byte[1024];
+            int i = -1;
+            while ((i = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, i);
+            }
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+
+            File files = new File(downPath+"temp/");
+            String[] filep = files.list();
+            File temps = null;
+            for (int a = 0; a < filep.length; a++) {
+                temps = new File(downPath+"temp/" + filep[a]);
+                if (temps.isFile()) {
+                    temps.delete();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
