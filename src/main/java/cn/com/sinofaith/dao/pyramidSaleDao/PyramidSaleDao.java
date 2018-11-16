@@ -85,8 +85,8 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
     public List<PsHierarchyEntity> selectPyramidSaleByAj_id(long id) {
         List<PsHierarchyEntity> psHierList = null;
         // 获取根元素的节点
-        String sql1 = "select sponsorid from pyramidsale t where t.sponsorid not in " +
-                "(select t1.psid from pyramidsale t1 where aj_id="+id+") and aj_id="+id;
+        String sql1 = "select sponsorid from pyramidsale t where not exists(select t1.psid from " +
+                "pyramidsale t1 where t.sponsorid=t1.psid and aj_id="+id+") and aj_id="+id;
         // 获得当前session
         Session session = getSession();
         try{

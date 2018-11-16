@@ -34,10 +34,10 @@
 
 <div class="tab_div">
     <span class="tab_nav">
-        <a  href="/SINOFAITH/pyramidSale" class="addactive">传销会员信息</a>
-        <a  href="/SINOFAITH/pyramidSaleTier">传销层级信息</a>
-        <%--<a  href="/SINOFAITH/wuliuShip">物流寄件人信息</a>
-        <a  href="/SINOFAITH/wuliuSj">物流收件人信息</a>--%>
+        <a href="/SINOFAITH/pyramidSale" class="addactive">传销会员信息</a>
+        <a href="/SINOFAITH/pyramidSaleTier">传销层级信息</a>
+        <a href="/SINOFAITH/pyramidSalePolt">传销层级图</a>
+        <%--<a  href="/SINOFAITH/wuliuSj">物流收件人信息</a>--%>
     </span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">

@@ -118,7 +118,7 @@ public class CftTjjgForm {
         cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
         cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
         cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
-        cftForm.setZhlx(new BigDecimal(map.get("ZHLX").toString()).longValue());
+        cftForm.setZhlx(new BigDecimal(map.get("ZHLX")!=null ? map.get("ZHLX").toString():"-1").longValue());
         cftForm.setZhlb((String) map.get("ZHLB"));
         return cftForm;
     }

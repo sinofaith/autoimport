@@ -62,18 +62,18 @@ public class pyramidSaleTierController {
         if(orderby!=null){
             if(orderby.equals(lastOrder)){
                 if(desc==null || desc.equals("desc")){
-                    seach += " order by "+orderby+" desc,id";
+                    seach += " order by "+orderby+" desc nulls last,id";
                     desc = "";
                 }else{
                     seach += " order by "+orderby+",id";
                     desc = "desc";
                 }
             }else{
-                seach += " order by "+orderby+" desc,id";
+                seach += " order by "+orderby+" desc nulls last,id";
                 desc = "";
             }
         }else if("".equals(desc)){
-            seach += " order by "+lastOrder+" desc,id";
+            seach += " order by "+lastOrder+" desc nulls last,id";
         }else if("desc".equals(desc)){
             seach += " order by "+lastOrder+",id";
         }
@@ -134,7 +134,7 @@ public class pyramidSaleTierController {
             if("".equals(desc)){
                 seach += " order by "+lastOrder;
             }else{
-                seach += " order by "+lastOrder+" desc";
+                seach += " order by "+lastOrder+" desc nulls last";
             }
         }else{
             if(order.equals(lastOrder)){
@@ -142,11 +142,11 @@ public class pyramidSaleTierController {
                     seach += " order by "+order;
                     desc = "desc";
                 }else{
-                    seach += " order by "+order+" desc";
+                    seach += " order by "+order+" desc nulls last";
                     desc = "";
                 }
             }else{
-                seach += " order by "+order+" desc";
+                seach += " order by "+order+" desc nulls last";
                 desc = "";
             }
         }
