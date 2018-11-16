@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.PyramidSaleService.PyramidSaleService;
+import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -72,18 +73,18 @@ public class PyramidSaleController {
         if(orderby!=null){
             if(orderby.equals(lastOrder)){
                 if(desc==null || desc.equals("desc")){
-                    dc.addOrder(Order.desc(orderby));
+                    dc.addOrder(Order.desc(orderby).nulls(NullPrecedence.LAST));
                     desc = "";
                 }else{
                     dc.addOrder(Order.asc(orderby));
                     desc = "desc";
                 }
             }else{
-                dc.addOrder(Order.desc(orderby));
+                dc.addOrder(Order.desc(orderby).nulls(NullPrecedence.LAST));
                 desc = "";
             }
         }else if("".equals(desc)){
-            dc.addOrder(Order.desc(lastOrder));
+            dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
         }else if("desc".equals(desc)){
             dc.addOrder(Order.asc(lastOrder));
         }

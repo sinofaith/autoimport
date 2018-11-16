@@ -33,8 +33,9 @@
 
 <div class="tab_div">
     <span class="tab_nav">
-        <a  href="/SINOFAITH/pyramidSale">传销会员信息</a>
-        <a  href="/SINOFAITH/pyramidSaleTier" class="addactive">传销层级信息</a>
+        <a href="/SINOFAITH/pyramidSale">传销会员信息</a>
+        <a href="/SINOFAITH/pyramidSaleTier" class="addactive">传销层级信息</a>
+        <a href="/SINOFAITH/pyramidSalePolt">传销层级图</a>
         <%--<a  href="/SINOFAITH/wuliuShip">物流寄件人信息</a>
         <a  href="/SINOFAITH/wuliuSj">物流收件人信息</a>--%>
     </span>
@@ -48,7 +49,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="13"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="14"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>传销层级信息(${aj.aj})</strong>
                                             </div>
@@ -56,17 +57,18 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="3%">序号</td>
-                                        <td width="5%">会员编号</td>
-                                        <td width="6%">推荐会员编号</td>
-                                        <td width="4%">姓名</td>
+                                        <td width="4%">会员号</td>
+                                        <td width="6%">推荐会员号</td>
+                                        <td width="5%">姓名</td>
                                         <td width="8%">身份证号码</td>
                                         <td width="6%">手机号</td>
                                         <td width="12%">详细地址</td>
                                         <td width="9%">银行卡号</td>
                                         <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=tier">当前层级</a></td>
-                                        <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=containsTier">包含层级数</a></td>
-                                        <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=directDrive">直推下线数</a></td>
-                                        <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=directReferNum">下线会员数</a></td>
+                                        <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=containsTier">包含层级</a></td>
+                                        <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=directDrive">直推下线</a></td>
+                                        <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=directReferNum">下线会员</a></td>
+                                        <td width="3%">层图</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}"
                                                var="item" varStatus="st">
@@ -80,25 +82,26 @@
                                             <td align="center" title="${item.address}"><xmp style="font-family: 'Microsoft YaHei UI';width:180px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;font-size: 12px !important;color: #666;">${item.address}</xmp></td>
                                             <td align="center">${item.accountnumber}</td>
                                             <td align="center">${item.tier}</td>
-                                            <td align="center">${item.containsTier!=0?item.containsTier:"无包含层级"}</td>
+                                            <td align="center">${item.containsTier}</td>
                                             <td align="center">
                                                 <c:if test="${item.directDrive!=0}">
                                                     <button  data-toggle="modal" data-target="#myModal" onclick="getPyramSaleDetails(this,true)">${item.directDrive}</button>
                                                 </c:if>
-                                                <c:if test="${item.directDrive==0}">无直推下线</c:if>
+                                                <c:if test="${item.directDrive==0}">${item.directDrive}</c:if>
                                             </td>
                                             <td align="center">
                                                 <c:if test="${item.directReferNum!=0}">
                                                     <button  data-toggle="modal" data-target="#myModal1" onclick="getPyramSaleDetails(this,false)">${item.directReferNum}</button>
                                                 </c:if>
-                                                <c:if test="${item.directReferNum==0}">无下线会员</c:if>
+                                                <c:if test="${item.directReferNum==0}">${item.directReferNum}</c:if>
                                             </td>
+                                            <td align="center"><a href="${pageContext.request.contextPath}/pyramidSalePolt?psId=${item.psId}">详情</a></td>
                                         </tr>
                                     </c:forEach>
                                     <c:choose>
                                         <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                             <tr>
-                                                <td colspan="13" align="center"> 无数据 </td>
+                                                <td colspan="14" align="center"> 无数据 </td>
                                             </tr>
                                         </c:when>
                                     </c:choose>
