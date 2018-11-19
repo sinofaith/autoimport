@@ -41,7 +41,8 @@ function UploadBank() {
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
-        alertify.alert('请选择要上传的文件夹')
+        alertify.set('notifier','position', 'top-center');
+        alertify.success('请选择要上传的文件夹')
         return;
     }
     var aj = $("#aj").val();
@@ -50,7 +51,8 @@ function UploadBank() {
     //     checkBox=1
     // }
     if(aj==''){
-        alertify.alert('请填写案件名称')
+        alertify.set('notifier','position', 'top-center');
+        alertify.error('请填写案件名称')
         return
     }
     var FileController = "/SINOFAITH/uploadBank"; // 接收上传文件的后台地址
@@ -65,11 +67,13 @@ function UploadBank() {
     xhr.open("post", FileController, true);
     xhr.onload = function(e) {
         if(this.status == 200||this.status == 304){
-            alertify.alert("导入完成!");
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("导入完成!");
             $('#myModal').modal('hide');
             setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
         }else{
-            alertify.alert("错误!请联系管理员")
+            alertify.set('notifier','position', 'top-center');
+            alertify.error("错误!请联系管理员")
             return
         }
     };
@@ -92,7 +96,8 @@ function progressFunction(evt) {
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
 
         if((evt.loaded/evt.total) ==1){
-            alertify.alert("文件夹上传成功\n请等待数据导入...");
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("文件夹上传成功\n请等待数据导入...");
         }
     }
 }
