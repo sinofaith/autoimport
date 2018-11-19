@@ -19,7 +19,8 @@ function UploadWuliu() {
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
-        alertify.alert('请选择要上传的文件夹')
+        alertify.set('notifier','position', 'top-center');
+        alertify.error('请选择要上传的文件夹')
         return;
     }
     var aj = $("#aj").val();
@@ -28,8 +29,9 @@ function UploadWuliu() {
     //     checkBox=1
     // }
     if(aj==''){
-        alertify.alert('请填写案件名称')
-        return
+        alertify.set('notifier','position', 'top-center');
+        alertify.error('请填写案件名称')
+        return;
     }
     var FileController = "/SINOFAITH/uploadWuliu"; // 接收上传文件的后台地址
     // FormData 对象
@@ -43,11 +45,13 @@ function UploadWuliu() {
     xhr.open("post", FileController, true);
     xhr.onload = function(e) {
         if(this.status == 200||this.status == 304){
-            alertify.alert("导入完成!");
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("导入完成!");
             $('#myModal').modal('hide');
             setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
         }else{
-            alertify.alert("错误!请联系管理员")
+            alertify.set('notifier','position', 'top-center');
+            alertify.error("错误!请联系管理员")
             return;
         }
     };

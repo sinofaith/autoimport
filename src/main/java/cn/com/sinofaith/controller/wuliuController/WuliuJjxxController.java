@@ -114,7 +114,7 @@ public class WuliuJjxxController {
             dc.addOrder(Order.asc(lastOrder));
         }
         // 获取分页数据
-        Page page = wlService.queryForPage(parseInt(pageNo),7,dc, aj, seach);
+        Page page = wlService.queryForPage(parseInt(pageNo),10,dc, aj, seach);
         // 将数据存入request域中
         model.addAttribute("seachCode", seachCode);
         model.addAttribute("seachCondition", seachCondition);

@@ -3,12 +3,14 @@ function UploadPyramidSale(){
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
-        alertify.alert('请选择要上传的文件夹')
+        alertify.set('notifier','position', 'top-center');
+        alertify.error('请选择要上传的文件夹')
         return;
     }
     var aj = $("#aj").val();
     if(aj==''){
-        alertify.alert('请填写案件名称')
+        alertify.set('notifier','position', 'top-center');
+        alertify.error('请填写案件名称')
         return;
     }
     var FileController = "/SINOFAITH/uploadPyramidSale"; // 接收上传文件的后台地址
@@ -45,7 +47,8 @@ function UploadPyramidSale(){
             $('#myModal1').modal('show');
 
         }else{
-            alertify.alert("错误!请联系管理员");
+            alertify.set('notifier','delay', 0);
+            alertify.error("错误!请联系管理员");
             return;
         }
     };
@@ -61,7 +64,8 @@ function progressFunction(evt) {
         progressBar.value = evt.loaded;
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
         if((evt.loaded/evt.total) ==1){
-            alertify.alert("文件夹上传成功\n请等待设置字段映射...");
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("文件上传成功,请设置字段映射...");
         }
     }
 }
@@ -117,19 +121,26 @@ function uploadPsSheet(){
         data:list,
         success:function (data) {
            if(data=="200"){
-               alertify.alert("导入完成!");
+               alertify.set('notifier','position', 'top-center');
+               alertify.success("导入完成!");
                setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
            }else if(data=="403"){
-               alertify.alert("错误!该EXCEL文件存在多个根会员");
+               alertify.set('notifier','position', 'top-center');
+               alertify.set('notifier','delay', 0);
+               alertify.error("错误!该EXCEL文件存在多个根会员");
                return;
            }else{
-               alertify.alert("错误!请联系管理员");
+               alertify.set('notifier','position', 'top-center');
+               alertify.set('notifier','delay', 0);
+               alertify.error("错误!请联系管理员");
                return;
            }
         },
         dataType:"json"
     });
-    alertify.alert("正在导入数据，请等待.....");
+    alertify.set('notifier','position', 'top-center');
+    alertify.set('notifier','delay', 0);
+    alertify.success("正在导入数据，请等待.....");
 }
 
 // 跳转页面

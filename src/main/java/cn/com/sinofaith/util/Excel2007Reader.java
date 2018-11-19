@@ -95,6 +95,8 @@ public abstract class Excel2007Reader extends DefaultHandler {
             parser.parse(sheetSource);
             sheet.close();
         }
+        pkg.flush();
+        pkg.close();
     }
 
     public XMLReader fetchSheetParser(SharedStringsTable sst)
