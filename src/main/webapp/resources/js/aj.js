@@ -29,7 +29,7 @@ function addAj() {
     xhr.open("post", Controller, true);
     xhr.onload = function() {
         if(xhr.responseText==200){
-            alertify.alert("添加完成!");
+            alertify.success("添加完成!");
             $('#myModal').modal('hide');
             setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
         }
@@ -37,7 +37,7 @@ function addAj() {
             $(".txt").attr('title',"案件名重复").tooltip('show');
         }
         if(xhr.responseText==404){
-            alertify.alert("添加失败")
+            alertify.error("添加失败")
         }
         $(".btn").removeAttr("disabled","disabled");
     };
@@ -45,6 +45,7 @@ function addAj() {
 }
 
 $(function () {
+    alertify.set('notifier','position', 'top-center');
     $(".delete").click(function () {
         var label = $(this).next(":hidden").val();
         var flag = confirm("确定删除 "+label+" ?");
@@ -59,11 +60,11 @@ $(function () {
                 },
                 success:function (data) {
                     if(data==303){
-                        alertify.alert("请先删除包含此案件的并案案件")
+                        alertify.success("请先删除包含此案件的并案案件")
                     }
                 },
                 error:function (e) {
-                  alertify.alert("错误")
+                  alertify.error("错误")
                 }
             })
         }
@@ -86,7 +87,7 @@ function ajsCount() {
         alertify.alert("数据分析中,请等待跳转...");
         $.get("/SINOFAITH/aj/ajsCount?ajm="+check_val,function (data) {
             if(data==200){
-                alertify.alert("分析完成..正在跳转..");
+                alertify.success("分析完成..正在跳转..");
                 setTimeout(function (){
                     window.location="/SINOFAITH/aj/ajm?aj="+check_val;
                 },1500);
@@ -99,8 +100,54 @@ function ajsCount() {
             }
         })
     }else{
-        alertify.alert("请至少选择两个案件");
+        alertify.error("请至少选择两个案件");
     }
 }
 
+function selectAll(){
+    var isCheck=$("#sel_1").is(':checked');  //获得全选复选框是否选中
+    $("input[name='deleteAj']").each(function() {
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });
+}
 
+function deleteAj(obj) {
+    var ajm = $(obj).closest("tr").find("td:eq(1)").text()
+    $("#aj1").attr("value", ajm);
+}
+
+function deleteAjByFilter() {
+    var ajm = $("#aj1").val();
+    obj = document.getElementsByName("deleteAj");
+    var check_val = [];
+    for(k in obj){
+        if(obj[k].checked)
+            check_val.push(obj[k].value);
+    }
+    if(check_val.length>0){
+        alertify.set('notifier','delay', 0);
+        alertify.success("删除中,请等待")
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/SINOFAITH/aj/delete",
+            data:{
+                ajm:ajm,
+                list:check_val.toString()
+        },
+        success:function (data) {
+            if(data==303){
+                alertify.success("请先删除包含此案件的并案案件")
+            }
+            if(data==200){
+                alertify.success("删除成功")
+                setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
+            }
+        },
+            error:function (e) {
+                alertify.error("错误")}
+    })
+    }else{
+        alertify.error("请选择要删除的数据")
+    }
+}

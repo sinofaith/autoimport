@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -121,15 +122,18 @@ public class AjController {
         return result;
     }
 
-    @RequestMapping(value = "/delete",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String delete(@RequestParam("aj") String aj,HttpSession httpSession){
-        AjEntity aje = ajs.findByName(aj).get(0);
-        if(ajs.findByLike(aj).size()>0){
+    public String delete( String ajm,String list,HttpSession httpSession){
+        AjEntity aje = ajs.findByName(ajm).get(0);
+        if(ajs.findByLike(ajm).size()>0){
             return "303";
         }else{
-            ajs.deleteByAj(aje.getId());
-            httpSession.removeAttribute("aj");
+            String [] type = list.split(",");
+            ajs.deleteByAj(aje.getId(),type);
+            if(type.length==4) {
+                httpSession.removeAttribute("aj");
+            }
             return "200";
         }
     }

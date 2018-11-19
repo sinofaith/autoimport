@@ -66,29 +66,40 @@ public class AjServices {
         page.setTotalRecords(allRow);
         return page;
     }
-    public void deleteByAj(long ajid){
+    public void deleteByAj(long ajid,String[] type){
         Connection con = DBUtil.getConnection();
-        String sql = "delete  aj where id ="+ajid;
         Statement st;
         try {
             st = con.createStatement();
-            st.execute(sql);
-            con.commit();
-            st.addBatch("delete  cft_zcxx where aj_id="+ajid);
-            st.addBatch("delete  cft_zzxx where aj_id="+ajid);
-            st.addBatch("delete  cft_tjjg where aj_id="+ajid);
-            st.addBatch("delete  cft_tjjgs where aj_id="+ajid);
-//            st.addBatch("delete bank_person where yhkzh='"+ajid+"'");
-            st.addBatch("delete bank_zcxx where aj_id="+ajid);
-            st.addBatch("delete bank_zzxx where aj_id="+ajid);
-            st.addBatch("delete bank_tjjg where aj_id="+ajid);
-            st.addBatch("delete bank_tjjgs where aj_id="+ajid);
-            st.addBatch("DELETE wuliu where aj_id="+ajid);
-            st.addBatch("DELETE wuliu_relation where aj_id="+ajid);
-            st.addBatch("DELETE wuliu_ship where aj_id="+ajid);
-            st.addBatch("DELETE wuliu_sj where aj_id="+ajid);
-            st.addBatch("DELETE pyramidsale where aj_id="+ajid);
-            st.addBatch("DELETE ps_hierarchy where aj_id="+ajid);
+            if(type.length==4){
+                st.execute("delete  aj where id ="+ajid);
+                con.commit();
+            }
+            for(String a:type){
+                if(a.equals("1")){
+                    st.addBatch("delete  cft_zcxx where aj_id="+ajid);
+                    st.addBatch("delete  cft_zzxx where aj_id="+ajid);
+                    st.addBatch("delete  cft_tjjg where aj_id="+ajid);
+                    st.addBatch("delete  cft_tjjgs where aj_id="+ajid);
+                }
+                if(a.equals("2")){
+                    st.addBatch("delete bank_zcxx where aj_id="+ajid);
+                    st.addBatch("delete bank_zzxx where aj_id="+ajid);
+                    st.addBatch("delete bank_tjjg where aj_id="+ajid);
+                    st.addBatch("delete bank_tjjgs where aj_id="+ajid);
+                }
+                if(a.equals("3")){
+                    st.addBatch("DELETE wuliu where aj_id="+ajid);
+                    st.addBatch("DELETE wuliu_relation where aj_id="+ajid);
+                    st.addBatch("DELETE wuliu_ship where aj_id="+ajid);
+                    st.addBatch("DELETE wuliu_sj where aj_id="+ajid);
+                }
+                if(a.equals("4")){
+                    st.addBatch("DELETE pyramidsale where aj_id="+ajid);
+                    st.addBatch("DELETE ps_hierarchy where aj_id="+ajid);
+                }
+
+            }
             st.executeBatch();
             con.commit();
 

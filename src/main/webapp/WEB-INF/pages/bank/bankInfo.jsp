@@ -62,7 +62,7 @@
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.yhkkh}</td>
                                                 <td align="center">${item.yhkzh}</td>
-                                                <td align="center">${item.khxm}</td>
+                                                <td align="center" title="${item.khxm}" ><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.khxm}</div></td>
                                                 <td align="center">${item.khzjh}</td>
                                                 <td align="center">${item.zhye}</td>
                                                 <td align="center">${item.kyye}</td>

@@ -64,7 +64,7 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.yhkkh}</td>
-                                                <td align="center">${item.jyxm}</td>
+                                                <td align="center" title="${item.jyxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyxm}</div></td>
                                                 <td align="center">${item.jysj}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0.0#"/></td>
@@ -131,6 +131,9 @@
                                             <option value="khxm"<c:if test="${bzzseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>
                                             <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手账卡号</option>
                                             <option value="dsxm" <c:if test="${bzzseachCondition=='dsxm'}">selected="selected"</c:if> >对手户名</option>
+                                            <option value="zysm" <c:if test="${bzzseachCondition=='zysm'}">selected="selected"</c:if> >摘要说明</option>
+                                            <option value="jywdmc" <c:if test="${bzzseachCondition=='jywdmc'}">selected="selected"</c:if> >交易网点名称</option>
+                                            <option value="bz" <c:if test="${bzzseachCondition=='bz'}">selected="selected"</c:if> >备注</option>
 
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>

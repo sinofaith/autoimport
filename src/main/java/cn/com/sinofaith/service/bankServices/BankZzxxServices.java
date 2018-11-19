@@ -35,9 +35,9 @@ public class BankZzxxServices {
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if("khxm".equals(seachCondition)){
-                seach.append(" and (s."+seachCondition + " like '"+seachCode+"' or c.jyxm like '"+seachCode+"')");
+                seach.append(" and (s."+seachCondition + " like '%"+seachCode+"%' or c.jyxm like '%"+seachCode+"%')");
             } else {
-                seach.append(" and c." + seachCondition + " like " + "'" + seachCode + "'");
+                seach.append(" and c." + seachCondition + " like " + "'%" + seachCode + "%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");

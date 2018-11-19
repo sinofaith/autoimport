@@ -73,6 +73,7 @@ function UploadBank() {
             setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
         }else{
             alertify.set('notifier','position', 'top-center');
+            alertify.set('notifier','delay', 0);
             alertify.error("错误!请联系管理员")
             return
         }
@@ -97,6 +98,7 @@ function progressFunction(evt) {
 
         if((evt.loaded/evt.total) ==1){
             alertify.set('notifier','position', 'top-center');
+            alertify.set('notifier','delay', 0);
             alertify.success("文件夹上传成功\n请等待数据导入...");
         }
     }

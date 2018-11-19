@@ -65,8 +65,7 @@
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=4">${item.psnum}</a></td>
                                             <td align="center">${item.inserttime}</td>
                                             <td align="center">
-                                                <a href="/SINOFAITH/aj/delete?aj=${item.aj}" class="delete">删除</a>
-                                                <input type="hidden" value="${item.aj}">
+                                                <button  data-toggle="modal" data-target="#myModal1" onclick="deleteAj(this)">删除</button>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -201,6 +200,40 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <span id="percentage1" style="color:blue;"></span> <br>
+                <div class="file-box">
+
+                    案件名:<input type="text" name = 'aj1' id ='aj1'readonly
+                               class='txt'  data-toggle="tooltip" data-placement="top"  >
+                    <br>
+                    <br>
+                    <label><input id="sel_1" onchange="selectAll()" type="checkbox" value="0"/>全选/全不选</label>
+                    <label><input name="deleteAj" type="checkbox" value="1"/>财付通</label>
+                    <label><input name="deleteAj" type="checkbox" value="2"/>银行卡</label>
+                    <label><input name="deleteAj" type="checkbox" value="3"/>物流</label>
+                    <label><input name="deleteAj" type="checkbox" value="4"/>传销</label>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="submit" class="btn" value="删除" onclick="deleteAjByFilter()"/>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
         <!-- /.modal-content -->

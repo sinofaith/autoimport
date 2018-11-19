@@ -340,7 +340,13 @@ public class BankTjjgServices {
             } else {
                 if (mapElse.containsKey(bz.getJyzh())) {
                     BankTjjgEntity btt = mapElse.get(bz.getJyzh());
-                    temps = (bz.getJzzje().subtract(btt.getJzzje())).divide(bz.getCzzje().subtract(btt.getCzzje()), 5, ROUND_UP);
+                    if((bz.getCzzje().subtract(btt.getCzzje())).compareTo(new BigDecimal(0)) == 0){
+                        temps = new BigDecimal(2);
+                    }else if((bz.getJzzje().subtract(btt.getJzzje())).compareTo(new BigDecimal(0)) == 0){
+                        temps = new BigDecimal(0.2);
+                    }else{
+                        temps = (bz.getJzzje().subtract(btt.getJzzje())).divide(bz.getCzzje().subtract(btt.getCzzje()), 5, ROUND_UP);
+                    }
                 } else {
                     temps = bz.getJzzje().divide(bz.getCzzje(), 5, ROUND_UP);
                 }
