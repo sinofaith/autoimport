@@ -43,7 +43,7 @@ public class PyramidSalePoltDao extends BaseDao<PsHierarchyEntity> {
         }
         List<PsPoltForm> psPoltForms = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("select p.*,h.directrefernum value from (select p.psid,p.sponsorid,p.accountholder name,level tier from (");
+        sql.append("select p.*,h.directrefernum value from (select p.psid,p.sponsorid,p.nick_name name,level tier from (");
         sql.append("select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id) su from PYRAMIDSALE t where t.aj_id="+id+")) p ");
         sql.append("start with psid = '"+psId+"' connect by prior psid=sponsorid) p ");
         sql.append("left join (select * from ps_hierarchy h where aj_id="+id+") h on p.psid=h.psid and p.sponsorid=h.sponsorid order by h.tier");

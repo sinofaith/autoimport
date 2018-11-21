@@ -65,7 +65,7 @@ function progressFunction(evt) {
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
         if((evt.loaded/evt.total) ==1){
             alertify.set('notifier','position', 'top-center');
-            alertify.success("文件上传成功,请设置字段映射...");
+            alertify.success("文件上传成功,请等待设置字段映射");
         }
     }
 }

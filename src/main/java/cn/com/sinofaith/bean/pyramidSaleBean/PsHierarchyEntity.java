@@ -11,7 +11,8 @@ public class PsHierarchyEntity {
     private String path;
     private long tier;
     private long aj_id;
-    private long directReferNum;
+    private Long directReferNum;
+    private Long containsTier;
     @Id
     @Column(name="id",nullable = false,precision = 0)
     public long getId() {
@@ -64,12 +65,22 @@ public class PsHierarchyEntity {
 
     @Basic
     @Column(name = "directrefernum",nullable = false,precision = 0)
-    public long getDirectReferNum() {
+    public Long getDirectReferNum() {
         return directReferNum;
     }
 
-    public void setDirectReferNum(long directReferNum) {
-        this.directReferNum = directReferNum;
+    public void setDirectReferNum(Long directReferNum) {
+        if(directReferNum==null){this.directReferNum = 0l;}else{this.directReferNum = directReferNum;}
+    }
+
+    @Basic
+    @Column(name = "containsTier",nullable = false,precision = 0)
+    public Long getContainsTier() {
+        return containsTier;
+    }
+
+    public void setContainsTier(Long containsTier) {
+        if(containsTier==null){this.containsTier = 0l;}else{this.containsTier = containsTier;}
     }
 
     @Basic

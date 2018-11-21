@@ -5,12 +5,12 @@ import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.dao.pyramidSaleDao.PsHierarchyDao;
 import cn.com.sinofaith.dao.pyramidSaleDao.PyramidSaleDao;
 import cn.com.sinofaith.page.Page;
+import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -111,31 +111,37 @@ public class PyramidSaleService {
     private Map<String,List<String>> getBy2007Excel(String path) {
         File file = new File(path);
         Map<String,List<String>> sheetMap = new HashMap<>();
-        XSSFWorkbook xssfWorkbook = null;
         FileInputStream fi = null;
         try {
             fi = new FileInputStream(file);
-            xssfWorkbook = new XSSFWorkbook(fi);
-            for (int numSheet = 0; numSheet < xssfWorkbook.getNumberOfSheets(); numSheet++) {
+            Workbook wk = StreamingReader.builder()
+                    .rowCacheSize(200)  //缓存到内存中的行数，默认是10
+                    .bufferSize(4096)  //读取资源时，缓存到内存的字节大小，默认是1024
+                    .open(fi);  //打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件
+            for (int numSheet = 0; numSheet < wk.getNumberOfSheets(); numSheet++) {
                 List<String> readList = new ArrayList<String>();
-                XSSFSheet sheet = xssfWorkbook.getSheetAt(numSheet);
+                Sheet sheet = wk.getSheetAt(numSheet);
                 if (sheet == null) {
                     continue;
                 }
-                for (int rowNum = 0; rowNum <= 1; rowNum++) {
-                    XSSFRow xssfRow = sheet.getRow(rowNum);
-                    if (xssfRow != null) {
-                        int cell = xssfRow.getLastCellNum();
+                int temp = 0;
+                for(Row row : sheet){
+                    if (row != null && temp < 2) {
+                        int cell = row.getLastCellNum();
                         for (int i = 0; i < cell; i++) {
                             String rawValue = null;
-                            if(xssfRow.getCell(i)==null){
+                            if(row.getCell(i)==null){
                                 rawValue = "";
                             }else{
-                                xssfRow.getCell(i).setCellType(Cell.CELL_TYPE_STRING);
-                                rawValue = xssfRow.getCell(i).getStringCellValue();
+                                //row.getCell(i).setCellType(CellType.STRING);
+                                rawValue = row.getCell(i).getStringCellValue();
                             }
                             readList.add(rawValue);
                         }
+                        temp++;
+                    }
+                    if(temp>1){
+                        break;
                     }
                 }
                 if(readList.size()>0){
@@ -188,10 +194,6 @@ public class PyramidSaleService {
             }else if(path.endsWith(".xls")){
                 psList = getBy2003ExcelAll(path,field);
             }
-//            for (int i=0;i<psList.size();i++) {
-//                psList.get(i).set
-//            }
-
             sum = pyramidSaleDao.insertPyramidSale(psList,aj_id);
         }
         return sum;
@@ -264,23 +266,25 @@ public class PyramidSaleService {
         // 用于存放表格中列号
         List<PyramidSaleEntity> psList = new ArrayList<>();
         File file = new File(path);
-        XSSFWorkbook xssfWorkbook = null;
         Map<String,Integer> title = new HashMap<>();
         FileInputStream fi = null;
         try {
             fi = new FileInputStream(file);
-            xssfWorkbook = new XSSFWorkbook(fi);
-            for (int numSheet = 0; numSheet < xssfWorkbook.getNumberOfSheets(); numSheet++) {
-                XSSFSheet sheet = xssfWorkbook.getSheetAt(numSheet);
+            Workbook wk = StreamingReader.builder()
+                    .rowCacheSize(200)  //缓存到内存中的行数，默认是10
+                    .bufferSize(4096)  //读取资源时，缓存到内存的字节大小，默认是1024
+                    .open(fi);  //打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件
+            for (int numSheet = 0; numSheet < wk.getNumberOfSheets(); numSheet++) {
+                Sheet sheet = wk.getSheetAt(numSheet);
                 if (sheet == null) {
                     continue;
                 }else if(sheet.getSheetName().equals(field.get(0))){
-                    for (int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++) {
-                        XSSFRow xssfRow = sheet.getRow(rowNum);
-                        if(rowNum==0){
-                            if (xssfRow != null) {
-                                for (int i = 0; i < xssfRow.getLastCellNum(); i++) {
-                                    String cellName = xssfRow.getCell(i).getStringCellValue();
+                    int temp = 0;
+                    for (Row row : sheet) {
+                        if(temp==0){
+                            if (row != null) {
+                                for (int i = 0; i < row.getLastCellNum(); i++) {
+                                    String cellName = row.getCell(i).getStringCellValue();
                                     for(int j=1;j<field.size();j++){
                                         if(cellName.equals(field.get(j))){
                                             title.put(field.get(j),i);
@@ -288,9 +292,10 @@ public class PyramidSaleService {
                                     }
                                 }
                             }
+                            temp++;
                         }else{
-                            if (xssfRow != null) {
-                                PyramidSaleEntity ps = RowToEntity(xssfRow,field,title);
+                            if (row != null) {
+                                PyramidSaleEntity ps = RowToEntity(row,field,title);
                                 if(ps!=null){
                                     psList.add(ps);
                                 }
@@ -323,11 +328,11 @@ public class PyramidSaleService {
      */
     private PyramidSaleEntity RowToEntity(Row xssfRow, ArrayList<String> field, Map<String,Integer> title) {
         // 设置单元格为String类型
-        for(int i=1;i<12;i++){
+        /*for(int i=1;i<12;i++){
             if(!field.get(i).equals("无") && xssfRow.getCell(title.get(field.get(i)))!=null){
                 xssfRow.getCell(title.get(field.get(i))).setCellType(Cell.CELL_TYPE_STRING);
             }
-        }
+        }*/
         PyramidSaleEntity ps = new PyramidSaleEntity();
         if(field.get(1).equals("无") || xssfRow.getCell(title.get(field.get(1)))==null || StringUtils.isBlank(xssfRow.getCell(title.get(field.get(1))).getStringCellValue())){
             ps.setPsId("");
@@ -442,16 +447,19 @@ public class PyramidSaleService {
         if(pshierList==null){
             return 0;
         }
-        List<PsHierarchyEntity> pshList = psHierarchyDao.selectPsHierarchyByAj_Id(id);
+        /*List<PsHierarchyEntity> pshList = psHierarchyDao.selectPsHierarchyByAj_Id(id);
         for (int i=0;i<pshierList.size();i++) {
             for (PsHierarchyEntity psh : pshList) {
                 if(pshierList.get(i).getPsId().equals(psh.getPsId())){
                     pshierList.get(i).setDirectReferNum(psh.getDirectReferNum());
                 }
             }
-        }
+        }*/
         // 插入数据
         int sum = psHierarchyDao.insertpsHierarchy(pshierList,id);
+
+        // 更新包含层数据
+        //psHierarchyDao.updateHierarchy(id);
         return sum;
     }
 

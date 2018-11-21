@@ -125,7 +125,7 @@ public class pyramidSaleTierController {
         String lastOrder = (String) session.getAttribute("xqPyramSaleLastOrder");
         String desc = (String) session.getAttribute("xqPyramSaleDesc");
         if(temp){
-            seach += " and sponsorid="+psId;
+            seach += " and sponsorid='"+psId+"'";
         }else{
             seach = " and aj_id="+aj.getId();
         }
