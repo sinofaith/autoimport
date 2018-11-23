@@ -97,7 +97,7 @@ public class BankTjjgServices {
             seach.append(" and c.zhlx=" + code);
         }
         if(hcode!=0){
-            seach.append(" and s.khxm not like '%财付通%' and s.khxm not like '%支付宝%' or s.khxm is null ");
+            seach.append(" and s.khxm not like '%财付通%' and s.khxm not like '%支付宝%' and s.khxm not like '%清算%' or s.khxm is null ");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -353,7 +353,7 @@ public class BankTjjgServices {
                 if (temps.doubleValue() < 0.5) {
                     temp = "来源账户";
                 } else if (temps.doubleValue() <= 1.5) {
-                    temp = "转账账户";
+                    temp = "中转账户";
                 } else {
                     temp = "汇聚账户";
                 }
@@ -506,16 +506,17 @@ public class BankTjjgServices {
                 }
             }
         }
-
-        HSSFWorkbook wb = createExcel(listNull);
-        try {
-            FileOutputStream fos = new FileOutputStream(downPath+"temp/未知开户行账户.xls");
-            wb.write(fos);
-            fos.flush();
-            fos.close();
-            listPath.add(downPath+"temp/未知开户行账户.xls");
-        }catch (Exception e){
-            e.printStackTrace();
+        if(listNull.size()>0){
+            HSSFWorkbook wb = createExcel(listNull);
+            try {
+                FileOutputStream fos = new FileOutputStream(downPath+"temp/未知开户行账户.xls");
+                wb.write(fos);
+                fos.flush();
+                fos.close();
+                listPath.add(downPath+"temp/未知开户行账户.xls");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         File zip = new File(downPath+"temp/协助调查文书.zip");
         File srcfile[] = new File[listPath.size()];

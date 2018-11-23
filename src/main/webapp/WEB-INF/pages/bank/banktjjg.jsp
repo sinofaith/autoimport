@@ -83,7 +83,7 @@
                                                         href="/SINOFAITH/banktjjg/order?orderby=czzcs">出账总次数</a></td>
                                                 <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=czzje">出账总金额(元)</a>
                                                 </td>
-                                                <td width="10%">账户类别
+                                                <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=zhlb">账户类别</a>
                                                 </td>
                                                 <td width="7%">详情</td>
                                             </tr>
@@ -196,6 +196,10 @@
                                                     <option value="czzje"
                                                             <c:if test="${btjseachCondition=='czzje'}">selected="selected"</c:if>>
                                                         出账总金额阀值
+                                                    </option>
+                                                    <option value="zhlb"
+                                                            <c:if test="${btjseachCondition=='zhlb'}">selected="selected"</c:if>>
+                                                        账户类别
                                                     </option>
                                                     <%--<option value="xm" <c:if test="${seachCondition=='xm'}">selected="selected"</c:if> >姓名</option>--%>
                                                     <%--<option value="sfzhm" <c:if test="${seachCondition=='sfzhm'}">selected="selected"</c:if> >身份证号码</option>--%>

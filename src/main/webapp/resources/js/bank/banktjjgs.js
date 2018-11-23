@@ -419,7 +419,6 @@ function hiddenZfbCft() {
     location.href= "/SINOFAITH/banktjjgs/hiddenZfbCft?code="+flg;
 }
 
-var radio = -1;
 $(function () {
 
     var old = null; //用来保存原来的对象
@@ -438,8 +437,8 @@ $(function () {
             }
         }
     });
-
-    $(":radio").click(function(){
-        alert(this.val());
-    });
+    //
+    // $(":radio").click(function(){
+    //     alert(this.val());
+    // });
 });

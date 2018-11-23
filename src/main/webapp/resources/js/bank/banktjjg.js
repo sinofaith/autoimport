@@ -1,4 +1,3 @@
-var radio = -1;
 $(function () {
     var old = null; //用来保存原来的对象
     $(":radio").each(function(){
@@ -17,9 +16,9 @@ $(function () {
         }
     });
 
-    $(":radio").click(function(){
-        alert(this.val());
-    });
+    // $(":radio").click(function(){
+    //     alert(this.val());
+    // });
 });
 
 function hiddenZfbCft() {

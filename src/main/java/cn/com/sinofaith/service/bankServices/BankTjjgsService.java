@@ -127,7 +127,7 @@ public class BankTjjgsService {
             seach.append(" and c.zhlx=" + code);
         }
         if(hcode!=0){
-            seach.append(" and (d.khxm not like '%财付通%' and d.khxm not like '%支付宝%' or d.khxm is null) ");
+            seach.append(" and (d.khxm not like '%财付通%' and d.khxm not like '%支付宝%' and d.khxm not like '%清算%' or d.khxm is null) ");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -242,22 +242,22 @@ public class BankTjjgsService {
         if("共同".equals(lx)){
             AjEntity aje = (AjEntity) req.getSession().getAttribute("aj");
             if(seach.contains("order by")) {
-                listTjjg = banktjsd.findBySQL("select s.khxm,n.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+                listTjjg = banktjsd.findBySQL("select s.khxm,d.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
                         "  select t.dfzh,count(1) as num from bank_tjjgs t " +
                         " where t.dfzh not in( select distinct t1.jyzh from bank_tjjgs t1) and t.aj_id=" +aje.getId()+
                         " group by dfzh " +
                         "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
                         " left join bank_person s on c.jyzh = s.yhkkh " +
-                        " left join bank_person n on c.dfzh = n.yhkkh "+
+                        " left join bank_person d on c.dfzh = d.yhkkh "+
                         "  where a.num is not null " + seach +",c.dfzh");
             }else{
-                listTjjg = banktjsd.findBySQL("select s.khxm,n.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+                listTjjg = banktjsd.findBySQL("select s.khxm,d.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
                         "  select t.dfzh,count(1) as num from bank_tjjgs t " +
                         " where t.dfzh not in( select distinct t1.jyzh from bank_tjjgs t1) and t.aj_id=" +aje.getId()+
                         " group by dfzh " +
                         "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
                         " left join bank_person s on c.jyzh = s.yhkkh " +
-                        " left join bank_person n on c.dfzh = n.yhkkh "+
+                        " left join bank_person d on c.dfzh = d.yhkkh "+
                         "  where a.num is not null " + seach +" order by c.dfzh");
             }
 

@@ -33,6 +33,8 @@ public class BankGtzhController {
         httpSession.removeAttribute("gtseachCondition");
         //查询内容
         httpSession.removeAttribute("gtseachCode");
+        httpSession.setAttribute("hcode",0);
+
 
 //        httpSession.setAttribute("gorderby","num");
 //        httpSession.setAttribute("glastOrder","num");
@@ -61,6 +63,13 @@ public class BankGtzhController {
         return mav;
     }
 
+    @RequestMapping(value = "/hiddenZfbCft")
+    public ModelAndView hiddenZfbCft(int code ,HttpSession httpSession){
+        ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");
+        httpSession.setAttribute("hcode",code);
+        return mav;
+    }
+
     @RequestMapping(value = "/seach")
     public ModelAndView getcfttj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("bank/bankgtzh");
@@ -69,13 +78,15 @@ public class BankGtzhController {
         String orderby = (String) req.getSession().getAttribute("gorderby");
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),-1,0);
+        int hcode = (Integer) req.getSession().getAttribute("hcode");
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),-1,hcode);
         Page page = banktjss.queryForPageGt(parseInt(pageNo),10,seach,aj!=null ? aj.getId():-1);
         mav.addObject("page",page);
         mav.addObject("gtseachCode",seachCode);
         mav.addObject("gtseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
         mav.addObject("ajm",aj);
+        mav.addObject("hcode",hcode);
         return mav;
     }
 
@@ -102,7 +113,8 @@ public class BankGtzhController {
         String orderby = (String) req.getSession().getAttribute("gorderby");
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),-1,0);
+        int hcode = (Integer) req.getSession().getAttribute("hcode");
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),-1,hcode);
         banktjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","共同",req);
     }
     @RequestMapping("/getDetails")
