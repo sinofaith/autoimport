@@ -145,9 +145,10 @@ public class BankZzxxController {
     public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,
                              HttpServletRequest req,HttpServletResponse rep,HttpSession ses)throws Exception{
         dskh = dskh.replace("\n","").trim();
+        yhkkh = yhkkh.replace("\n","").trim();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String ajid=cftzzs.getAjidByAjm(aj);
-        String seach = " and (c.yhkkh = '"+yhkkh+"' )";
+        String seach = " and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"' or c.bcsm like '"+yhkkh+"')";
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String desc = (String) ses.getAttribute("xqdesc");
         if(!"".equals(dskh)){

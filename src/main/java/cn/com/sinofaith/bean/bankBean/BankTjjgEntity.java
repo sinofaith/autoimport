@@ -127,7 +127,7 @@ public class BankTjjgEntity {
         this.zhlb = zhlb;
     }
     @Basic
-    @Column(name="khh",nullable = true,length = 30)
+    @Column(name="khh",nullable = true,length = 200)
     public String getKhh() {
         return khh;
     }

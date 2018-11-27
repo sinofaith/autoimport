@@ -15,6 +15,7 @@
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
+<script src="<c:url value="/resources/js/bank/bankgtzh.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
@@ -47,10 +48,12 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="7%">序号</td>
-                                        <td width="7%"><a href="/SINOFAITH/bankgtzh/order?orderby=khxm">姓名</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/bankgtzh/order?orderby=khxm">姓名</a></td>
                                         <td width="9%">交易账卡号</td>
-                                        <td width="9%">对方账户</td>
-                                        <td width="7%">对方姓名</td>
+                                        <td width="12%">对方账户<br>
+                                            <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
+                                            <label for="checkbox1">去除支付宝、财付通</label></td>
+                                        <td width="6%">对方姓名</td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jzzcs">进账总次数</a></td>

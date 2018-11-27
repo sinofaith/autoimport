@@ -2,7 +2,7 @@ function ajSkip(){
     var totalPage = $("#totalPage").text();
     var onPage = $("#num").val();
     if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
-        alert("请输入你要跳转的页数！");
+        alertify.error("请输入你要跳转的页数！");
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
@@ -84,18 +84,20 @@ function ajsCount() {
             check_val.push(obj[k].value);
     }
     if(check_val.length>1){
-        alertify.alert("数据分析中,请等待跳转...");
+        alertify.set('notifier','delay', 0);
+        alertify.success("数据分析中,请等待跳转...");
         $.get("/SINOFAITH/aj/ajsCount?ajm="+check_val,function (data) {
             if(data==200){
                 alertify.success("分析完成..正在跳转..");
                 setTimeout(function (){
-                    window.location="/SINOFAITH/aj/ajm?aj="+check_val;
+                    window.location="/SINOFAITH/aj/ajm?aj="+check_val+"&type=1";
                 },1500);
             }
             if(data==303){
-                alertify.alert("多案件分析结果已存在,正在跳转..");
+                alertify.set('notifier','delay', 0);
+                alertify.error("多案件分析结果已存在,正在跳转..");
                 setTimeout(function (){
-                    window.location="/SINOFAITH/aj/ajm?aj="+check_val;
+                    window.location="/SINOFAITH/aj/ajm?aj="+check_val+"&type=1";
                 },1500);
             }
         })
@@ -126,7 +128,7 @@ function deleteAjByFilter() {
     }
     if(check_val.length>0){
         alertify.set('notifier','delay', 0);
-        alertify.success("删除中,请等待")
+        alertify.success("删除中")
         $.ajax({
             type:"post",
             dataType:"json",
@@ -138,10 +140,11 @@ function deleteAjByFilter() {
         success:function (data) {
             if(data==303){
                 alertify.success("请先删除包含此案件的并案案件")
+                return
             }
+            setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
             if(data==200){
                 alertify.success("删除成功")
-                setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
             }
         },
             error:function (e) {
