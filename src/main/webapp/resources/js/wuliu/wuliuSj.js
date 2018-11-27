@@ -37,6 +37,7 @@ function getZzDetails(obj) {
         },
         success:function (msg) {
             var data = msg.list
+            console.log(data)
             var str = ""
             for (i in data){
                 if(i%2==0){

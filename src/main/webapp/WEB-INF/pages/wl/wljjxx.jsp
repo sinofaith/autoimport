@@ -12,13 +12,16 @@
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">
+
+
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
-
 <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
 <script src="<c:url value="/resources/js/wuliu/wuliu.js"/> "></script>
-
+<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
@@ -26,6 +29,8 @@
 </script>
 <style type="text/css">
     .crimeterrace{ background-color: #636B75 !important;}
+    .select1 { width: 200px; margin: 150px auto;}
+    .sod_select { font-size: 12px;}
 </style>
 
 <div class="tab_div">
@@ -216,5 +221,134 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">多文件字段映射</h4>
+            </div>
+            <div class="modal-body" >
+                <div class="form-group">
+                    <div class="row" style="width: 600px;">
+
+                        <span class="col-md-1" id="excelName" style="width: 350px;">
+                            <label for="excelName">Excel名</label>
+
+                        </span>
+                        <span class="col-md-1" id="excelSheet" style="width: 200px;">
+                            <label for="excelSheet">Sheet名</label>
+
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div id="roll" style="overflow-x: auto; overflow-y: auto; height: 100px; width:1300px;">
+                        <table id="head" class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc;">
+
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <label for="c1">运单号</label>
+                            <select	 id="c1" placeholder="运单号">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c2">寄件时间</label>
+                            <select	 id="c2" placeholder="寄件时间">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c3">寄件地址</label>
+                            <select	 id="c3" placeholder="寄件地址">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c4">寄件人</label>
+                            <select	 id="c4" placeholder="寄件人">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c5">寄件电话</label>
+                            <select	id="c5" placeholder="寄件电话">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c6">寄件手机</label>
+                            <select	id="c6" placeholder="寄件手机">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c7">收件地址</label>
+                            <select id="c7" placeholder="收件地址">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c8">收件人</label>
+                            <select	id="c8" placeholder="收件人">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c9">收件电话</label>
+                            <select id="c9" placeholder="收件电话">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c10">收件手机</label>
+                            <select	id="c10" placeholder="收件手机">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c11">收件员</label>
+                            <select	id="c11" placeholder="收件员">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c12">托寄物</label>
+                            <select	id="c12" placeholder="托寄物">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c13">付款方式</label>
+                            <select	id="c13" placeholder="付款方式">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c14">代收货款</label>
+                            <select	id="c14" placeholder="代收货款">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c15">计费重量</label>
+                            <select	id="c15" placeholder="计费重量">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c16">件数</label>
+                            <select	id="c16" placeholder="件数">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c17">运费</label>
+                            <select	id="c17" placeholder="运费">
+                            </select>
+                        </div>
+                    </div>
+                    <button id="mapping" type="button" style="margin-left: 1280px" class="btn btn-primary" onclick="uploadMapping()">提交映射</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="uploadWuliuExcel()">导入数据</button>
+            </div>
+        </div>
+    </div>
 </div>
 <%@include file="../template/newfooter.jsp" %>

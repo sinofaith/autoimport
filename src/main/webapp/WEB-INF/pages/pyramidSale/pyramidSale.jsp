@@ -14,13 +14,17 @@
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/style.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/thirdparty/alertify/css/bootstrap.css"/> " rel="stylesheet">
+<link href="<c:url value="/resources/css/select/selectordie.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">
+
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/alertify/js/alertify.min.js"/> "></script>
 <script src="<c:url value="/resources/js/multiselect.min.js"/> "></script>
+<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
+<script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 
-<%--<script src="<c:url value="/resources/js/bank/bank.js"/> "></script>--%>
 <script src="<c:url value="/resources/js/pyramidSale/pyramidSale.js"/> "></script>
 
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
@@ -241,57 +245,57 @@
                     <div class="row">
                         <div class="col-md-1">
                             <label for="c1">会员编号</label>
-                            <select	class="form-control" id="c1" placeholder="会员编号" name="custSource">
+                            <select id="c1" placeholder="会员编号">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c2">推荐人编号</label>
-                            <select	class="form-control" id="c2" placeholder="推荐人编号" name="custSource">
+                            <select id="c2" placeholder="推荐人编号">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c3">手机号</label>
-                            <select	class="form-control" id="c3" placeholder="手机号" name="custSource">
+                            <select id="c3" placeholder="手机号">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c4">电话</label>
-                            <select	class="form-control" id="c4" placeholder="手机号2" name="custSource">
+                            <select id="c4" placeholder="手机号2">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c5">姓名</label>
-                            <select	class="form-control" id="c5" placeholder="姓名" name="custSource">
+                            <select id="c5" placeholder="姓名">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c6">性别</label>
-                            <select	class="form-control" id="c6" placeholder="性别" name="custSource">
+                            <select id="c6" placeholder="性别">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c7">详细地址</label>
-                            <select	class="form-control" id="c7" placeholder="详细地址" name="custSource">
+                            <select id="c7" placeholder="详细地址">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c8">身份证号</label>
-                            <select	class="form-control" id="c8" placeholder="身份证号" name="custSource">
+                            <select id="c8" placeholder="身份证号">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c9">开户行</label>
-                            <select	class="form-control" id="c9" placeholder="开户行" name="custSource">
+                            <select id="c9" placeholder="开户行">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c10">持卡人姓名</label>
-                            <select	class="form-control" id="c10" placeholder="持卡人姓名" name="custSource">
+                            <select id="c10" placeholder="持卡人姓名">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c11">银行卡号</label>
-                            <select	class="form-control" id="c11" placeholder="银行卡号" name="custSource">
+                            <select id="c11" placeholder="银行卡号">
                             </select>
                         </div>
                     </div>

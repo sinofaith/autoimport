@@ -5,6 +5,7 @@ import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.dao.pyramidSaleDao.PsHierarchyDao;
 import cn.com.sinofaith.dao.pyramidSaleDao.PyramidSaleDao;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.ExcelMappingUtils;
 import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -44,122 +45,12 @@ public class PyramidSaleService {
         List<String> listPath = getPsFileList(uploadPath);
         for (String path : listPath) {
             if(path.endsWith(".xlsx")){
-                readMap = getBy2007Excel(path);
+                readMap = ExcelMappingUtils.getBy2007Excel(path);
             }else if(path.endsWith(".xls")){
-                readMap = getBy2003Excel(path);
+                readMap = ExcelMappingUtils.getBy2003Excel(path);
             }
         }
         return readMap;
-    }
-
-    /**
-     * 获取2003版excel.xls版本数据
-     * @param path
-     * @return
-     */
-    private Map<String,List<String>> getBy2003Excel(String path) {
-        InputStream is = null;
-        Map<String,List<String>> sheetMap = new HashMap<>();
-        try{
-            is = new FileInputStream(path);
-            HSSFWorkbook wb = new HSSFWorkbook(is);
-            for(int numSheet = 0; numSheet < wb.getNumberOfSheets(); numSheet++){
-                List<String> readList = new ArrayList<>();
-                HSSFSheet sheet = wb.getSheetAt(numSheet);
-                if (sheet == null) {
-                    continue;
-                }
-                for (int rowNum = 0; rowNum <= 1; rowNum++) {
-                    HSSFRow row = sheet.getRow(rowNum);
-                    if (row != null) {
-                        int cell = row.getLastCellNum();
-                        for (int i = 0; i < cell; i++) {
-                            String rawValue = null;
-                            if(row.getCell(i)==null){
-                                rawValue = "";
-                            }else{
-                                row.getCell(i).setCellType(Cell.CELL_TYPE_STRING);
-                                rawValue = row.getCell(i).getStringCellValue();
-                            }
-                            readList.add(rawValue);
-                        }
-                    }
-                }
-                if(readList.size()>0){
-                    sheetMap.put(sheet.getSheetName(),readList);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(is!=null){
-                    is.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sheetMap;
-    }
-
-    /**
-     * 获取2007版excel.xlsx
-     * @param path
-     * @return
-     */
-    private Map<String,List<String>> getBy2007Excel(String path) {
-        File file = new File(path);
-        Map<String,List<String>> sheetMap = new HashMap<>();
-        FileInputStream fi = null;
-        try {
-            fi = new FileInputStream(file);
-            Workbook wk = StreamingReader.builder()
-                    .rowCacheSize(200)  //缓存到内存中的行数，默认是10
-                    .bufferSize(4096)  //读取资源时，缓存到内存的字节大小，默认是1024
-                    .open(fi);  //打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件
-            for (int numSheet = 0; numSheet < wk.getNumberOfSheets(); numSheet++) {
-                List<String> readList = new ArrayList<String>();
-                Sheet sheet = wk.getSheetAt(numSheet);
-                if (sheet == null) {
-                    continue;
-                }
-                int temp = 0;
-                for(Row row : sheet){
-                    if (row != null && temp < 2) {
-                        int cell = row.getLastCellNum();
-                        for (int i = 0; i < cell; i++) {
-                            String rawValue = null;
-                            if(row.getCell(i)==null){
-                                rawValue = "";
-                            }else{
-                                //row.getCell(i).setCellType(CellType.STRING);
-                                rawValue = row.getCell(i).getStringCellValue();
-                            }
-                            readList.add(rawValue);
-                        }
-                        temp++;
-                    }
-                    if(temp>1){
-                        break;
-                    }
-                }
-                if(readList.size()>0){
-                    sheetMap.put(sheet.getSheetName(),readList);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally{
-            try {
-                if(fi!=null){
-                    fi.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sheetMap;
     }
 
     /**
@@ -200,7 +91,7 @@ public class PyramidSaleService {
     }
 
     /**
-     * 读取2003版所有的excel数据.xlsx
+     * 读取2003版所有的excel数据.xls
      * @param path
      * @param field
      * @return
@@ -292,7 +183,7 @@ public class PyramidSaleService {
                                     }
                                 }
                             }
-                            temp++;
+                            temp=1;
                         }else{
                             if (row != null) {
                                 PyramidSaleEntity ps = RowToEntity(row,field,title);
@@ -443,10 +334,7 @@ public class PyramidSaleService {
      */
     public int insertPsHierarchy(long id) {
         // 查出所需要的数据
-        List<PsHierarchyEntity> pshierList = pyramidSaleDao.selectPyramidSaleByAj_id(id);
-        if(pshierList==null){
-            return 0;
-        }
+        int rowNum = pyramidSaleDao.selectPyramidSaleByAj_id(id);
         /*List<PsHierarchyEntity> pshList = psHierarchyDao.selectPsHierarchyByAj_Id(id);
         for (int i=0;i<pshierList.size();i++) {
             for (PsHierarchyEntity psh : pshList) {
@@ -456,11 +344,10 @@ public class PyramidSaleService {
             }
         }*/
         // 插入数据
-        int sum = psHierarchyDao.insertpsHierarchy(pshierList,id);
-
+       // int sum = psHierarchyDao.insertpsHierarchy(pshierList,id);
         // 更新包含层数据
         //psHierarchyDao.updateHierarchy(id);
-        return sum;
+        return rowNum;
     }
 
 }

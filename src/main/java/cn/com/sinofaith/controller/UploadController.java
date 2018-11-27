@@ -170,7 +170,76 @@ public class UploadController {
         return result;
     }
 
-    @RequestMapping(value = "/uploadWuliu",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    /**
+     * 物流字段映射
+     * @param file
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/uploadWuliu",method = RequestMethod.POST)
+    public @ResponseBody Map<String,Map<String,List<String>>> fieldMappingWuliu(
+            @RequestParam("file") List<MultipartFile> file,HttpServletRequest req){
+        // 创建一个路径
+        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
+        String filePath = "";
+        String fileName = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if (!uploadPathd.exists()) {
+            uploadPathd.mkdirs();
+        }
+        // 将文件上传到服务器
+        for(int i=0;i<file.size();i++) {
+            fileName = file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        req.getSession().setAttribute("wuliuPath",uploadPath);
+        // 读取服务器的excel表
+        Map<String,Map<String,List<String>>> excelMap = wjs.readExcel(uploadPath);
+        if(excelMap!=null){
+            return excelMap;
+        }
+        return null;
+    }
+
+    /**
+     * 物流数据存入数据库
+     * @param field
+     * @return
+     */
+    @RequestMapping(value = "/uploadWuliuExcel",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public @ResponseBody String uploadWuliuExcel(@RequestBody List<List<String>> field, HttpSession session) {
+        // 读取域中数据
+        String path = (String) session.getAttribute("wuliuPath");
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 将数据插入数据库
+        int sum = wjs.insertWuliu(path,field,aj.getId());
+        // wuliu_relation表添加数据
+        wjs.insertRelation(aj.getId());
+        // wuliu_ship表添加数据
+        wlsService.insertShip(aj.getId());
+        // wuliu_sj表添加数据
+        wlsjService.insertSj(aj.getId());
+        // 删除文件
+        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(uploadPath);
+        wjs.deleteFile(uploadPathd);
+        if(sum>0){
+            return "200";
+        } else {
+            return "400";
+        }
+    }
+
+    /*@RequestMapping(value = "/Wuliu",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String uploadWuliu(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                               HttpServletRequest req) {
@@ -184,7 +253,6 @@ public class UploadController {
         if (!uploadPathd.exists()) {
             uploadPathd.mkdirs();
         }
-
         // 将文件上传到服务器
         for(int i=0;i<file.size();i++) {
             fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
@@ -221,10 +289,10 @@ public class UploadController {
         }
         req.getSession().setAttribute("aj",aje);
         return result;
-    }
+    }*/
 
     /**
-     * 读取Excel字段与表映射
+     * 传销Excel字段与表映射
      * @param file
      * @param aj
      * @param req
@@ -265,7 +333,7 @@ public class UploadController {
     }
 
     /**
-     * 将数据存入数据库
+     * 传销数据存入数据库
      * @param field
      * @return
      */

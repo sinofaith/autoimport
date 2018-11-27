@@ -6,6 +6,7 @@ import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.dao.BaseDao;
 import cn.com.sinofaith.util.DBUtil;
 import com.sun.org.apache.bcel.internal.generic.ReturnaddressType;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
@@ -82,8 +83,8 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
      * @param id
      * @return
      */
-    public List<PsHierarchyEntity> selectPyramidSaleByAj_id(long id) {
-        List<PsHierarchyEntity> psHierList = null;
+    public int selectPyramidSaleByAj_id(long id) {
+        int rowNum = 0;
         // 获取根元素的节点
         String sql1 = "select distinct(sponsorid) from pyramidsale t where not exists(select t1.psid from " +
                 "pyramidsale t1 where t.sponsorid=t1.psid and aj_id="+id+") and aj_id="+id;
@@ -105,39 +106,39 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
                 //delete("delete from PyramidSaleEntity where aj_id="+id);
                 //return psHierList;
             }
+
             if(sponsorid!=null){
                 String temp = sponsorid.size()>1?"根节点":sponsorid.get(0);
                 String level = sponsorid.size()>1?"level-1":"level";
-                session = getSession();
+                session = openSession();
                 // 开启事务
                 Transaction tx1 = session.beginTransaction();
                 StringBuffer sql = new StringBuffer();
-                sql.append("select t.*,p.directReferNum from (select psid,sponsorid,"+level+" tier,sys_connect_by_path(psid,'/') path ");
-                sql.append("from (select distinct t.psid,t.sponsorid from PYRAMIDSALE t where t.aj_id="+id+") ");
-                sql.append("start with sponsorid = '"+temp+"' connect by prior psid=sponsorid) t ");
-                sql.append("left join(select * from (select psid,count(1)-1 directReferNum from ( ");
-                sql.append("select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id) su ");
-                sql.append("from PYRAMIDSALE t where aj_id="+id+") where su=1 ) ");
-                sql.append("connect by psid= prior sponsorid group by psid ) where directReferNum > 0) p on t.psid=p.psid where t.tier>0");
-                psHierList = session.createSQLQuery(sql.toString())
-                        .addScalar("psId")
-                        .addScalar("sponsorId")
-                        .addScalar("tier", StandardBasicTypes.LONG)
-                        .addScalar("path")
-                        .addScalar("directReferNum", StandardBasicTypes.LONG)
-                        .setResultTransformer(Transformers.aliasToBean(PsHierarchyEntity.class)).list();
+                sql.append("insert into ps_hierarchy h(h.psid,h.sponsorid,h.tier,h.path,h.aj_id,h.directrefernum,h.containstier) ");
+                sql.append("select t.*,p.directReferNum,p1.containsTier from ( ");
+                sql.append("select psid,sponsorid,"+level+" tier,sys_connect_by_path(psid,'/') path,aj_id from ( ");
+                sql.append("select distinct t.psid,t.sponsorid,t.aj_id from PYRAMIDSALE t where t.aj_id="+id+") y start with sponsorid = '"+temp+"' connect by prior psid=sponsorid) t ");
+                sql.append("left join(select * from (select psid,count(1)-1 directReferNum from ( select * from ( ");
+                sql.append("select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id) su from PYRAMIDSALE t where aj_id="+id+") where su=1 ) ");
+                sql.append("connect by psid= prior sponsorid group by psid ) where directReferNum > 0) p on t.psid=p.psid ");
+                sql.append("left join(select psid,max(level)-1 containsTier from(select b.psid,b.sponsorid from pyramidsale b where b.aj_id="+id+") c connect by c.psid=prior c.sponsorid ");
+                sql.append("group by c.psid) p1 on p1.psid=t.psid where t.tier>0");
+
+                SQLQuery sqlQuery = session.createSQLQuery(sql.toString());
+                rowNum = sqlQuery.executeUpdate();
                 // 提交事务
                 tx1.commit();
                 // 删除添加的数据
                 if(sponsorid.size()>1){
                     delete("delete from PyramidSaleEntity where sponsorid='根节点' and aj_id="+id);
                 }
+                session.close();
             }
         }catch (Exception e){
             e.printStackTrace();
             session.close();
         }
-        return psHierList;
+        return rowNum;
     }
 
     /**
@@ -175,8 +176,8 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
             sql.append("select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)su ");
             sql.append("from PYRAMIDSALE t where "+seach+") where su=1)");
         }else{
-            sql.append("select * from (select * from (select t.*,row_number() over(");
-            sql.append("partition by t.psid,t.sponsorid order by t.id)su from PYRAMIDSALE t where (1=1) "+seach+") where su=1)");
+            sql.append("select * from (select t.*,row_number() over(");
+            sql.append("partition by t.psid,t.sponsorid order by t.id)su from PYRAMIDSALE t where (1=1) "+seach+") where su=1 ");
             sql.append("start with sponsorid = '"+psId+"' connect by prior psid=sponsorid");
         }
         sql.append(") c ");

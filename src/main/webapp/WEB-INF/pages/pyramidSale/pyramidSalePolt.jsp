@@ -45,56 +45,20 @@
         <a href="/SINOFAITH/pyramidSalePolt" class="addactive">传销层级图</a>
         <%--<a  href="/SINOFAITH/wuliuSj">物流收件人信息</a>--%>
     </span>
-    <div style="width: 1430px;height: 600px;margin-left: 14px;margin-top: 40px">
-        <div id="container" style="height: 100%"></div>
+    <div style="width: 1430px;height: 600px;margin-left: 14px;margin-top: 40px;overflow-x:scroll;">
+        <div id="container" style="height: 100%;"></div>
     </div>
 </div>
 
 <script type="text/javascript">
-    /*var data = {
-        "id" : 1,
-        "psid" : 2,
-        "name": "flare",
-        "value" : "",
-        "children": [
-            {
-                "name": "analytics",
-                "value" : 1597,
-                "children": [
-                    {
-                        "name": "cluster",
-                        "children": [
-                            {"name": "AgglomerativeCluster", "value": 3938},
-                            {"name": "CommunityStructure", "value": 3812},
-                            {"name": "HierarchicalCluster", "value": 6714},
-                            {"name": "MergeEdge", "value": 743}
-                        ]
-                    },
-                    {
-                        "name": "graph",
-                        "children": [
-                            {"name": "BetweennessCentrality", "value": 3534},
-                            {"name": "LinkDistance", "value": 5731},
-                            {"name": "MaxFlowMinCut", "value": 7840},
-                            {"name": "ShortestPaths", "value": 5914},
-                            {"name": "SpanningTree", "value": 3416}
-                        ]
-                    },
-                    {
-                        "name": "optimization",
-                        "children": [
-                            {"name": "AspectRatioBanker", "value": 7074}
-                        ]
-                    }
-                ]
-            }]
-        };*/
     var dom = document.getElementById("container");
     var myChart = echarts.init(dom);
+    myChart.on("click", clickFun);
     var app = {};
     option = null;
+    myChart.showLoading();
     $.get('${pageContext.request.contextPath}/pyramidSalePolt/tree', function (data) {
-        console.log(data)
+        myChart.hideLoading();
         myChart.setOption(option = {
             tooltip: {
                 trigger: 'item',
@@ -113,32 +77,44 @@
                     expandAndCollapse: true,
                     label: {
                         normal: {
-                            position: 'bottom',
-                            rotate: -0,
+                            position: 'top',
+                            rotate: -90,
                             verticalAlign: 'middle',
-                            align: 'left',
-                            fontSize: 16
+                            align: 'right',
+                            fontSize: 11
                         }
                     },
                     leaves: {
                         label: {
+                            distance:-45,
                             normal: {
                                 position: 'bottom',
-                                rotate: -90,
                                 verticalAlign: 'middle',
                                 align: 'left'
                             }
                         }
                     },
-                    animationDurationUpdate: 750,
-                    //expandAndCollapse:false
+                    animationDurationUpdate: 750
                 }
             ]
         });
-        if (option && typeof option === "object") {
-            myChart.setOption(option, true);
-        }
     });
+    function clickFun(param){
+        var allNode=0;
+        var nodes=myChart._chartsViews[0]._data._graphicEls;
+        for(var i=0,count =nodes.length;i<count;i++){
+            var node=nodes[i];
+            if(node===undefined)
+                continue;
+            allNode++;
+        }
+        var height=window.innerHeight;
+        var currentHeight=25*allNode;
+        var newWidth=Math.max(currentHeight,height);
+        container.style.width = newWidth + 'px';
+        // container.style.height = window.innerHeight + 'px';
+        myChart.resize();
+    }
 </script>
 
 <%@include file="../template/newfooter.jsp" %>

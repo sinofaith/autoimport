@@ -154,7 +154,7 @@ public class WuliuJjxxDao extends BaseDao<WuliuEntity> {
      * @param all
      * @return
      */
-    public int insertJjxx(List<WuliuEntity> listJjxx, long aj_id, List<WuliuEntity> all) {
+    public int insertJjxx(List<WuliuEntity> listJjxx, long aj_id) {
         List<WuliuEntity> w = null;
         // 数据去重
         // 根据运单号+寄件时间去重

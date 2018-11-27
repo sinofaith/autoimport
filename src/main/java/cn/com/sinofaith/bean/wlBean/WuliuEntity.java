@@ -402,48 +402,78 @@ public class WuliuEntity {
             Object[] str = list.get(i);
             if(str[0]!=null && str[0].toString()!=null){
                 wuliu.setWaybill_id(str[0].toString());
+            }else{
+                wuliu.setWaybill_id("");
             }
             if(str[1]!=null && str[1].toString()!=null){
                 wuliu.setShip_time(str[1].toString());
+            }else{
+                wuliu.setShip_time("");
             }
             if(str[2]!=null && str[2].toString()!=null){
                 wuliu.setShip_address(str[2].toString());
+            }else{
+                wuliu.setShip_address("");
             }
             if(str[3]!=null && str[3].toString()!=null){
                 wuliu.setSender(str[3].toString());
+            }else{
+                wuliu.setSender("");
             }
             if(str[4]!=null && str[4].toString()!=null){
                 wuliu.setShip_phone(str[4].toString());
+            }else{
+                wuliu.setShip_phone("");
             }
             if(str[5]!=null && str[5].toString()!=null){
                 wuliu.setShip_mobilephone(str[5].toString());
+            }else{
+                wuliu.setShip_mobilephone("");
             }
             if(str[6]!=null && str[6].toString()!=null){
                 wuliu.setSj_address(str[6].toString());
+            }else{
+                wuliu.setSj_address("");
             }
             if(str[7]!=null && str[7].toString()!=null){
                 wuliu.setAddressee(str[7].toString());
+            }else{
+                wuliu.setAddressee("");
             }
             if(str[8]!=null && str[8].toString()!=null){
                 wuliu.setSj_phone(str[8].toString());
+            }else{
+                wuliu.setSj_phone("");
             }
             if(str[9]!=null && str[9].toString()!=null){
                 wuliu.setSj_mobilephone(str[9].toString());
+            }else{
+                wuliu.setSj_mobilephone("");
             }
             if(str[10]!=null && str[10].toString()!=null){
                 wuliu.setTjw(str[10].toString());
+            }else{
+                wuliu.setTjw("");
             }
             if(str[11]!=null && str[11].toString()!=null){
                 wuliu.setDshk(str[11].toString());
+            }else{
+                wuliu.setDshk("");
             }
             if(str[12]!=null && str[12].toString()!=null){
                 wuliu.setNumber_cases(str[12].toString());
+            }else{
+                wuliu.setNumber_cases("");
             }
             if(str[13]!=null && str[13].toString()!=null){
                 wuliu.setPayment(str[13].toString());
+            }else{
+                wuliu.setPayment("");
             }
             if(str[14]!=null && str[14].toString()!=null){
                 wuliu.setFreight(str[14].toString());
+            }else{
+                wuliu.setFreight("");
             }
             wls.add(wuliu);
         }

@@ -12,6 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class ReadExcelUtils {
@@ -73,6 +75,7 @@ public class ReadExcelUtils {
                 return cell.getRichStringCellValue().getString().trim();
             case Cell.CELL_TYPE_NUMERIC:
                     return String.valueOf(cell.getNumericCellValue());
+
             case Cell.CELL_TYPE_BOOLEAN:
                 return String.valueOf(cell.getBooleanCellValue());
             case Cell.CELL_TYPE_FORMULA:

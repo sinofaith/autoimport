@@ -32,8 +32,8 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
     public int insertpsHierarchy(List<PsHierarchyEntity> pshierList, long id) {
         // 使用原生sql
         Connection conn = DBUtil.getConnection();
-        String sql = "insert into ps_hierarchy(PSID,SPONSORID,TIER,PATH,DIRECTREFERNUM,AJ_ID)" +
-                "values(?,?,?,?,?,?)";
+        String sql = "insert into ps_hierarchy(PSID,SPONSORID,TIER,PATH,DIRECTREFERNUM,CONTAINSTIER,AJ_ID)" +
+                "values(?,?,?,?,?,?,?)";
         int a = 0;
         PreparedStatement pstm = null;
         // 做批处理
@@ -48,7 +48,8 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
                 pstm.setLong(3,ps.getTier());
                 pstm.setString(4,ps.getPath());
                 pstm.setLong(5,ps.getDirectReferNum());
-                pstm.setLong(6,id);
+                pstm.setLong(6,ps.getContainsTier());
+                pstm.setLong(7,id);
                 pstm.addBatch();
                 a++;
                 // 有5000条添加一次
@@ -77,13 +78,12 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
     public int getRowPsHierarchy(String seach, long id) {
         StringBuffer sql = new StringBuffer();
         sql.append("select to_char(count(1)) num from (");
-        sql.append(" select p1.id,p1.psid,p1.sponsorid,p1.nick_name psAccountholder,p1.sfzhm,p1.mobile,p1.address,p1.accountnumber,h.tier,h.path,h2.sum directDrive,c.containsTier,c.directrefernum from (");
+        sql.append(" select p1.id,p1.psid,p1.sponsorid,p1.nick_name psAccountholder,p1.sfzhm,p1.mobile,p1.address,p1.accountnumber,h.tier,h.path,h2.sum directDrive,h.containsTier,h.directrefernum from (");
         sql.append(" select p.id,p.psid,p.sponsorid,p.nick_name,p.sfzhm,p.mobile,p.address,p.accountnumber from(select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)");
         sql.append(" su from PYRAMIDSALE t where aj_id="+id+") where su=1)p) p1");
         sql.append(" left join (select * from ps_hierarchy where aj_id="+id+") h on p1.psid=h.psid");
         sql.append(" left join (select h1.sponsorid,count(1) sum from ps_hierarchy h1 where aj_id="+id+" group by h1.sponsorid) h2 on p1.psid=h2.sponsorid");
-        sql.append(" left join (select psid,directrefernum,(select max(tier) from ps_hierarchy where aj_id="+id+")-tier containsTier from ps_hierarchy p where aj_id="+id+" and exists");
-        sql.append(" (select sponsorid from ps_hierarchy h where p.psid=h.sponsorid and aj_id="+id+")) c on c.psid=p1.psid) where (1=1) "+seach);
+        sql.append(" ) where (1=1) "+seach);
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
@@ -103,14 +103,12 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
         sql.append("SELECT * FROM ( ");
         sql.append("SELECT c.*, ROWNUM rn FROM ( ");//p1.psid,p1.nick_name psNick_name,p1.accountholder psAccountholder,p3.*,h.tier,h.path,h2.sum directDrive,c.containsTier,c.directrefernum
         sql.append("select * from (");
-        sql.append(" select p1.id,p1.psid,p1.sponsorid,p1.nick_name psAccountholder,p1.sfzhm,p1.mobile,p1.address,p1.accountnumber,h.tier,h.path,h2.sum directDrive,c.containsTier,c.directrefernum from (");
+        sql.append(" select p1.id,p1.psid,p1.sponsorid,p1.nick_name psAccountholder,p1.sfzhm,p1.mobile,p1.address,p1.accountnumber,h.tier,h.path,h2.sum directDrive,h.containsTier,h.directrefernum from (");
         sql.append(" select p.id,p.psid,p.sponsorid,p.nick_name,p.sfzhm,p.mobile,p.address,p.accountnumber from(select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)");
         sql.append(" su from PYRAMIDSALE t where aj_id="+id+") where su=1)p) p1");
         sql.append(" left join (select * from ps_hierarchy where aj_id="+id+") h on p1.psid=h.psid");
         sql.append(" left join (select h1.sponsorid,count(1) sum from ps_hierarchy h1 where aj_id="+id+" group by h1.sponsorid) h2 on p1.psid=h2.sponsorid");
-        sql.append(" left join (select psid,directrefernum,(select max(tier) from ps_hierarchy where aj_id="+id+")-tier containsTier from ps_hierarchy p where aj_id="+id+" and exists");
-        sql.append(" (select sponsorid from ps_hierarchy h where p.psid=h.sponsorid and aj_id="+id+")) c on c.psid=p1.psid) where (1=1) "+seach);
-        sql.append(") c ");
+        sql.append(") where (1=1) "+seach+" ) c ");
         sql.append(" WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         // 获取当前线程session
         Session session = getSession();
@@ -144,7 +142,7 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
      * 更新数据
      * @param id
      */
-    public void updateHierarchy(long id) {
+    /*public void updateHierarchy(long id) {
         String sql2 = "select psid from ps_hierarchy t where not exists(select t1.psid from " +
                 "ps_hierarchy t1 where t.sponsorid=t1.psid and aj_id="+id+") and aj_id="+id;
         List<PsHierarchyEntity> psh = new ArrayList<>();
@@ -178,12 +176,12 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
         if(psh!=null){
             updateHierarchy(psh,id);
         }
-    }
+    }*/
 
     /**
      * update
      */
-    public static int updateHierarchy(List<PsHierarchyEntity> pshierList, long id) {
+    /*public static int updateHierarchy(List<PsHierarchyEntity> pshierList, long id) {
         // 使用原生sql
         Connection conn = DBUtil.getConnection();
             String sql = "update ps_hierarchy set containsTier=? where aj_id=? and psid=?";
@@ -216,7 +214,7 @@ public class PsHierarchyDao extends BaseDao<PsHierarchyEntity>{
             e.printStackTrace();
         }
         return a;
-    }
+    }*/
     /**
      * 查询出所有会员的包含会员数
      * @param id

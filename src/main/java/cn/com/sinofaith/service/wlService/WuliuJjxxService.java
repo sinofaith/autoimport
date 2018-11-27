@@ -2,21 +2,38 @@ package cn.com.sinofaith.service.wlService;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
+import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.dao.wuliuDao.WuliuDao;
 import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
 import cn.com.sinofaith.dao.wuliuDao.WuliuRelationDao;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.ExcelMappingUtils;
+import com.monitorjbl.xlsx.StreamingReader;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class WuliuJjxxService {
@@ -195,4 +212,397 @@ public class WuliuJjxxService {
         }
         return wb;
     }
+
+    /**
+     * 物流表数据映射
+     * @param uploadPath
+     * @return
+     */
+    public Map<String,Map<String,List<String>>> readExcel(String uploadPath) {
+        Map<String,Map<String,List<String>>> excelMap = new HashMap<>();
+        Map<String,List<String>> sheetMap = new HashMap<>();
+        // 读取
+        List<String> listPath = getPsFileList(uploadPath);
+        String excelName = null;
+        for (String path : listPath) {
+            excelName = path.substring(path.lastIndexOf("\\")+1);
+            if(path.endsWith(".xlsx")){
+                sheetMap = ExcelMappingUtils.getBy2007Excel(path);
+            }else if(path.endsWith(".xls")){
+                sheetMap = ExcelMappingUtils.getBy2003Excel(path);
+            }
+            // 将单个excel表数据放入map中
+            excelMap.put(excelName,sheetMap);
+        }
+        return excelMap;
+    }
+
+    /**
+     * 获取文件
+     * @param uploadPath
+     * @return
+     */
+    private List<String> getPsFileList(String uploadPath) {
+        List<String> listPath = new ArrayList<>();
+        File dir = new File(uploadPath);
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            listPath.add(file.getAbsolutePath());
+        }
+        return listPath;
+    }
+
+    /**
+     * 物流数据导入数据库
+     * @param uploadPath
+     * @param field
+     * @param id
+     * @return
+     */
+    public int insertWuliu(String uploadPath, List<List<String>> field, long id) {
+        // 读取
+        List<String> listPath = getPsFileList(uploadPath);
+        List<WuliuEntity> wuliuList = null;
+        int sum = 0;
+        for (String path : listPath) {
+            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            if(path.endsWith(".xlsx")){
+                wuliuList = getBy2007ExcelAll(path,excelName,field);
+            }else if(path.endsWith(".xls")){
+                wuliuList = getBy2003ExcelAll(path,excelName,field);
+            }
+            sum += jjxxDao.insertJjxx(wuliuList, id);
+        }
+        return sum;
+    }
+
+    /**
+     * 读取2003版所有的excel数据.xls
+     * @param path
+     * @param excelName
+     * @param field
+     * @return
+     */
+    private List<WuliuEntity> getBy2003ExcelAll(String path, String excelName, List<List<String>> field) {
+        List<WuliuEntity> psList = new ArrayList<>();
+        InputStream is = null;
+        Map<String,Integer> title = new HashMap<>();
+        try {
+            is = new FileInputStream(path);
+            HSSFWorkbook wb = new HSSFWorkbook(is);
+            for (int numSheet = 0; numSheet < wb.getNumberOfSheets(); numSheet++) {
+                HSSFSheet sheet = wb.getSheetAt(numSheet);
+                for (List<String> excel : field) {
+                    if (sheet == null) {
+                        continue;
+                    } else if (excelName.equals(excel.get(0)) && sheet.getSheetName().equals(excel.get(1))) {
+                        for (int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++) {
+                            HSSFRow row = sheet.getRow(rowNum);
+                            if (rowNum == 0) {
+                                if (row != null) {
+                                    for (int i = 0; i < row.getLastCellNum(); i++) {
+                                        String cellName = row.getCell(i).getStringCellValue();
+                                        for (int j = 1; j < excel.size(); j++) {
+                                            if (cellName.equals(excel.get(j))) {
+                                                title.put(excel.get(j), i);
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (row != null) {
+                                    WuliuEntity ps = RowToEntity(row, excel, title);
+                                    if (ps != null) {
+                                        psList.add(ps);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(is!=null)
+                    is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // 删除文件
+        new File(path).delete();
+        return psList;
+    }
+
+    /**
+     * 读取2007版所有的excel数据.xlsx
+     * @param path
+     * @param excelName
+     * @param field
+     * @return
+     */
+    private List<WuliuEntity> getBy2007ExcelAll(String path,String excelName,List<List<String>> field) {
+        // 用于存放表格中列号
+        List<WuliuEntity> psList = new ArrayList<>();
+        File file = new File(path);
+        Map<String,Integer> title = new HashMap<>();
+        FileInputStream fi = null;
+        try {
+            fi = new FileInputStream(file);
+            Workbook wk = StreamingReader.builder()
+                    .rowCacheSize(200)  //缓存到内存中的行数，默认是10
+                    .bufferSize(4096)  //读取资源时，缓存到内存的字节大小，默认是1024
+                    .open(fi);  //打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件
+            for (int numSheet = 0; numSheet < wk.getNumberOfSheets(); numSheet++) {
+                Sheet sheet = wk.getSheetAt(numSheet);
+                for (List<String> excel : field) {
+                    if (sheet == null) {
+                        continue;
+                    }else if(excelName.equals(excel.get(0)) && sheet.getSheetName().equals(excel.get(1))){
+                        int temp = 0;
+                        for (Row row : sheet) {
+                            if(temp==0){
+                                if (row != null) {
+                                    for (int i = 0; i < row.getLastCellNum(); i++) {
+                                        Cell cell = row.getCell(i);
+                                        String rowValue = ExcelMappingUtils.rowValue(cell);
+                                        for(int j=2;j<excel.size();j++){
+                                            if(rowValue.equals(excel.get(j))){
+                                                title.put(excel.get(j),i);
+                                            }
+                                        }
+                                    }
+                                }
+                                temp=1;
+                            }else{
+                                if (row != null) {
+                                    WuliuEntity ps = RowToEntity(row,excel,title);
+                                    if(ps!=null){
+                                        psList.add(ps);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            try {
+                if(fi!=null){
+                    fi.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // 删除文件
+        new File(path).delete();
+        return psList;
+    }
+
+    /**
+     * 将行内容转换成对象
+     * @param xssfRow
+     * @param field
+     * @return
+     */
+    private WuliuEntity RowToEntity(Row xssfRow, List<String> field, Map<String,Integer> title) {
+        WuliuEntity wuliu = new WuliuEntity();
+        // 运单号
+        if(field.get(2).equals("无") || xssfRow.getCell(title.get(field.get(2)))==null){
+            wuliu.setWaybill_id("");
+        }else{
+            String waybill_id = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(2)))).replace(",","");
+            wuliu.setWaybill_id(waybill_id);
+        }
+        // 寄件时间
+        if(field.get(3).equals("无") || xssfRow.getCell(title.get(field.get(3)))==null){
+            wuliu.setShip_time("");
+        }else{
+            String ship_time = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(3)))).replace(",","");
+            wuliu.setShip_time(ship_time);
+        }
+        // 寄件地址
+        if(field.get(4).equals("无") || xssfRow.getCell(title.get(field.get(4)))==null){
+            wuliu.setShip_address("");
+        }else{
+            String ship_address = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(4)))).replace(",","");
+            wuliu.setShip_address(ship_address);
+        }
+        // 寄件人
+        if(field.get(5).equals("无") || xssfRow.getCell(title.get(field.get(5)))==null){
+            wuliu.setSender("");
+        }else{
+            String sender = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(5)))).replace(",","");
+            wuliu.setSender(sender);
+        }
+        // 寄件电话
+        if(field.get(6).equals("无") || xssfRow.getCell(title.get(field.get(6)))==null){
+            wuliu.setShip_phone("");
+        }else{
+            String ship_phone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(6)))).replace(",","");
+            wuliu.setShip_phone(ship_phone);
+        }
+        // 寄件手机
+        if(field.get(7).equals("无") || xssfRow.getCell(title.get(field.get(7)))==null){
+            wuliu.setShip_mobilephone("");
+        }else{
+            String ship_phone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(7)))).replace(",","");
+            wuliu.setShip_mobilephone(ship_phone);
+        }
+        // 寄件人=0
+        if("0".equals(wuliu.getSender())){
+            wuliu.setSender(wuliu.getShip_phone());
+        }
+        // 寄件电话  为0时
+        if("0".equals(wuliu.getShip_phone()) || "".equals(wuliu.getShip_phone())){
+            // 手机不为0时
+            if(!"0".equals(wuliu.getShip_mobilephone())){
+                // 电话=手机
+                wuliu.setShip_phone(wuliu.getShip_mobilephone());
+            }else{
+                // 电话=寄件人
+                wuliu.setShip_phone(wuliu.getSender());
+            }
+            // 手机为""
+            if("".equals(wuliu.getShip_mobilephone())){
+                // 电话=收件人
+                wuliu.setShip_phone(wuliu.getSender());
+            }
+        }
+        // 收件地址
+        if(field.get(8).equals("无") || xssfRow.getCell(title.get(field.get(8)))==null){
+            wuliu.setSj_address("");
+        }else{
+            String sj_address = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(8)))).replace(",","");
+            if("0".equals(sj_address)){
+                sj_address = "";
+            }
+            wuliu.setSj_address(sj_address);
+        }
+        // 收件人
+        if(field.get(9).equals("无") || xssfRow.getCell(title.get(field.get(9)))==null){
+            wuliu.setAddressee("");
+        }else{
+            String addressee = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(9)))).replace(",","");
+            wuliu.setAddressee(addressee);
+        }
+        // 收件电话
+        if(field.get(10).equals("无") || xssfRow.getCell(title.get(field.get(10)))==null){
+            wuliu.setSj_phone("");
+        }else{
+            String sj_phone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(10)))).replace(",","");
+            wuliu.setSj_phone(sj_phone);
+        }
+        // 收件手机
+        if(field.get(11).equals("无") || xssfRow.getCell(title.get(field.get(11)))==null){
+            wuliu.setSj_mobilephone("");
+        }else{
+            String sj_mobilephone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(11)))).replace(",","");
+            wuliu.setSj_mobilephone(sj_mobilephone);
+        }
+        // 收件人=0
+        if(wuliu.getAddressee().equals("0")){
+            wuliu.setAddressee(wuliu.getSj_phone());
+        }
+        // 收件电话 为0时
+        if("0".equals(wuliu.getSj_phone()) || "".equals(wuliu.getSj_phone())){
+            // 手机 不为0时
+            if(!"0".equals(wuliu.getSj_mobilephone())){
+                // 电话=手机
+                wuliu.setSj_phone(wuliu.getSj_mobilephone());
+            }else{
+                // 电话=收件人
+                wuliu.setSj_phone(wuliu.getAddressee());
+            }
+            // 手机为""
+            if("".equals(wuliu.getSj_mobilephone())){
+                // 电话=收件人
+                wuliu.setSj_phone(wuliu.getAddressee());
+            }
+        }
+        // 电话<11位
+        if(wuliu.getSj_phone().length()<11){
+            // 手机>=11位
+            if(wuliu.getSj_mobilephone().length()>=11){
+                wuliu.setSj_phone(wuliu.getSj_mobilephone());
+            }else if(wuliu.getSj_mobilephone().equals("18755457379") || wuliu.getSj_mobilephone().equals("0")){
+                // 手机号=18755457379
+                // 收件人=收件电话
+                wuliu.setAddressee(wuliu.getSj_phone());
+            }
+        }
+        // 收件员
+        if(field.get(12).equals("无") || xssfRow.getCell(title.get(field.get(12)))==null){
+            wuliu.setCollector("");
+        }else{
+            String collector = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(12)))).replace(",","");
+            wuliu.setCollector(collector);
+        }
+        // 托寄物
+        if(field.get(13).equals("无") || xssfRow.getCell(title.get(field.get(13)))==null){
+            wuliu.setTjw("");
+        }else{
+            String tjw = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(13)))).replace(",","");
+            wuliu.setTjw(tjw);
+        }
+        // 付款方式
+        if(field.get(14).equals("无") || xssfRow.getCell(title.get(field.get(14)))==null){
+            wuliu.setPayment("");
+        }else{
+            String payment = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(14)))).replace(",","");
+            wuliu.setPayment(payment);
+        }
+        // 代收货款
+        if(field.get(15).equals("无") || xssfRow.getCell(title.get(field.get(15)))==null){
+            wuliu.setDshk("");
+        }else{
+            String dshk = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(15)))).replace(",","");
+            wuliu.setDshk(dshk);
+        }
+        // 计费重量
+        if(field.get(16).equals("无") || xssfRow.getCell(title.get(field.get(16)))==null){
+            wuliu.setWeight("");
+        }else{
+            String weight = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(16)))).replace(",","");
+            wuliu.setWeight(weight);
+        }
+        // 件数
+        if(field.get(17).equals("无") || xssfRow.getCell(title.get(field.get(17)))==null){
+            wuliu.setNumber_cases("");
+        }else{
+            String number_cases = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(17)))).replace(",","");
+            wuliu.setNumber_cases(number_cases);
+        }
+        // 运费
+        if(field.get(18).equals("无") || xssfRow.getCell(title.get(field.get(18)))==null){
+            wuliu.setFreight("");
+        }else{
+            String freight = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(18)))).replace(",","");
+            wuliu.setFreight(freight);
+        }
+        return wuliu;
+    }
+
+    /**
+     * 删除文件
+     * @param uploadPathd
+     */
+    public void deleteFile(File uploadPathd){
+        if(uploadPathd.exists()){
+            for(File file : uploadPathd.listFiles()){
+                if(file.isFile()){
+                    file.delete();
+                }else{
+                    deleteFile(file);
+                }
+            }
+        }
+        uploadPathd.delete();
+    }
 }
+

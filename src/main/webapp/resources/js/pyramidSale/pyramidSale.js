@@ -65,7 +65,7 @@ function progressFunction(evt) {
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
         if((evt.loaded/evt.total) ==1){
             alertify.set('notifier','position', 'top-center');
-            alertify.success("文件上传成功,请等待设置字段映射");
+            alertify.success("文件上传成功,等待设置字段映射");
         }
     }
 }
@@ -78,7 +78,7 @@ function insertTable(data){
     var key = $('#c12').val();
     var content = "<thead style=\"display:table;width: 350%;table-layout:fixed;\">";
     content += "<tr align=\"center\">";
-    var size = data[key].length/2;
+    var size = Math.ceil(data[key].length/2);
     for(j=1;j<12;j++){
         $("#c"+j).append("<option value=\"无\" selected>无</option>")
     }
@@ -95,6 +95,10 @@ function insertTable(data){
                 $("#c"+j).append("<option value='"+data[key][i]+"'>"+data[key][i]+"</option>");
             }
         }
+    }
+    for(j=1;j<12;j++){
+        $("#c"+j).selectOrDie();
+        $("#c"+j).selectOrDie("update");
     }
     content += "</tr></thead>";
     var tbody = "<tbody style=\"display:table;width: 350%;table-layout:fixed;\"><tr align='center'>";
@@ -375,5 +379,17 @@ function scrollF(temp) {
                 }
             })
         }
+    }
+}
+
+// 阈值设置
+function seachChange() {
+    var seachCondition = $("#seachCondition").val();
+    if(seachCondition === "directDrive"){
+        $("#seachCode").val("100")
+    }else if(seachCondition === "directReferNum"){
+        $("#seachCode").val("5000")
+    }else{
+        $("#seachCode").val("")
     }
 }

@@ -262,6 +262,9 @@ public class BaseDao<T>{
     public  Session getSession() {
         return sessionFactory.getCurrentSession();
     }
+    public  Session openSession() {
+        return sessionFactory.openSession();
+    }
 
     /**
      * 获取所有条目

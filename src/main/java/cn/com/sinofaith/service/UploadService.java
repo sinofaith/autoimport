@@ -263,12 +263,7 @@ public class UploadService {
                 mapZ.remove(str.get(s));
             }
         allbp=new ArrayList<>(mapZ.values());
-
-
         bpd.add(allbp,String.valueOf(aj_id));
-
-
-
         return i;
     }
 
@@ -277,7 +272,7 @@ public class UploadService {
      * 物流寄件添加数据
      * @param uploadPath
      */
-    public int insertWuliuJjxx(String uploadPath, long aj_id, List<WuliuEntity> all) {
+    /*public int insertWuliuJjxx(String uploadPath, long aj_id, List<WuliuEntity> all) {
         List<String> listPath = getWlFileList(uploadPath);
         List<WuliuEntity> listJjxx = null;
         int i = 0;
@@ -287,7 +282,7 @@ public class UploadService {
             }else{
                 listJjxx = getBy2003Excel(list);
             }
-            i = wljjd.insertJjxx(listJjxx, aj_id, all);
+            i = wljjd.insertJjxx(listJjxx, aj_id);
         }
         return i;
     }
@@ -362,11 +357,10 @@ public class UploadService {
         new File(listPath).delete();
         return wls;
     }
-    /**
+    *//**
      * 解析2007excel
-     * @param listPath
      * @return
-     */
+     *//*
     private List<WuliuEntity> getByJjxxExcel(String listPath) {
         // 用于存放表格中列号
         final Map<String,Integer> title = new HashMap<>();
@@ -434,7 +428,7 @@ public class UploadService {
         }
 
         return wls;
-    }
+    }*/
 
     public List<BankZzxxEntity> getByExcel(List<String> filepath) {
         final Map<String, Integer> title = new HashMap();
