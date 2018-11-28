@@ -179,6 +179,7 @@ function progressFunction(evt) {
     }
 }
 
+// 封装参数
 var excelData = [];
 function uploadMapping(){
     var fieldList = [];
@@ -189,7 +190,20 @@ function uploadMapping(){
     for(i=1;i<18;i++){
         fieldList.push($("#c"+i).val());
     }
-    excelData.push(fieldList);
+    if(excelData.length>0){
+        for(j=0;j<excelData.length;j++){
+            var field = excelData[j];
+            if(field[0]==fieldList[0]&&field[1]==fieldList[1]){
+                excelData[j] = fieldList;
+                break;
+            }else if(j==excelData.length-1){
+                excelData.push(fieldList);
+            }
+        }
+    }else{
+        excelData.push(fieldList);
+    }
+    console.log(excelData);
     $("#mapping").attr("disabled",true);
     alertify.set('notifier','position', 'top-center');
     alertify.success(excelSheet+"</br>"+"映射成功!");
