@@ -22,6 +22,7 @@
     <a href="/SINOFAITH/bank"><i class="icon-untitled47"></i>银行卡</a>
     <a href="/SINOFAITH/wuliu"><i class="icon-search"></i>物流</a>
     <a href="/SINOFAITH/pyramidSale"><i class="icon-untitled44"></i>传销</a>
+    <a href="/SINOFAITH/zfb"><i class="icon-untitled36"></i>支付宝</a>
  </span>
 </aside>
 </body>

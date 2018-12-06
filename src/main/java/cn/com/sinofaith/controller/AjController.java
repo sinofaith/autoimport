@@ -100,6 +100,8 @@ public class AjController {
             mav = new ModelAndView("redirect:/wuliujjxx/seach?pageNo=1");
         } else if(type==4){
             mav = new ModelAndView("redirect:/pyramidSale/seach?pageNo=1");
+        } else if(type==5){
+            mav = new ModelAndView("redirect:/zfbZhmx/seach?pageNo=1");
         }
 
         httpSession.removeAttribute("zcseachCode");
@@ -131,7 +133,7 @@ public class AjController {
         }else{
             String [] type = list.split(",");
             ajs.deleteByAj(aje.getId(),type);
-            if(type.length==4) {
+            if(type.length==5) {
                 httpSession.removeAttribute("aj");
             }
             return "200";

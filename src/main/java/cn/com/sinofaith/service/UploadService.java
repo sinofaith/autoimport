@@ -6,7 +6,8 @@ import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftPersonEntity;
 import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
-import cn.com.sinofaith.bean.wlBean.WuliuEntity;
+import cn.com.sinofaith.bean.zfbBean.*;
+import cn.com.sinofaith.dao.zfbDao.*;
 import cn.com.sinofaith.dao.bankDao.BankPersonDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
@@ -14,14 +15,14 @@ import cn.com.sinofaith.dao.cftDao.CftPersonDao;
 import cn.com.sinofaith.dao.cftDao.CftZcxxDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
 import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
-import cn.com.sinofaith.util.Excel2007Reader;
 import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.ReadExcelUtils;
-import cn.com.sinofaith.util.GetBank;
+import com.csvreader.CsvReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -50,6 +51,17 @@ public class UploadService {
 
     @Autowired
     private BankPersonDao bpd;
+
+    @Autowired
+    private ZfbZcxxDao zfbZcxxDao;
+    @Autowired
+    private ZfbZhmxDao zfbZhmxDao;
+    @Autowired
+    private ZfbDlrzDao zfbDlrzDao;
+    @Autowired
+    private ZfbJyjlDao zfbJyjlDao;
+    @Autowired
+    private ZfbZzmxDao zfbZzmxDao;
 
     public int deleteAll(String uploadPath) {
         try {
@@ -608,7 +620,7 @@ public class UploadService {
      * @param uploadPath
      * @return
      */
-    private static List<String> getWlFileList(String uploadPath) {
+    private static List<String> getZfbFileList(String uploadPath) {
         List<String> listPath = new ArrayList<String>();
         File dir = new File(uploadPath);
         File[] files = dir.listFiles();
@@ -616,5 +628,188 @@ public class UploadService {
             listPath.add(file.getAbsolutePath());
         }
         return listPath;
+    }
+
+    /**
+     * 支付宝数据导入
+     * @param uploadPath
+     * @param id
+     * @return
+     */
+    public int insertZfb(String uploadPath, long id) {
+        List<String> listPath = getZfbFileList(uploadPath);
+        int sum = 0;
+        for (String path : listPath) {
+            if(path.contains("注册信息")){
+                List<ZfbZcxxEntity> zcxxList = (List<ZfbZcxxEntity>) getZfbByCsv(path,1);
+                sum += zfbZcxxDao.insertZcxx(zcxxList,id);
+            }else if(path.contains("登陆日志")){
+                List<ZfbDlrzEntity> dlrzList = (List<ZfbDlrzEntity>) getZfbByCsv(path,2);
+                sum += zfbDlrzDao.insertDlrz(dlrzList,id);
+            }else if(path.contains("交易记录")){
+                List<ZfbJyjlEntity> jyjlList = (List<ZfbJyjlEntity>) getZfbByCsv(path,3);
+                sum += zfbJyjlDao.insertJyjl(jyjlList,id);
+            }else if(path.contains("账户明细")){
+                List<ZfbZhmxEntity> zhmxList = (List<ZfbZhmxEntity>) getZfbByCsv(path,4);
+                sum +=  zfbZhmxDao.insertZhmx(zhmxList,id);
+            }else if(path.contains("转账明细")){
+                List<ZfbZzmxEntity> zzmxList = (List<ZfbZzmxEntity>) getZfbByCsv(path,5);
+                sum += zfbZzmxDao.insertZzmx(zzmxList,id);
+            }
+        }
+        if(sum>0){
+            // 修改交易记录表数据
+            String sql = "update zfbjyjl j set j.jyzt='交易成功' where j.jyzt='TRADE_SUCCESS' and j.aj_id="+id;
+            zfbJyjlDao.updateBySql(sql);
+        }
+        return sum;
+    }
+
+    /**
+     * 支付宝数据读取
+     * @param path
+     * @param flag
+     * @return
+     */
+    private static Object getZfbByCsv(String path,int flag) {
+        List<ZfbZcxxEntity> zcxxList = new ArrayList<>();
+        List<ZfbDlrzEntity> dlrzList = new ArrayList<>();
+        List<ZfbJyjlEntity> jyjlList = new ArrayList<>();
+        List<ZfbZhmxEntity> zhmxList = new ArrayList<>();
+        List<ZfbZzmxEntity> zzmxList = new ArrayList<>();
+        // 创建CSV读对象
+        CsvReader csvReader = null;
+        try {
+            // 创建CSV读对象
+            csvReader = new CsvReader(path, ',', Charset.forName("GBK"));
+            // 读表头 不需要则跳过
+            csvReader.readHeaders();
+            /*String[] heads = csvReader.getHeaders();
+            Map<String,Integer> title = new HashMap<>();
+            for (int i = 0; i < heads.length; i++) {
+                if(heads[i].contains("用户Id")){
+                    title.put("yhId",i);
+                }else if(heads[i].contains("登陆邮箱")){
+                    title.put("dlyx",i);
+                }else if(heads[i].contains("登陆手机")){
+                    title.put("dlsj",i);
+                }else if(heads[i].contains("账户名称")){
+                    title.put("zhmc",i);
+                }else if(heads[i].contains("证件类型")){
+                    title.put("zjlx",i);
+                }else if(heads[i].contains("证件号")){
+                    title.put("zjh",i);
+                }else if(heads[i].contains("可用余额")){
+                    title.put("kyye",i);
+                }else if(heads[i].contains("绑定手机")){
+                    title.put("bdsj",i);
+                }else if(heads[i].contains("绑定银行卡")){
+                    title.put("bdyhk",i);
+                }else if(heads[i].contains("对应的协查数据")){
+                    title.put("dyxcsj",i);
+                }
+            }*/
+            // 读取内容
+            while (csvReader.readRecord()) {
+                if (flag == 1) {
+                    // 注册信息
+                    ZfbZcxxEntity zfbZcxxEntity = new ZfbZcxxEntity();
+                    zfbZcxxEntity.setYhId(csvReader.get("用户Id").trim());
+                    zfbZcxxEntity.setDlyx(csvReader.get("登陆邮箱").trim());
+                    zfbZcxxEntity.setDlsj(csvReader.get("登陆手机").trim());
+                    zfbZcxxEntity.setZhmc(csvReader.get("账户名称").trim());
+                    zfbZcxxEntity.setZjlx(csvReader.get("证件类型").trim());
+                    zfbZcxxEntity.setZjh(csvReader.get("证件号").trim());
+                    zfbZcxxEntity.setKyye(Double.parseDouble(csvReader.get("可用余额")));
+                    zfbZcxxEntity.setBdsj(csvReader.get("绑定手机").trim());
+                    zfbZcxxEntity.setBdyhk(csvReader.get("绑定银行卡").trim());
+                    zfbZcxxEntity.setDyxcsj(csvReader.get("对应的协查数据").trim());
+                    zcxxList.add(zfbZcxxEntity);
+                } else if (flag == 2) {
+                    // 登陆日志
+                    ZfbDlrzEntity zfbDlrzEntity = new ZfbDlrzEntity();
+                    zfbDlrzEntity.setDlzh(csvReader.get("登陆账号").trim());
+                    zfbDlrzEntity.setZfbyhId(csvReader.get("支付宝用户ID").trim());
+                    zfbDlrzEntity.setZhm(csvReader.get("账户名").trim());
+                    zfbDlrzEntity.setKhdIp(csvReader.get("客户端ip").trim());
+                    zfbDlrzEntity.setCzfssj(csvReader.get("操作发生时间").trim());
+                    zfbDlrzEntity.setDyxcsj(csvReader.get("对应的协查数据").trim());
+                    dlrzList.add(zfbDlrzEntity);
+                } else if (flag == 3) {
+                    // 交易记录
+                    ZfbJyjlEntity zfbJyjlEntity = new ZfbJyjlEntity();
+                    zfbJyjlEntity.setJyh(csvReader.get("交易号").trim());
+                    zfbJyjlEntity.setWbjyh(csvReader.get("外部交易号").trim());
+                    zfbJyjlEntity.setJyzt(csvReader.get("交易状态").trim());
+                    zfbJyjlEntity.setHzhbId(csvReader.get("合作伙伴ID").trim());
+                    zfbJyjlEntity.setMjyhId(csvReader.get("买家用户id").trim());
+                    zfbJyjlEntity.setMjxx(csvReader.get("买家信息").trim());
+                    zfbJyjlEntity.setMijyhId(csvReader.get("卖家用户id").trim());
+                    zfbJyjlEntity.setMijxx(csvReader.get("卖家信息").trim());
+                    zfbJyjlEntity.setJyje(Double.parseDouble(csvReader.get("交易金额（元）")));
+                    zfbJyjlEntity.setSksj(csvReader.get("收款时间").trim());
+                    zfbJyjlEntity.setZhxgsj(csvReader.get("最后修改时间").trim());
+                    zfbJyjlEntity.setCjsj(csvReader.get("创建时间").trim());
+                    zfbJyjlEntity.setJylx(csvReader.get("交易类型").trim());
+                    zfbJyjlEntity.setLyd(csvReader.get("来源地").trim());
+                    zfbJyjlEntity.setSpmc(csvReader.get("商品名称").trim());
+                    zfbJyjlEntity.setShrdz(csvReader.get("收货人地址").trim());
+                    zfbJyjlEntity.setDyxcsj(csvReader.get("对应的协查数据").trim());
+                    jyjlList.add(zfbJyjlEntity);
+                } else if (flag == 4) {
+                    // 账户明细
+                    ZfbZhmxEntity zfbZhmxEntity = new ZfbZhmxEntity();
+                    zfbZhmxEntity.setJyh(csvReader.get("交易号").trim());
+                    zfbZhmxEntity.setShddh(csvReader.get("商户订单号").trim());
+                    zfbZhmxEntity.setJycjsj(csvReader.get("交易创建时间").trim());
+                    zfbZhmxEntity.setFksj(csvReader.get("付款时间").trim());
+                    zfbZhmxEntity.setZjxgsj(csvReader.get("最近修改时间").trim());
+                    zfbZhmxEntity.setJylyd(csvReader.get("交易来源地").trim());
+                    zfbZhmxEntity.setLx(csvReader.get("类型").trim());
+                    zfbZhmxEntity.setYhxx(csvReader.get("用户信息").trim());
+                    zfbZhmxEntity.setJydfxx(csvReader.get("交易对方信息").trim());
+                    zfbZhmxEntity.setXfmc(csvReader.get("消费名称").trim());
+                    zfbZhmxEntity.setJe(Double.parseDouble(csvReader.get("金额（元）")));
+                    zfbZhmxEntity.setSz(csvReader.get("收/支").trim());
+                    zfbZhmxEntity.setJyzt(csvReader.get("交易状态").trim());
+                    zfbZhmxEntity.setBz(csvReader.get("备注").trim());
+                    zfbZhmxEntity.setDyxcsj(csvReader.get("对应的协查数据").trim());
+                    zhmxList.add(zfbZhmxEntity);
+                } else if (flag == 5) {
+                    // 转账明细
+                    ZfbZzmxEntity zfbZzmxEntity = new ZfbZzmxEntity();
+                    zfbZzmxEntity.setJyh(csvReader.get("交易号").trim());
+                    zfbZzmxEntity.setFkfzfbzh(csvReader.get("付款方支付宝账号").trim());
+                    zfbZzmxEntity.setSkfzfbzh(csvReader.get("收款方支付宝账号").trim());
+                    zfbZzmxEntity.setSkjgxx(csvReader.get("收款机构信息").trim());
+                    zfbZzmxEntity.setDzsj(csvReader.get("到账时间").trim());
+                    zfbZzmxEntity.setZzje(Double.parseDouble(csvReader.get("转账金额（元）")));
+                    zfbZzmxEntity.setZzcpmc(csvReader.get("转账产品名称").trim());
+                    zfbZzmxEntity.setJyfsd(csvReader.get("交易发生地").trim());
+                    zfbZzmxEntity.setTxlsh(csvReader.get("提现流水号").trim());
+                    zfbZzmxEntity.setDyxcsj(csvReader.get("对应的协查数据").trim());
+                    zzmxList.add(zfbZzmxEntity);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(csvReader!=null){
+                csvReader.close();
+            }
+        }
+
+        if(zcxxList.size()>0){
+            return zcxxList;
+        }else if(dlrzList.size()>0){
+            return dlrzList;
+        }else if(jyjlList.size()>0){
+            return jyjlList;
+        }else if(zhmxList.size()>0){
+            return zhmxList;
+        }else if(zzmxList.size()>0){
+            return zzmxList;
+        }
+        return null;
     }
 }

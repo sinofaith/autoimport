@@ -23,6 +23,11 @@
             <mapping class="cn.com.sinofaith.bean.wlBean.WuliuSjEntity"/>
             <mapping class="cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity"/>
             <mapping class="cn.com.sinofaith.bean.pyramidSaleBean.PsHierarchyEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZcxxEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbDlrzEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

@@ -15,6 +15,7 @@ import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.service.wlService.WuliuJjxxService;
 import cn.com.sinofaith.service.wlService.WuliuShipService;
 import cn.com.sinofaith.service.wlService.WuliuSjService;
+import cn.com.sinofaith.service.zfbService.*;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,6 +60,16 @@ public class UploadController {
     private WuliuSjService wlsjService;
     @Autowired
     private PyramidSaleService pyramidSaleService;
+    /*@Autowired
+    private ZfbZcxxService zfbZcxxService;
+    @Autowired
+    private ZfbDlrzService zfbDlrzService;
+    @Autowired
+    private ZfbZhmxService zfbZhmxService;
+    @Autowired
+    private ZfbZzmxService zfbZzmxService;
+    @Autowired
+    private ZfbJyjlService zfbJyjlService;*/
     @Autowired
     private AjServices ajs;
 
@@ -356,6 +367,56 @@ public class UploadController {
             return "403";
         }else{
             return "404";
+        }
+    }
+
+    /**
+     * 支付宝数据导入
+     * @param file
+     * @param aj
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/uploadZfb",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String uploadZfb(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+                              HttpServletRequest req) {
+        // 创建一个路径
+        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
+        String filePath = "";
+        String fileName = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if (!uploadPathd.exists()) {
+            uploadPathd.mkdirs();
+        }
+        // 将文件上传到服务器
+        for(int i=0;i<file.size();i++) {
+            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".csv")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        int a=0;
+        AjEntity aje = ajs.findByName(aj).get(0);
+        if(uploadPathd.listFiles()!=null) {
+            // Zfb表添加数据
+            a = us.insertZfb(uploadPath, aje.getId());
+            us.deleteAll(uploadPath);
+            uploadPathd.delete();
+        }
+
+        req.getSession().setAttribute("aj",aje);
+        if(a>0){
+            return "";
+        }else {
+            return null;
         }
     }
 }

@@ -3,6 +3,7 @@ function relationSkip(code) {
     var totalPage = $("#totalPage").text();
     var onPage = $("#num").val();
     if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
+        alertify.set('notifier','position', 'top-center');
         alertify.error("请输入你要跳转的页数！");
         return;
     }

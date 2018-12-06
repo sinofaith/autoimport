@@ -141,7 +141,7 @@
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="psId"<c:if test="${psSeachCondition=='psId'}">selected="selected"</c:if>>会员编号</option>
                                             <option value="sponsorId" <c:if test="${psSeachCondition=='sponsorId'}">selected="selected"</c:if> >推荐会员编号</option>
-                                            <option value="nick_name" <c:if test="${psSeachCondition=='addressee'}">selected="selected"</c:if> >姓名</option>
+                                            <option value="nick_name" <c:if test="${psSeachCondition=='nick_name'}">selected="selected"</c:if> >姓名</option>
                                             <option value="accountHolder" <c:if test="${psSeachCondition=='accountHolder'}">selected="selected"</c:if> >持卡人</option>
 
                                         </select>

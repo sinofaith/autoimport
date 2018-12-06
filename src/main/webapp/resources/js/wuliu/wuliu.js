@@ -3,7 +3,8 @@ function wuliuSkip(code) {
     var totalPage = $("#totalPage").text();
     var onPage = $("#num").val();
     if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
-        alert("请输入你要跳转的页数！");
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("请输入你要跳转的页数！");
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
@@ -13,7 +14,7 @@ function wuliuSkip(code) {
         location="/SINOFAITH/wuliu"+code+"/seach?pageNo="+onPage;
     }
 }
-
+var keyList;
 // 数据上传
 function UploadWuliu() {
     var fileObj = document.getElementById("file");// js 获取文件对象
@@ -49,14 +50,14 @@ function UploadWuliu() {
                 $("#c18").remove();
             }
             var resp = xhr.responseText;
-            var keyList = JSON.parse(resp);
+            keyList = JSON.parse(resp);
             var jsonData = JSON.stringify(resp);
             var data = $.parseJSON(jsonData);
             var i=1;
             $("#excelName").append("<select class=\"form-control\" id=\"c18\" name=\"custSource\" onchange='insertSheet("+data+")'>");
             for(var key in keyList){
                 if(i==1){
-                    $("#c18").append("<option value='"+key+"' selected>"+key+"</option></select>");
+                    $("#c18").append("<option value='"+key+"' selected='selected'>"+key+"</option></select>");
                     $("#c18").load(insertSheet(keyList));
                     i++;
                 }else{
@@ -67,6 +68,7 @@ function UploadWuliu() {
             $('#myModal1').modal('show');
         }else{
             alertify.set('notifier','position', 'top-center');
+            alertify.set('notifier','delay', 0);
             alertify.error("错误!请联系管理员")
             return;
         }
@@ -74,9 +76,9 @@ function UploadWuliu() {
     xhr.upload.addEventListener("progress", progressFunction, false);
     xhr.send(form);
 }
-
 // 拼接sheet字符
 function insertSheet(data){
+    $("#nextSelect").attr("disabled",false);
     if($("#c19")!=null){
         $("#c19").remove();
     }
@@ -203,7 +205,6 @@ function uploadMapping(){
     }else{
         excelData.push(fieldList);
     }
-    console.log(excelData);
     $("#mapping").attr("disabled",true);
     alertify.set('notifier','position', 'top-center');
     alertify.success(excelSheet+"</br>"+"映射成功!");
@@ -240,6 +241,21 @@ function uploadWuliuExcel() {
     alertify.set('notifier','position', 'top-center');
     alertify.set('notifier','delay', 0);
     alertify.success("正在导入数据，请等待.....");
+}
+
+
+// 下一个
+function nextSelect(){
+    var sel = document.getElementById("c18");
+    var index = sel.selectedIndex;
+    var selectLength = sel.length-1;
+    if(index<sel.length-1){
+        sel[index+1].selected=true;
+    }
+    insertSheet(keyList);
+    if(selectLength==index+1){
+        $("#nextSelect").attr("disabled",true);
+    }
 }
 
 // 每次点击将数据清空

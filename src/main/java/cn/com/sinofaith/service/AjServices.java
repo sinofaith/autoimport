@@ -71,7 +71,7 @@ public class AjServices {
         Statement st;
         try {
             st = con.createStatement();
-            if(type.length==4){
+            if(type.length==5){
                 st.execute("delete  aj where id ="+ajid);
                 con.commit();
             }
@@ -97,6 +97,13 @@ public class AjServices {
                 if(a.equals("4")){
                     st.addBatch("DELETE pyramidsale where aj_id="+ajid);
                     st.addBatch("DELETE ps_hierarchy where aj_id="+ajid);
+                }
+                if(a.equals("5")){
+                    st.addBatch("DELETE zfbzcxx where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzhmx where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzzmx where aj_id="+ajid);
+                    st.addBatch("DELETE zfbdlrz where aj_id="+ajid);
+                    st.addBatch("DELETE zfbjyjl where aj_id="+ajid);
                 }
 
             }

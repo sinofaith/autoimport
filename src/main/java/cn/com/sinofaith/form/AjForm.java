@@ -12,6 +12,7 @@ public class AjForm {
     private String banknum;
     private String wuliunum;
     private String psnum;
+    private String zfbnum;
     private String inserttime;
 
     public String getWuliunum() {
@@ -86,6 +87,14 @@ public class AjForm {
         this.psnum = psnum;
     }
 
+    public String getZfbnum() {
+        return zfbnum;
+    }
+
+    public void setZfbnum(String zfbnum) {
+        this.zfbnum = zfbnum;
+    }
+
     public AjForm mapToForm(Map map){
         AjForm af = new AjForm();
         af.setId((BigDecimal)map.get("ID"));
@@ -94,6 +103,7 @@ public class AjForm {
         af.setBanknum(map.get("BANKNUM")!=null ? (String) map.get("BANKNUM"):"0");
         af.setWuliunum(map.get("WULIUNUM")!=null ? (String) map.get("WULIUNUM"):"0");
         af.setPsnum(map.get("PSNUM")!=null ? (String) map.get("PSNUM"):"0");
+        af.setZfbnum(map.get("ZFBNUM")!=null ? (String) map.get("ZFBNUM"):"0");
         af.setInserttime((String)map.get("INSERTTIME"));
         return af;
     }

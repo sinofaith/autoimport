@@ -3,15 +3,15 @@ package cn.com.sinofaith.bean.zfbBean;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "zfb_zzxx")
-public class ZfbZzxx {
+@Table(name = "ZfbZzmx")
+public class ZfbZzmxEntity {
     private long id=-1;
     private String jyh="";             //交易号
     private String fkfzfbzh="";        //付款方支付宝账号
     private String skfzfbzh="";        //收款方支付宝账号
     private String skjgxx="";          //收款机构信息
     private String dzsj="";            //到账时间
-    private String zzje="";            //转账金额
+    private double zzje;            //转账金额
     private String zzcpmc="";          //转账产品名称
     private String jyfsd="";           //交易发生地
     private String txlsh="";           //提现流水号
@@ -20,8 +20,8 @@ public class ZfbZzxx {
     private long aj_id=-1;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="zfb_num")
-    @SequenceGenerator(name="zfb_num",sequenceName="SEQ_ZFB_ZZXX_ID",allocationSize=1,initialValue=1)
+    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator="zfb_zzxxnum")
+    @SequenceGenerator(name="zfb_zzxxnum",sequenceName="SEQ_ZFBZZXX_ID",allocationSize=1,initialValue=1)
     @Column(name="id",nullable = false)
     public long getId() {
         return id;
@@ -31,7 +31,7 @@ public class ZfbZzxx {
         this.id = id;
     }
     @Basic
-    @Column(name = "jyh",nullable = true,length = 300)
+    @Column(name = "jyh",nullable = true,length = 100)
     public String getJyh() {
         return jyh;
     }
@@ -40,25 +40,33 @@ public class ZfbZzxx {
         this.jyh = jyh;
     }
     @Basic
-    @Column(name = "fkfzfbzh",nullable = true,length = 300)
+    @Column(name = "fkfzfbzh",nullable = true,length = 100)
     public String getFkfzfbzh() {
         return fkfzfbzh;
     }
 
     public void setFkfzfbzh(String fkfzfbzh) {
-        this.fkfzfbzh = fkfzfbzh;
+        if(fkfzfbzh==null){
+            this.fkfzfbzh = "";
+        }else{
+            this.fkfzfbzh = fkfzfbzh;
+        }
     }
     @Basic
-    @Column(name = "skfzfbzh",nullable = true,length = 300)
+    @Column(name = "skfzfbzh",nullable = true,length = 100)
     public String getSkfzfbzh() {
         return skfzfbzh;
     }
 
     public void setSkfzfbzh(String skfzfbzh) {
-        this.skfzfbzh = skfzfbzh;
+        if(skfzfbzh==null){
+            this.skfzfbzh = "";
+        }else{
+            this.skfzfbzh = skfzfbzh;
+        }
     }
     @Basic
-    @Column(name = "skjgxx",length = 300)
+    @Column(name = "skjgxx",length = 100)
     public String getSkjgxx() {
         return skjgxx;
     }
@@ -76,16 +84,16 @@ public class ZfbZzxx {
         this.dzsj = dzsj;
     }
     @Basic
-    @Column(name="zzje",length = 100)
-    public String getZzje() {
+    @Column(name="zzje",precision = 0)
+    public double getZzje() {
         return zzje;
     }
 
-    public void setZzje(String zzje) {
+    public void setZzje(double zzje) {
         this.zzje = zzje;
     }
     @Basic
-    @Column(name = "zzcpmc",length = 300)
+    @Column(name = "zzcpmc",length = 100)
     public String getZzcpmc() {
         return zzcpmc;
     }
@@ -94,7 +102,7 @@ public class ZfbZzxx {
         this.zzcpmc = zzcpmc;
     }
     @Basic
-    @Column(name = "jyfsd",length = 300)
+    @Column(name = "jyfsd",length = 100)
     public String getJyfsd() {
         return jyfsd;
     }
@@ -109,7 +117,11 @@ public class ZfbZzxx {
     }
 
     public void setTxlsh(String txlsh) {
-        this.txlsh = txlsh;
+        if(txlsh==null){
+            this.txlsh = "";
+        } else {
+            this.txlsh = txlsh;
+        }
     }
     @Basic
     @Column(name = "dyxcsj",length = 100)
@@ -121,7 +133,7 @@ public class ZfbZzxx {
         this.dyxcsj = dyxcsj;
     }
     @Basic
-    @Column(name="inserttime",length = 19)
+    @Column(name="insert_time",length = 19)
     public String getInserttime() {
         return inserttime;
     }
@@ -139,10 +151,10 @@ public class ZfbZzxx {
         this.aj_id = aj_id;
     }
 
-    public ZfbZzxx() {
+    public ZfbZzmxEntity() {
     }
 
-    public ZfbZzxx(long id, String jyh, String fkfzfbzh, String skfzfbzh, String skjgxx, String dzsj, String zzje, String zzcpmc, String jyfsd, String txlsh, String dyxcsj, String inserttime, long aj_id) {
+    public ZfbZzmxEntity(long id, String jyh, String fkfzfbzh, String skfzfbzh, String skjgxx, String dzsj, double zzje, String zzcpmc, String jyfsd, String txlsh, String dyxcsj, String inserttime, long aj_id) {
         this.id = id;
         this.jyh = jyh;
         this.fkfzfbzh = fkfzfbzh;
@@ -160,7 +172,7 @@ public class ZfbZzxx {
 
     @Override
     public String toString() {
-        return "ZfbZzxx{" +
+        return "ZfbZzmxEntity{" +
                 "id=" + id +
                 ", jyh='" + jyh + '\'' +
                 ", fkfzfbzh='" + fkfzfbzh + '\'' +
@@ -184,14 +196,13 @@ public class ZfbZzxx {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ZfbZzxx zfbZzxx = (ZfbZzxx) o;
+        ZfbZzmxEntity zfbZzxx = (ZfbZzmxEntity) o;
 
         if (jyh != null ? !jyh.equals(zfbZzxx.jyh) : zfbZzxx.jyh != null) return false;
         if (fkfzfbzh != null ? !fkfzfbzh.equals(zfbZzxx.fkfzfbzh) : zfbZzxx.fkfzfbzh != null) return false;
         if (skfzfbzh != null ? !skfzfbzh.equals(zfbZzxx.skfzfbzh) : zfbZzxx.skfzfbzh != null) return false;
         if (skjgxx != null ? !skjgxx.equals(zfbZzxx.skjgxx) : zfbZzxx.skjgxx != null) return false;
         if (dzsj != null ? !dzsj.equals(zfbZzxx.dzsj) : zfbZzxx.dzsj != null) return false;
-        if (zzje != null ? !zzje.equals(zfbZzxx.zzje) : zfbZzxx.zzje != null) return false;
         if (zzcpmc != null ? !zzcpmc.equals(zfbZzxx.zzcpmc) : zfbZzxx.zzcpmc != null) return false;
         return jyfsd != null ? jyfsd.equals(zfbZzxx.jyfsd) : zfbZzxx.jyfsd == null;
     }
@@ -203,7 +214,6 @@ public class ZfbZzxx {
         result = 31 * result + (skfzfbzh != null ? skfzfbzh.hashCode() : 0);
         result = 31 * result + (skjgxx != null ? skjgxx.hashCode() : 0);
         result = 31 * result + (dzsj != null ? dzsj.hashCode() : 0);
-        result = 31 * result + (zzje != null ? zzje.hashCode() : 0);
         result = 31 * result + (zzcpmc != null ? zzcpmc.hashCode() : 0);
         result = 31 * result + (jyfsd != null ? jyfsd.hashCode() : 0);
         return result;
