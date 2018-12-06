@@ -78,7 +78,6 @@ function UploadWuliu() {
 }
 // 拼接sheet字符
 function insertSheet(data){
-    $("#nextSelect").attr("disabled",false);
     if($("#c19")!=null){
         $("#c19").remove();
     }
@@ -100,6 +99,14 @@ function insertSheet(data){
 
 // 拼接table
 function insertTable(sheetName){
+    var sel = document.getElementById("c18");
+    var index = sel.selectedIndex;
+    var selectLength = sel.length-1;
+    if(selectLength==index && selectLength!=0){
+        $("#nextSelect").attr("disabled",true);
+    }else{
+        $("#nextSelect").attr("disabled",false);
+    }
     var key = $("#c19").val();
     $("#head").empty();
     for(i=1;i<18;i++){
