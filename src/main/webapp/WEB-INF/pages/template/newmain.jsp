@@ -98,6 +98,8 @@
     <%--<script src="<c:url value="/resources/thirdparty/assets/js/bootstrap.min.js"/>"></script>--%>
     <script src="<c:url value="/resources/thirdparty/assets/js/typeahead-bs2.min.js"/>"></script>
 
+    <script src="<c:url value="/resources/ali_icon/iconfont.js"/>"></script>
+
     <!-- page specific plugin scripts -->
 
     <script src="<c:url value="/resources/thirdparty/assets/js/date-time/bootstrap-datepicker.min.js"/>"></script>

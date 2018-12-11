@@ -12,17 +12,43 @@
 <%--新加样式--%>
 <head>
     <title>SINOFAITH</title>
+    <style type="text/css">
+        .icon {
+            width: 32px; height: 32px;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 <aside class="sideMenu_left" style="top: 0px;">
     <a class="logo" ><img src="<c:url value="/resources/img/logo02.png"/>"style="padding:20px 0 20px 10px; width: 63px ;float: left"/> </a>
  <span>
-    <a href="/SINOFAITH/aj" ><i class=" icon-untitled26 "></i>案件</a>
-    <a href="/SINOFAITH/cft" class="sidebar_left_addative"><i class="icon-untitled54"></i>财付通</a>
-    <a href="/SINOFAITH/bank"><i class="icon-untitled47"></i>银行卡</a>
-    <a href="/SINOFAITH/wuliu"><i class="icon-search"></i>物流</a>
-    <a href="/SINOFAITH/pyramidSale"><i class="icon-untitled44"></i>传销</a>
-    <a href="/SINOFAITH/zfb"><i class="icon-untitled36"></i>支付宝</a>
+    <a href="/SINOFAITH/aj" >
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-xiangqing"></use>
+        </svg><br>案件</a>
+    <a href="/SINOFAITH/cft" class="sidebar_left_addative">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-caifutong"></use>
+        </svg><br>财付通</a>
+    <a href="/SINOFAITH/bank">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-icon"></use>
+        </svg><br>银行卡</a>
+    <a href="/SINOFAITH/wuliu">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-wuliu"></use>
+        </svg><br>物流</a>
+    <a href="/SINOFAITH/pyramidSale">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-cengji"></use>
+        </svg><br>传销</a>
+    <a href="/SINOFAITH/zfb">
+        <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-big-Pay"></use>
+        </svg><br>支付宝</a>
  </span>
 </aside>
 </body>
