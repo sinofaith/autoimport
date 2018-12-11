@@ -15,9 +15,7 @@
     <style type="text/css">
         .icon {
             width: 32px; height: 32px;
-            vertical-align: -0.15em;
             fill: currentColor;
-            overflow: hidden;
         }
     </style>
 </head>
@@ -26,29 +24,29 @@
     <a class="logo" ><img src="<c:url value="/resources/img/logo02.png"/>"style="padding:20px 0 20px 10px; width: 63px ;float: left"/> </a>
  <span>
     <a href="/SINOFAITH/aj" >
-        <svg class="icon" aria-hidden="true">
+        <svg class="icon">
             <use xlink:href="#icon-xiangqing"></use>
         </svg><br>案件</a>
-    <a href="/SINOFAITH/cft" class="sidebar_left_addative">
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-caifutong"></use>
-        </svg><br>财付通</a>
     <a href="/SINOFAITH/bank">
-        <svg class="icon" aria-hidden="true">
+        <svg class="icon">
             <use xlink:href="#icon-icon"></use>
         </svg><br>银行卡</a>
+    <a href="/SINOFAITH/cft" class="sidebar_left_addative">
+        <svg class="icon">
+            <use xlink:href="#icon-caifutonge"></use>
+        </svg><br>财付通</a>
+    <a href="/SINOFAITH/zfb">
+        <svg class="icon">
+            <use xlink:href="#icon-zhifubao"></use>
+        </svg><br>支付宝</a>
     <a href="/SINOFAITH/wuliu">
-        <svg class="icon" aria-hidden="true">
+        <svg class="icon">
             <use xlink:href="#icon-wuliu"></use>
         </svg><br>物流</a>
     <a href="/SINOFAITH/pyramidSale">
-        <svg class="icon" aria-hidden="true">
+        <svg class="icon">
             <use xlink:href="#icon-cengji"></use>
         </svg><br>传销</a>
-    <a href="/SINOFAITH/zfb">
-        <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-big-Pay"></use>
-        </svg><br>支付宝</a>
  </span>
 </aside>
 </body>
