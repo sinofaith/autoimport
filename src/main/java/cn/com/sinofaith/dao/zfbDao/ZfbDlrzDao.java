@@ -101,7 +101,7 @@ public class ZfbDlrzDao extends BaseDao<ZfbDlrzEntity>{
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * FROM ( ");
         sql.append("SELECT c.*, ROWNUM rn FROM (");
-        sql.append("select d.zfbyhid,z.zhmc,z.dlsj,z.zjlx,z.zjh,d.dlzcs from(select zfbyhid,aj_id,count(zfbyhid) dlzcs from zfbdlrz group by zfbyhid,aj_id) d ");
+        sql.append("select d.zfbyhid,z.zhmc,z.dlsj,z.zjlx,z.zjh,d.dlzcs from(select zfbyhid,aj_id,count(zfbyhid) dlzcs from zfbdlrz  where khdip <> '127.0.0.1' group by zfbyhid,aj_id) d ");
         sql.append("left join zfbzcxx z on d.zfbyhid = z.yhid where d.aj_id="+id+" and z.aj_id="+id+search);
         sql.append(" ) c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         // 获取当前线程session
@@ -134,7 +134,7 @@ public class ZfbDlrzDao extends BaseDao<ZfbDlrzEntity>{
         List<ZfbDlrzForms> zfbDlrzForms = null;
         StringBuffer sql = new StringBuffer();
         sql.append("select t.khdip,to_number(substr(trim(t.czfssj),12,2)) hour,count(1) NUM from ZFBDLRZ t where t.aj_id ="+id);
-        sql.append(" and t.zfbyhid='"+zfbyhId+"' group by t.zfbyhid,t.khdip,substr(trim(t.czfssj),12,2) order by hour");
+        sql.append(" and t.khdip <> '127.0.0.1' and t.zfbyhid='"+zfbyhId+"' group by t.zfbyhid,t.khdip,substr(trim(t.czfssj),12,2) order by hour");
         // 获取当前线程session
         Session session = getSession();
         try {

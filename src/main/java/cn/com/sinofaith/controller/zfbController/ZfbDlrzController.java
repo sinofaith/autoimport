@@ -29,12 +29,13 @@ public class ZfbDlrzController {
     private ZfbDlrzService zfbDlrzService;
 
     @RequestMapping()
-    public ModelAndView zfbdlrz(HttpSession session){
+    public ModelAndView zfbdlrz(String flag, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/zfbDlrz/search?pageNo=1");
         session.removeAttribute("dlrzSearchCondition"); //查询条件
         session.removeAttribute("dlrzSearchCode");//查询内容
         session.removeAttribute("dlrzLastOrder");
         session.removeAttribute("dlrzDesc");
+        session.setAttribute("flag",flag);
         return mav;
     }
 

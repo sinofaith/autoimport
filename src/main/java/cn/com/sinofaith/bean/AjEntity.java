@@ -8,6 +8,7 @@ public class AjEntity {
     private long id = -1;
     private String aj ="";
     private long flg=0;
+    private String filter="";
     private String inserttime;
 
     @Id
@@ -33,6 +34,16 @@ public class AjEntity {
     public long getFlg(){return flg;}
     public void setFlg(long flg){this.flg = flg;}
     @Basic
+    @Column(name="filter",nullable = false,precision = 0)
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    @Basic
     @Column(name = "inserttime",length = 19)
     public String getInserttime() {
         return inserttime;
@@ -51,10 +62,11 @@ public class AjEntity {
                 '}';
     }
 
-    public AjEntity(long id, String aj,long flg, String inserttime) {
+    public AjEntity(long id, String aj, long flg, String filter, String inserttime) {
         this.id = id;
         this.aj = aj;
         this.flg = flg;
+        this.filter = filter;
         this.inserttime = inserttime;
     }
 

@@ -2,9 +2,18 @@ package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
+import cn.com.sinofaith.dao.zfbDao.ZfbJyjlDao;
+import cn.com.sinofaith.dao.zfbDao.ZfbJyjlTjjgsDao;
+import cn.com.sinofaith.dao.zfbDao.ZfbZzmxDao;
+import cn.com.sinofaith.dao.zfbDao.ZfbZzmxTjjgsDao;
 import cn.com.sinofaith.form.AjForm;
+import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.DBUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +32,14 @@ public class AjServices {
     private AJDao ad;
     @Autowired
     private CftZzxxDao zzd;
+    @Autowired
+    private ZfbZzmxDao zfbZzmxDao;
+    @Autowired
+    private ZfbZzmxTjjgsDao zfbZzmxTjjgsDao;
+    @Autowired
+    private ZfbJyjlDao zfbJyjlDao;
+    @Autowired
+    private ZfbJyjlTjjgsDao zfbJyjlTjjgsDao;
 
     public void save(AjEntity aj){
          ad.save(aj);
@@ -104,6 +121,10 @@ public class AjServices {
                     st.addBatch("DELETE zfbzzmx where aj_id="+ajid);
                     st.addBatch("DELETE zfbdlrz where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzzmx_tjjg where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzzmx_tjjgs where aj_id="+ajid);
+                    st.addBatch("DELETE zfbjyjl_tjjgs where aj_id="+ajid);
+                    st.addBatch("DELETE zfbjyjl_Sjdzs where aj_id="+ajid);
                 }
 
             }
@@ -134,5 +155,32 @@ public class AjServices {
 
     public void updateAj(AjEntity aj){
         ad.update(aj);
+    }
+
+    public int getZfbZzmxList(AjEntity aje,String filterInput) {
+        String search = "";
+        if(filterInput!=""){
+            search += " and j1.spmc like '%"+filterInput+"%' and j1.jyzt='交易成功' group by j1.dyxcsj";
+        }else{
+            search += " group by j1.dyxcsj";
+        }
+        // 转账明细条件筛选
+        List<ZfbZzmxTjjgsForm> zfbZzmxList = zfbZzmxDao.selectFilterJyjlBySpmc(search,aje.getId());
+        List<ZfbZzmxTjjgsEntity> tjjgsList = ZfbZzmxTjjgsEntity.FormToList(zfbZzmxList, aje.getId());
+        // 交易记录条件筛选
+        List<ZfbJyjlTjjgsForm> zfbJyjlList = zfbJyjlDao.selectFilterJyjlBySpmc(search,aje.getId());
+        List<ZfbJyjlTjjgsEntity> jyjlTjjgsList = ZfbJyjlTjjgsEntity.FormToList(zfbJyjlList, aje.getId());
+        if(tjjgsList.size()>0&&jyjlTjjgsList.size()>0){
+            zfbZzmxTjjgsDao.delAll(aje.getId());
+            zfbZzmxTjjgsDao.insertZzmxTjjgs(tjjgsList);
+            zfbJyjlTjjgsDao.delAll(aje.getId());
+            zfbJyjlTjjgsDao.insertJyjlTjjgs(jyjlTjjgsList);
+            // 修改筛选
+            aje.setFilter(filterInput);
+            updateAj(aje);
+        }else{
+
+        }
+        return tjjgsList.size()>0&&jyjlTjjgsList.size()>0?1:0;
     }
 }

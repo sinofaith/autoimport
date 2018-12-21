@@ -25,13 +25,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">
-        <a  href="/SINOFAITH/zfb">支付宝注册信息</a>
-        <a href="/SINOFAITH/zfbZhmx">支付宝账户明细</a>
-        <a href="/SINOFAITH/zfbZzmx">支付宝转账明细</a>
-        <a href="/SINOFAITH/zfbJyjl" class="addactive">支付宝交易记录</a>
-        <a href="/SINOFAITH/zfbDlrz">支付宝登陆日志</a>
-    </span>
+    <%@include file="title.jsp" %>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -49,33 +43,31 @@
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="4%">序号</td>
-                                        <td width="5%">用户Id</td>
-                                        <td width="5%">账户名称</td>
-                                        <td width="5%">交易类型</td>
-                                        <td width="5%">对方用户Id</td>
-                                        <td width="7%">对方账户名称</td>
-                                        <td width="18%">商品名称</td>
-                                        <td width="15%">收货人地址</td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbJyjl/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbJyjl/seach?pageNo=1&orderby=jyzje">交易总金额</a></td>
-                                        <td width="3%">详情</td>
+                                        <td width="3%">序号</td>
+                                        <td width="5%">交易号</td>
+                                        <td width="5%"><a href="/SINOFAITH/zfbJyjl/seach?pageNo=1&orderby=jyzt">交易状态</a></td>
+                                        <td width="9%"><a href="/SINOFAITH/zfbJyjl/seach?pageNo=1&orderby=sksj">收款时间</a></td>
+                                        <td width="5%">买家用户Id</td>
+                                        <td width="5%">买家信息</td>
+                                        <td width="8%">卖家用户Id</td>
+                                        <td width="5%">卖家信息</td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjl/seach?pageNo=1&orderby=jyje">交易金额</a></td>
+                                        <td width="6%">商品名称</td>
+                                        <td width="10%"><a href="/SINOFAITH/zfbJyjl/seach?pageNo=1&orderby=shrdz">收货人地址</a></td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
-                                            <td align="center">${item.mjyhid}</td>
-                                            <td align="center" title="${item.mjxx}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.mjxx}</div></td>
-                                            <td align="center">${item.direction}</td>
-                                            <td align="center">${item.mijyhid}</td>
+                                            <td align="center" title="${item.jyh}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyh}</div></td>
+                                            <td align="center" title="${item.jyzt}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyzt}</div></td>
+                                            <td align="center">${item.sksj}</td>
+                                            <td align="center">${item.mjyhId}</td>
+                                            <td align="center" title="${item.mjxx}"><div style="width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.mjxx}</div></td>
+                                            <td align="center">${item.mijyhId}</td>
                                             <td align="center" title="${item.mijxx}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.mijxx}</div></td>
-                                            <td align="center" title="${item.spmc}"><div style="width:220px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.spmc}</div></td>
-                                            <td align="center" title="${item.shrdz}"><div style="width:200px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.shrdz}</div></td>
-                                            <td align="center">${item.jyzcs}</td>
-                                            <td align="center">${item.jyzje}</td>
-                                            <td align="center">
-                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbJyjlDetails(this)">详情</button>
-                                            </td>
+                                            <td align="center">${item.jyje}</td>
+                                            <td align="center" title="${item.spmc}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.spmc}</div></td>
+                                            <td align="center" title="${item.shrdz}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.shrdz}</div></td>
                                         </tr>
                                     </c:forEach>
                                     <c:choose>
@@ -128,10 +120,12 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="mjyhid,mijyhid" <c:if test="${jyjlSeachCondition=='mjyhid'}">selected="selected"</c:if>>用户Id</option>
-                                            <option value="mjxx,mijxx" <c:if test="${jyjlSeachCondition=='mjxx'}">selected="selected"</c:if>>账户名称</option>
-                                            <option value="mijyhid,mjyhid" <c:if test="${jyjlSeachCondition=='mijyhid'}">selected="selected"</c:if>>对方用户Id</option>
-                                            <option value="mijxx,mjxx" <c:if test="${jyjlSeachCondition=='mijxx'}">selected="selected"</c:if>>对方账户名称</option>
+                                            <option value="mjyhId" <c:if test="${jyjlSeachCondition=='mjyhId'}">selected="selected"</c:if>>买家用户Id</option>
+                                            <option value="mjxx" <c:if test="${jyjlSeachCondition=='mjxx'}">selected="selected"</c:if>>买家信息</option>
+                                            <option value="mijyhId" <c:if test="${jyjlSeachCondition=='mijyhId'}">selected="selected"</c:if>>卖家用户Id</option>
+                                            <option value="mijxx" <c:if test="${jyjlSeachCondition=='mijxx'}">selected="selected"</c:if>>卖家信息</option>
+                                            <option value="spmc" <c:if test="${jyjlSeachCondition=='spmc'}">selected="selected"</c:if>>商品名称</option>
+                                            <option value="shrdz" <c:if test="${jyjlSeachCondition=='shrdz'}">selected="selected"</c:if>>收货人地址</option>
                                         </select>
                                         <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${jyjlSeachCode}</textarea>
                                     </div>
@@ -169,7 +163,7 @@
         </div>
     </ul>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+<%--<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
         <div class="modal-content">
@@ -215,5 +209,5 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal -->
-</div>
+</div>--%>
 <%@include file="../template/newfooter.jsp" %>

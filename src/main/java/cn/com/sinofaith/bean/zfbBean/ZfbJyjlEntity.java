@@ -138,7 +138,11 @@ public class ZfbJyjlEntity {
     }
 
     public void setSksj(String sksj) {
-        this.sksj = sksj;
+        if(sksj!=null){
+            this.sksj = sksj;
+        }else{
+            this.sksj = "";
+        }
     }
 
     @Basic

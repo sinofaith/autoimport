@@ -35,13 +35,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">
-        <a  href="/SINOFAITH/zfb">支付宝注册信息</a>
-        <a href="/SINOFAITH/zfbZhmx">支付宝账户明细</a>
-        <a href="/SINOFAITH/zfbDlrz">支付宝转账明细</a>
-        <a href="/SINOFAITH/zfbJyjl">支付宝交易记录</a>
-        <a href="/SINOFAITH/zfbDlrz" class="addactive">支付宝登陆日志</a>
-    </span>
+    <%@include file="title.jsp" %>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -72,7 +66,7 @@
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center">${item.zfbyhId}</td>
-                                            <td align="center">${item.zhmc}</td>
+                                            <td align="center" title="${item.zhmc}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zhmc}</div></td>
                                             <td align="center">${item.dlsj}</td>
                                             <td align="center">${item.zjlx}</td>
                                             <td align="center">${item.zjh}</td>

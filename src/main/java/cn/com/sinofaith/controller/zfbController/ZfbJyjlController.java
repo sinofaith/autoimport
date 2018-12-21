@@ -30,65 +30,62 @@ public class ZfbJyjlController {
     private ZfbJyjlService zfbJyjlService;
 
     @RequestMapping()
-    public ModelAndView zfbJyjl(HttpSession session){
+    public ModelAndView zfbJyjl(String flag, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/zfbJyjl/seach?pageNo=1");
         session.removeAttribute("jyjlSeachCondition"); //查询条件
         session.removeAttribute("jyjlSeachCode");//查询内容
         session.removeAttribute("jyjlLastOrder");
         session.removeAttribute("jyjlDesc");
+        session.setAttribute("flag",flag);
         return mav;
     }
 
     @RequestMapping("/seach")
     public String seach(int pageNo, String orderby, HttpSession session, Model model){
+        // 创建离线查询对象
+        DetachedCriteria dc = DetachedCriteria.forClass(ZfbJyjlEntity.class);
         // 取出域中对象
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         if(aj==null){
             return "/zfb/zfbJyjl";
         }
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
         String seachCondition = (String) session.getAttribute("jyjlSeachCondition");
         String seachCode = (String) session.getAttribute("jyjlSeachCode");
         String lastOrder = (String) session.getAttribute("jyjlLastOrder");
         String desc = (String) session.getAttribute("jyjlDesc");
         // 创建离线查询语句
-        String seach = "";
-        String[] condition = null;
-        if(seachCondition!=null){
-            condition = seachCondition.split(",");
-        }
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            seach += " and ("+condition[0]+" like '"+seachCode+"' or "+condition[1]+" like '"+seachCode+"')";
+            dc.add(Restrictions.like(seachCondition,seachCode));
         }
         if(orderby==null && desc==null){
-            seach += " order by jyzje desc,jyh";
+            dc.addOrder(Order.desc("jyje").nulls(NullPrecedence.LAST));
         }
         if(orderby!=null){
             if(orderby.equals(lastOrder)){
                 if(desc==null || desc.equals("desc")){
-                    seach += " order by "+orderby+",jyh";
+                    dc.addOrder(Order.asc(orderby));
                     desc = "";
                 }else{
-                    seach += " order by "+orderby+" desc,jyh nulls last";
+                    dc.addOrder(Order.desc(orderby).nulls(NullPrecedence.LAST));
                     desc = "desc";
                 }
             }else{
-                seach += " order by "+orderby+",jyh";
+                dc.addOrder(Order.asc(orderby));
                 desc = "";
             }
         }else if("".equals(desc)){
-            seach += " order by "+lastOrder+",jyh";
+            dc.addOrder(Order.asc(lastOrder));
         }else if("desc".equals(desc)){
-            seach += " order by "+lastOrder+" desc,jyh nulls last";
+            dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
         }
         // 封装分页数据
         // 获取分页数据
-        Page page = zfbJyjlService.queryForPage(pageNo,10,seach,aj.getId());
+        Page page = zfbJyjlService.queryForPage(pageNo,10,dc);
         // 将数据存入request域中
         model.addAttribute("jyjlSeachCode", seachCode);
-        if(condition!=null){
-            model.addAttribute("jyjlSeachCondition", condition[0]);
-        }
+        model.addAttribute("jyjlSeachCondition", seachCondition);
         if(page!=null){
             model.addAttribute("page", page);
             model.addAttribute("detailinfo", page.getList());
@@ -122,7 +119,7 @@ public class ZfbJyjlController {
         return "redirect:/zfbJyjl/seach?pageNo=1";
     }
 
-    @RequestMapping("/getDetails")
+   /* @RequestMapping("/getDetails")
     public @ResponseBody String getDetails(String mjyhid,String mjxx,String mijyhid,String mijxx,String direction,String spmc,String order,
                                            int page,HttpSession session){
         // 创建离线查询对象
@@ -173,18 +170,18 @@ public class ZfbJyjlController {
             session.setAttribute("jyjlXQLastOrder", order);
         }
         return zfbJyjlService.getZfbJyjl(page, 100, dc);
-    }
+    }*/
 
-    /**
+   /* *//**
      * 删除desc
      * @param ses
      * @return
-     */
+     *//*
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String removeDesc(HttpSession ses){
         ses.removeAttribute("jyjlXQDesc");
         ses.removeAttribute("jyjlXQLastOrder");
         return "200";
-    }
+    }*/
 }

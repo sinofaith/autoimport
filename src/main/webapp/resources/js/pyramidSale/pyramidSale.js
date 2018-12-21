@@ -382,14 +382,21 @@ function scrollF(temp) {
     }
 }
 
-// 阈值设置
+// 阀值设置
 function seachChange() {
     var seachCondition = $("#seachCondition").val();
     if(seachCondition === "directDrive"){
-        $("#seachCode").val("100")
+        $("#seachCode").val("50")
     }else if(seachCondition === "directReferNum"){
         $("#seachCode").val("5000")
     }else{
         $("#seachCode").val("")
+    }
+}
+
+function isNum(obj){
+    var seachCondition = $("#seachCondition").val();
+    if(seachCondition === "directDrive" || seachCondition === "directReferNum"){
+        obj.value=obj.value.replace(/[^\d]/g,'')
     }
 }

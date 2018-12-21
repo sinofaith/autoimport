@@ -2,7 +2,8 @@ package cn.com.sinofaith.dao.zfbDao;
 
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlEntity;
 import cn.com.sinofaith.dao.BaseDao;
-import cn.com.sinofaith.form.zfbForm.ZfbJyjlForm;
+import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
 import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.hibernate.Criteria;
@@ -18,9 +19,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /***
  * 支付宝交易记录持久层
@@ -92,7 +91,7 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
      * @param seach
      * @param id
      * @return
-     */
+     *//*
     public int getCountRow(String seach, long id) {
         StringBuffer sql = new StringBuffer();
         sql.append("select to_char(count(1)) NUM from (");
@@ -107,14 +106,14 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
         return Integer.parseInt((String) map.get("NUM"));
     }
 
-    /**
+    *//**
      * 分页数据
      * @param currentPage
      * @param pageSize
      * @param seach
      * @param id
      * @return
-     */
+     *//*
     public List<ZfbJyjlForm> queryForPage(int currentPage, int pageSize, String seach, long id) {
         List<ZfbJyjlForm> zfbJyjlForms = null;
         StringBuffer sql = new StringBuffer();
@@ -156,9 +155,9 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
                     if(yhid.equals(zfbJyjl.getMjyhid())){
                         if(flag){
                             zfbJyjl.setDirection("买家");
-                        }/*else{
+                        }*//*else{
                             zfbJyjl.setDirection("互通");
-                        }*/
+                        }*//*
                         flag = false;
                     }
                     if(yhid.equals(zfbJyjl.getMijyhid())){
@@ -170,7 +169,7 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
                             String mjyhid = zfbJyjl.getMjyhid();
                             zfbJyjl.setMjyhid(zfbJyjl.getMijyhid());
                             zfbJyjl.setMijyhid(mjyhid);
-                        }/*else{
+                        }*//*else{
                             if(!"买家".equals(zfbJyjl.getDirection())){
                                 String mjxx = zfbJyjl.getMjxx();
                                 zfbJyjl.setMjxx(zfbJyjl.getMijxx());
@@ -180,14 +179,14 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
                                 zfbJyjl.setMijyhid(mjyhid);
                             }
                             zfbJyjl.setDirection("互通");
-                        }*/
+                        }*//*
                         flag = false;
                     }
                 }
             }
         }
         return zfbJyjlForms;
-    }
+    }*/
 
     /**
      * 去重详情条数
@@ -248,5 +247,38 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
             session.close();
         }
         return zhxxs;
+    }
+
+    /**
+     * 条件筛选查询数据
+     * @param search
+     * @param id
+     * @return
+     */
+    public List<ZfbJyjlTjjgsForm> selectFilterJyjlBySpmc(String search, long id) {
+        List<ZfbJyjlTjjgsForm> zfbJyjlList = null;
+        StringBuffer sql = new StringBuffer();
+        sql.append("select a.mjyhid,substr(a.mjxx,1,instr(a.mjxx,')')) mjxx,a.jyzt,a.mijyhid,substr(a.mijxx,1,instr(a.mijxx,')')) mijxx,a.jyje from(");
+        sql.append("select j3.* from(select * from (select t.*,row_number() over( partition by t.jyh order by t.id) su ");
+        sql.append("from zfbjyjl t where aj_id="+id+" and jyzt <> '交易关闭') where su=1) j3 ");
+        sql.append("left join (select j1.dyxcsj,min(j1.sksj) sksj from zfbjyjl j1 where j1.aj_id="+id+" "+search);
+        sql.append(") j4 on j3.dyxcsj = j4.dyxcsj where j3.sksj>=j4.sksj) a ");
+        sql.append("left join(select * from (select t.*,row_number() over(partition by t.jyh order by t.id) su ");
+        sql.append("from zfbzhmx t where aj_id="+id+") where su=1) h on a.jyh=h.jyh ");
+        sql.append("left join zfbzcxx c on c.dyxcsj = a.dyxcsj where c.aj_id="+id);
+        Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            zfbJyjlList = session.createSQLQuery(sql.toString())
+                    .addScalar("mjyhid").addScalar("mjxx")
+                    .addScalar("jyzt").addScalar("mijyhid")
+                    .addScalar("mijxx").addScalar("jyje", StandardBasicTypes.BIG_DECIMAL)
+                    .setResultTransformer(Transformers.aliasToBean(ZfbJyjlTjjgsForm.class)).list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return zfbJyjlList;
     }
 }

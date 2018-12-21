@@ -28,6 +28,10 @@
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbDlrzEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

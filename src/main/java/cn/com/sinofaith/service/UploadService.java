@@ -15,8 +15,12 @@ import cn.com.sinofaith.dao.cftDao.CftPersonDao;
 import cn.com.sinofaith.dao.cftDao.CftZcxxDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
 import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
+import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgForm;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
 import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.ReadExcelUtils;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import com.csvreader.CsvReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +55,6 @@ public class UploadService {
 
     @Autowired
     private BankPersonDao bpd;
-
     @Autowired
     private ZfbZcxxDao zfbZcxxDao;
     @Autowired
@@ -62,6 +65,15 @@ public class UploadService {
     private ZfbJyjlDao zfbJyjlDao;
     @Autowired
     private ZfbZzmxDao zfbZzmxDao;
+    @Autowired
+    private ZfbZzmxTjjgDao zfbZzmxTjjgDao;
+    @Autowired
+    private ZfbZzmxTjjgsDao zfbZzmxTjjgsDao;
+    @Autowired
+    private ZfbJyjlTjjgsDao zfbJyjlTjjgsDao;
+    @Autowired
+    private ZfbJyjlSjdzsDao zfbJyjlSjdzsDao;
+
 
     public int deleteAll(String uploadPath) {
         try {
@@ -662,6 +674,25 @@ public class UploadService {
             String sql = "update zfbjyjl j set j.jyzt='交易成功' where j.jyzt='TRADE_SUCCESS' and j.aj_id="+id;
             zfbJyjlDao.updateBySql(sql);
         }
+        // 添加转账明细统计数据
+        List<ZfbZzmxTjjgForm> tjjgForms = zfbZzmxTjjgDao.selectZzmxTjjg(id);
+        List<ZfbZzmxTjjgEntity> zzmxTjjgList = ZfbZzmxTjjgEntity.FormToList(tjjgForms,id);
+        zfbZzmxTjjgDao.delAll(id);
+        zfbZzmxTjjgDao.insertZzmxTjjg(zzmxTjjgList);
+        // 添加转账明细对手账户统计数据
+        List<ZfbZzmxTjjgsForm> tjjgsForms = zfbZzmxTjjgsDao.selectZzmxTjjgs(id);
+        List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = ZfbZzmxTjjgsEntity.FormToList(tjjgsForms,id);
+        zfbZzmxTjjgsDao.delAll(id);
+        zfbZzmxTjjgsDao.insertZzmxTjjgs(zzmxTjjgsList);
+        // 添加交易记录对手账户统计数据
+        List<ZfbJyjlTjjgsForm> jyjlTjjgsForms = zfbJyjlTjjgsDao.selectJyjlTjjgs(id);
+        List<ZfbJyjlTjjgsEntity> jyjlTjjgsList = ZfbJyjlTjjgsEntity.FormToList(jyjlTjjgsForms,id);
+        zfbJyjlTjjgsDao.delAll(id);
+        zfbJyjlTjjgsDao.insertJyjlTjjgs(jyjlTjjgsList);
+        // 添加交易记录收件人地址统计数据
+        List<ZfbJyjlSjdzsEntity> jyjlSjdzsForms = zfbJyjlSjdzsDao.selectJyjlSjdzs(id);
+        zfbJyjlSjdzsDao.delAll(id);
+        zfbJyjlSjdzsDao.insertJyjlSjdzs(jyjlSjdzsForms,id);
         return sum;
     }
 

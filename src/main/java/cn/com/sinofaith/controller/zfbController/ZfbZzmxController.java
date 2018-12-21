@@ -30,17 +30,20 @@ public class ZfbZzmxController {
     private ZfbZzmxService zfbZzmxService;
 
     @RequestMapping()
-    public ModelAndView zfbZzmx(HttpSession session){
+    public ModelAndView zfbZzmx(String flag, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/zfbZzmx/seach?pageNo=1");
         session.removeAttribute("zzmxSeachCondition"); //查询条件
         session.removeAttribute("zzmxSeachCode");//查询内容
         session.removeAttribute("zzmxLastOrder");
         session.removeAttribute("zzmxDesc");
+        session.setAttribute("flag",flag);
         return mav;
     }
 
     @RequestMapping("/seach")
     public String seach(int pageNo, String orderby, HttpSession session, Model model){
+        // 创建离线查询对象
+        DetachedCriteria dc = DetachedCriteria.forClass(ZfbZzmxEntity.class);
         // 取出域中对象
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         if(aj==null){
@@ -51,35 +54,34 @@ public class ZfbZzmxController {
         String lastOrder = (String) session.getAttribute("zzmxLastOrder");
         String desc = (String) session.getAttribute("zzmxDesc");
         // 创建离线查询语句
-        String seach = "";
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            seach += " and "+seachCondition+" like '"+seachCode+"'";
+            dc.add(Restrictions.like(seachCondition,seachCode));
         }
         if(orderby==null && desc==null){
-            seach += " order by zzje desc";
+            dc.addOrder(Order.desc("zzje").nulls(NullPrecedence.LAST));
         }
         if(orderby!=null){
             if(orderby.equals(lastOrder)){
                 if(desc==null || desc.equals("desc")){
-                    seach += " order by "+orderby;
+                    dc.addOrder(Order.asc(orderby));
                     desc = "";
                 }else{
-                    seach += " order by "+orderby+" desc nulls last";
+                    dc.addOrder(Order.desc(orderby).nulls(NullPrecedence.LAST));
                     desc = "desc";
                 }
             }else{
-                seach += " order by "+orderby;
+                dc.addOrder(Order.asc(orderby));
                 desc = "";
             }
         }else if("".equals(desc)){
-            seach += " order by "+lastOrder;
+            dc.addOrder(Order.asc(lastOrder));
         }else if("desc".equals(desc)){
-            seach += " order by "+lastOrder+" desc nulls last";
+            dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
         }
         // 封装分页数据
         // 获取分页数据
-        Page page = zfbZzmxService.queryForPage(pageNo,10,seach,aj.getId());
+        Page page = zfbZzmxService.queryForPage(pageNo,10,dc);
         // 将数据存入request域中
         model.addAttribute("zzmxSeachCode", seachCode);
         model.addAttribute("zzmxSeachCondition", seachCondition);
@@ -116,7 +118,7 @@ public class ZfbZzmxController {
         return "redirect:/zfbZzmx/seach?pageNo=1";
     }
 
-    @RequestMapping("/getDetails")
+    /*@RequestMapping("/getDetails")
     public @ResponseBody
     String getPyramSaleDetails(String dyxcsj, String zzcpmc, String order, int page, HttpSession session){
         // 创建离线查询对象
@@ -156,18 +158,5 @@ public class ZfbZzmxController {
         }
         String json= zfbZzmxService.getZfbZzmx(page, 100, dc);
         return json;
-    }
-
-    /**
-     * 删除desc
-     * @param ses
-     * @return
-     */
-    @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
-    @ResponseBody
-    public String removeDesc(HttpSession ses){
-        ses.removeAttribute("zzmxXQDesc");
-        ses.removeAttribute("zzmxXQLastOrder");
-        return "200";
-    }
+    }*/
 }

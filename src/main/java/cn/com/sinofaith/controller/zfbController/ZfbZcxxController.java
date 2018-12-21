@@ -29,12 +29,16 @@ public class ZfbZcxxController {
     private ZfbZcxxService zfbZcxxService;
 
     @RequestMapping()
-    public ModelAndView zfb(HttpSession session){
+    public ModelAndView zfb(String flag, HttpSession session){
         ModelAndView mav = new ModelAndView("redirect:/zfb/seach?pageNo=1");
         session.removeAttribute("zcxxSeachCondition"); //查询条件
         session.removeAttribute("zcxxSeachCode");//查询内容
         session.removeAttribute("zcxxLastOrder");
         session.removeAttribute("zcxxDesc");
+        if(flag==null){
+            flag = "a1";
+        }
+        session.setAttribute("flag",flag);
         return mav;
     }
 

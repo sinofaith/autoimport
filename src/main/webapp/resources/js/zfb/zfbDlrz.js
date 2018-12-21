@@ -92,7 +92,7 @@ function getZfbDlrzDetails(obj){
                         var j = 1;
                         for(i=0;i<dataA.length;i++){
                             if(dataA[i][0]==value[0] && dataA[i][1]==value[1]){
-                                if(j%2==0){
+                                if(j%4==0){
                                     content += schema[2].text+(j++)+ ': ' + dataA[i][2] + '<br>';
                                 }else{
                                     content += schema[2].text+(j++)+ ': ' + dataA[i][2] + '\t';

@@ -1,0 +1,54 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+
+<span class="tab_nav">
+    <span class="dropdown">
+        <a href="#" onclick="skip('a1','zfb')" <c:if test="${flag=='a1'}">class="addactive"</c:if> id="dropdownMenu1" data-toggle="dropdown">支付宝注册信息</a>
+    </span>
+    <span class="dropdown">
+        <a href="#" onclick="skip('a2','zfbZhmx')" <c:if test="${flag=='a2'}">class="addactive"</c:if> id="dropdownMenu2" data-toggle="dropdown">支付宝账户明细</a>
+    </span>
+    <span class="dropdown">
+        <a href="#" onclick="skip('a3','zfbZzmx')" <c:if test="${flag=='a3'||flag=='a4'||flag=='a5'||flag=='a6'}">class="addactive"</c:if> id="dropdownMenu3" data-toggle="dropdown">支付宝转账明细</a>
+        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 288px; background: white; margin-top: 6px; margin-left: -288px">
+            <li role="presentation">
+                <a id="a4" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a4','zfbZzmxTjjg')" style="width: 265px; <c:if test="${flag=='a4'}">background: #09CEB8</c:if>">转账明细统计结果</a>
+            </li>
+            <li role="presentation">
+                <a id="a5" role="menuitem" tabindex="2" href="JavaScript:void(0);" onclick="skip('a5','zfbZzmxTjjgs')" style="width: 265px; <c:if test="${flag=='a5'}">background: #09CEB8</c:if>">转账明细对手账户</a>
+            </li>
+            <li role="presentation">
+                <a id="a6" role="menuitem" tabindex="3" href="JavaScript:void(0);" onclick="skip('a6','zfbZzmxGtzh')" style="width: 265px; <c:if test="${flag=='a6'}">background: #09CEB8</c:if>">转账明细共同账户</a>
+            </li>
+        </span>
+    </span>
+    <span class="dropdown">
+        <a href="#" onclick="skip('a7','zfbJyjl')" <c:if test="${flag=='a7'||flag=='a8'||flag=='a9'}">class="addactive"</c:if> id="dropdownMenu4" data-toggle="dropdown">支付宝交易记录</a>
+        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 288px; background: white; margin-top: 6px; margin-left: -288px">
+            <li role="presentation">
+                <a id="a8" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a8','zfbJyjlSjdzs')" style="width: 265px; <c:if test="${flag=='a8'}">background: #09CEB8</c:if>">交易记录地址统计</a>
+            </li>
+            <li role="presentation">
+                <a id="a9" role="menuitem" tabindex="2" href="JavaScript:void(0);" onclick="skip('a9','zfbJyjlTjjgs')" style="width: 265px; <c:if test="${flag=='a9'}">background: #09CEB8</c:if>">交易记录对手账户</a>
+            </li>
+        </span>
+    </span>
+    <span class="dropdown">
+        <a href="#" onclick="skip('a10','zfbDlrz')" <c:if test="${flag=='a10'}">class="addactive"</c:if> id="dropdownMenu5" data-toggle="dropdown">支付宝登陆日志</a>
+    </span>
+</span>
+<script type="text/javascript">
+    function skip(obj,url){
+        window.location = "${pageContext.request.contextPath}/"+url+"?flag="+obj;
+    }
+    //bootstrap下拉菜单 鼠标悬停显示
+    $(function () {
+        $(".dropdown").mouseover(function () {
+            $(this).addClass("open");
+        });
+        $(".dropdown").mouseleave(function(){
+            $(this).removeClass("open");
+        })
+
+    })
+</script>

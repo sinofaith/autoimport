@@ -25,16 +25,15 @@ public class ZfbZzmxService {
      * 分页数据
      * @param currentPage
      * @param pageSize
-     * @param seach
-     * @param id
+     * @param dc
      * @return
      */
-    public Page queryForPage(int currentPage, int pageSize, String seach, long id) {
+    public Page queryForPage(int currentPage, int pageSize, DetachedCriteria dc) {
         Page page = new Page();
-        List<ZfbZzmxForm> zzmxForms = null;
-        int rowAll = zfbZzmxDao.getCountRow(seach,id);
+        List<ZfbZzmxEntity> zzmxForms = null;
+        int rowAll = zfbZzmxDao.getRowAll(dc);
         if(rowAll>0){
-            zzmxForms = zfbZzmxDao.queryForPage(currentPage,pageSize,seach,id);
+            zzmxForms = zfbZzmxDao.getDoPage(currentPage,pageSize,dc);
             if(zzmxForms!=null){
                 page.setPageSize(pageSize);
                 page.setList(zzmxForms);
@@ -52,7 +51,7 @@ public class ZfbZzmxService {
      * @param dc
      * @return
      */
-    public String getZfbZzmx(int currentPage, int pageSize, DetachedCriteria dc) {
+    /*public String getZfbZzmx(int currentPage, int pageSize, DetachedCriteria dc) {
         Gson gson = new Gson();
         Page page = null;
         int rowAll = zfbZzmxDao.getRowAll(dc);
@@ -70,5 +69,5 @@ public class ZfbZzmxService {
             }
         }
         return gson.toJson(page);
-    }
+    }*/
 }

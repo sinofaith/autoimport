@@ -93,18 +93,18 @@ function progressFunction(evt) {
 // 转账明细显示详情数据
 function getZfbZzxxDetails(obj){
     // 用户Id
-    var dyxcsj = $(obj).closest("tr").find("td:eq(5)").text();
+    var zfbzh = $(obj).closest("tr").find("td:eq(1)").text();
     // 转账产品名称
-    var zzcpmc = $(obj).closest("tr").find("td:eq(6)").text();
+    var zzcpmc = $(obj).closest("tr").find("td:eq(3)").text();
     window.page = 1;
     var tbody = window.document.getElementById("result");
-    var url = "/SINOFAITH/zfbZzmx/getDetails";
+    var url = "/SINOFAITH/zfbZzmxTjjg/getDetails";
     $.ajax({
         type:"post",
         dataType:"json",
         url:url,
         data:{
-            dyxcsj:dyxcsj,
+            zfbzh:zfbzh,
             zzcpmc:zzcpmc,
             order:'dzsj',
             page:parseInt(page)
@@ -112,7 +112,7 @@ function getZfbZzxxDetails(obj){
         success:function (msg) {
             var data = msg.list;
             insert(data,tbody,true);
-            $("#dyxcsj").attr("value",dyxcsj);
+            $("#zfbzh").attr("value",zfbzh);
             $("#zzcpmc").attr("value",zzcpmc);
             $("#allRow").attr("value",msg.totalRecords);
         }
@@ -122,19 +122,19 @@ function getZfbZzxxDetails(obj){
 // 转账明细排序
 function orderByFilter(filter){
     var tbody = window.document.getElementById("result");
-    var dyxcsj = $("#dyxcsj").val();
+    var zfbzh = $("#zfbzh").val();
     var zzcpmc = $("#zzcpmc").val();
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
     window.page = 1;
-    var url = "/SINOFAITH/zfbZzmx/getDetails";
+    var url = "/SINOFAITH/zfbZzmxTjjg/getDetails";
     $.ajax({
         type:"post",
         dataType:"json",
         url:url,
         data:{
-            dyxcsj:dyxcsj,
+            zfbzh:zfbzh,
             zzcpmc:zzcpmc,
             order:filter,
             page:parseInt(page)
@@ -142,7 +142,7 @@ function orderByFilter(filter){
         success:function (msg) {
             var data = msg.list;
             insert(data,tbody,true);
-            $("#dyxcsj").attr("value",dyxcsj);
+            $("#zfbzh").attr("value",zfbzh);
             $("#zzcpmc").attr("value",zzcpmc);
             $("#allRow").attr("value",msg.totalRecords);
         }
@@ -153,7 +153,7 @@ function orderByFilter(filter){
 var is_running = false;
 function scrollF() {
     var tbody = window.document.getElementById("result");
-    var dyxcsj = $("#dyxcsj").val();
+    var zfbzh = $("#zfbzh").val();
     var zzcpmc = $("#zzcpmc").val();
     var allRow = $("#allRow").val();
     var scrollT = parseFloat(tbody.scrollTop) + parseFloat(tbody.clientHeight)
@@ -162,13 +162,13 @@ function scrollF() {
         if (is_running == false) {
             is_running = true;
             window.page = page += 1;
-            var url = "/SINOFAITH/zfbZzmx/getDetails"
+            var url = "/SINOFAITH/zfbZzmxTjjg/getDetails"
             $.ajax({
                 type:"post",
                 dataType:"json",
                 url:url,
                 data:{
-                    dyxcsj:dyxcsj,
+                    zfbzh:zfbzh,
                     zzcpmc:zzcpmc,
                     order:"xxx",
                     page:parseInt(window.page)
@@ -176,7 +176,7 @@ function scrollF() {
                 success:function (msg) {
                     var data = msg.list;
                     insert(data,tbody,false);
-                    $("#dyxcsj").attr("value",dyxcsj);
+                    $("#zfbzh").attr("value",zfbzh);
                     $("#zzcpmc").attr("value",zzcpmc);
                     $("#allRow").attr("value",msg.totalRecords);
                     is_running = false;
@@ -199,11 +199,11 @@ function insert(data,tbody,temp){
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"14%\">"+data[i].jyh+"</td>"+
             "<td width=\"8%\">"+data[i].fkfzfbzh+"</td>"+
+            "<td width=\"8%\">"+data[i].zzcpmc+"</td>"+
             "<td width=\"8%\">"+data[i].skfzfbzh+"</td>"+
             "<td width=\"5%\">"+data[i].skjgxx+ "</td>"+
             "<td width=\"7%\">"+data[i].dzsj+"</td>"+
             "<td width=\"4%\">"+data[i].zzje+"</td>"+
-            "<td width=\"8%\">"+data[i].zzcpmc+"</td>"+
             "<td width=\"12%\">"+data[i].txlsh+"</td>"+
             "</tr>";
     }
@@ -224,8 +224,7 @@ $(function () {
         if(tbody!=null) {
             tbody.innerHTML = "";
         }
-        $.ajax({url:"/SINOFAITH/zfbZzmx/removeDesc"});
-        $.ajax({url:"/SINOFAITH/zfbJyjl/removeDesc"});
+        $.ajax({url:"/SINOFAITH/zfbZzmxTjjg/removeDesc"});
     });
 });
 
@@ -394,5 +393,22 @@ function jyjlInsert(data,tbody,temp){
         tbody.innerHTML = str;
     }else{
         tbody.innerHTML += str;
+    }
+}
+
+// 阀值设置
+function seachChange() {
+    var seachCondition = $("#seachCondition").val();
+    if(seachCondition === "fkzje" || seachCondition === "skzje"){
+        $("#seachCode").val("50000")
+    }else{
+        $("#seachCode").val("")
+    }
+}
+
+function isNum(obj){
+    var seachCondition = $("#seachCondition").val();
+    if(seachCondition === "fkzje" || seachCondition === "skzje"){
+        obj.value=obj.value.replace(/[^\d]/g,'')
     }
 }

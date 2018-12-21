@@ -25,13 +25,19 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">
-        <a  href="/SINOFAITH/zfb" class="addactive">支付宝注册信息</a>
-        <a href="/SINOFAITH/zfbZhmx">支付宝账户明细</a>
-        <a href="/SINOFAITH/zfbZzmx">支付宝转账明细</a>
-        <a href="/SINOFAITH/zfbJyjl">支付宝交易记录</a>
-        <a href="/SINOFAITH/zfbDlrz">支付宝登陆日志</a>
-    </span>
+    <%--<span class="tab_nav">
+        <a style="width: 10%;" href="/SINOFAITH/zfb" class="addactive">支付宝注册信息</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbZhmx">支付宝账户明细</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbZzmx">支付宝转账明细</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbZzmxTjjg">转账明细统计结果</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbZzmxTjjgs">转账明细对手账户</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbZzmxGtzh">转账明细共同账户</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbJyjl">支付宝交易记录</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbJyjlSjdzs">交易记录地址统计</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbJyjlTjjgs">交易记录对手账户</a>
+        <a style="width: 10%;" href="/SINOFAITH/zfbDlrz">支付宝登陆日志</a>
+    </span>--%>
+    <%@include file="title.jsp" %>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -42,7 +48,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>支付宝注册信息(${aj.aj})</strong>
                                             </div>
@@ -54,11 +60,12 @@
                                         <td width="8%">登陆邮箱</td>
                                         <td width="10%">登陆手机</td>
                                         <td width="8%">账户名称</td>
-                                        <td width="8%">证件类型</td>
+                                        <td width="10%">证件类型</td>
                                         <td width="15%">证件号</td>
                                         <td width="6%">可用余额</td>
                                         <td width="10%">绑定手机</td>
-                                        <td width="25%">绑定银行卡</td>
+                                        <td width="15%">绑定银行卡</td>
+                                        <td width="6%">店铺名</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
@@ -66,18 +73,19 @@
                                             <td align="center">${item.yhId}</td>
                                             <td align="center">${item.dlyx}</td>
                                             <td align="center">${item.dlsj}</td>
-                                            <td align="center">${item.zhmc}</td>
+                                            <td align="center" title="${item.zhmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zhmc}</div></td>
                                             <td align="center">${item.zjlx}</td>
                                             <td align="center">${item.zjh}</td>
                                             <td align="center">${item.kyye}</td>
                                             <td align="center">${item.bdsj}</td>
-                                            <td align="center" title="${item.bdyhk}"><div style="width:250px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.bdyhk}</div></td>
+                                            <td align="center" title="${item.bdyhk}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.bdyhk}</div></td>
+                                            <td align="center">${item.dyxcsj}</td>
                                         </tr>
                                     </c:forEach>
                                     <c:choose>
                                         <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                             <tr>
-                                                <td colspan="10" align="center"> 无数据 </td>
+                                                <td colspan="11" align="center"> 无数据 </td>
                                             </tr>
                                         </c:when>
                                     </c:choose>

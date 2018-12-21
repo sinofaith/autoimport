@@ -148,14 +148,14 @@
                                 <form action="/SINOFAITH/pyramidSaleTier/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
-                                        <select id="seachCondition" name="seachCondition" class="width100" STYLE="margin-bottom: 20px;"  onchange="seachChange()">
+                                        <select id="seachCondition" name="seachCondition" class="width100" STYLE="margin-bottom: 20px;" onchange="seachChange()">
                                             <option value="psId"<c:if test="${psTierSeachCondition=='psId'}">selected="selected"</c:if>>会员编号</option>
                                             <option value="sponsorid" <c:if test="${psTierSeachCondition=='sponsorid'}">selected="selected"</c:if> >推荐会员编号</option>
                                             <option value="psAccountholder" <c:if test="${psTierSeachCondition=='psAccountholder'}">selected="selected"</c:if> >姓名</option>
-                                            <option value="directDrive" <c:if test="${psTierSeachCondition=='directDrive'}">selected="selected"</c:if> >直推下线数阈值</option>
-                                            <option value="directReferNum" <c:if test="${psTierSeachCondition=='directReferNum'}">selected="selected"</c:if> >下线会员数阈值</option>
+                                            <option value="directDrive" <c:if test="${psTierSeachCondition=='directDrive'}">selected="selected"</c:if> >直推下线数阀值</option>
+                                            <option value="directReferNum" <c:if test="${psTierSeachCondition=='directReferNum'}">selected="selected"</c:if> >下线会员数阀值</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${psTierSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" onkeyup="isNum(this)">${psTierSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>

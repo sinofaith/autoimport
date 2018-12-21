@@ -57,7 +57,7 @@ public class pyramidSaleTierController {
             seach += " and "+seachCondition+" like '"+seachCode+"'";
         }else if(seachCode!=null && (seachCondition.equals("directDrive") || seachCondition.equals("directReferNum"))){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            seach += " and "+seachCondition+"<'"+seachCode+"'";
+            seach += " and "+seachCondition+">'"+seachCode+"'";
         }
         if(orderby==null && desc==null){
             seach += " order by tier,id";

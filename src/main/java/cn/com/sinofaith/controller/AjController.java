@@ -2,6 +2,9 @@ package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
@@ -101,7 +104,7 @@ public class AjController {
         } else if(type==4){
             mav = new ModelAndView("redirect:/pyramidSale/seach?pageNo=1");
         } else if(type==5){
-            mav = new ModelAndView("redirect:/zfbZhmx/seach?pageNo=1");
+            mav = new ModelAndView("redirect:/zfbZhmx?flag=a2");
         }
 
         httpSession.removeAttribute("zcseachCode");
@@ -118,7 +121,7 @@ public class AjController {
         if(ajs.findByName(aj).size()>0){
             result = "303";
         }else {
-            ajs.save(new AjEntity(0,aj, 0,TimeFormatUtil.getDate("/")));
+            ajs.save(new AjEntity(0,aj, 0,"",TimeFormatUtil.getDate("/")));
             result = "200";
         }
         return result;
@@ -145,7 +148,7 @@ public class AjController {
     public String ajsCount(@RequestParam("ajm") String ajm){
         List<AjEntity> ajlist = ajs.findByName(ajm);
         if(ajlist.size()<1) {
-            ajs.save(new AjEntity(0, ajm,0, TimeFormatUtil.getDate("/")));
+            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/")));
             AjEntity aje = ajs.findByName(ajm).get(0);
             List<CftZzxxEntity> listZz = ajs.getCftList(aje);
             tjs.count(listZz, aje.getId());
@@ -170,6 +173,20 @@ public class AjController {
             return "200";
         }else {
             return "303";
+        }
+    }
+
+    @RequestMapping(value = "/filterJyjlBySpmc",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String filterJyjlBySpmc(String aj,String filterInput,HttpSession session){
+        AjEntity aje = ajs.findByName(aj).get(0);
+        int sum = ajs.getZfbZzmxList(aje,filterInput);
+        if(sum>0){
+            aje = ajs.findByName(aj).get(0);
+            session.setAttribute("aj",aje);
+            return "200";
+        }else{
+            return "500";
         }
     }
 }
