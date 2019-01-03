@@ -56,11 +56,11 @@ public class PyramidSaleEntity {
     }
 
     public void setMobile(String mobile) {
-        if(mobile == null){
+        /*if(mobile == null){
             this.mobile = "";
-        }else{
+        }else{*/
             this.mobile = mobile;
-        }
+        /*}*/
     }
 
     @Basic
@@ -70,11 +70,11 @@ public class PyramidSaleEntity {
     }
 
     public void setTelphone(String telphone) {
-        if(telphone == null){
+        /*if(telphone == null){
             this.telphone = "";
-        }else{
+        }else{*/
             this.telphone = telphone;
-        }
+        /*}*/
     }
 
     @Basic
@@ -84,11 +84,11 @@ public class PyramidSaleEntity {
     }
 
     public void setNick_name(String nick_name) {
-        if(nick_name == null){
+        /*if(nick_name == null){
             this.nick_name = "";
-        }else {
+        }else {*/
             this.nick_name = nick_name;
-        }
+        /*}*/
     }
 
     @Basic
@@ -98,11 +98,11 @@ public class PyramidSaleEntity {
     }
 
     public void setSex(String sex) {
-        if(sex == null){
+        /*if(sex == null){
             this.sex = "";
-        }else{
+        }else{*/
             this.sex = sex;
-        }
+        /*}*/
     }
 
     @Basic
@@ -112,11 +112,11 @@ public class PyramidSaleEntity {
     }
 
     public void setAddress(String address) {
-        if(address == null){
+        /*if(address == null){
             this.address = "";
-        }else{
+        }else{*/
             this.address = address;
-        }
+        /*}*/
     }
 
     @Basic
@@ -126,11 +126,11 @@ public class PyramidSaleEntity {
     }
 
     public void setSfzhm(String sfzhm) {
-        if(sfzhm == null){
+        /*if(sfzhm == null){
             this.sfzhm = "";
-        }else {
+        }else {*/
             this.sfzhm = sfzhm;
-        }
+        /*}*/
     }
 
     @Basic
@@ -140,11 +140,11 @@ public class PyramidSaleEntity {
     }
 
     public void setBankName(String bankName) {
-        if(bankName == null){
+        /*if(bankName == null){
             this.bankName = "";
-        }else{
+        }else{*/
             this.bankName = bankName;
-        }
+        /*}*/
     }
 
     @Basic
@@ -154,11 +154,11 @@ public class PyramidSaleEntity {
     }
 
     public void setAccountHolder(String accountHolder) {
-        if(accountHolder == null){
+       /* if(accountHolder == null){
             this.accountHolder = "";
-        }else{
+        }else{*/
             this.accountHolder = accountHolder;
-        }
+       /* }*/
     }
 
     @Basic
@@ -168,11 +168,11 @@ public class PyramidSaleEntity {
     }
 
     public void setAccountNumber(String accountNumber) {
-        if(accountNumber == null){
+        /*if(accountNumber == null){
             this.accountNumber = "";
-        }else{
+        }else{*/
             this.accountNumber = accountNumber;
-        }
+        /*}*/
     }
 
     @Basic

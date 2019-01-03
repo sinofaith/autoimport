@@ -114,11 +114,8 @@ public class ZfbJyjlTjjgsDao extends BaseDao<ZfbJyjlTjjgsEntity>{
      */
     public int getRowAllCount(String search,AjEntity aj) {
         StringBuffer sql = new StringBuffer();
-        String filter = aj.getFilter()!=null?aj.getFilter():"";
-        sql.append("select to_char(count(1)) NUM from (select * from (select t.*,row_number() over( ");
-        sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+aj.getId()+") j where su=1"+search);
-        sql.append(") j1 left join(select t.dyxcsj,min(t.sksj) sksj from ZFBJYJL t where t.aj_id="+aj.getId()+" and t.spmc like '%"+filter+"%' ");
-        sql.append("group by t.dyxcsj) j2 on j1.dyxcsj=j2.dyxcsj where j1.sksj>=j2.sksj");
+        sql.append("select to_char(count(1)) NUM from (select j.*,row_number() over(");
+        sql.append("partition by j.jyh order by j.id) su from zfbjyjl j where aj_id="+aj.getId()+search+")");
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
@@ -130,21 +127,23 @@ public class ZfbJyjlTjjgsDao extends BaseDao<ZfbJyjlTjjgsEntity>{
      * @param pageSize
      * @param search
      * @param aj
+     * @param flag
      * @return
      */
-    public List<ZfbJyjlEntity> getDoPageTjjgs(int currentPage, int pageSize, String search, AjEntity aj) {
+    public List<ZfbJyjlEntity> getDoPageTjjgs(int currentPage, int pageSize, String search, AjEntity aj, boolean flag) {
         List<ZfbJyjlEntity> jyjlTjjgs = null;
-        String filter = aj.getFilter()!=null?aj.getFilter():"";
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM (");
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM (");
+        }
         sql.append("select j.jyh,j.mjyhid,substr(j.mjxx,1,instr(j.mjxx,')')) mjxx,j.jyzt,j.mijyhid,");
-        sql.append("substr(j.mijxx,1,instr(j.mijxx,')')) mijxx,j.jyje,j.sksj,j.spmc,j.shrdz from (select * from (");
-        sql.append("select t.*,row_number() over(");
-        sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+aj.getId()+") j where su=1"+search);
-        sql.append(") j left join(select t.dyxcsj,min(t.sksj) sksj from ZFBJYJL t where t.aj_id="+aj.getId()+" and t.spmc like '%"+filter+"%' ");
-        sql.append("group by t.dyxcsj) j2 on j.dyxcsj=j2.dyxcsj where j.sksj>=j2.sksj");
-        sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        sql.append("substr(j.mijxx,1,instr(j.mijxx,')')) mijxx,j.jyje,j.sksj,j.spmc,j.shrdz from (");
+        sql.append("select j.*,row_number() over(");
+        sql.append("partition by j.jyh order by j.id) su from zfbjyjl j where aj_id="+aj.getId()+search+") j");
+        if(flag){
+            sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();

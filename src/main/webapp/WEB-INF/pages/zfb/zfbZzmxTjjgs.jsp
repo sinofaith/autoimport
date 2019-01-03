@@ -14,7 +14,6 @@
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
-<script src="<c:url value="/resources/js/zfb/zfb.js"/> "></script>
 <script src="<c:url value="/resources/js/zfb/zfbzzmxtjjgs.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
@@ -142,7 +141,7 @@
                                             <option value="fkzje"<c:if test="${zzmxTjjgsSeachCondition=='fkzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <option value="skzje"<c:if test="${zzmxTjjgsSeachCondition=='skzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" onkeyup="isNum(this)">${zzmxTjjgsSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${zzmxTjjgsSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -158,7 +157,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/zfbZzmxTjjgs/download'"</c:if>>数据导出</button>
+                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjgs/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>

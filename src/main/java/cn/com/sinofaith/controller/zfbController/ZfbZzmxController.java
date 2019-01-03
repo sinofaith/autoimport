@@ -1,9 +1,11 @@
 package cn.com.sinofaith.controller.zfbController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZhmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.zfbService.ZfbZzmxService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -16,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 /**
  * 支付宝转账明细控制器
@@ -49,6 +55,7 @@ public class ZfbZzmxController {
         if(aj==null){
             return "/zfb/zfbZzmx";
         }
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
         String seachCondition = (String) session.getAttribute("zzmxSeachCondition");
         String seachCode = (String) session.getAttribute("zzmxSeachCode");
         String lastOrder = (String) session.getAttribute("zzmxLastOrder");
@@ -56,7 +63,7 @@ public class ZfbZzmxController {
         // 创建离线查询语句
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            dc.add(Restrictions.like(seachCondition,seachCode));
+            dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
         }
         if(orderby==null && desc==null){
             dc.addOrder(Order.desc("zzje").nulls(NullPrecedence.LAST));
@@ -118,45 +125,45 @@ public class ZfbZzmxController {
         return "redirect:/zfbZzmx/seach?pageNo=1";
     }
 
-    /*@RequestMapping("/getDetails")
-    public @ResponseBody
-    String getPyramSaleDetails(String dyxcsj, String zzcpmc, String order, int page, HttpSession session){
+    @RequestMapping("/download")
+    public void download(HttpServletResponse resp, HttpSession session) throws IOException {
         // 创建离线查询对象
         DetachedCriteria dc = DetachedCriteria.forClass(ZfbZzmxEntity.class);
-        // 取出域中对象
+        // 获得session中对象
+        String seachCondition = (String) session.getAttribute("zzmxSeachCondition");
+        String seachCode = (String) session.getAttribute("zzmxSeachCode");
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
+        }
         AjEntity aj = (AjEntity) session.getAttribute("aj");
-        // 条件语句
         dc.add(Restrictions.eq("aj_id",aj.getId()));
-        String lastOrder = (String) session.getAttribute("zzmxXQLastOrder");
-        String desc = (String) session.getAttribute("zzmxXQDesc");
-        dc.add(Restrictions.eq("dyxcsj",dyxcsj));
-        dc.add(Restrictions.eq("zzcpmc",zzcpmc));
-        // 查询哪一个案件
-        if("xxx".equals(order)){
-            if("".equals(desc)){
+        String lastOrder = (String) session.getAttribute("zzmxLastOrder");
+        String desc = (String) session.getAttribute("zzmxDesc");
+        if(lastOrder!=null && desc!=null){
+            if(desc.equals("desc")){
                 dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
+                dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
             }else{
                 dc.addOrder(Order.asc(lastOrder));
+                dc.addOrder(Order.asc("id"));
             }
         }else{
-            if(order.equals(lastOrder)){
-                if(desc==null || desc.equals("")){
-                    dc.addOrder(Order.asc(order));
-                    desc = "desc";
-                }else{
-                    dc.addOrder(Order.desc(order).nulls(NullPrecedence.LAST));
-                    desc = "";
-                }
-            }else{
-                dc.addOrder(Order.desc(order).nulls(NullPrecedence.LAST));
-                desc = "";
-            }
+            dc.addOrder(Order.desc("zzje").nulls(NullPrecedence.LAST));
+            dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
         }
-        session.setAttribute("zzmxXQDesc", desc);
-        if(!order.equals("xxx")){
-            session.setAttribute("zzmxXQLastOrder", order);
+        // 获取所有数据数据
+        List<ZfbZzmxEntity> zzmxs = zfbZzmxService.getZfbZzmxAll(dc);
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(zzmxs!=null){
+            wb = zfbZzmxService.createExcel(zzmxs);
         }
-        String json= zfbZzmxService.getZfbZzmx(page, 100, dc);
-        return json;
-    }*/
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝转账明细(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
+    }
 }

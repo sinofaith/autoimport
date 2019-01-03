@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.pyramidSaleBean.PsHierarchyEntity;
 import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.dao.pyramidSaleDao.PsHierarchyDao;
 import cn.com.sinofaith.dao.pyramidSaleDao.PyramidSaleDao;
+import cn.com.sinofaith.form.zfbForm.ZfbJyjlSjdzsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.ExcelMappingUtils;
 import com.monitorjbl.xlsx.StreamingReader;
@@ -335,19 +336,113 @@ public class PyramidSaleService {
     public int insertPsHierarchy(long id) {
         // 查出所需要的数据
         int rowNum = pyramidSaleDao.selectPyramidSaleByAj_id(id);
-        /*List<PsHierarchyEntity> pshList = psHierarchyDao.selectPsHierarchyByAj_Id(id);
-        for (int i=0;i<pshierList.size();i++) {
-            for (PsHierarchyEntity psh : pshList) {
-                if(pshierList.get(i).getPsId().equals(psh.getPsId())){
-                    pshierList.get(i).setDirectReferNum(psh.getDirectReferNum());
-                }
-            }
-        }*/
-        // 插入数据
-       // int sum = psHierarchyDao.insertpsHierarchy(pshierList,id);
-        // 更新包含层数据
-        //psHierarchyDao.updateHierarchy(id);
         return rowNum;
     }
 
+    /**
+     * 数据导出
+     * @param search
+     * @return
+     */
+    public List<PyramidSaleEntity> getPyramidSaleAll(String search) {
+        List<PyramidSaleEntity> psList = null;
+        int rowAll = pyramidSaleDao.getRowAllCount(search);
+        if(rowAll>0){
+            psList = pyramidSaleDao.getPyramidSaleAll(search);
+        }
+        return psList;
+    }
+
+    /**
+     * 数据导出excel表
+     * @param psList
+     * @return
+     */
+    public HSSFWorkbook createExcel(List<PyramidSaleEntity> psList) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet("传销会员信息");
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("序号");
+        cell = row.createCell(1);
+        cell.setCellValue("会员编号");
+        cell = row.createCell(2);
+        cell.setCellValue("推荐会员编号");
+        cell = row.createCell(3);
+        cell.setCellValue("姓名");
+        cell = row.createCell(4);
+        cell.setCellValue("手机号");
+        cell = row.createCell(5);
+        cell.setCellValue("性别");
+        cell = row.createCell(6);
+        cell.setCellValue("详细地址");
+        cell = row.createCell(7);
+        cell.setCellValue("身份证号");
+        cell = row.createCell(8);
+        cell.setCellValue("持卡人");
+        cell = row.createCell(9);
+        cell.setCellValue("银行名称");
+        cell = row.createCell(10);
+        cell.setCellValue("银行卡号");
+        int b = 1;
+        for(int i=0;i<psList.size();i++) {
+            PyramidSaleEntity wl = psList.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
+                sheet = wb.createSheet("传销会员信息(" + b + ")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("会员编号");
+                cell = row.createCell(2);
+                cell.setCellValue("推荐会员编号");
+                cell = row.createCell(3);
+                cell.setCellValue("姓名");
+                cell = row.createCell(4);
+                cell.setCellValue("手机号");
+                cell = row.createCell(5);
+                cell.setCellValue("性别");
+                cell = row.createCell(6);
+                cell.setCellValue("详细地址");
+                cell = row.createCell(7);
+                cell.setCellValue("身份证号");
+                cell = row.createCell(8);
+                cell.setCellValue("持卡人");
+                cell = row.createCell(9);
+                cell.setCellValue("银行名称");
+                cell = row.createCell(10);
+                cell.setCellValue("银行卡号");
+                b += 1;
+            }
+            row = sheet.createRow((i+b) % 65536);
+            cell = row.createCell(0);
+            cell.setCellValue(i+1);
+            cell = row.createCell(1);
+            cell.setCellValue(wl.getPsId());
+            cell = row.createCell(2);
+            cell.setCellValue(wl.getSponsorId());
+            cell = row.createCell(3);
+            cell.setCellValue(wl.getNick_name());
+            cell = row.createCell(4);
+            cell.setCellValue(wl.getMobile());
+            cell = row.createCell(5);
+            cell.setCellValue(wl.getSex());
+            cell = row.createCell(6);
+            cell.setCellValue(wl.getAddress());
+            cell = row.createCell(7);
+            cell.setCellValue(wl.getSfzhm());
+            cell = row.createCell(8);
+            cell.setCellValue(wl.getAccountHolder());
+            cell = row.createCell(9);
+            cell.setCellValue(wl.getBankName());
+            cell = row.createCell(10);
+            cell.setCellValue(wl.getAccountNumber());
+            if((i+b)%65536==0) {
+                for (int a = 0; a < 11; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
+        }
+        return wb;
+    }
 }

@@ -197,16 +197,16 @@ function getPyramSaleDetails(obj,temp){
                     "<td width=\"8%\">"+data[i].psId+"</td>"+
                     "<td width=\"8%\">"+data[i].sponsorId+"</td>"+
                     "<td width=\"8%\">"+data[i].nick_name+"</td>"+
-                    "<td width=\"8%\">"+data[i].mobile+ "</td>"+
-                    "<td width=\"5%\">"+data[i].sex+"</td>"+
-                    "<td width=\"15%\" title='"+data[i].address+"'>"+
-                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].address+"</div></td>"+
-                    "<td width=\"13%\">"+data[i].sfzhm+"</td>"+
-                    "<td width=\"12%\">"+data[i].accountHolder+"</td>"+
-                    "<td width=\"13%\" title='"+data[i].bankName+"'>"+
-                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bankName+"</div></td>"+
-                    "<td width=\"13%\" title='"+data[i].accountNumber+"'>"+
-                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].accountNumber+"</div></td>"+
+                    "<td width=\"8%\">"+(data[i].mobile!=null?data[i].mobile:"")+ "</td>"+
+                    "<td width=\"5%\">"+(data[i].sex!=null?data[i].sex:"")+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].address!=null?data[i].address:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].address!=null?data[i].address:"")+"</div></td>"+
+                    "<td width=\"13%\">"+(data[i].sfzhm!=null?data[i].sfzhm:"")+"</td>"+
+                    "<td width=\"12%\">"+(data[i].accountHolder!=null?data[i].accountHolder:"")+"</td>"+
+                    "<td width=\"13%\" title='"+(data[i].bankName!=null?data[i].bankName:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].bankName!=null?data[i].bankName:"")+"</div></td>"+
+                    "<td width=\"13%\" title='"+(data[i].accountNumber!=null?data[i].accountNumber:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].accountNumber!=null?data[i].accountNumber:"")+"</div></td>"+
                     "</tr>";
             }
             tbody.innerHTML = str;
@@ -281,16 +281,16 @@ function orderByFilter(filter,temp){
                     "<td width=\"8%\">"+data[i].psId+"</td>"+
                     "<td width=\"8%\">"+data[i].sponsorId+"</td>"+
                     "<td width=\"8%\">"+data[i].nick_name+"</td>"+
-                    "<td width=\"8%\">"+data[i].mobile+ "</td>"+
-                    "<td width=\"5%\">"+data[i].sex+"</td>"+
-                    "<td width=\"15%\" title='"+data[i].address+"'>"+
-                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].address+"</div></td>"+
-                    "<td width=\"13%\">"+data[i].sfzhm+"</td>"+
-                    "<td width=\"12%\">"+data[i].accountHolder+"</td>"+
-                    "<td width=\"13%\" title='"+data[i].bankName+"'>"+
-                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bankName+"</div></td>"+
-                    "<td width=\"13%\" title='"+data[i].accountNumber+"'>"+
-                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].accountNumber+"</div></td>"+
+                    "<td width=\"8%\">"+(data[i].mobile!=null?data[i].mobile:"")+ "</td>"+
+                    "<td width=\"5%\">"+(data[i].sex!=null?data[i].sex:"")+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].address!=null?data[i].address:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].address!=null?data[i].address:"")+"</div></td>"+
+                    "<td width=\"13%\">"+(data[i].sfzhm!=null?data[i].sfzhm:"")+"</td>"+
+                    "<td width=\"12%\">"+(data[i].accountHolder!=null?data[i].accountHolder:"")+"</td>"+
+                    "<td width=\"13%\" title='"+(data[i].bankName!=null?data[i].bankName:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].bankName!=null?data[i].bankName:"")+"</div></td>"+
+                    "<td width=\"13%\" title='"+(data[i].accountNumber!=null?data[i].accountNumber:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].accountNumber!=null?data[i].accountNumber:"")+"</div></td>"+
                     "</tr>";
             }
             tbody.innerHTML = str
@@ -354,16 +354,16 @@ function scrollF(temp) {
                             "<td width=\"8%\">"+data[i].psId+"</td>"+
                             "<td width=\"8%\">"+data[i].sponsorId+"</td>"+
                             "<td width=\"8%\">"+data[i].nick_name+"</td>"+
-                            "<td width=\"8%\">"+data[i].mobile+ "</td>"+
-                            "<td width=\"5%\">"+data[i].sex+"</td>"+
-                            "<td width=\"15%\" title='"+data[i].address+"'>"+
-                            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].address+"</div></td>"+
-                            "<td width=\"13%\">"+data[i].sfzhm+"</td>"+
-                            "<td width=\"12%\">"+data[i].accountHolder+"</td>"+
-                            "<td width=\"13%\" title='"+data[i].bankName+"'>"+
-                            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bankName+"</div></td>"+
-                            "<td width=\"13%\" title='"+data[i].accountNumber+"'>"+
-                            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].accountNumber+"</div></td>"+
+                            "<td width=\"8%\">"+(data[i].mobile!=null?data[i].mobile:"")+ "</td>"+
+                            "<td width=\"5%\">"+(data[i].sex!=null?data[i].sex:"")+"</td>"+
+                            "<td width=\"15%\" title='"+(data[i].address!=null?data[i].address:"")+"'>"+
+                            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].address!=null?data[i].address:"")+"</div></td>"+
+                            "<td width=\"13%\">"+(data[i].sfzhm!=null?data[i].sfzhm:"")+"</td>"+
+                            "<td width=\"12%\">"+(data[i].accountHolder!=null?data[i].accountHolder:"")+"</td>"+
+                            "<td width=\"13%\" title='"+(data[i].bankName!=null?data[i].bankName:"")+"'>"+
+                            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].bankName!=null?data[i].bankName:"")+"</div></td>"+
+                            "<td width=\"13%\" title='"+(data[i].accountNumber!=null?data[i].accountNumber:"")+"'>"+
+                            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].accountNumber!=null?data[i].accountNumber:"")+"</div></td>"+
                             "</tr>";
                     }
                     if(temp){
@@ -394,9 +394,22 @@ function seachChange() {
     }
 }
 
+// 判断是否输入的是数字
 function isNum(obj){
     var seachCondition = $("#seachCondition").val();
     if(seachCondition === "directDrive" || seachCondition === "directReferNum"){
         obj.value=obj.value.replace(/[^\d]/g,'')
     }
+}
+
+// 直推详情数据导出
+function downDetailInfo(){
+    var psId = $("#psid").val();
+    location = "/SINOFAITH/pyramidSaleTier/downDetailInfo?psId="+psId+"&temp="+true;
+}
+
+// 下线会员详情数据导出
+function downDetailInfoAll(){
+    var psId = $("#psid1").val();
+    location = "/SINOFAITH/pyramidSaleTier/downDetailInfo?psId="+psId+"&temp="+false;
 }

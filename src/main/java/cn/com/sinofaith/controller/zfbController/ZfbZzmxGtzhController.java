@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.zfbController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxGtzhForm;
@@ -9,6 +10,7 @@ import cn.com.sinofaith.service.zfbService.ZfbZzmxGtzhService;
 import cn.com.sinofaith.service.zfbService.ZfbZzmxTjjgsService;
 import com.google.gson.Gson;
 import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
@@ -73,11 +75,15 @@ public class ZfbZzmxGtzhController {
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if(seachCondition.equals("fkzje") || seachCondition.equals("skzje")){
-                long fz = Long.parseLong(seachCode);
-                BigDecimal big = BigDecimal.valueOf(fz);
-                search += "where "+seachCondition+" > "+big;
+                if(StringUtils.isNumeric(seachCode)) {
+                    long fz = Long.parseLong(seachCode);
+                    BigDecimal big = BigDecimal.valueOf(fz);
+                    search += "where "+seachCondition+" > "+big;
+                }else{
+                    return "/zfb/zfbZzmxGtzh";
+                }
             }else{
-                search += "where "+seachCondition+" like '"+seachCode+"'";
+                search += "where "+seachCondition+" like '%"+seachCode+"%'";
             }
         }
         // 排序字段
@@ -94,8 +100,8 @@ public class ZfbZzmxGtzhController {
                     desc = "";
                 }
             }else{
-                search += " order by "+orderby;
-                desc = "desc";
+                search += " order by "+orderby+" desc";;
+                desc = "";
             }
         }else if("".equals(desc)){
             search += " order by "+lastOrder+" desc";
@@ -114,6 +120,8 @@ public class ZfbZzmxGtzhController {
             model.addAttribute("detailinfo", page.getList());
         }
         if(orderby!=null){
+            session.setAttribute("zzmxGtzhLastOrder",orderby);
+        } else{
             session.setAttribute("zzmxGtzhLastOrder",orderby);
         }
         session.setAttribute("zzmxTjjgOrder",orderby);
@@ -218,7 +226,7 @@ public class ZfbZzmxGtzhController {
                 }
                 search += "where "+seachCondition+" > "+big;
             }else{
-                search += "where "+seachCondition+" like '"+seachCode+"'";
+                search += "where "+seachCondition+" like '%"+seachCode+"%'";
             }
         }
         AjEntity aj = (AjEntity) session.getAttribute("aj");
@@ -242,6 +250,41 @@ public class ZfbZzmxGtzhController {
         }
         resp.setContentType("application/force-download");
         resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝转账明细共同账户信息(\""+aj.getAj()+")"+name+".xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
+    }
+
+    /**
+     * 详情页数据导出
+     * @param resp
+     * @param session
+     * @throws IOException
+     */
+    @RequestMapping("/downDetailInfo")
+    public void downloadDetails(String dfzh, HttpServletResponse resp,
+                                HttpSession session) throws IOException {
+        // 取出域中对象
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 条件语句
+        String lastOrder = (String) session.getAttribute("zzmxGtzhXQLastOrder");
+        String desc = (String) session.getAttribute("zzmxGtzhXQDesc");
+        String search = "where dfzh='"+dfzh+"'";
+        if("".equals(desc)){
+            search += " order by "+lastOrder+" desc  nulls last";
+        }else{
+            search +=  " order by "+lastOrder;
+        }
+        // 获取所有数据数据
+        List<ZfbZzmxGtzhForm> zzmxGtzhForms = zfbZzmxGtzhService.getZfbZzmxDetails(search,aj.getId());
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(zzmxGtzhForms!=null){
+            wb = zfbZzmxGtzhService.createExcel(zzmxGtzhForms);
+        }
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝转账明细共同账号信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = resp.getOutputStream();
         wb.write(op);
         op.flush();

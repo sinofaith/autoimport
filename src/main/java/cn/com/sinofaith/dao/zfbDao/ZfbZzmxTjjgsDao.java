@@ -111,44 +111,54 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
     /**
      * 统计结果详情总条数
      * @param search
-     * @param id
+     * @param aj
      * @return
      */
     public int getRowAllCount(String search, AjEntity aj) {
         StringBuffer sql = new StringBuffer();
         sql.append("select to_char(count(1)) NUM from(select z.* from(select * from (");
-        sql.append("select t.*,row_number() over( partition by t.jyh order by t.id) su from zfbzzmx t) ");
-        sql.append("where su=1 and aj_id="+aj.getId()+") z left join(");
+        sql.append("select t.*,row_number() over( partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+aj.getId()+") ");
+        sql.append("where su=1) z left join(");
         sql.append("select f.yhid,f.dyxcsj from zfbzcxx f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj ");
-        sql.append("where "+search+") z1 left join (select j.dyxcsj,min(sksj) sksj  from (select * from (select t.*,row_number() over(");
-        sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+aj.getId()+") where su=1) ");
+        sql.append("where "+search+") z1");
         if(aj.getFilter()!=null){
-            sql.append("j where j.spmc like '%"+aj.getFilter()+"%' group by j.dyxcsj) j1 on j1.dyxcsj=z1.dyxcsj where z1.dzsj>=j1.sksj ");
-        }else{
-            sql.append("j where j.spmc like '%%' group by j.dyxcsj) j1 on j1.dyxcsj=z1.dyxcsj where z1.dzsj>=j1.sksj ");
+            sql.append(" left join (select j.dyxcsj,min(sksj) sksj  from (select * from (select t.*,row_number() over(");
+            sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+aj.getId()+") where su=1) ");
+            sql.append("j where upper(spmc) like '%"+aj.getFilter().toUpperCase()+"%' and j.jyzt='交易成功' group by j.dyxcsj) j1 on j1.dyxcsj=z1.dyxcsj where z1.dzsj>=j1.sksj");
         }
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
     }
 
-    public List<ZfbZzmxEntity> getDoPageTjjgs(int currentPage, int pageSize, String search, AjEntity aj) {
+    /**
+     * 统计结果详情分页数据
+     * @param currentPage
+     * @param pageSize
+     * @param search
+     * @param aj
+     * @return
+     */
+    public List<ZfbZzmxEntity> getDoPageTjjgs(int currentPage, int pageSize, String search, AjEntity aj,boolean flag) {
         List<ZfbZzmxEntity> zzmxTjjgs = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM (");
-        sql.append("select * from(select z.* from(select * from (");
-        sql.append("select t.*,row_number() over( partition by t.jyh order by t.id) su from zfbzzmx t) ");
-        sql.append("where su=1 and aj_id="+aj.getId()+") z left join(");
-        sql.append("select f.yhid,f.dyxcsj from zfbzcxx f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj ");
-        sql.append("where "+search+") z1 left join (select j.dyxcsj,min(sksj) sksj  from (select * from (select t.*,row_number() over(");
-        sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+aj.getId()+") where su=1) ");
-        if(aj.getFilter()!=null){
-            sql.append("j where j.spmc like '%"+aj.getFilter()+"%' and j.jyzt='交易成功' group by j.dyxcsj) j1 on j1.dyxcsj=z1.dyxcsj where z1.dzsj>=j1.sksj ");
-        }else{
-            sql.append("j where j.spmc like '%%' group by j.dyxcsj) j1 on j1.dyxcsj=z1.dyxcsj where z1.dzsj>=j1.sksj ");
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM (");
         }
-        sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        sql.append("select * from(select z.* from(select * from (");
+        sql.append("select t.*,row_number() over( partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+aj.getId()+") ");
+        sql.append("where su=1) z left join(");
+        sql.append("select f.yhid,f.dyxcsj from zfbzcxx f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj ");
+        sql.append("where "+search+") z1");
+        if(aj.getFilter()!=null){
+            sql.append(" left join (select j.dyxcsj,min(sksj) sksj  from (select * from (select t.*,row_number() over(");
+            sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+aj.getId()+") where su=1) ");
+            sql.append("j where upper(spmc) like '%"+aj.getFilter().toUpperCase()+"%' and j.jyzt='交易成功' group by j.dyxcsj) j1 on j1.dyxcsj=z1.dyxcsj where z1.dzsj>=j1.sksj");
+        }
+        if(flag){
+            sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();
@@ -160,28 +170,5 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
             session.close();
         }
         return zzmxTjjgs;
-    }
-
-    /**
-     * 详情数据下载
-     * @param dc
-     * @return
-     */
-    public List<ZfbZzmxTjjgsEntity> getZfbZzmxTjjgAll(DetachedCriteria dc) {
-        Session session = getSession();
-        List<ZfbZzmxTjjgsEntity> zhxxs = null;
-        try {
-            // 开启事务
-            Transaction tx = session.beginTransaction();
-            // 关联session
-            Criteria criteria = dc.getExecutableCriteria(session);
-            // 创建对象
-            zhxxs = criteria.list();
-            tx.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-            session.close();
-        }
-        return zhxxs;
     }
 }

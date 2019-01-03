@@ -129,7 +129,7 @@
                                             <option value="yhxx"<c:if test="${zhmxSeachCondition=='yhxx'}">selected="selected"</c:if>>用户信息</option>
                                             <option value="jydfxx" <c:if test="${zhmxSeachCondition=='jydfxx'}">selected="selected"</c:if> >交易对方信息</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${zhmxSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${zhmxSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -145,7 +145,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/zfbZhmx/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmx/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>

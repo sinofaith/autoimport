@@ -66,7 +66,7 @@
                                         </tr>
                                     </c:forEach>
                                     <c:choose>
-                                        <c:when test="${detailinfo ==null || detailinfo.size()==0}">
+                                        <c:when test="${detailinfo==null || detailinfo.size()==0}">
                                             <tr>
                                                 <td colspan="11" align="center"> 无数据 </td>
                                             </tr>
@@ -118,7 +118,7 @@
                                             <option value="mjyhid" <c:if test="${jyjlSjdzsSeachCondition=='mjyhid'}">selected="selected"</c:if>>买家用户Id</option>
                                             <option value="mjxx" <c:if test="${jyjlSjdzsSeachCondition=='mjxx'}">selected="selected"</c:if>>买家信息</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${jyjlSjdzsSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${jyjlSjdzsSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -134,7 +134,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/zfbJyjlSjdzs/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0 && detailinfo!=null}">onclick="location.href='/SINOFAITH/zfbJyjlSjdzs/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" onclick="downDetailInfo()">导出</button>
+                <button type="button" class="btn btn-default" onclick="downJyjlSjdzsDetailInfo()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

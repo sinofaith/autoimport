@@ -88,10 +88,11 @@ public class ZfbZzmxDao extends BaseDao<ZfbZzmxEntity> {
         StringBuffer sql = new StringBuffer();
         sql.append("select c.yhid,c.zhmc,a.fkfzfbzh,a.skfzfbzh,h.jydfxx,a.zzje from(");
         sql.append("select j3.* from(select * from (select t.*,row_number() over( ");
-        sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) j3 left join ");
-        sql.append("(select j1.dyxcsj,min(j1.sksj) sksj from zfbjyjl j1 where j1.aj_id="+id+" "+search);
-        sql.append(") j4 on j3.dyxcsj = j4.dyxcsj where j3.dzsj>=j4.sksj) a ");
-        sql.append("left join(select * from (select t.*,row_number() over(");
+        sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) j3 ");
+        if(!search.equals("")){
+            sql.append("left join (select j1.dyxcsj,min(j1.sksj) sksj from zfbjyjl j1 where j1.aj_id="+id+" "+search+" group by j1.dyxcsj) j4 on j3.dyxcsj = j4.dyxcsj where j3.dzsj>=j4.sksj");
+        }
+        sql.append(") a left join(select * from (select t.*,row_number() over(");
         sql.append("partition by t.jyh order by t.id) su from zfbzhmx t where aj_id="+id+") where su=1) h on a.jyh=h.jyh ");
         sql.append("left join zfbzcxx c on c.dyxcsj = a.dyxcsj where c.aj_id="+id);
         Session session = getSession();
@@ -109,61 +110,4 @@ public class ZfbZzmxDao extends BaseDao<ZfbZzmxEntity> {
         }
         return zfbZzmxList;
     }
-
-    /**
-     * 转账明细统计条数
-     * @param seach
-     * @param id
-     * @return
-     */
-    /*public int getCountRow(String seach, long id) {
-        StringBuffer sql = new StringBuffer();
-        sql.append("select to_char(count(1)) NUM from(select t.dyxcsj,count(t.zzcpmc) zzcs,t.zzcpmc,sum(t.zzje) zzje from zfbzzmx t where t.aj_id="+id);
-        sql.append(" group by t.dyxcsj,t.zzcpmc) t left join zfbzcxx z on z.dyxcsj=t.dyxcsj where z.aj_id="+id+seach);
-        List list = findBySQL(sql.toString());
-        Map map = (Map) list.get(0);
-        return Integer.parseInt((String)map.get("NUM"));
-    }*/
-
-    /**
-     * 转账明细分页数据
-     * @param currentPage
-     * @param pageSize
-     * @param seach
-     * @param id
-     * @return
-     */
-    /*public List<ZfbZzmxForm> queryForPage(int currentPage, int pageSize, String seach, long id) {
-        StringBuffer sql = new StringBuffer();
-        List<ZfbZzmxForm> zfbZzmxForms = null;
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM (");
-        sql.append("select * from (");
-        sql.append("select z.yhid,z.zhmc,z.zjlx,z.zjh,t.* from(select t.dyxcsj,count(t.zzcpmc) zzcs,t.zzcpmc,sum(t.zzje) zzje from zfbzzmx t where t.aj_id="+id);
-        sql.append(" group by t.dyxcsj,t.zzcpmc) t left join zfbzcxx z on z.dyxcsj=t.dyxcsj where z.aj_id="+id);
-        sql.append(") where (1=1)"+seach+" ) c ");
-        sql.append(" WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
-        // 获取当前线程session
-        Session session = getSession();
-        try {
-            // 开启事务
-            Transaction tx = session.beginTransaction();
-            zfbZzmxForms = session.createSQLQuery(sql.toString())
-                    .addScalar("yhId")
-                    .addScalar("zhmc")
-                    .addScalar("zjlx")
-                    .addScalar("zjh")
-                    .addScalar("dyxcsj")
-                    .addScalar("zzcs", StandardBasicTypes.LONG)
-                    .addScalar("zzcpmc")
-                    .addScalar("zzje", StandardBasicTypes.DOUBLE)
-                    .setResultTransformer(Transformers.aliasToBean(ZfbZzmxForm.class)).list();
-            // 关闭事务
-            tx.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-            session.close();
-        }
-        return zfbZzmxForms;
-    }*/
 }

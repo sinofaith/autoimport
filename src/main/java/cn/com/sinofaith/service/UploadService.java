@@ -715,31 +715,6 @@ public class UploadService {
             csvReader = new CsvReader(path, ',', Charset.forName("GBK"));
             // 读表头 不需要则跳过
             csvReader.readHeaders();
-            /*String[] heads = csvReader.getHeaders();
-            Map<String,Integer> title = new HashMap<>();
-            for (int i = 0; i < heads.length; i++) {
-                if(heads[i].contains("用户Id")){
-                    title.put("yhId",i);
-                }else if(heads[i].contains("登陆邮箱")){
-                    title.put("dlyx",i);
-                }else if(heads[i].contains("登陆手机")){
-                    title.put("dlsj",i);
-                }else if(heads[i].contains("账户名称")){
-                    title.put("zhmc",i);
-                }else if(heads[i].contains("证件类型")){
-                    title.put("zjlx",i);
-                }else if(heads[i].contains("证件号")){
-                    title.put("zjh",i);
-                }else if(heads[i].contains("可用余额")){
-                    title.put("kyye",i);
-                }else if(heads[i].contains("绑定手机")){
-                    title.put("bdsj",i);
-                }else if(heads[i].contains("绑定银行卡")){
-                    title.put("bdyhk",i);
-                }else if(heads[i].contains("对应的协查数据")){
-                    title.put("dyxcsj",i);
-                }
-            }*/
             // 读取内容
             while (csvReader.readRecord()) {
                 if (flag == 1) {

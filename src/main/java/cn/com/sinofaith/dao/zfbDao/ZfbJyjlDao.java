@@ -258,14 +258,13 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
     public List<ZfbJyjlTjjgsForm> selectFilterJyjlBySpmc(String search, long id) {
         List<ZfbJyjlTjjgsForm> zfbJyjlList = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("select a.mjyhid,substr(a.mjxx,1,instr(a.mjxx,')')) mjxx,a.jyzt,a.mijyhid,substr(a.mijxx,1,instr(a.mijxx,')')) mijxx,a.jyje from(");
-        sql.append("select j3.* from(select * from (select t.*,row_number() over( partition by t.jyh order by t.id) su ");
-        sql.append("from zfbjyjl t where aj_id="+id+" and jyzt <> '交易关闭') where su=1) j3 ");
-        sql.append("left join (select j1.dyxcsj,min(j1.sksj) sksj from zfbjyjl j1 where j1.aj_id="+id+" "+search);
-        sql.append(") j4 on j3.dyxcsj = j4.dyxcsj where j3.sksj>=j4.sksj) a ");
-        sql.append("left join(select * from (select t.*,row_number() over(partition by t.jyh order by t.id) su ");
-        sql.append("from zfbzhmx t where aj_id="+id+") where su=1) h on a.jyh=h.jyh ");
-        sql.append("left join zfbzcxx c on c.dyxcsj = a.dyxcsj where c.aj_id="+id);
+        sql.append("select j.mjyhid,substr(j.mjxx,1,instr(j.mjxx,')')) mjxx,j.jyzt,j.mijyhid,");
+        sql.append("substr(j.mijxx,1,instr(j.mijxx,')')) mijxx,j.jyje from(select * from (select j1.*,row_number() ");
+        sql.append("over( partition by j1.jyh order by j1.id) su from zfbjyjl j1 where aj_id="+id);
+        if(!search.equals("")){
+            sql.append(" "+search);
+        }
+        sql.append(") where su=1) j left join(select * from zfbzcxx where aj_id="+id+") c on c.dyxcsj=j.dyxcsj");
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();

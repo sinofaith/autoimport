@@ -1,3 +1,20 @@
+// 跳转页面
+function zfbSkip(code){
+    var totalPage = $("#totalPage").text();
+    var onPage = $("#num").val();
+    if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("请输入你要跳转的页数！");
+        return;
+    }
+    if(parseInt(onPage)>parseInt(totalPage)){
+        $("#num").val(totalPage);
+        return;
+    } else {
+        location="/SINOFAITH/zfb"+code+"/seach?pageNo="+onPage;
+    }
+}
+
 // 转账明细显示详情数据
 function getZfbZzxxTjjgsDetails(obj){
     // 用户Id
@@ -106,13 +123,13 @@ function insert(data,tbody,temp){
         }
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"14%\">"+data[i].jyh+"</td>"+
-            "<td width=\"8%\">"+data[i].fkfzfbzh+"</td>"+
+            "<td width=\"8%\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</td>"+
             "<td width=\"8%\">"+data[i].zzcpmc+"</td>"+
-            "<td width=\"8%\">"+data[i].skfzfbzh+"</td>"+
+            "<td width=\"8%\">"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"</td>"+
             "<td width=\"5%\">"+data[i].skjgxx+ "</td>"+
             "<td width=\"7%\">"+data[i].dzsj+"</td>"+
             "<td width=\"4%\">"+data[i].zzje+"</td>"+
-            "<td width=\"12%\">"+data[i].txlsh+"</td>"+
+            "<td width=\"12%\">"+(data[i].txlsh!=null?data[i].txlsh:"")+"</td>"+
             "</tr>";
     }
     if(temp){
@@ -122,25 +139,32 @@ function insert(data,tbody,temp){
     }
 }
 
+var isFlag = true;
 function filterJyjlByspmc(aj){
     var filterInput = $("#filterInput").val();
-    $.post(
-        "/SINOFAITH/aj/filterJyjlBySpmc",
-        {aj:aj,filterInput:filterInput},
-        function(data){
-            alertify.set('notifier','position', 'top-center');
-            if(data==200){
-                alertify.success("分析完成..正在跳转..");
-                setTimeout(function (){document.getElementById("seachDetail").submit()},1500);
-            }else{
-                alertify.set('notifier','delay', 0);
-                alertify.error("无"+filterInput+"分析结果,请重新输入");
+    if(isFlag) {
+        isFlag = false;
+        $.post(
+            "/SINOFAITH/aj/filterJyjlBySpmc",
+            {aj: aj, filterInput: filterInput},
+            function (data) {
+                alertify.set('notifier', 'position', 'top-center');
+                if (data == 200) {
+                    alertify.success("分析完成..正在跳转..");
+                    setTimeout(function () {
+                        document.getElementById("seachDetail").submit()
+                    }, 1500);
+                } else {
+                    alertify.set('notifier', 'delay', 0);
+                    alertify.error("无" + filterInput + "分析结果,请重新输入");
+                    isFlag = true;
+                }
             }
-        }
-    );
-    alertify.set('notifier','position', 'top-center');
-    alertify.set('notifier','delay', 0);
-    alertify.success("数据分析中,请等待跳转...");
+        );
+        alertify.set('notifier', 'position', 'top-center');
+        alertify.set('notifier', 'delay', 0);
+        alertify.success("数据分析中,请等待跳转...");
+    }
 }
 
 // 每次点击将数据清空
@@ -154,6 +178,29 @@ $(function () {
             tbody.innerHTML = "";
         }
         $.ajax({url:"/SINOFAITH/zfbZzmxTjjgs/removeDesc"});
-        $.ajax({url:"/SINOFAITH/zfbJyjl/removeDesc"});
     });
 });
+
+// 阀值设置
+function seachChange() {
+    var seachCondition = $("#seachCondition").val();
+    if(seachCondition === "fkzje" || seachCondition === "skzje"){
+        $("#seachCode").val("50000")
+    }else{
+        $("#seachCode").val("")
+    }
+}
+
+function isNum(obj){
+    var seachCondition = $("#seachCondition").val();
+    if(seachCondition === "fkzje" || seachCondition === "skzje"){
+        obj.value=obj.value.replace(/[^\d]/g,'')
+    }
+}
+
+// 数据导出
+function downDetailInfo(){
+    var zfbzh = $("#zfbzh").val();
+    var dfzh = $("#dfzh").val();
+    location = "/SINOFAITH/zfbZzmxTjjgs/downDetailInfo?zfbzh="+zfbzh+'&dfzh='+dfzh;
+}

@@ -130,15 +130,25 @@ public class ZfbZzmxTjjgDao extends BaseDao<ZfbZzmxTjjgEntity> {
         return Integer.parseInt((String)map.get("NUM"));
     }
 
-    public List<ZfbZzmxEntity> getDoPageTjjg(int currentPage, int pageSize, String search, long aj_id) {
+    /**
+     * 统计结果详情分页数据
+     * @param search
+     * @param aj_id
+     * @return
+     */
+    public List<ZfbZzmxEntity> getDoPageTjjg(int currentPage, int pageSize, String search, long aj_id, boolean flag) {
         List<ZfbZzmxEntity> zzmxTjjgs = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM (");
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM (");
+        }
         sql.append("select * from (select * from (select t.*,row_number() over( ");
         sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id = "+aj_id+") where su=1) z ");
-        sql.append("where "+search+") c");
-        sql.append(" WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        sql.append("where "+search);
+        if(flag){
+            sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();
@@ -150,29 +160,6 @@ public class ZfbZzmxTjjgDao extends BaseDao<ZfbZzmxTjjgEntity> {
             session.close();
         }
         return zzmxTjjgs;
-    }
-
-    /**
-     * 详情数据下载
-     * @param dc
-     * @return
-     */
-    public List<ZfbZzmxTjjgEntity> getZfbZzmxTjjgAll(DetachedCriteria dc) {
-        Session session = getSession();
-        List<ZfbZzmxTjjgEntity> zhxxs = null;
-        try {
-            // 开启事务
-            Transaction tx = session.beginTransaction();
-            // 关联session
-            Criteria criteria = dc.getExecutableCriteria(session);
-            // 创建对象
-            zhxxs = criteria.list();
-            tx.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-            session.close();
-        }
-        return zhxxs;
     }
 
     /**

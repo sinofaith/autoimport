@@ -315,4 +315,22 @@ public class BaseDao<T>{
         }
         return zhxxs;
     }
+
+    public List<T> getDoPageAll(DetachedCriteria dc) {
+        Session session = getSession();
+        List<T> zhxxs = null;
+        try {
+            // 开启事务
+            Transaction tx = session.beginTransaction();
+            // 关联session
+            Criteria criteria = dc.getExecutableCriteria(session);
+            // 创建对象
+            zhxxs = criteria.list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return zhxxs;
+    }
 }

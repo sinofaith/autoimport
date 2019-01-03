@@ -1,6 +1,12 @@
 package cn.com.sinofaith.bean.zfbBean;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "ZfbZzmx")
@@ -46,11 +52,11 @@ public class ZfbZzmxEntity {
     }
 
     public void setFkfzfbzh(String fkfzfbzh) {
-        if(fkfzfbzh==null){
+        /*if(fkfzfbzh==null){
             this.fkfzfbzh = "";
-        }else{
+        }else{*/
             this.fkfzfbzh = fkfzfbzh;
-        }
+        /*}*/
     }
     @Basic
     @Column(name = "skfzfbzh",nullable = true,length = 100)
@@ -59,11 +65,11 @@ public class ZfbZzmxEntity {
     }
 
     public void setSkfzfbzh(String skfzfbzh) {
-        if(skfzfbzh==null){
+        /*if(skfzfbzh==null){
             this.skfzfbzh = "";
-        }else{
+        }else{*/
             this.skfzfbzh = skfzfbzh;
-        }
+        /*}*/
     }
     @Basic
     @Column(name = "skjgxx",length = 100)
@@ -117,11 +123,11 @@ public class ZfbZzmxEntity {
     }
 
     public void setTxlsh(String txlsh) {
-        if(txlsh==null){
+        /*if(txlsh==null){
             this.txlsh = "";
-        } else {
+        } else {*/
             this.txlsh = txlsh;
-        }
+        /*}*/
     }
     @Basic
     @Column(name = "dyxcsj",length = 100)
@@ -217,5 +223,86 @@ public class ZfbZzmxEntity {
         result = 31 * result + (zzcpmc != null ? zzcpmc.hashCode() : 0);
         result = 31 * result + (jyfsd != null ? jyfsd.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * 详情数据导出
+     * @param tjjgs
+     * @return
+     */
+    public static HSSFWorkbook createExcel(List<ZfbZzmxEntity> tjjgs,String sheetName) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet(sheetName);
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("序号");
+        cell = row.createCell(1);
+        cell.setCellValue("交易号");
+        cell = row.createCell(2);
+        cell.setCellValue("付款方账号");
+        cell = row.createCell(3);
+        cell.setCellValue("转账产品名称");
+        cell = row.createCell(4);
+        cell.setCellValue("收款方账号");
+        cell = row.createCell(5);
+        cell.setCellValue("收款机构信息");
+        cell = row.createCell(6);
+        cell.setCellValue("到账时间");
+        cell = row.createCell(7);
+        cell.setCellValue("转账金额");
+        cell = row.createCell(8);
+        cell.setCellValue("提现流水号");
+        int b = 1;
+        for(int i=0;i<tjjgs.size();i++) {
+            ZfbZzmxEntity wl = tjjgs.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
+                sheet = wb.createSheet(sheetName+"(" + b + ")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("交易号");
+                cell = row.createCell(2);
+                cell.setCellValue("付款方账号");
+                cell = row.createCell(3);
+                cell.setCellValue("转账产品名称");
+                cell = row.createCell(4);
+                cell.setCellValue("收款方账号");
+                cell = row.createCell(5);
+                cell.setCellValue("收款机构信息");
+                cell = row.createCell(6);
+                cell.setCellValue("到账时间");
+                cell = row.createCell(7);
+                cell.setCellValue("转账金额");
+                cell = row.createCell(8);
+                cell.setCellValue("提现流水号");
+                b += 1;
+            }
+            row = sheet.createRow((i+b)%65536);
+            cell = row.createCell(0);
+            cell.setCellValue(i+1);
+            cell = row.createCell(1);
+            cell.setCellValue(wl.getJyh());
+            cell = row.createCell(2);
+            cell.setCellValue(wl.getFkfzfbzh());
+            cell = row.createCell(3);
+            cell.setCellValue(wl.getZzcpmc());
+            cell = row.createCell(4);
+            cell.setCellValue(wl.getSkfzfbzh());
+            cell = row.createCell(5);
+            cell.setCellValue(wl.getSkjgxx());
+            cell = row.createCell(6);
+            cell.setCellValue(wl.getDzsj());
+            cell = row.createCell(7);
+            cell.setCellValue(wl.getZzje());
+            cell = row.createCell(8);
+            cell.setCellValue(wl.getTxlsh());
+            if((i+b)%65536==0) {
+                for (int a = 0; a < 9; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
+        }
+        return wb;
     }
 }

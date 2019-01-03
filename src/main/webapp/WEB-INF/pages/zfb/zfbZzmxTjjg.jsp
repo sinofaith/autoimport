@@ -48,18 +48,6 @@
 
 <div class="tab_div">
     <%@include file="title.jsp" %>
-    <%--<span class="tab_nav">
-        <a style="width: 10%;" href="/SINOFAITH/zfb">支付宝注册信息</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbZhmx">支付宝账户明细</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbZzmx">支付宝转账明细</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbZzmxTjjg" class="addactive">转账明细统计结果</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbZzmxTjjgs">转账明细对手账户</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbZzmxGtzh">转账明细共同账户</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbJyjl">支付宝交易记录</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbJyjlSjdzs">交易记录地址统计</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbJyjlTjjgs">交易记录对手账户</a>
-        <a style="width: 10%;" href="/SINOFAITH/zfbDlrz">支付宝登陆日志</a>
-    </span>--%>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -82,7 +70,7 @@
                                         <td width="12%"><a href="/SINOFAITH/zfbZzmxTjjg/seach?pageNo=1&orderby=zfbmc">账号名称</a></td>
                                         <td width="10%">
                                             <select id="select" onchange="SeachCode()" style="width: 110px;">
-                                                <option>转账产品名称</option>
+                                                <option >转账产品名称</option>
                                             </select>
                                         </td>
                                         <td width="8%"><a href="/SINOFAITH/zfbZzmxTjjg/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
@@ -164,7 +152,7 @@
                                             <option value="fkzje"<c:if test="${zzmxTjjgSeachCondition=='fkzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <option value="skzje"<c:if test="${zzmxTjjgSeachCondition=='skzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" onkeyup="isNum(this)">${zzmxTjjgSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${zzmxTjjgSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -180,7 +168,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/download'"</c:if>>数据导出</button>
+                           <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -207,7 +195,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">支付宝转账详情<span id="title"></span></h4>
+                <h4 class="modal-title" id="myModalLabel">支付宝转账明细统计详情<span id="title"></span></h4>
             </div>
             <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">

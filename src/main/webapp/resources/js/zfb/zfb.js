@@ -14,7 +14,6 @@ function zfbSkip(code){
         location="/SINOFAITH/zfb"+code+"/seach?pageNo="+onPage;
     }
 }
-
 // 上传
 function UploadZfb() {
     var fileObj = document.getElementById("file");// js 获取文件对象
@@ -198,13 +197,13 @@ function insert(data,tbody,temp){
         }
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"14%\">"+data[i].jyh+"</td>"+
-            "<td width=\"8%\">"+data[i].fkfzfbzh+"</td>"+
+            "<td width=\"8%\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</td>"+
             "<td width=\"8%\">"+data[i].zzcpmc+"</td>"+
-            "<td width=\"8%\">"+data[i].skfzfbzh+"</td>"+
+            "<td width=\"8%\">"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"</td>"+
             "<td width=\"5%\">"+data[i].skjgxx+ "</td>"+
             "<td width=\"7%\">"+data[i].dzsj+"</td>"+
             "<td width=\"4%\">"+data[i].zzje+"</td>"+
-            "<td width=\"12%\">"+data[i].txlsh+"</td>"+
+            "<td width=\"12%\">"+(data[i].txlsh!=null?data[i].txlsh:"")+"</td>"+
             "</tr>";
     }
     if(temp){
@@ -227,145 +226,6 @@ $(function () {
         $.ajax({url:"/SINOFAITH/zfbZzmxTjjg/removeDesc"});
     });
 });
-
-// 交易记录详情
-function getZfbJyjlDetails(obj){
-    // 买家用户Id
-    var mjyhid = $(obj).closest("tr").find("td:eq(1)").text();
-    var mjxx = $(obj).closest("tr").find("td:eq(2)").text();
-    // 卖家用户Id
-    var mijyhid = $(obj).closest("tr").find("td:eq(4)").text();
-    var mijxx = $(obj).closest("tr").find("td:eq(5)").text();
-    // 商品名称
-    var direction = $(obj).closest("tr").find("td:eq(3)").text();
-    var spmc = $(obj).closest("tr").find("td:eq(6)").text();
-    window.page = 1;
-    var tbody = window.document.getElementById("result");
-    var url = "/SINOFAITH/zfbJyjl/getDetails";
-    $.ajax({
-        type:"post",
-        dataType:"json",
-        url:url,
-        data:{
-            mjyhid:mjyhid,
-            mjxx:mjxx,
-            mijyhid:mijyhid,
-            mijxx:mijxx,
-            direction:direction,
-            spmc:spmc,
-            order:'jyje',
-            page:parseInt(page)
-        },
-        success:function (msg) {
-            var data = msg.list;
-            jyjlInsert(data,tbody,true);
-            $("#mjyhid").attr("value",mjyhid);
-            $("#mjxx").attr("value",mjxx);
-            $("#mijyhid").attr("value",mijyhid);
-            $("#mijxx").attr("value",mijxx);
-            $("#spmc").attr("value",spmc);
-            $("#direction").attr("value",direction);
-            $("#allRow").attr("value",msg.totalRecords);
-        }
-    })
-}
-
-// 交易记录排序
-function orderByJyjlFilter(filter){
-    var tbody = window.document.getElementById("result");
-    // 买家用户Id
-    var mjyhid = $("#mjyhid").val();
-    var mjxx = $("#mjxx").val();
-    // 卖家用户Id
-    var mijyhid = $("#mijyhid").val();
-    var mijxx = $("#mijxx").val();
-    // 商品名称
-    var direction = $("#direction").val();
-    var spmc = $("#spmc").val();
-    if(tbody!=null) {
-        tbody.innerHTML = ""
-    }
-    window.page = 1;
-    var url = "/SINOFAITH/zfbJyjl/getDetails";
-    $.ajax({
-        type:"post",
-        dataType:"json",
-        url:url,
-        data:{
-            mjyhid:mjyhid,
-            mjxx:mjxx,
-            mijyhid:mijyhid,
-            mijxx:mijxx,
-            direction:direction,
-            spmc:spmc,
-            order:filter,
-            page:parseInt(page)
-        },
-        success:function (msg) {
-            var data = msg.list;
-            jyjlInsert(data,tbody,true);
-            $("#mjyhid").attr("value",mjyhid);
-            $("#mjxx").attr("value",mjxx);
-            $("#mijyhid").attr("value",mijyhid);
-            $("#mijxx").attr("value",mijxx);
-            $("#spmc").attr("value",spmc);
-            $("#direction").attr("value",direction);
-            $("#allRow").attr("value",msg.totalRecords);
-        }
-    })
-}
-
-// 转账明细滚动条加载数据
-var jyjlIs_running = false;
-function scrollFJyjl() {
-    var tbody = window.document.getElementById("result");
-    // 买家用户Id
-    var mjyhid = $("#mjyhid").val();
-    var mjxx = $("#mjxx").val();
-    // 卖家用户Id
-    var mijyhid = $("#mijyhid").val();
-    var mijxx = $("#mijxx").val();
-    // 商品名称
-    var direction = $("#direction").val();
-    var spmc = $("#spmc").val();
-    var allRow = $("#allRow").val();
-    var scrollT = parseFloat(tbody.scrollTop) + parseFloat(tbody.clientHeight)
-    var scrollH = parseFloat(tbody.scrollHeight)
-    if (1 >= scrollH - scrollT && tbody.scrollTop != 0 && tbody.childNodes.length < allRow) {
-        if (jyjlIs_running == false) {
-            jyjlIs_running = true;
-            window.page = page += 1;
-            var url = "/SINOFAITH/zfbJyjl/getDetails";
-            $.ajax({
-                type:"post",
-                dataType:"json",
-                url:url,
-                data:{
-                    mjyhid:mjyhid,
-                    mjxx:mjxx,
-                    mijyhid:mijyhid,
-                    mijxx:mijxx,
-                    direction:direction,
-                    spmc:spmc,
-                    order:"xxx",
-                    page:parseInt(window.page)
-                },
-                success:function (msg) {
-                    var data = msg.list;
-                    jyjlInsert(data,tbody,false);
-                    $("#mjyhid").attr("value",mjyhid);
-                    $("#mjxx").attr("value",mjxx);
-                    $("#mijyhid").attr("value",mijyhid);
-                    $("#mijxx").attr("value",mijxx);
-                    $("#spmc").attr("value",spmc);
-                    $("#direction").attr("value",direction);
-                    $("#allRow").attr("value",msg.totalRecords);
-                    jyjlIs_running = false;
-                }
-            })
-        }
-    }
-}
 
 // 交易记录插入表记录
 function jyjlInsert(data,tbody,temp){
@@ -411,4 +271,11 @@ function isNum(obj){
     if(seachCondition === "fkzje" || seachCondition === "skzje"){
         obj.value=obj.value.replace(/[^\d]/g,'')
     }
+}
+
+// 数据导出
+function downDetailInfo(){
+    var zfbzh = $("#zfbzh").val();
+    var zzcpmc = $("#zzcpmc").val();
+    location = "/SINOFAITH/zfbZzmxTjjg/downDetailInfo?zfbzh="+zfbzh+'&zzcpmc='+zzcpmc;
 }

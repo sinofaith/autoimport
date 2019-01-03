@@ -1,8 +1,13 @@
 package cn.com.sinofaith.service.zfbService;
 
+import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZcxxEntity;
 import cn.com.sinofaith.dao.zfbDao.ZfbZcxxDao;
 import cn.com.sinofaith.page.Page;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +45,112 @@ public class ZfbZcxxService {
             }
         }
         return page;
+    }
+
+    /**
+     * 支付宝注册信息导出
+     * @param dc
+     * @return
+     */
+    public List<ZfbZcxxEntity> getZfbZcxxAll(DetachedCriteria dc) {
+        List<ZfbZcxxEntity> zcxxs = null;
+        int rowAll = zfbZcxxDao.getRowAll(dc);
+        if(rowAll>0){
+            zcxxs = zfbZcxxDao.getDoPageAll(dc);
+        }
+        return zcxxs;
+    }
+
+    /**
+     * 导出excel表
+     * @param zcxxs
+     * @return
+     */
+    public HSSFWorkbook createExcel(List<ZfbZcxxEntity> zcxxs) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet("支付宝注册信息");
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("序号");
+        cell = row.createCell(1);
+        cell.setCellValue("用户Id");
+        cell = row.createCell(2);
+        cell.setCellValue("登陆邮箱");
+        cell = row.createCell(3);
+        cell.setCellValue("登陆手机");
+        cell = row.createCell(4);
+        cell.setCellValue("账户名称");
+        cell = row.createCell(5);
+        cell.setCellValue("证件类型");
+        cell = row.createCell(6);
+        cell.setCellValue("证件号");
+        cell = row.createCell(7);
+        cell.setCellValue("可用余额");
+        cell = row.createCell(8);
+        cell.setCellValue("绑定手机");
+        cell = row.createCell(9);
+        cell.setCellValue("绑定银行卡");
+        cell = row.createCell(10);
+        cell.setCellValue("店铺名");
+        int b = 1;
+        for(int i=0;i<zcxxs.size();i++) {
+            ZfbZcxxEntity wl = zcxxs.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
+                sheet = wb.createSheet("支付宝注册信息(" + b + ")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("用户Id");
+                cell = row.createCell(2);
+                cell.setCellValue("登陆邮箱");
+                cell = row.createCell(3);
+                cell.setCellValue("登陆手机");
+                cell = row.createCell(4);
+                cell.setCellValue("账户名称");
+                cell = row.createCell(5);
+                cell.setCellValue("证件类型");
+                cell = row.createCell(6);
+                cell.setCellValue("证件号");
+                cell = row.createCell(7);
+                cell.setCellValue("可用余额");
+                cell = row.createCell(8);
+                cell.setCellValue("绑定手机");
+                cell = row.createCell(9);
+                cell.setCellValue("绑定银行卡");
+                cell = row.createCell(10);
+                cell.setCellValue("店铺名");
+                b += 1;
+            }
+            row = sheet.createRow((i+b)%65536);
+            cell = row.createCell(0);
+            cell.setCellValue(i+1);
+            cell = row.createCell(1);
+            cell.setCellValue(wl.getYhId());
+            cell = row.createCell(2);
+            cell.setCellValue(wl.getDlyx());
+            cell = row.createCell(3);
+            cell.setCellValue(wl.getDlsj());
+            cell = row.createCell(4);
+            cell.setCellValue(wl.getZhmc());
+            cell = row.createCell(5);
+            cell.setCellValue(wl.getZjlx());
+            cell = row.createCell(6);
+            cell.setCellValue(wl.getZjh());
+            cell = row.createCell(7);
+            cell.setCellValue(wl.getKyye());
+            cell = row.createCell(8);
+            cell.setCellValue(wl.getBdsj());
+            cell = row.createCell(9);
+            cell.setCellValue(wl.getBdyhk());
+            cell = row.createCell(10);
+            cell.setCellValue(wl.getDyxcsj());
+            if((i+b)%65536==0) {
+                for (int a = 0; a < 11; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
+        }
+        return wb;
     }
 }

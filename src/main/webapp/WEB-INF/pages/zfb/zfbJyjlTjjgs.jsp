@@ -135,7 +135,7 @@
                                             <option value="dfmc"<c:if test="${jyjlTjjgsSeachCondition=='dfmc'}">selected="selected"</c:if>>卖家信息</option>
                                             <option value="fkzje"<c:if test="${jyjlTjjgsSeachCondition=='fkzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" onkeyup="isNum(this)">${jyjlTjjgsSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${jyjlTjjgsSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -148,10 +148,10 @@
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">
+                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">dd
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/zfbJyjlTjjgs/download'"</c:if>>数据导出</button>
+                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo!=null}">onclick="location.href='/SINOFAITH/zfbJyjlTjjgs/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" onclick="downDetailInfo()">导出</button>
+                <button type="button" class="btn btn-default" onclick="downJyjlTjjgsDetailInfo()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

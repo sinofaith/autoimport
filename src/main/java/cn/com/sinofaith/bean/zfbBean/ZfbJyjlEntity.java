@@ -1,9 +1,13 @@
 package cn.com.sinofaith.bean.zfbBean;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "ZfbJyjl")
@@ -138,11 +142,11 @@ public class ZfbJyjlEntity {
     }
 
     public void setSksj(String sksj) {
-        if(sksj!=null){
+        /*if(sksj!=null){*/
             this.sksj = sksj;
-        }else{
+        /*}else{
             this.sksj = "";
-        }
+        }*/
     }
 
     @Basic
@@ -202,11 +206,11 @@ public class ZfbJyjlEntity {
     }
 
     public void setShrdz(String shrdz) {
-        if(shrdz!=null){
+        /*if(shrdz!=null){*/
             this.shrdz = shrdz;
-        }else{
+        /*}else{
             this.shrdz = "";
-        }
+        }*/
     }
 
     @Basic
@@ -328,5 +332,99 @@ public class ZfbJyjlEntity {
             zfbJyjlList.add(zfbJyjl);
         }
         return zfbJyjlList;
+    }
+
+    /**
+     * 详情数据生成excel文件
+     * @param tjjgs
+     * @param sheetName
+     * @return
+     */
+    public static HSSFWorkbook createExcel(List<ZfbJyjlEntity> tjjgs,String sheetName) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet(sheetName);
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("序号");
+        cell = row.createCell(1);
+        cell.setCellValue("交易号");
+        cell = row.createCell(2);
+        cell.setCellValue("买家用户Id");
+        cell = row.createCell(3);
+        cell.setCellValue("买家信息");
+        cell = row.createCell(4);
+        cell.setCellValue("交易状态");
+        cell = row.createCell(5);
+        cell.setCellValue("卖家用户Id");
+        cell = row.createCell(6);
+        cell.setCellValue("卖家信息");
+        cell = row.createCell(7);
+        cell.setCellValue("交易金额");
+        cell = row.createCell(8);
+        cell.setCellValue("收款时间");
+        cell = row.createCell(9);
+        cell.setCellValue("商品名称");
+        cell = row.createCell(10);
+        cell.setCellValue("收货人地址");
+        int b = 1;
+        for(int i=0;i<tjjgs.size();i++) {
+            ZfbJyjlEntity wl = tjjgs.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
+                sheet = wb.createSheet(sheetName+"(" + b + ")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("交易号");
+                cell = row.createCell(2);
+                cell.setCellValue("买家用户Id");
+                cell = row.createCell(3);
+                cell.setCellValue("买家信息");
+                cell = row.createCell(4);
+                cell.setCellValue("交易状态");
+                cell = row.createCell(5);
+                cell.setCellValue("卖家用户Id");
+                cell = row.createCell(6);
+                cell.setCellValue("卖家信息");
+                cell = row.createCell(7);
+                cell.setCellValue("交易金额");
+                cell = row.createCell(8);
+                cell.setCellValue("收款时间");
+                cell = row.createCell(9);
+                cell.setCellValue("商品名称");
+                cell = row.createCell(10);
+                cell.setCellValue("收货人地址");
+                b += 1;
+            }
+            row = sheet.createRow((i+b)%65536);
+            cell = row.createCell(0);
+            cell.setCellValue(i+1);
+            cell = row.createCell(1);
+            cell.setCellValue(wl.getJyh());
+            cell = row.createCell(2);
+            cell.setCellValue(wl.getMjyhId());
+            cell = row.createCell(3);
+            cell.setCellValue(wl.getMjxx());
+            cell = row.createCell(4);
+            cell.setCellValue(wl.getJyzt());
+            cell = row.createCell(5);
+            cell.setCellValue(wl.getMijyhId());
+            cell = row.createCell(6);
+            cell.setCellValue(wl.getMijxx());
+            cell = row.createCell(7);
+            cell.setCellValue(wl.getJyje());
+            cell = row.createCell(8);
+            cell.setCellValue(wl.getSksj());
+            cell = row.createCell(9);
+            cell.setCellValue(wl.getSpmc());
+            cell = row.createCell(10);
+            cell.setCellValue(wl.getShrdz());
+            if((i+b)%65536==0) {
+                for (int a = 0; a < 11; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
+        }
+        return wb;
     }
 }

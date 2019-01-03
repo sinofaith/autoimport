@@ -151,4 +151,35 @@ public class ZfbDlrzDao extends BaseDao<ZfbDlrzEntity>{
         }
         return zfbDlrzForms;
     }
+
+    /**
+     * 获取全部数据
+     * @param search
+     * @param id
+     * @return
+     */
+    public List<ZfbDlrzForm> getZfbDlrzAll(String search, long id) {
+        List<ZfbDlrzForm> zfbDlrzForms = null;
+        StringBuffer sql = new StringBuffer();
+        sql.append("select d.zfbyhid,z.zhmc,z.dlsj,z.zjlx,z.zjh,d.dlzcs from(select zfbyhid,aj_id,count(zfbyhid) dlzcs from zfbdlrz  where khdip <> '127.0.0.1' group by zfbyhid,aj_id) d ");
+        sql.append("left join zfbzcxx z on d.zfbyhid = z.yhid where d.aj_id="+id+" and z.aj_id="+id+search);
+        // 获取当前线程session
+        Session session = getSession();
+        try {
+            Transaction tx = session.beginTransaction();
+            zfbDlrzForms = session.createSQLQuery(sql.toString())
+                    .addScalar("zfbyhId")
+                    .addScalar("zhmc")
+                    .addScalar("dlsj")
+                    .addScalar("zjlx")
+                    .addScalar("zjh")
+                    .addScalar("dlzcs", StandardBasicTypes.LONG)
+                    .setResultTransformer(Transformers.aliasToBean(ZfbDlrzForm.class)).list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return zfbDlrzForms;
+    }
 }

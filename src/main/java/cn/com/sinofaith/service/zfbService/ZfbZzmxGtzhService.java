@@ -1,5 +1,6 @@
 package cn.com.sinofaith.service.zfbService;
 
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
 import cn.com.sinofaith.dao.zfbDao.ZfbZzmxGtzhDao;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxGtzhForm;
@@ -22,8 +23,9 @@ import java.util.List;
 public class ZfbZzmxGtzhService {
     @Autowired
     private ZfbZzmxGtzhDao zfbZzmxGtzhDao;
+
     /**
-     * 共同账户分页
+     * 共同账户分页/详情分页数据
      * @param currentPage
      * @param pageSize
      * @param search
@@ -65,7 +67,7 @@ public class ZfbZzmxGtzhService {
     }
 
     /**
-     * 数据导出
+     * 生成excel表
      * @param tjjgs
      * @return
      */
@@ -88,15 +90,15 @@ public class ZfbZzmxGtzhService {
         cell = row.createCell(6);
         cell.setCellValue("出账总次数");
         cell = row.createCell(7);
-        cell.setCellValue("出账总金额(元)");
+        cell.setCellValue("出账总金额");
         cell = row.createCell(8);
         cell.setCellValue("进账总次数");
         cell = row.createCell(9);
-        cell.setCellValue("进账总金额(元)");
-        int i = 1;
+        cell.setCellValue("进账总金额");
         int b = 1;
-        for(ZfbZzmxGtzhForm wl:tjjgs) {
-            if (i >= 65536 && i % 65536 == 0) {
+        for(int i=0;i<tjjgs.size();i++) {
+            ZfbZzmxGtzhForm wl = tjjgs.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
                 sheet = wb.createSheet("支付宝转账共同账户信息(" + b + ")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
@@ -114,16 +116,16 @@ public class ZfbZzmxGtzhService {
                 cell = row.createCell(6);
                 cell.setCellValue("出账总次数");
                 cell = row.createCell(7);
-                cell.setCellValue("出账总金额(元)");
+                cell.setCellValue("出账总金额");
                 cell = row.createCell(8);
                 cell.setCellValue("进账总次数");
                 cell = row.createCell(9);
-                cell.setCellValue("进账总金额(元)");
+                cell.setCellValue("进账总金额");
                 b += 1;
             }
-            row = sheet.createRow(i%65536);
+            row = sheet.createRow((i+b)%65536);
             cell = row.createCell(0);
-            cell.setCellValue(i);
+            cell.setCellValue(i+1);
             cell = row.createCell(1);
             cell.setCellValue(wl.getZfbzh());
             cell = row.createCell(2);
@@ -142,13 +144,27 @@ public class ZfbZzmxGtzhService {
             cell.setCellValue(wl.getSkzcs());
             cell = row.createCell(9);
             cell.setCellValue(wl.getSkzje().toString());
-            if(i%65536==0) {
+            if((i+b)%65536==0) {
                 for (int a = 0; a < 10; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
-            i++;
         }
         return wb;
+    }
+
+    /**
+     * 共同账户详情总数据
+     * @param search
+     * @param id
+     * @return
+     */
+    public List<ZfbZzmxGtzhForm> getZfbZzmxDetails(String search, long id) {
+        List<ZfbZzmxGtzhForm> gtzhForms = null;
+        int rowAll = zfbZzmxGtzhDao.getCountRow(search,id);
+        if(rowAll>0) {
+            gtzhForms = zfbZzmxGtzhDao.getZfbZzmxGtzhAll(search, id);
+        }
+        return gtzhForms;
     }
 }

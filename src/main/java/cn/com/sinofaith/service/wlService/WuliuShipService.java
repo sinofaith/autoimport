@@ -133,10 +133,10 @@ public class WuliuShipService {
         cell.setCellValue("寄件地址");
         cell = row.createCell(4);
         cell.setCellValue("寄件次数");
-        int i = 1;
         int b = 1;
-        for(WuliuShipEntity wl:wls) {
-            if (i >= 65536 && i % 65536 == 0) {
+        for(int i=0;i<wls.size();i++) {
+            WuliuShipEntity wl = wls.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
                 sheet = wb.createSheet("物流寄件人信息(" + b + ")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
@@ -151,9 +151,9 @@ public class WuliuShipService {
                 cell.setCellValue("寄件次数");
                 b += 1;
             }
-            row = sheet.createRow(i%65536);
+            row = sheet.createRow((i+b)%65536);
             cell = row.createCell(0);
-            cell.setCellValue(i);
+            cell.setCellValue(i+1);
             cell = row.createCell(1);
             cell.setCellValue(wl.getSender());
             cell = row.createCell(2);
@@ -162,12 +162,11 @@ public class WuliuShipService {
             cell.setCellValue(wl.getShip_address());
             cell = row.createCell(4);
             cell.setCellValue(wl.getNum());
-            if(i%65536==0) {
+            if((i+b)%65536==0) {
                 for (int a = 0; a < 5; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
-            i++;
         }
         return wb;
     }
@@ -221,10 +220,10 @@ public class WuliuShipService {
         cell.setCellValue("代收货款");
         cell = row.createCell(12);
         cell.setCellValue("运费");
-        int i = 1;
         int b = 1;
-        for(WuliuEntity wl:wls) {
-            if (i >= 65536 && i % 65536 == 0) {
+        for(int i=0;i<wls.size();i++) {
+            WuliuEntity wl = wls.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
                 sheet = wb.createSheet("物流寄件人详情信息(" + b + ")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
@@ -255,9 +254,9 @@ public class WuliuShipService {
                 cell.setCellValue("运费");
                 b += 1;
             }
-            row = sheet.createRow(i%65536);
+            row = sheet.createRow((i+b) % 65536);
             cell = row.createCell(0);
-            cell.setCellValue(i);
+            cell.setCellValue(i+1);
             cell = row.createCell(1);
             cell.setCellValue(wl.getWaybill_id());
             cell = row.createCell(2);
@@ -282,12 +281,11 @@ public class WuliuShipService {
             cell.setCellValue(wl.getDshk());
             cell = row.createCell(12);
             cell.setCellValue(wl.getFreight());
-            if(i%65536==0) {
+            if((i+b)%65536==0) {
                 for (int a = 0; a < 13; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
-            i++;
         }
         return wb;
     }

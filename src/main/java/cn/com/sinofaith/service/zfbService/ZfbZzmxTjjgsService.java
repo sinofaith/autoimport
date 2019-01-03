@@ -64,7 +64,7 @@ public class ZfbZzmxTjjgsService {
         Page page = null;
         int rowAll = zfbZzmxTjjgsDao.getRowAllCount(search,aj);
         if(rowAll>0){
-            List<ZfbZzmxEntity> zzmxList = zfbZzmxTjjgsDao.getDoPageTjjgs(currentPage, pageSize, search,aj);
+            List<ZfbZzmxEntity> zzmxList = zfbZzmxTjjgsDao.getDoPageTjjgs(currentPage, pageSize, search,aj,true);
             for (int i =0;i<zzmxList.size();i++) {
                 zzmxList.get(i).setId((currentPage-1)*pageSize+i+1);
             }
@@ -80,34 +80,6 @@ public class ZfbZzmxTjjgsService {
     }
 
     /**
-     * 统计结果详情数据
-     * @param currentPage
-     * @param pageSize
-     * @param search
-     * @param aj_id
-     * @return
-     */
-    /*public String getZfbZzmxTjjg(int currentPage, int pageSize, String search, long aj_id) {
-        Gson gson = new Gson();
-        Page page = null;
-        int rowAll = zfbZzmxTjjgsDao.getRowAllCount(search,aj_id);
-        if(rowAll>0){
-            List<ZfbZzmxEntity> zzmxList = zfbZzmxTjjgsDao.getDoPageTjjgs(currentPage, pageSize, search,aj_id);
-            for (int i =0;i<zzmxList.size();i++) {
-                zzmxList.get(i).setId((currentPage-1)*pageSize+i+1);
-            }
-            if(zzmxList!=null){
-                page = new Page();
-                page.setPageNo(currentPage);
-                page.setTotalRecords(rowAll);
-                page.setList(zzmxList);
-                page.setPageSize(pageSize);
-            }
-        }
-        return gson.toJson(page);
-    }*/
-
-    /**
      * 数据下载
      * @param dc
      * @return
@@ -116,7 +88,7 @@ public class ZfbZzmxTjjgsService {
         List<ZfbZzmxTjjgsEntity> wls = null;
         int rowAll = zfbZzmxTjjgsDao.getRowAll(dc);
         if(rowAll>0){
-            wls = zfbZzmxTjjgsDao.getZfbZzmxTjjgAll(dc);
+            wls = zfbZzmxTjjgsDao.getDoPageAll(dc);
         }
         return wls;
     }
@@ -140,15 +112,15 @@ public class ZfbZzmxTjjgsService {
         cell = row.createCell(6);
         cell.setCellValue("出账总次数");
         cell = row.createCell(7);
-        cell.setCellValue("出账总金额(元)");
+        cell.setCellValue("出账总金额");
         cell = row.createCell(8);
         cell.setCellValue("进账总次数");
         cell = row.createCell(9);
-        cell.setCellValue("进账总金额(元)");
-        int i = 1;
+        cell.setCellValue("进账总金额");
         int b = 1;
-        for(ZfbZzmxTjjgsEntity wl:tjjgs) {
-            if (i >= 65536 && i % 65536 == 0) {
+        for(int i=0;i<tjjgs.size();i++) {
+            ZfbZzmxTjjgsEntity wl = tjjgs.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
                 sheet = wb.createSheet("支付宝转账对手信息(" + b + ")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
@@ -166,16 +138,16 @@ public class ZfbZzmxTjjgsService {
                 cell = row.createCell(6);
                 cell.setCellValue("出账总次数");
                 cell = row.createCell(7);
-                cell.setCellValue("出账总金额(元)");
+                cell.setCellValue("出账总金额");
                 cell = row.createCell(8);
                 cell.setCellValue("进账总次数");
                 cell = row.createCell(9);
-                cell.setCellValue("进账总金额(元)");
+                cell.setCellValue("进账总金额");
                 b += 1;
             }
-            row = sheet.createRow(i%65536);
+            row = sheet.createRow((i+b)%65536);
             cell = row.createCell(0);
-            cell.setCellValue(i);
+            cell.setCellValue(i+1);
             cell = row.createCell(1);
             cell.setCellValue(wl.getZfbzh());
             cell = row.createCell(2);
@@ -198,13 +170,27 @@ public class ZfbZzmxTjjgsService {
             cell.setCellValue(wl.getSkzcs());
             cell = row.createCell(9);
             cell.setCellValue(wl.getSkzje().toString());
-            if(i%65536==0) {
+            if((i+b)%65536==0) {
                 for (int a = 0; a < 10; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
-            i++;
         }
         return wb;
+    }
+
+    /**
+     * 对手详情数据
+     * @param search
+     * @param aj
+     * @return
+     */
+    public List<ZfbZzmxEntity> getZfbZzmxDetails(String search, AjEntity aj) {
+        List<ZfbZzmxEntity> zzmxs = null;
+        int rowAll = zfbZzmxTjjgsDao.getRowAllCount(search,aj);
+        if(rowAll>0){
+            zzmxs = zfbZzmxTjjgsDao.getDoPageTjjgs(0, 0, search,aj,false);
+        }
+        return zzmxs;
     }
 }

@@ -2,8 +2,10 @@ package cn.com.sinofaith.controller.zfbController;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZhmxEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.zfbService.ZfbJyjlService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -16,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 /**
  * 支付宝交易记录控制器
@@ -57,7 +63,7 @@ public class ZfbJyjlController {
         // 创建离线查询语句
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            dc.add(Restrictions.like(seachCondition,seachCode));
+            dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
         }
         if(orderby==null && desc==null){
             dc.addOrder(Order.desc("jyje").nulls(NullPrecedence.LAST));
@@ -119,69 +125,50 @@ public class ZfbJyjlController {
         return "redirect:/zfbJyjl/seach?pageNo=1";
     }
 
-   /* @RequestMapping("/getDetails")
-    public @ResponseBody String getDetails(String mjyhid,String mjxx,String mijyhid,String mijxx,String direction,String spmc,String order,
-                                           int page,HttpSession session){
+    /**
+     * 数据导出
+     * @param resp
+     * @param session
+     */
+    @RequestMapping("/download")
+    public void download(HttpServletResponse resp, HttpSession session) throws IOException {
         // 创建离线查询对象
         DetachedCriteria dc = DetachedCriteria.forClass(ZfbJyjlEntity.class);
-        // 获取Aj
+        // 获得session中对象
+        String seachCondition = (String) session.getAttribute("jyjlSeachCondition");
+        String seachCode = (String) session.getAttribute("jyjlSeachCode");
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
+        }
         AjEntity aj = (AjEntity) session.getAttribute("aj");
-
         dc.add(Restrictions.eq("aj_id",aj.getId()));
-        if(direction.equals("卖家")){
-            dc.add(Restrictions.eq("mjyhId",mijyhid));
-            dc.add(Restrictions.eq("mjxx",mijxx));
-            dc.add(Restrictions.eq("mijyhId",mjyhid));
-            dc.add(Restrictions.eq("mijxx",mjxx));
-        }else{
-            dc.add(Restrictions.eq("mjyhId",mjyhid));
-            dc.add(Restrictions.eq("mjxx",mjxx));
-            dc.add(Restrictions.eq("mijyhId",mijyhid));
-            dc.add(Restrictions.eq("mijxx",mijxx));
-        }
-        dc.add(Restrictions.eq("spmc",spmc));
-        dc.add(Restrictions.eq("jyzt","交易成功"));
-        // 获取desc
-        String desc = (String) session.getAttribute("jyjlXQDesc");
-        String lastOrder = (String) session.getAttribute("jyjlXQLastOrder");
-        // 查询哪一个案件
-        if("xxx".equals(order)){
-            if("".equals(desc)){
-                dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
-            }else{
+        String lastOrder = (String) session.getAttribute("jyjlLastOrder");
+        String desc = (String) session.getAttribute("jyjlDesc");
+        if(lastOrder!=null && desc!=null){
+            if(desc.equals("")){
                 dc.addOrder(Order.asc(lastOrder));
+                dc.addOrder(Order.asc("id"));
+            }else{
+                dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
+                dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
             }
         }else{
-            if(order.equals(lastOrder)){
-                if(desc==null || desc.equals("")){
-                    dc.addOrder(Order.asc(order));
-                    desc = "desc";
-                }else{
-                    dc.addOrder(Order.desc(order).nulls(NullPrecedence.LAST));
-                    desc = "";
-                }
-            }else{
-                dc.addOrder(Order.desc(order).nulls(NullPrecedence.LAST));
-                desc = "";
-            }
+            dc.addOrder(Order.desc("jyje").nulls(NullPrecedence.LAST));
+            dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
         }
-        session.setAttribute("jyjlXQDesc", desc);
-        if(!order.equals("xxx")){
-            session.setAttribute("jyjlXQLastOrder", order);
+        // 获取所有数据数据
+        List<ZfbJyjlEntity> zcxxs = zfbJyjlService.getZfbJyjlAll(dc);
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(zcxxs!=null){
+            wb = zfbJyjlService.createExcel(zcxxs);
         }
-        return zfbJyjlService.getZfbJyjl(page, 100, dc);
-    }*/
-
-   /* *//**
-     * 删除desc
-     * @param ses
-     * @return
-     *//*
-    @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
-    @ResponseBody
-    public String removeDesc(HttpSession ses){
-        ses.removeAttribute("jyjlXQDesc");
-        ses.removeAttribute("jyjlXQLastOrder");
-        return "200";
-    }*/
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
+    }
 }

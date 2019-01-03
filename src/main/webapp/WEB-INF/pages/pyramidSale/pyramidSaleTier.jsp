@@ -60,10 +60,6 @@
                                         <td width="4%">会员号</td>
                                         <td width="6%">推荐会员号</td>
                                         <td width="5%">姓名</td>
-                                        <td width="8%">身份证号码</td>
-                                        <td width="6%">手机号</td>
-                                        <td width="12%">详细地址</td>
-                                        <td width="9%">银行卡号</td>
                                         <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=tier">当前层级</a></td>
                                         <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=containsTier">包含层级</a></td>
                                         <td width="5%"><a href="/SINOFAITH/pyramidSaleTier/seach?pageNo=1&orderby=directDrive">直推下线</a></td>
@@ -75,25 +71,21 @@
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center">${item.psId}</td>
-                                            <td align="center">${item.sponsorid}</td>
-                                            <td align="center">${item.psAccountholder}</td>
-                                            <td align="center">${item.sfzhm}</td>
-                                            <td align="center">${item.mobile}</td>
-                                            <td align="center" title="${item.address}"><xmp style="font-family: 'Microsoft YaHei UI';width:180px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;font-size: 12px !important;color: #666;">${item.address}</xmp></td>
-                                            <td align="center">${item.accountnumber}</td>
+                                            <td align="center">${item.sponsorId}</td>
+                                            <td align="center">${item.nick_name}</td>
                                             <td align="center">${item.tier}</td>
                                             <td align="center">${item.containsTier}</td>
                                             <td align="center">
-                                                <c:if test="${item.directDrive!=0}">
+                                                <c:if test="${item.directDrive!=null}">
                                                     <button  data-toggle="modal" data-target="#myModal" onclick="getPyramSaleDetails(this,true)">${item.directDrive}</button>
                                                 </c:if>
-                                                <c:if test="${item.directDrive==0}">${item.directDrive}</c:if>
+                                                <c:if test="${item.directDrive==null}">0</c:if>
                                             </td>
                                             <td align="center">
-                                                <c:if test="${item.directReferNum!=0}">
+                                                <c:if test="${item.directReferNum!=null}">
                                                     <button  data-toggle="modal" data-target="#myModal1" onclick="getPyramSaleDetails(this,false)">${item.directReferNum}</button>
                                                 </c:if>
-                                                <c:if test="${item.directReferNum==0}">${item.directReferNum}</c:if>
+                                                <c:if test="${item.directReferNum==null}">0</c:if>
                                             </td>
                                             <td align="center"><a href="${pageContext.request.contextPath}/pyramidSalePolt?psId=${item.psId}">详情</a></td>
                                         </tr>
@@ -171,7 +163,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">传销数据导入</button>
                            </c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/pyramidSaleTier/download'"</c:if>>数据导出</button>
+                           <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/pyramidSaleTier/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -264,7 +256,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" onclick="downDetailInfo()">导出</button>
+                        <button type="button" class="btn btn-default" onclick="downDetailInfoAll()">导出</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     </div>
                 </div>

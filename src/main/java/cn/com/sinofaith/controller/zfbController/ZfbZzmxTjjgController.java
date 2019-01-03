@@ -6,6 +6,7 @@ import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.zfbService.ZfbZzmxTjjgService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
@@ -73,11 +74,15 @@ public class ZfbZzmxTjjgController {
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if(seachCondition.equals("fkzje") || seachCondition.equals("skzje")){
-                long fz = Long.parseLong(seachCode);
-                BigDecimal big = new BigDecimal(fz);
-                dc.add(Restrictions.gt(seachCondition,big));
+                if(StringUtils.isNumeric(seachCode)){
+                    long fz = Long.parseLong(seachCode);
+                    BigDecimal big = new BigDecimal(fz);
+                    dc.add(Restrictions.gt(seachCondition,big));
+                }else{
+                    return "/zfb/zfbZzmxTjjg";
+                }
             }else{
-                dc.add(Restrictions.like(seachCondition,seachCode));
+                dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
             }
         }
         // 排序字段
@@ -96,9 +101,9 @@ public class ZfbZzmxTjjgController {
                     desc = "";
                 }
             }else{
-                dc.addOrder(Order.asc(orderby));
-                dc.addOrder(Order.asc("id"));
-                desc = "desc";
+                dc.addOrder(Order.desc(orderby).nulls(NullPrecedence.LAST));
+                dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
+                desc = "";
             }
         }else if("".equals(desc)){
             dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
@@ -121,6 +126,8 @@ public class ZfbZzmxTjjgController {
         }
         if(orderby!=null){
             session.setAttribute("zzmxTjjgLastOrder",orderby);
+        }else{
+            session.setAttribute("zzmxTjjgLastOrder","jyzcs");
         }
         session.setAttribute("zzmxTjjgOrder",orderby);
         session.setAttribute("zzmxTjjgDesc",desc);
@@ -216,16 +223,18 @@ public class ZfbZzmxTjjgController {
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if(seachCondition.equals("fkzje") || seachCondition.equals("skzje")){
-                long fz = Long.parseLong(seachCode);
-                BigDecimal big = new BigDecimal(fz);
-                if(seachCondition.equals("fkzje")){
-                    name = "--出账总金额大于"+big;
-                }else{
-                    name = "--进账总金额大于"+big;
+                if(StringUtils.isNumeric(seachCode)) {
+                    long fz = Long.parseLong(seachCode);
+                    BigDecimal big = new BigDecimal(fz);
+                    if (seachCondition.equals("fkzje")) {
+                        name = "--出账总金额大于" + big;
+                    } else {
+                        name = "--进账总金额大于" + big;
+                    }
+                    dc.add(Restrictions.gt(seachCondition, big));
                 }
-                dc.add(Restrictions.gt(seachCondition,big));
             }else{
-                dc.add(Restrictions.like(seachCondition,seachCode));
+                dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
             }
         }
         AjEntity aj = (AjEntity) session.getAttribute("aj");
@@ -273,5 +282,41 @@ public class ZfbZzmxTjjgController {
         dc.setProjection(Projections.groupProperty("zzcpmc"));
         List<String> zzmcpmcs = zfbZzmxTjjgService.onload(dc);
         return zzmcpmcs;
+    }
+
+    /**
+     * 详情页数据导出
+     * @param resp
+     * @param session
+     * @throws IOException
+     */
+    @RequestMapping("/downDetailInfo")
+    public void downloadDetails(String zfbzh, String zzcpmc, HttpServletResponse resp,
+                                HttpSession session) throws IOException {
+        // 取出域中对象
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 条件语句
+        String lastOrder = (String) session.getAttribute("zzmxXQLastOrder");
+        String desc = (String) session.getAttribute("zzmxXQDesc");
+        String search = " (z.fkfzfbzh = '"+zfbzh+"' or z.skfzfbzh= '"+zfbzh+"')";
+        search += " and z.zzcpmc = '"+zzcpmc+"'";
+        if("".equals(desc)){
+            search += " order by "+lastOrder+" desc  nulls last";
+        }else{
+            search += " order by "+lastOrder;
+        }
+        // 获取所有数据数据
+        List<ZfbZzmxEntity> tjjgs = zfbZzmxTjjgService.getZfbZzmxDetails(search,aj.getId());
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(tjjgs!=null){
+            wb = ZfbZzmxEntity.createExcel(tjjgs,"支付宝转账统计详情信息");
+        }
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝转账明细统计详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
     }
 }

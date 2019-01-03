@@ -63,7 +63,7 @@ public class ZfbJyjlTjjgsService {
         Page page = null;
         int rowAll = zfbJyjlTjjgsDao.getRowAllCount(search,aj);
         if(rowAll>0){
-            List<ZfbJyjlEntity> zzmxList = zfbJyjlTjjgsDao.getDoPageTjjgs(currentPage, pageSize, search,aj);
+            List<ZfbJyjlEntity> zzmxList = zfbJyjlTjjgsDao.getDoPageTjjgs(currentPage, pageSize, search,aj, true);
             for (int i =0;i<zzmxList.size();i++) {
                 zzmxList.get(i).setId((currentPage-1)*pageSize+i+1);
             }
@@ -117,10 +117,10 @@ public class ZfbJyjlTjjgsService {
         cell.setCellValue("出账总次数");
         cell = row.createCell(7);
         cell.setCellValue("出账总金额");
-        int i = 1;
         int b = 1;
-        for(ZfbJyjlTjjgsEntity wl:tjjgs) {
-            if (i >= 65536 && i % 65536 == 0) {
+        for(int i=0;i<tjjgs.size();i++) {
+            ZfbJyjlTjjgsEntity wl = tjjgs.get(i);
+            if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
                 sheet = wb.createSheet("支付宝交易对手信息(" + b + ")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
@@ -141,9 +141,9 @@ public class ZfbJyjlTjjgsService {
                 cell.setCellValue("出账总金额");
                 b += 1;
             }
-            row = sheet.createRow(i%65536);
+            row = sheet.createRow((i+b)%65536);
             cell = row.createCell(0);
-            cell.setCellValue(i);
+            cell.setCellValue(i+1);
             cell = row.createCell(1);
             cell.setCellValue(wl.getZfbzh());
             cell = row.createCell(2);
@@ -158,13 +158,26 @@ public class ZfbJyjlTjjgsService {
             cell.setCellValue(wl.getFkzcs());
             cell = row.createCell(7);
             cell.setCellValue(wl.getFkzje().toString());
-            if(i%65536==0) {
+            if((i+b)%65536==0) {
                 for (int a = 0; a < 8; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }
-            i++;
         }
         return wb;
+    }
+
+    /**支付宝交易记录对手详情全部数据
+     * @param search
+     * @param aj
+     * @return
+     */
+    public List<ZfbJyjlEntity> getZfbJyjlDetails(String search, AjEntity aj) {
+        List<ZfbJyjlEntity> jyjls = null;
+        int rowAll = zfbJyjlTjjgsDao.getRowAllCount(search,aj);
+        if(rowAll>0){
+            jyjls = zfbJyjlTjjgsDao.getDoPageTjjgs(0, 0, search,aj, false);
+        }
+        return jyjls;
     }
 }

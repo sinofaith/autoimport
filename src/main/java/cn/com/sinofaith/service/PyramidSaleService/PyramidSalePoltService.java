@@ -53,7 +53,6 @@ public class PyramidSalePoltService {
         }
         treelist.add(root);
         return treelist;
-
     }
 
     private static void getChildrenNodes(List<PsPoltForm> parentNodes, PsPoltForm node){

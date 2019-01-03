@@ -136,7 +136,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">物流数据导入</button>
                            </c:if>--%>
-                               <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/wuliuShip/download'"</c:if>>数据导出</button>
+                               <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/wuliuShip/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>

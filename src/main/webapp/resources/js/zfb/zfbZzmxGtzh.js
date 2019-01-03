@@ -128,3 +128,9 @@ $(function () {
         $.ajax({url:"/SINOFAITH/zfbJyjl/removeDesc"});
     });
 });
+
+// 数据导出
+function downGtzhDetailInfo(){
+    var dfzh = $("#dfzh").val();
+    location = "/SINOFAITH/zfbZzmxGtzh/downDetailInfo?dfzh="+dfzh;
+}

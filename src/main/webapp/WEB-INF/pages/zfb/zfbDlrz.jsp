@@ -130,7 +130,7 @@
                                             <option value="zhmc" <c:if test="${dlrzSearchCondition=='zhmc'}">selected="selected"</c:if>>账户名</option>
                                             <option value="dlsj"<c:if test="${dlrzSearchCondition=='dlsj'}">selected="selected"</c:if>>登陆手机</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="searchCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="searchCode" >${dlrzSearchCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="searchCode" placeholder="请输入要查询内容" name="searchCode" >${dlrzSearchCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -146,7 +146,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/zfbDlrz/download'" >数据导出</button>
+                           <button type="button" class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbDlrz/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" >
     <div class="modal-dialog" style="top: 0%; min-width: 96%;left: 2%;right: 2%;">
-        <div class="modal-content" style="background: #404a59;">
+        <div class="modal-content" style="background: #404a59;top:40px;">
             <div class="modal-header" >
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>

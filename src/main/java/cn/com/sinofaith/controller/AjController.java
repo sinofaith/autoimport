@@ -180,13 +180,18 @@ public class AjController {
     @ResponseBody
     public String filterJyjlBySpmc(String aj,String filterInput,HttpSession session){
         AjEntity aje = ajs.findByName(aj).get(0);
-        int sum = ajs.getZfbZzmxList(aje,filterInput);
-        if(sum>0){
-            aje = ajs.findByName(aj).get(0);
-            session.setAttribute("aj",aje);
+        // 是否与上次筛选一致
+        if(filterInput.equals(aje.getFilter()) || (filterInput.equals("") && aje.getFilter()==null)){
             return "200";
         }else{
-            return "500";
+            int sum = ajs.getZfbZzmxList(aje,filterInput);
+            if(sum>0){
+                aje = ajs.findByName(aj).get(0);
+                session.setAttribute("aj",aje);
+                return "200";
+            }else{
+                return "500";
+            }
         }
     }
 }

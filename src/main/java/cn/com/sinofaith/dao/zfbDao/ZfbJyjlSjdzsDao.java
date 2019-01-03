@@ -123,16 +123,21 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
      * @param currentPage
      * @param pageSize
      * @param search
+     * @param flag
      * @return
      */
-    public List<ZfbJyjlSjdzsForm> getDoPageSjdzs(int currentPage, int pageSize, String search) {
+    public List<ZfbJyjlSjdzsForm> getDoPageSjdzs(int currentPage, int pageSize, String search, boolean flag) {
         List<ZfbJyjlSjdzsForm> forms = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM (");
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM (");
+        }
         sql.append("select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz,count(1) sjcs,");
         sql.append("sum(jyje) czje from ZFBJYJL t where "+search);
-        sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        if(flag){
+            sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();

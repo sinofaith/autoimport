@@ -15,7 +15,7 @@
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/zfb/zfb.js"/> "></script>
-<script src="<c:url value="/resources/js/zfb/zfbZzmxGtzh.js"/> "></script>
+<script src="<c:url value="/resources/js/zfb/zfbJyjlTjjg.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
@@ -37,44 +37,38 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="7"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>转账明细共同账户(${aj.aj})</strong>
+                                                <strong>交易记录统计结果(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
                                         <td width="4%">序号</td>
-                                        <td width="7%">支付宝账号</td>
-                                        <td width="6%">账号名称</td>
-                                        <td width="12%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=dfzh">共同账户</a></td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=gthys">共同联系人数</a></td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=fkzje">出账总金额</a></td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=skzcs">进账总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=1&orderby=skzje">进账总金额</a></td>
+                                        <td width="6%">店铺名</td>
+                                        <td width="5%">支付宝账号</td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=dfzh">账户名称</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=skzcs">进账总次数</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=skzje">进账总金额</a></td>
+                                        <td width="3%">详情</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
-                                            <td align="center">${item.zfbzh}</td>
-                                            <td align="center" title="${item.zfbmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbmc}</div></td>
+                                            <td align="center">${item.dyxcsj}</td>
                                             <td align="center">${item.dfzh}</td>
-                                            <td align="center">
-                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbZzmxGtzhDetails(this)">${item.gthys}</button>
-                                            </td>
-                                            <td align="center">${item.jyzcs}</td>
-                                            <td align="center">${item.fkzcs}</td>
-                                            <td align="center">${item.fkzje}</td>
+                                            <td align="center" title="${item.dfmc}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfmc}</div></td>
                                             <td align="center">${item.skzcs}</td>
                                             <td align="center">${item.skzje}</td>
+                                            <td align="center">
+                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbJyjlTjjgDetails(this)">详情</button>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                     <c:choose>
                                         <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                             <tr>
-                                                <td colspan="10" align="center"> 无数据 </td>
+                                                <td colspan="7" align="center"> 无数据 </td>
                                             </tr>
                                         </c:when>
                                     </c:choose>
@@ -86,10 +80,10 @@
                                 <c:when test="${detailinfo!=null && detailinfo.size()!=0}">
                                     <div  class="page_nmber">
                                         <div class="mar_t_15">共${page.totalRecords}条记录 共<span id="totalPage">${page.totalPages}</span>页 当前第${page.pageNo}页<br></div>
-                                        <a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
+                                        <a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
                                         <c:choose>
                                             <c:when test="${page.pageNo!=1}">
-                                                <a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
+                                                <a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="previousPage" value="上一页" />
@@ -97,15 +91,15 @@
                                         </c:choose>
                                         <c:choose>
                                             <c:when test="${page.pageNo != page.totalPages}">
-                                                <a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
+                                                <a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="nextPage" value="下一页" />
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="/SINOFAITH/zfbZzmxGtzh/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
+                                        <a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
-                                        <input type="button" value="跳转" onclick="zfbSkip('ZzmxGtzh')">
+                                        <input type="button" value="跳转" onclick="zfbSkip('JyjlTjjg')">
                                     </div>
 
                                 </c:when>
@@ -117,17 +111,25 @@
                         <div class=" ">
 
                             <div>
-                                <form action="/SINOFAITH/zfbZzmxGtzh/SeachCode" method="post">
+                               <div class="col-lg-15">
+                                    <div class="input-group">
+                                        <input type="text" id="filterInput" class="form-control" value="${aj.filter}" placeholder="请输入要筛选的内容,例如：MCM">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" onclick="filterJyjlByspmc('${aj.aj}')">
+                                                筛选
+                                            </button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 --></div><br>
+                                <form action="/SINOFAITH/zfbJyjlTjjg/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select id="seachCondition" name="seachCondition" class="width100" STYLE="margin-bottom: 20px;" onchange="seachChange()">
-                                            <option value="zfbzh" <c:if test="${zzmxGtzhSeachCondition=='zfbzh'}">selected="selected"</c:if>>支付宝账号</option>
-                                            <option value="zfbmc" <c:if test="${zzmxGtzhSeachCondition=='zfbmc'}">selected="selected"</c:if>>账号名称</option>
-                                            <option value="dfzh"<c:if test="${zzmxGtzhSeachCondition=='dfzh'}">selected="selected"</c:if>>共同账户</option>
-                                            <option value="fkzje"<c:if test="${zzmxGtzhSeachCondition=='fkzje'}">selected="selected"</c:if>>出账总金额阀值</option>
-                                            <option value="skzje"<c:if test="${zzmxGtzhSeachCondition=='skzje'}">selected="selected"</c:if>>进账总金额阀值</option>
+                                            <option value="dfzh" <c:if test="${jyjlTjjgSeachCondition=='dfzh'}">selected="selected"</c:if>>支付宝账号</option>
+                                            <option value="dfmc" <c:if test="${jyjlTjjgSeachCondition=='dfmc'}">selected="selected"</c:if>>账号名称</option>
+                                            <option value="skzje"<c:if test="${jyjlTjjgSeachCondition=='skzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${zzmxGtzhSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${jyjlTjjgSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -143,7 +145,7 @@
                            <%--<c:if test="${!fn:contains(aj.aj, ',')}">
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>--%>
-                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxGtzh/download'"</c:if>>数据导出</button>
+                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbJyjlTjjg/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
                                 </div>
@@ -170,24 +172,26 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">支付宝共同账户详情<span id="title"></span></h4>
+                <h4 class="modal-title" id="myModalLabel">支付宝交易记录统计详情<span id="title"></span></h4>
             </div>
             <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                     <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
                     <tr align="center">
-                        <td width="4%">序号</td>
-                        <td width="7%">支付宝账号</td>
-                        <td width="6%">账号名称</td>
-                        <td width="12%">共同账户</td>
-                        <td width="6%">共同联系人数</td>
-                        <td width="6%">交易总次数</td>
-                        <td width="6%">出账总次数</td>
-                        <td width="8%">出账总金额</td>
-                        <td width="6%">进账总次数</td>
-                        <td width="8%">进账总金额</td>
+                        <td width="3%">序号</td>
+                        <td width="6%"><button onclick="orderByFilter('jyh')">交易号</button></td>
+                        <td width="8%">买家用户Id</td>
+                        <td width="8%">买家信息</td>
+                        <td width="4%">交易状态</td>
+                        <td width="8%">卖家用户Id</td>
+                        <td width="8%">卖家信息</td>
+                        <td width="7%"><button onclick="orderByFilter('jyje')">交易金额</button></td>
+                        <td width="8%"><button onclick="orderByFilter('sksj')">收款时间</button></td>
+                        <td width="13%">商品名称</td>
+                        <td width="15%">收货人地址</td>
                     </tr>
                     <input name="label" id="dfzh" hidden="hidden" value="">
+                    <input name="label" id="dfmc" hidden="hidden" value="">
                     <input name="label" id="allRow" hidden="hidden" value="">
                     </thead>
                     <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF()">
@@ -196,7 +200,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" onclick="downGtzhDetailInfo()">导出</button>
+                <button type="button" class="btn btn-default" onclick="downJyjlTjjgDetailInfo()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

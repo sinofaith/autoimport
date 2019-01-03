@@ -1,11 +1,8 @@
 package cn.com.sinofaith.dao.pyramidSaleDao;
 
-import cn.com.sinofaith.bean.pyramidSaleBean.PsHierarchyEntity;
 import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
-import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.dao.BaseDao;
 import cn.com.sinofaith.util.DBUtil;
-import com.sun.org.apache.bcel.internal.generic.ReturnaddressType;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -114,13 +111,14 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
                 // 开启事务
                 Transaction tx1 = session.beginTransaction();
                 StringBuffer sql = new StringBuffer();
-                sql.append("insert into ps_hierarchy h(h.psid,h.sponsorid,h.tier,h.path,h.aj_id,h.directrefernum,h.containstier) ");
-                sql.append("select t.*,p.directReferNum,p1.containsTier from ( ");
-                sql.append("select psid,sponsorid,"+level+" tier,sys_connect_by_path(psid,'/') path,aj_id from ( ");
-                sql.append("select distinct t.psid,t.sponsorid,t.aj_id from PYRAMIDSALE t where t.aj_id="+id+") y start with sponsorid = '"+temp+"' connect by prior psid=sponsorid) t ");
+                sql.append("insert into ps_hierarchy h(h.psid,h.sponsorid,h.nick_name,h.tier,h.path,h.aj_id,h.directrefernum,h.containstier,h.directDrive) ");
+                sql.append("select t.*,p.directReferNum,p1.containsTier,d.directDrive from ( ");
+                sql.append("select psid,sponsorid,nick_name,"+level+" tier,sys_connect_by_path(psid,'/') path,aj_id from ( ");
+                sql.append("select distinct t.psid,t.sponsorid,t.nick_name,t.aj_id from PYRAMIDSALE t where t.aj_id="+id+") y start with sponsorid = '"+temp+"' connect by prior psid=sponsorid) t ");
                 sql.append("left join(select * from (select psid,count(1)-1 directReferNum from ( select * from ( ");
                 sql.append("select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id) su from PYRAMIDSALE t where aj_id="+id+") where su=1 ) ");
                 sql.append("connect by psid= prior sponsorid group by psid ) where directReferNum > 0) p on t.psid=p.psid ");
+                sql.append("left join(select h1.sponsorid,count(1) directDrive from pyramidsale h1 where aj_id="+id+" group by h1.sponsorid) d on d.sponsorid=t.psid ");
                 sql.append("left join(select psid,max(level)-1 containsTier from(select b.psid,b.sponsorid from pyramidsale b where b.aj_id="+id+") c connect by c.psid=prior c.sponsorid ");
                 sql.append("group by c.psid) p1 on p1.psid=t.psid where t.tier>0");
 
@@ -164,13 +162,16 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
      * @param currentPage
      * @param pageSize
      * @param seach
+     * @param flag
      * @return
      */
-    public List<PyramidSaleEntity> getDoPageBySql(int currentPage, int pageSize, String seach, boolean temp, String psId) {
+    public List<PyramidSaleEntity> getDoPageBySql(int currentPage, int pageSize, String seach, boolean temp, String psId, boolean flag) {
         List<PyramidSaleEntity> psList = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM ( ");
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM ( ");
+        }
         if(temp){
             sql.append("select * from (select * from (");
             sql.append("select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)su ");
@@ -180,8 +181,9 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
             sql.append("partition by t.psid,t.sponsorid order by t.id)su from PYRAMIDSALE t where (1=1) "+seach+") where su=1 ");
             sql.append("start with sponsorid = '"+psId+"' connect by prior psid=sponsorid");
         }
-        sql.append(") c ");
-        sql.append(" WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        if(flag){
+            sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
         Session session = getSession();
         try {
             Transaction tx = session.beginTransaction();
@@ -198,6 +200,39 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
                     .addScalar("accountHolder")
                     .addScalar("accountNumber")
                     .setResultTransformer(Transformers.aliasToBean(PyramidSaleEntity.class)).list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return psList;
+    }
+
+    /**
+     * 总条数
+     * @param search
+     * @return
+     */
+    public int getRowAllCount(String search) {
+        String sql = "select to_char(count(1)) NUM from pyramidSale where"+search;
+        List list = findBySQL(sql);
+        Map map = (Map)list.get(0);
+        return Integer.parseInt((String) map.get("NUM"));
+    }
+
+    /**
+     * 获取总数据
+     * @param search
+     * @return
+     */
+    public List<PyramidSaleEntity> getPyramidSaleAll(String search) {
+        List<PyramidSaleEntity> psList = null;
+        String sql = "select * from pyramidSale where"+search;
+        Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            psList = session.createSQLQuery(sql)
+                    .addEntity(PyramidSaleEntity.class).list();
             tx.commit();
         }catch (Exception e){
             e.printStackTrace();

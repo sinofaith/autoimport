@@ -23,18 +23,21 @@
         </span>
     </span>
     <span class="dropdown">
-        <a href="#" onclick="skip('a7','zfbJyjl')" <c:if test="${flag=='a7'||flag=='a8'||flag=='a9'}">class="addactive"</c:if> id="dropdownMenu4" data-toggle="dropdown">支付宝交易记录</a>
+        <a href="#" onclick="skip('a7','zfbJyjl')" <c:if test="${flag=='a7'||flag=='a8'||flag=='a9'||flag=='a10'}">class="addactive"</c:if> id="dropdownMenu4" data-toggle="dropdown">支付宝交易记录</a>
         <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 288px; background: white; margin-top: 6px; margin-left: -288px">
             <li role="presentation">
-                <a id="a8" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a8','zfbJyjlSjdzs')" style="width: 265px; <c:if test="${flag=='a8'}">background: #09CEB8</c:if>">交易记录地址统计</a>
+                <a id="a10" role="menuitem" tabindex="2" href="JavaScript:void(0);" onclick="skip('a10','zfbJyjlTjjg')" style="width: 265px; <c:if test="${flag=='a10'}">background: #09CEB8</c:if>">交易记录统计结果</a>
             </li>
             <li role="presentation">
                 <a id="a9" role="menuitem" tabindex="2" href="JavaScript:void(0);" onclick="skip('a9','zfbJyjlTjjgs')" style="width: 265px; <c:if test="${flag=='a9'}">background: #09CEB8</c:if>">交易记录对手账户</a>
             </li>
+             <li role="presentation">
+                <a id="a8" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a8','zfbJyjlSjdzs')" style="width: 265px; <c:if test="${flag=='a8'}">background: #09CEB8</c:if>">交易记录地址统计</a>
+            </li>
         </span>
     </span>
     <span class="dropdown">
-        <a href="#" onclick="skip('a10','zfbDlrz')" <c:if test="${flag=='a10'}">class="addactive"</c:if> id="dropdownMenu5" data-toggle="dropdown">支付宝登陆日志</a>
+        <a href="#" onclick="skip('a11','zfbDlrz')" <c:if test="${flag=='a11'}">class="addactive"</c:if> id="dropdownMenu5" data-toggle="dropdown">支付宝登陆日志</a>
     </span>
 </span>
 <script type="text/javascript">

@@ -89,7 +89,7 @@ public class AjServices {
         try {
             st = con.createStatement();
             if(type.length==5){
-                st.execute("delete  aj where id ="+ajid);
+                st.execute("delete aj where id ="+ajid);
                 con.commit();
             }
             for(String a:type){
@@ -125,6 +125,9 @@ public class AjServices {
                     st.addBatch("DELETE zfbzzmx_tjjgs where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl_tjjgs where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl_Sjdzs where aj_id="+ajid);
+                    if(type.length<5){
+                        st.addBatch("UPDATE AJ a SET a.filter='' WHERE ID="+ajid);
+                    }
                 }
 
             }
@@ -160,9 +163,7 @@ public class AjServices {
     public int getZfbZzmxList(AjEntity aje,String filterInput) {
         String search = "";
         if(filterInput!=""){
-            search += " and j1.spmc like '%"+filterInput+"%' and j1.jyzt='交易成功' group by j1.dyxcsj";
-        }else{
-            search += " group by j1.dyxcsj";
+            search += " and upper(j1.spmc) like '%"+filterInput.toUpperCase()+"%' and j1.jyzt='交易成功'";
         }
         // 转账明细条件筛选
         List<ZfbZzmxTjjgsForm> zfbZzmxList = zfbZzmxDao.selectFilterJyjlBySpmc(search,aje.getId());
@@ -178,8 +179,6 @@ public class AjServices {
             // 修改筛选
             aje.setFilter(filterInput);
             updateAj(aje);
-        }else{
-
         }
         return tjjgsList.size()>0&&jyjlTjjgsList.size()>0?1:0;
     }
