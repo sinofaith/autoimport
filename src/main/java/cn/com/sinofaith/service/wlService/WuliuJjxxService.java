@@ -1,17 +1,14 @@
 package cn.com.sinofaith.service.wlService;
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
-import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.dao.wuliuDao.WuliuDao;
 import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
 import cn.com.sinofaith.dao.wuliuDao.WuliuRelationDao;
 import cn.com.sinofaith.page.Page;
-import cn.com.sinofaith.util.ExcelMappingUtils;
+import cn.com.sinofaith.util.MappingUtils;
 import com.monitorjbl.xlsx.StreamingReader;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -27,13 +24,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class WuliuJjxxService {
@@ -226,9 +220,9 @@ public class WuliuJjxxService {
         for (String path : listPath) {
             excelName = path.substring(path.lastIndexOf("\\")+1);
             if(path.endsWith(".xlsx")){
-                sheetMap = ExcelMappingUtils.getBy2007Excel(path);
+                sheetMap = MappingUtils.getBy2007Excel(path);
             }else if(path.endsWith(".xls")){
-                sheetMap = ExcelMappingUtils.getBy2003Excel(path);
+                sheetMap = MappingUtils.getBy2003Excel(path);
             }
             // 将单个excel表数据放入map中
             excelMap.put(excelName,sheetMap);
@@ -366,7 +360,7 @@ public class WuliuJjxxService {
                                 if (row != null) {
                                     for (int i = 0; i < row.getLastCellNum(); i++) {
                                         Cell cell = row.getCell(i);
-                                        String rowValue = ExcelMappingUtils.rowValue(cell);
+                                        String rowValue = MappingUtils.rowValue(cell);
                                         for(int j=2;j<excel.size();j++){
                                             if(rowValue.equals(excel.get(j))){
                                                 title.put(excel.get(j),i);
@@ -415,42 +409,42 @@ public class WuliuJjxxService {
         if(field.get(2).equals("无") || xssfRow.getCell(title.get(field.get(2)))==null){
             wuliu.setWaybill_id("");
         }else{
-            String waybill_id = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(2)))).replace(",","");
+            String waybill_id = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(2)))).replace(",","");
             wuliu.setWaybill_id(waybill_id);
         }
         // 寄件时间
         if(field.get(3).equals("无") || xssfRow.getCell(title.get(field.get(3)))==null){
             wuliu.setShip_time("");
         }else{
-            String ship_time = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(3)))).replace(",","");
+            String ship_time = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(3)))).replace(",","");
             wuliu.setShip_time(ship_time);
         }
         // 寄件地址
         if(field.get(4).equals("无") || xssfRow.getCell(title.get(field.get(4)))==null){
             wuliu.setShip_address("");
         }else{
-            String ship_address = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(4)))).replace(",","");
+            String ship_address = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(4)))).replace(",","");
             wuliu.setShip_address(ship_address);
         }
         // 寄件人
         if(field.get(5).equals("无") || xssfRow.getCell(title.get(field.get(5)))==null){
             wuliu.setSender("");
         }else{
-            String sender = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(5)))).replace(",","");
+            String sender = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(5)))).replace(",","");
             wuliu.setSender(sender);
         }
         // 寄件电话
         if(field.get(6).equals("无") || xssfRow.getCell(title.get(field.get(6)))==null){
             wuliu.setShip_phone("");
         }else{
-            String ship_phone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(6)))).replace(",","");
+            String ship_phone = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(6)))).replace(",","");
             wuliu.setShip_phone(ship_phone);
         }
         // 寄件手机
         if(field.get(7).equals("无") || xssfRow.getCell(title.get(field.get(7)))==null){
             wuliu.setShip_mobilephone("");
         }else{
-            String ship_phone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(7)))).replace(",","");
+            String ship_phone = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(7)))).replace(",","");
             wuliu.setShip_mobilephone(ship_phone);
         }
         // 寄件人=0
@@ -477,7 +471,7 @@ public class WuliuJjxxService {
         if(field.get(8).equals("无") || xssfRow.getCell(title.get(field.get(8)))==null){
             wuliu.setSj_address("");
         }else{
-            String sj_address = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(8)))).replace(",","");
+            String sj_address = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(8)))).replace(",","");
             if("0".equals(sj_address)){
                 sj_address = "";
             }
@@ -487,21 +481,21 @@ public class WuliuJjxxService {
         if(field.get(9).equals("无") || xssfRow.getCell(title.get(field.get(9)))==null){
             wuliu.setAddressee("");
         }else{
-            String addressee = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(9)))).replace(",","");
+            String addressee = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(9)))).replace(",","");
             wuliu.setAddressee(addressee);
         }
         // 收件电话
         if(field.get(10).equals("无") || xssfRow.getCell(title.get(field.get(10)))==null){
             wuliu.setSj_phone("");
         }else{
-            String sj_phone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(10)))).replace(",","");
+            String sj_phone = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(10)))).replace(",","");
             wuliu.setSj_phone(sj_phone);
         }
         // 收件手机
         if(field.get(11).equals("无") || xssfRow.getCell(title.get(field.get(11)))==null){
             wuliu.setSj_mobilephone("");
         }else{
-            String sj_mobilephone = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(11)))).replace(",","");
+            String sj_mobilephone = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(11)))).replace(",","");
             wuliu.setSj_mobilephone(sj_mobilephone);
         }
         // 收件人=0
@@ -539,49 +533,49 @@ public class WuliuJjxxService {
         if(field.get(12).equals("无") || xssfRow.getCell(title.get(field.get(12)))==null){
             wuliu.setCollector("");
         }else{
-            String collector = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(12)))).replace(",","");
+            String collector = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(12)))).replace(",","");
             wuliu.setCollector(collector);
         }
         // 托寄物
         if(field.get(13).equals("无") || xssfRow.getCell(title.get(field.get(13)))==null){
             wuliu.setTjw("");
         }else{
-            String tjw = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(13)))).replace(",","");
+            String tjw = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(13)))).replace(",","");
             wuliu.setTjw(tjw);
         }
         // 付款方式
         if(field.get(14).equals("无") || xssfRow.getCell(title.get(field.get(14)))==null){
             wuliu.setPayment("");
         }else{
-            String payment = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(14)))).replace(",","");
+            String payment = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(14)))).replace(",","");
             wuliu.setPayment(payment);
         }
         // 代收货款
         if(field.get(15).equals("无") || xssfRow.getCell(title.get(field.get(15)))==null){
             wuliu.setDshk("");
         }else{
-            String dshk = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(15)))).replace(",","");
+            String dshk = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(15)))).replace(",","");
             wuliu.setDshk(dshk);
         }
         // 计费重量
         if(field.get(16).equals("无") || xssfRow.getCell(title.get(field.get(16)))==null){
             wuliu.setWeight("");
         }else{
-            String weight = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(16)))).replace(",","");
+            String weight = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(16)))).replace(",","");
             wuliu.setWeight(weight);
         }
         // 件数
         if(field.get(17).equals("无") || xssfRow.getCell(title.get(field.get(17)))==null){
             wuliu.setNumber_cases("");
         }else{
-            String number_cases = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(17)))).replace(",","");
+            String number_cases = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(17)))).replace(",","");
             wuliu.setNumber_cases(number_cases);
         }
         // 运费
         if(field.get(18).equals("无") || xssfRow.getCell(title.get(field.get(18)))==null){
             wuliu.setFreight("");
         }else{
-            String freight = ExcelMappingUtils.rowValue(xssfRow.getCell(title.get(field.get(18)))).replace(",","");
+            String freight = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(18)))).replace(",","");
             wuliu.setFreight(freight);
         }
         return wuliu;

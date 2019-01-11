@@ -1,5 +1,6 @@
 package cn.com.sinofaith.service;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
@@ -690,7 +691,7 @@ public class UploadService {
         zfbJyjlTjjgsDao.delAll(id);
         zfbJyjlTjjgsDao.insertJyjlTjjgs(jyjlTjjgsList);
         // 添加交易记录收件人地址统计数据
-        List<ZfbJyjlSjdzsEntity> jyjlSjdzsForms = zfbJyjlSjdzsDao.selectJyjlSjdzs(id);
+        List<ZfbJyjlSjdzsEntity> jyjlSjdzsForms = zfbJyjlSjdzsDao.selectJyjlSjdzs(id,null);
         zfbJyjlSjdzsDao.delAll(id);
         zfbJyjlSjdzsDao.insertJyjlSjdzs(jyjlSjdzsForms,id);
         return sum;

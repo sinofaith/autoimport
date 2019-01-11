@@ -1,21 +1,16 @@
 package cn.com.sinofaith.service.PyramidSaleService;
 
-import cn.com.sinofaith.bean.pyramidSaleBean.PsHierarchyEntity;
 import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.dao.pyramidSaleDao.PsHierarchyDao;
 import cn.com.sinofaith.dao.pyramidSaleDao.PyramidSaleDao;
-import cn.com.sinofaith.form.zfbForm.ZfbJyjlSjdzsForm;
 import cn.com.sinofaith.page.Page;
-import cn.com.sinofaith.util.ExcelMappingUtils;
+import cn.com.sinofaith.util.MappingUtils;
 import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,9 +41,9 @@ public class PyramidSaleService {
         List<String> listPath = getPsFileList(uploadPath);
         for (String path : listPath) {
             if(path.endsWith(".xlsx")){
-                readMap = ExcelMappingUtils.getBy2007Excel(path);
+                readMap = MappingUtils.getBy2007Excel(path);
             }else if(path.endsWith(".xls")){
-                readMap = ExcelMappingUtils.getBy2003Excel(path);
+                readMap = MappingUtils.getBy2003Excel(path);
             }
         }
         return readMap;

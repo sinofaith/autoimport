@@ -86,13 +86,27 @@ public class ZfbZzmxTjjgDao extends BaseDao<ZfbZzmxTjjgEntity> {
      */
     public List<ZfbZzmxTjjgForm> selectZzmxTjjg(long id) {
         List<ZfbZzmxTjjgForm> zzmxTjjgForms = null;
+        String sql1 = "select to_char(count(1)) NUM from zfbzcxx where aj_id="+id;
+        List list = findBySQL(sql1.toString());
+        Map map = (Map) list.get(0);
+        int rowAll = Integer.parseInt((String) map.get("NUM"));
         StringBuffer sql = new StringBuffer();
-        sql.append("select f.*,s.*,f.fkzcs+s.skzcs jyzcs from (");
-        sql.append("select c.zhmc fkzhmc,z.fkfzfbzh,z.zzcpmc fkzzcpmc,count(1) fkzcs,sum(z.zzje) fkzje from zfbzzmx z ");
-        sql.append("left join zfbzcxx c on c.dyxcsj = z.dyxcsj where c.yhid = z.fkfzfbzh and c.aj_id="+id+" and z.aj_id="+id);
-        sql.append(" group by c.zhmc,z.zzcpmc,z.fkfzfbzh) f full join( select c.zhmc skzhmc,z.skfzfbzh,z.zzcpmc skzzcpmc,count(1) skzcs,sum(z.zzje) skzje ");
-        sql.append(" from zfbzzmx z left join zfbzcxx c on c.dyxcsj = z.dyxcsj where c.yhid = z.skfzfbzh and c.aj_id="+id);
-        sql.append(" and z.aj_id="+id+" group by c.zhmc,z.zzcpmc,z.skfzfbzh) s on f.fkfzfbzh = s.skfzfbzh and f.fkzzcpmc = s.skzzcpmc");
+        if(rowAll>0){
+            sql.append("select f.*,s.*,f.fkzcs+s.skzcs jyzcs from (");
+            sql.append("select c.zhmc fkzhmc,z.fkfzfbzh,z.zzcpmc fkzzcpmc,count(1) fkzcs,sum(z.zzje) fkzje from zfbzzmx z ");
+            sql.append("left join zfbzcxx c on c.dyxcsj = z.dyxcsj where c.yhid = z.fkfzfbzh and c.aj_id="+id+" and z.aj_id="+id);
+            sql.append(" group by c.zhmc,z.zzcpmc,z.fkfzfbzh) f full join( select c.zhmc skzhmc,z.skfzfbzh,z.zzcpmc skzzcpmc,count(1) skzcs,sum(z.zzje) skzje ");
+            sql.append(" from zfbzzmx z left join zfbzcxx c on c.dyxcsj = z.dyxcsj where c.yhid = z.skfzfbzh and c.aj_id="+id);
+            sql.append(" and z.aj_id="+id+" group by c.zhmc,z.zzcpmc,z.skfzfbzh) s on f.fkfzfbzh = s.skfzfbzh and f.fkzzcpmc = s.skzzcpmc");
+        }else{
+            sql.append("select b.*,a.*,b.fkzcs+a.skzcs jyzcs from(select '' fkzhmc,z.fkfzfbzh,z.zzcpmc fkzzcpmc,count(1) ");
+            sql.append("fkzcs,sum(z.zzje) fkzje from (select t.*,row_number() over(");
+            sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") z where su=1 ");
+            sql.append("group by z.zzcpmc,z.fkfzfbzh) b full join(select '' skzhmc,z.skfzfbzh,z.zzcpmc skzzcpmc,count(1) skzcs,");
+            sql.append("sum(z.zzje) skzje from (select t.*,row_number() over(");
+            sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") z where su=1 ");
+            sql.append("group by z.zzcpmc,z.skfzfbzh) a on a.skfzfbzh=b.fkfzfbzh and a.skzzcpmc=b.fkzzcpmc");
+        }
         // 获得当前线程session
         Session session = getSession();
         try{

@@ -169,7 +169,7 @@ public class ZfbZzmxTjjgsController {
         if(dfzh.equals("转账到银行卡")){
             search += " c.yhid='"+zfbzh+"' and z.fkfzfbzh='"+zfbzh+"' and z.skfzfbzh is null ";
         }else{
-            search += " c.yhid='"+zfbzh+"' and ((z.fkfzfbzh='"+zfbzh+"' and z.skfzfbzh='"+dfzh+"') ";
+            search += " ((z.fkfzfbzh='"+zfbzh+"' and z.skfzfbzh='"+dfzh+"') ";
             search += "or (z.fkfzfbzh='"+dfzh+"' and z.skfzfbzh='"+zfbzh+"')) ";
         }
         // 查询哪一个案件
@@ -293,7 +293,7 @@ public class ZfbZzmxTjjgsController {
         if(dfzh.equals("转账到银行卡")){
             search += " c.yhid='"+zfbzh+"' and z.fkfzfbzh='"+zfbzh+"' and z.skfzfbzh is null ";
         }else{
-            search += " c.yhid='"+zfbzh+"' and ((z.fkfzfbzh='"+zfbzh+"' and z.skfzfbzh='"+dfzh+"') ";
+            search += " ((z.fkfzfbzh='"+zfbzh+"' and z.skfzfbzh='"+dfzh+"') ";
             search += "or (z.fkfzfbzh='"+dfzh+"' and z.skfzfbzh='"+zfbzh+"')) ";
         }
 

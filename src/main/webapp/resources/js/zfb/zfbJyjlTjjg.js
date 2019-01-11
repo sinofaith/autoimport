@@ -17,7 +17,7 @@ function getZfbJyjlTjjgDetails(obj){
         },
         success:function (msg) {
             var data = msg.list;
-            insert(data,tbody,true);
+            insert(data,tbody,dfzh,true);
             $("#dfzh").attr("value",dfzh);
             $("#dfmc").attr("value",dfmc);
             $("#allRow").attr("value",msg.totalRecords);
@@ -47,7 +47,7 @@ function orderByFilter(filter){
         },
         success:function (msg) {
             var data = msg.list;
-            insert(data,tbody,true);
+            insert(data,tbody,dfzh,true);
             $("#dfzh").attr("value",dfzh);
             $("#dfmc").attr("value",dfmc);
             $("#allRow").attr("value",msg.totalRecords);
@@ -81,7 +81,7 @@ function scrollF() {
                 },
                 success:function (msg) {
                     var data = msg.list;
-                    insert(data,tbody,false);
+                    insert(data,tbody,dfzh,false);
                     $("#dfzh").attr("value",dfzh);
                     $("#dfmc").attr("value",dfmc);
                     $("#allRow").attr("value",msg.totalRecords);
@@ -94,7 +94,7 @@ function scrollF() {
 
 
 // 交易记录插入表记录
-function insert(data,tbody,temp){
+function insert(data,tbody,dfzh,temp){
     var str = "";
     for (i in data){
         if(i%2==0){
@@ -105,12 +105,12 @@ function insert(data,tbody,temp){
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"6%\" title='"+data[i].jyh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyh+"</div></td>"+
-            "<td width=\"8%\">"+data[i].mjyhId+"</td>"+
-            "<td width=\"8%\" title='"+data[i].mjxx+"'>"+
+            "<td width=\"8%\" "+(data[i].mjyhId==dfzh?"style=color:red":"")+">"+data[i].mjyhId+"</td>"+
+            "<td width=\"8%\" "+(data[i].mjyhId==dfzh?"style=color:red":"")+" title='"+data[i].mjxx+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].mjxx+"</div></td>"+
             "<td width=\"4%\">"+data[i].jyzt+"</td>"+
-            "<td width=\"8%\">"+data[i].mijyhId+ "</td>"+
-            "<td width=\"8%\" title='"+data[i].mijxx+"'>"+
+            "<td width=\"8%\" "+(data[i].mijyhId==dfzh?"style=color:red":"")+">"+data[i].mijyhId+ "</td>"+
+            "<td width=\"8%\" "+(data[i].mijyhId==dfzh?"style=color:red":"")+" title='"+data[i].mijxx+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].mijxx+"</div></td>"+
             "<td width=\"7%\">"+data[i].jyje+"</td>"+
             "<td width=\"8%\">"+(data[i].sksj!=null?data[i].sksj:"")+"</td>"+

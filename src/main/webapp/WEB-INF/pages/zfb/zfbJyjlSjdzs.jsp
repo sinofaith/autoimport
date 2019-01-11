@@ -111,6 +111,16 @@
                         <div class=" ">
 
                             <div>
+                                <div class="col-lg-15">
+                                    <div class="input-group">
+                                        <input type="text" id="filterInput" class="form-control" value="${aj.filter}" placeholder="请输入要筛选的内容,例如：MCM">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button" onclick="filterJyjlByspmc('${aj.aj}')">
+                                                筛选
+                                            </button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 --></div><br>
                                 <form action="/SINOFAITH/zfbJyjlSjdzs/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
@@ -184,6 +194,50 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" onclick="downJyjlSjdzsDetailInfo()">导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel1">支付宝交易单个地址详情<span id="title1"></span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="3%">序号</td>
+                        <td width="6%"><button onclick="orderByFilter1('jyh')">交易号</button></td>
+                        <td width="8%">买家用户Id</td>
+                        <td width="8%">买家信息</td>
+                        <td width="4%">交易状态</td>
+                        <td width="8%">卖家用户Id</td>
+                        <td width="8%">卖家信息</td>
+                        <td width="7%"><button onclick="orderByFilter1('jyje')">交易金额</button></td>
+                        <td width="12%"><button onclick="orderByFilter1('sksj')">收款时间</button></td>
+                        <td width="12%">商品名称</td>
+                        <td width="8%">收货人地址</td>
+                    </tr>
+                    <input name="label" id="mjyhid1" hidden="hidden" value="">
+                    <input name="label" id="shrdz1" hidden="hidden" value="">
+                    <input name="label" id="allRow1" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result1" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF1()">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="downDetailInfo1()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>

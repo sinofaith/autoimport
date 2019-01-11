@@ -1,5 +1,6 @@
 package cn.com.sinofaith.service.zfbService;
 
+import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
@@ -75,7 +76,6 @@ public class ZfbJyjlSjdzsService {
             }
         }
         return gson.toJson(page);
-
     }
 
     /**
@@ -167,5 +167,46 @@ public class ZfbJyjlSjdzsService {
             sjdzs = zfbJyjlSjdzsDao.getDoPageSjdzs(0, 0, search, false);
         }
         return sjdzs;
+    }
+
+    /**
+     * 单个地址详情数据
+     * @param currentPage
+     * @param pageSize
+     * @param search
+     * @return
+     */
+    public String getSingleDetails(int currentPage, int pageSize, String search) {
+        Gson gson = new Gson();
+        Page page = null;
+        int rowAll = zfbJyjlSjdzsDao.getRowAllCount1(search);
+        if(rowAll>0){
+            List<ZfbJyjlEntity> jyjlList = zfbJyjlSjdzsDao.getDoPageSjdzs1(currentPage, pageSize, search, true);
+            for (int i =0;i<jyjlList.size();i++) {
+                jyjlList.get(i).setId((currentPage-1)*pageSize+i+1);
+            }
+            if(jyjlList!=null){
+                page = new Page();
+                page.setPageNo(currentPage);
+                page.setTotalRecords(rowAll);
+                page.setList(jyjlList);
+                page.setPageSize(pageSize);
+            }
+        }
+        return gson.toJson(page);
+    }
+
+    /**
+     * 单个地址详情数据导出
+     * @param search
+     * @return
+     */
+    public List<ZfbJyjlEntity> downloadDetails1(String search) {
+        List<ZfbJyjlEntity> jyjlList = null;
+        int rowAll = zfbJyjlSjdzsDao.getRowAllCount1(search);
+        if(rowAll>0) {
+            jyjlList = zfbJyjlSjdzsDao.getDoPageSjdzs1(0, 0, search, false);
+        }
+        return jyjlList;
     }
 }

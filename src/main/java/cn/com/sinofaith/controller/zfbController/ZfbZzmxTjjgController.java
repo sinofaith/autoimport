@@ -9,10 +9,7 @@ import cn.com.sinofaith.service.zfbService.ZfbZzmxTjjgService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,7 +79,15 @@ public class ZfbZzmxTjjgController {
                     return "/zfb/zfbZzmxTjjg";
                 }
             }else{
-                dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
+                seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+                String[] zzcpmcs = seachCode.split(",");
+                // 添加逻辑或的关系
+                Disjunction disjunction = Restrictions.disjunction();
+                for (int i = 0; i < zzcpmcs.length; i++) {
+                    String zzcpmc = zzcpmcs[i];
+                    disjunction.add(Restrictions.like(seachCondition, "%" + zzcpmc + "%"));
+                }
+                dc.add(disjunction);
             }
         }
         // 排序字段
@@ -143,8 +148,11 @@ public class ZfbZzmxTjjgController {
      */
     @RequestMapping(value = "/SeachCode",method = RequestMethod.POST)
     public String SeachCode(String seachCondition, String seachCode, HttpSession session){
+        if(seachCode.contains(",")){
+            seachCode = seachCode.substring(0, seachCode.length()-1);
+        }
         // 若seachCode(查询内容)为空或为null
-        if(seachCode==null || seachCode.trim().isEmpty()){
+         if(seachCode==null || seachCode.trim().isEmpty()){
             session.removeAttribute("zzmxTjjgSeachCondition");
             session.removeAttribute("zzmxTjjgSeachCode");
             return "redirect:/zfbZzmxTjjg/seach?pageNo=1";
@@ -234,7 +242,14 @@ public class ZfbZzmxTjjgController {
                     dc.add(Restrictions.gt(seachCondition, big));
                 }
             }else{
-                dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
+                String[] zzcpmcs = seachCode.split(",");
+                // 添加逻辑或的关系
+                Disjunction disjunction = Restrictions.disjunction();
+                for (int i = 0; i < zzcpmcs.length; i++) {
+                    String zzcpmc = zzcpmcs[i];
+                    disjunction.add(Restrictions.like(seachCondition, "%" + zzcpmc + "%"));
+                }
+                dc.add(disjunction);
             }
         }
         AjEntity aj = (AjEntity) session.getAttribute("aj");

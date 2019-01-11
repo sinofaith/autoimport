@@ -61,9 +61,9 @@
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
-                                            <td align="center">${item.zfbzh}</td>
+                                            <td align="center" title="${item.zfbzh}"><div style="width:110px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbzh}</div></td>
                                             <td align="center" title="${item.zfbmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbmc}</div></td>
-                                            <td align="center">${item.dfzh!=null?item.dfzh:"转账到银行卡"}</td>
+                                            <td align="center" title="${item.dfzh}"><div style="width:110px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfzh!=null?item.dfzh:"转账到银行卡"}</div></td>
                                             <td align="center" title="${item.dfmc}"><div style="width:180px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfmc}</div></td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.fkzcs}</td>
@@ -192,9 +192,9 @@
                     <tr align="center">
                         <td width="3%">序号</td>
                         <td width="14%"><button onclick="orderByFilter('jyh')">交易号</button></td>
-                        <td width="8%">付款方账号</td>
+                        <td width="10%"><button onclick="orderByFilter('fkfzfbzh')">付款方账号</button></td>
                         <td width="8%">转账产品名称</td>
-                        <td width="8%">收款方账号</td>
+                        <td width="10%"><button onclick="orderByFilter('skfzfbzh')">收款方账号</button></td>
                         <td width="5%">收款机构信息</td>
                         <td width="7%"><button onclick="orderByFilter('dzsj')">到账时间</button></td>
                         <td width="4%"><button onclick="orderByFilter('zzje')">转账金额</button></td>

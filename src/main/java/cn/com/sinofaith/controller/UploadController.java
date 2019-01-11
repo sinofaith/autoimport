@@ -60,14 +60,14 @@ public class UploadController {
     private WuliuSjService wlsjService;
     @Autowired
     private PyramidSaleService pyramidSaleService;
+    @Autowired
+    private ZfbZzmxService zfbZzmxService;
     /*@Autowired
     private ZfbZcxxService zfbZcxxService;
     @Autowired
     private ZfbDlrzService zfbDlrzService;
     @Autowired
     private ZfbZhmxService zfbZhmxService;
-    @Autowired
-    private ZfbZzmxService zfbZzmxService;
     @Autowired
     private ZfbJyjlService zfbJyjlService;*/
     @Autowired
@@ -250,58 +250,6 @@ public class UploadController {
         }
     }
 
-    /*@RequestMapping(value = "/Wuliu",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
-    @ResponseBody
-    public String uploadWuliu(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
-                              HttpServletRequest req) {
-        // 创建一个路径
-        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
-        String filePath = "";
-        String fileName = "";
-        String result = "";
-        File uploadFile = null;
-        File uploadPathd = new File(uploadPath);
-        if (!uploadPathd.exists()) {
-            uploadPathd.mkdirs();
-        }
-        // 将文件上传到服务器
-        for(int i=0;i<file.size();i++) {
-            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
-            filePath = uploadPath + fileName;
-            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
-                uploadFile = new File(filePath);
-                try {
-                    file.get(i).transferTo(uploadFile);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        int a = 0;
-        int b = 0;
-        AjEntity aje = ajs.findByName(aj).get(0);
-        if(uploadPathd.listFiles()!=null) {
-            List<WuliuEntity> listJjxx = wjs.getAll(aje.getId());
-            // wuliu表添加数据
-            us.insertWuliuJjxx(uploadPath,aje.getId(),listJjxx);
-            // wuliu_relation表添加数据
-            wjs.insertRelation(aje.getId());
-            // wuliu_ship表添加数据
-            wlsService.insertShip(aje.getId());
-            // wuliu_sj表添加数据
-            wlsjService.insertSj(aje.getId());
-            us.deleteAll(uploadPath);
-            uploadPathd.delete();
-        }
-        if(a+b>0){
-            result = String.valueOf(a+b);
-        }else {
-            result = "";
-        }
-        req.getSession().setAttribute("aj",aje);
-        return result;
-    }*/
-
     /**
      * 传销Excel字段与表映射
      * @param file
@@ -377,7 +325,7 @@ public class UploadController {
      * @param req
      * @return
      */
-    @RequestMapping(value = "/uploadZfb",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/uploadZfbcsv",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String uploadZfb(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                               HttpServletRequest req) {
@@ -411,12 +359,74 @@ public class UploadController {
             us.deleteAll(uploadPath);
             uploadPathd.delete();
         }
-
         req.getSession().setAttribute("aj",aje);
         if(a>0){
             return "";
         }else {
             return null;
+        }
+    }
+
+    /**
+     * 支付宝字段映射
+     * @param file
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/uploadZfbxlsx",method = RequestMethod.POST)
+    public @ResponseBody Map<String,Map<String,List<String>>> fieldMappingZfb(
+            @RequestParam("file") List<MultipartFile> file,HttpServletRequest req){
+        // 创建一个路径
+        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
+        String filePath = "";
+        String fileName = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if (!uploadPathd.exists()) {
+            uploadPathd.mkdirs();
+        }
+        // 将文件上传到服务器
+        for(int i=0;i<file.size();i++) {
+            fileName = file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(filePath.endsWith(".xlsx") || filePath.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        req.getSession().setAttribute("zfbPath",uploadPath);
+        // 读取服务器的excel表
+        Map<String,Map<String,List<String>>> excelMap = zfbZzmxService.readExcel(uploadPath);
+        if(excelMap!=null){
+            return excelMap;
+        }
+        return null;
+    }
+
+    /**
+     * 支付宝数据存入数据库
+     * @param field
+     * @return
+     */
+    @RequestMapping(value = "/uploadZfbExcel",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public @ResponseBody String uploadZfbExcel(@RequestBody List<List<String>> field, HttpSession session) {
+        // 读取域中数据
+        String path = (String) session.getAttribute("zfbPath");
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 将数据插入数据库
+        int sum = zfbZzmxService.insertZfb(path,field,aj.getId());
+        // 删除文件
+        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(uploadPath);
+        zfbZzmxService.deleteFile(uploadPathd);
+        if(sum>0){
+            return "200";
+        } else {
+            return "400";
         }
     }
 }

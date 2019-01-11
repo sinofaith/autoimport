@@ -2,6 +2,7 @@ package cn.com.sinofaith.bean.zfbBean;
 
 
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgssForm;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -220,6 +221,44 @@ public class ZfbZzmxTjjgsEntity {
                     tjjgs.setAj_id(id);
                     map.put(tjjgsForm.getYhid()+tjjgsForm.getFkfzfbzh(),tjjgs);
                 }
+            }
+        }
+        List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = new ArrayList<>(map.values());
+        return zzmxTjjgsList;
+    }
+
+    /**
+     * 单表对手数据统计
+     * @param tjjgsForms
+     * @param id
+     * @return
+     */
+    public static List<ZfbZzmxTjjgsEntity> FormToLists(List<ZfbZzmxTjjgssForm> tjjgsForms, long id) {
+        Map<String, ZfbZzmxTjjgsEntity> map = new HashMap<>();
+        ZfbZzmxTjjgsEntity zzmx = null;
+        for (ZfbZzmxTjjgssForm tjjgs : tjjgsForms) {
+            // 判断反方向   收+付
+            if(map.containsKey(tjjgs.getSkfzfbzh()+tjjgs.getFkfzfbzh())){
+                zzmx = map.get(tjjgs.getSkfzfbzh() + tjjgs.getFkfzfbzh());
+                zzmx.setJyzcs(zzmx.getJyzcs()+tjjgs.getZzcs());
+                zzmx.setSkzcs(zzmx.getSkzcs()+tjjgs.getZzcs());
+                zzmx.setSkzje(zzmx.getSkzje().add(tjjgs.getZzje()));
+            }else if(map.containsKey(tjjgs.getFkfzfbzh()+tjjgs.getSkfzfbzh())){ // 判断正方向   付+收
+                zzmx = map.get(tjjgs.getFkfzfbzh() + tjjgs.getSkfzfbzh());
+                zzmx.setJyzcs(zzmx.getJyzcs()+tjjgs.getZzcs());
+                zzmx.setFkzcs(zzmx.getFkzcs()+tjjgs.getZzcs());
+                zzmx.setFkzje(zzmx.getFkzje().add(tjjgs.getZzje()));
+            }else{// 新的转账记录  加入map中
+                zzmx = new ZfbZzmxTjjgsEntity();
+                zzmx.setZfbmc("");
+                zzmx.setZfbzh(tjjgs.getFkfzfbzh());
+                zzmx.setDfmc("");
+                zzmx.setDfzh(tjjgs.getSkfzfbzh());
+                zzmx.setJyzcs(tjjgs.getZzcs());
+                zzmx.setFkzcs(tjjgs.getZzcs());
+                zzmx.setFkzje(tjjgs.getZzje());
+                zzmx.setAj_id(id);
+                map.put(tjjgs.getFkfzfbzh()+tjjgs.getSkfzfbzh(),zzmx);
             }
         }
         List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = new ArrayList<>(map.values());

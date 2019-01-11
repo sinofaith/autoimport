@@ -260,7 +260,7 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
         StringBuffer sql = new StringBuffer();
         sql.append("select j.mjyhid,substr(j.mjxx,1,instr(j.mjxx,')')) mjxx,j.jyzt,j.mijyhid,");
         sql.append("substr(j.mijxx,1,instr(j.mijxx,')')) mijxx,j.jyje from(select * from (select j1.*,row_number() ");
-        sql.append("over( partition by j1.jyh order by j1.id) su from zfbjyjl j1 where aj_id="+id);
+        sql.append("over( partition by j1.jyh order by j1.id) su from zfbjyjl j1 where aj_id="+id+" and j1.jyzt='交易成功'");
         if(!search.equals("")){
             sql.append(" "+search);
         }

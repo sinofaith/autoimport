@@ -2,15 +2,13 @@ package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
-import cn.com.sinofaith.dao.zfbDao.ZfbJyjlDao;
-import cn.com.sinofaith.dao.zfbDao.ZfbJyjlTjjgsDao;
-import cn.com.sinofaith.dao.zfbDao.ZfbZzmxDao;
-import cn.com.sinofaith.dao.zfbDao.ZfbZzmxTjjgsDao;
+import cn.com.sinofaith.dao.zfbDao.*;
 import cn.com.sinofaith.form.AjForm;
 import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
@@ -40,6 +38,8 @@ public class AjServices {
     private ZfbJyjlDao zfbJyjlDao;
     @Autowired
     private ZfbJyjlTjjgsDao zfbJyjlTjjgsDao;
+    @Autowired
+    private ZfbJyjlSjdzsDao zfbJyjlSjdzsDao;
 
     public void save(AjEntity aj){
          ad.save(aj);
@@ -163,23 +163,29 @@ public class AjServices {
     public int getZfbZzmxList(AjEntity aje,String filterInput) {
         String search = "";
         if(filterInput!=""){
-            search += " and upper(j1.spmc) like '%"+filterInput.toUpperCase()+"%' and j1.jyzt='交易成功'";
+            search += " and upper(j1.spmc) like '%"+filterInput.toUpperCase()+"%'";
         }
         // 转账明细条件筛选
-        List<ZfbZzmxTjjgsForm> zfbZzmxList = zfbZzmxDao.selectFilterJyjlBySpmc(search,aje.getId());
+        List<ZfbZzmxTjjgsForm> zfbZzmxList = zfbZzmxDao.selectFilterJyjlBySpmc(search, aje.getId());
         List<ZfbZzmxTjjgsEntity> tjjgsList = ZfbZzmxTjjgsEntity.FormToList(zfbZzmxList, aje.getId());
         // 交易记录条件筛选
-        List<ZfbJyjlTjjgsForm> zfbJyjlList = zfbJyjlDao.selectFilterJyjlBySpmc(search,aje.getId());
+        List<ZfbJyjlTjjgsForm> zfbJyjlList = zfbJyjlDao.selectFilterJyjlBySpmc(search, aje.getId());
         List<ZfbJyjlTjjgsEntity> jyjlTjjgsList = ZfbJyjlTjjgsEntity.FormToList(zfbJyjlList, aje.getId());
-        if(tjjgsList.size()>0&&jyjlTjjgsList.size()>0){
+        // 交易地址条件筛选
+        List<ZfbJyjlSjdzsEntity> sjdzsList = zfbJyjlSjdzsDao.selectJyjlSjdzs(aje.getId(), filterInput);
+
+        // 修改数据
+        if(tjjgsList.size()>0&&jyjlTjjgsList.size()>0&&sjdzsList.size()>0){
             zfbZzmxTjjgsDao.delAll(aje.getId());
             zfbZzmxTjjgsDao.insertZzmxTjjgs(tjjgsList);
             zfbJyjlTjjgsDao.delAll(aje.getId());
             zfbJyjlTjjgsDao.insertJyjlTjjgs(jyjlTjjgsList);
+            zfbJyjlSjdzsDao.delAll(aje.getId());
+            zfbJyjlSjdzsDao.insertJyjlSjdzs(sjdzsList, aje.getId());
             // 修改筛选
             aje.setFilter(filterInput);
             updateAj(aje);
         }
-        return tjjgsList.size()>0&&jyjlTjjgsList.size()>0?1:0;
+        return tjjgsList.size()>0&&jyjlTjjgsList.size()>0&&sjdzsList.size()>0?1:0;
     }
 }

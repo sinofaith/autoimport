@@ -36,7 +36,7 @@ function getZfbZzxxTjjgsDetails(obj){
         },
         success:function (msg) {
             var data = msg.list;
-            insert(data,tbody,true);
+            insert(data,tbody,zfbzh,true);
             $("#zfbzh").attr("value",zfbzh);
             $("#dfzh").attr("value",dfzh);
             $("#allRow").attr("value",msg.totalRecords);
@@ -66,7 +66,7 @@ function orderByFilter(filter){
         },
         success:function (msg) {
             var data = msg.list;
-            insert(data,tbody,true);
+            insert(data,tbody,zfbzh,true);
             $("#zfbzh").attr("value",zfbzh);
             $("#dfzh").attr("value",dfzh);
             $("#allRow").attr("value",msg.totalRecords);
@@ -100,7 +100,7 @@ function scrollF() {
                 },
                 success:function (msg) {
                     var data = msg.list;
-                    insert(data,tbody,false);
+                    insert(data,tbody,zfbzh,false);
                     $("#zfbzh").attr("value",zfbzh);
                     $("#dfzh").attr("value",dfzh);
                     $("#allRow").attr("value",msg.totalRecords);
@@ -113,7 +113,7 @@ function scrollF() {
 
 
 // 转账明细插入表记录
-function insert(data,tbody,temp){
+function insert(data,tbody,zfbzh,temp){
     var str = "";
     for (i in data){
         if(i%2==0){
@@ -122,11 +122,14 @@ function insert(data,tbody,temp){
             str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
         }
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
-            "<td width=\"14%\">"+data[i].jyh+"</td>"+
-            "<td width=\"8%\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</td>"+
+            "<td width=\"14%\" title='"+data[i].jyh+"'>"+
+            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyh+"</div></td>"+
+            "<td width=\"10%\" "+(data[i].fkfzfbzh==zfbzh?"style=color:red":"")+" title='"+data[i].fkfzfbzh+"'>"+
+            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</div></td>"+
             "<td width=\"8%\">"+data[i].zzcpmc+"</td>"+
-            "<td width=\"8%\">"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"</td>"+
-            "<td width=\"5%\">"+data[i].skjgxx+ "</td>"+
+            "<td width=\"10%\" "+(data[i].skfzfbzh==zfbzh?"style=color:red":"")+" title='"+data[i].skfzfbzh+"'>"+
+            "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"</div></td>"+
+            "<td width=\"5%\">"+(data[i].skjgxx!=null?data[i].skjgxx:"")+"</td>"+
             "<td width=\"7%\">"+data[i].dzsj+"</td>"+
             "<td width=\"4%\">"+data[i].zzje+"</td>"+
             "<td width=\"12%\">"+(data[i].txlsh!=null?data[i].txlsh:"")+"</td>"+

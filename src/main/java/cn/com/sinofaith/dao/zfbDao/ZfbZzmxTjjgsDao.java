@@ -6,6 +6,7 @@ import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
 import cn.com.sinofaith.dao.BaseDao;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
+import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgssForm;
 import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.hibernate.Criteria;
@@ -42,7 +43,7 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
         sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) a ");
         sql.append("left join(select * from (select t.*,row_number() over(");
         sql.append("partition by t.jyh order by t.id) su from zfbzhmx t where aj_id="+id+") where su=1) h on a.jyh=h.jyh ");
-        sql.append("left join zfbzcxx c on c.dyxcsj = a.dyxcsj where c.aj_id="+id);
+        sql.append("left join zfbzcxx c on c.dyxcsj = a.dyxcsj and c.aj_id="+id);
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();
@@ -170,5 +171,31 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
             session.close();
         }
         return zzmxTjjgs;
+    }
+
+    /**
+     * 单表数据统计
+     * @param id
+     * @return
+     */
+    public List<ZfbZzmxTjjgssForm> selectZzmxTjjgss(long id) {
+        List<ZfbZzmxTjjgssForm> tjjgsForms = null;
+        StringBuffer sql = new StringBuffer();
+        sql.append("select fkfzfbzh,skfzfbzh,count(1) zzcs,sum(zzje) zzje from(select t.*,row_number() over(");
+        sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id=144) where su=1 group by fkfzfbzh,skfzfbzh");
+        Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            tjjgsForms = session.createSQLQuery(sql.toString())
+                    .addScalar("fkfzfbzh").addScalar("skfzfbzh")
+                    .addScalar("zzcs", StandardBasicTypes.LONG)
+                    .addScalar("zzje", StandardBasicTypes.BIG_DECIMAL)
+                    .setResultTransformer(Transformers.aliasToBean(ZfbZzmxTjjgssForm.class)).list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return tjjgsForms;
     }
 }

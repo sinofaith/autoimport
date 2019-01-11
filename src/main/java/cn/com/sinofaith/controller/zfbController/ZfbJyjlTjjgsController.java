@@ -27,7 +27,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 支付宝交易记录对手账户控制器
+ * 支付宝交易记录买家信息控制器
  * @author zd
  * create by 2018.12.16
  */
@@ -260,7 +260,7 @@ public class ZfbJyjlTjjgsController {
             wb = zfbJyjlTjjgsService.createExcel(tjjgs);
         }
         resp.setContentType("application/force-download");
-        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录对手信息(\""+aj.getAj()+")"+name+".xls").getBytes(), "ISO8859-1"));
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录买家账户信息(\""+aj.getAj()+")"+name+".xls").getBytes(), "ISO8859-1"));
         OutputStream op = resp.getOutputStream();
         wb.write(op);
         op.flush();
@@ -297,7 +297,7 @@ public class ZfbJyjlTjjgsController {
             wb = ZfbJyjlEntity.createExcel(tjjgs,"支付宝交易记录对手详情信息");
         }
         resp.setContentType("application/force-download");
-        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录对手详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录买家详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = resp.getOutputStream();
         wb.write(op);
         op.flush();

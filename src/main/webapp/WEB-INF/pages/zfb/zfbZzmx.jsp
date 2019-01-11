@@ -44,28 +44,28 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="4%">序号</td>
-                                        <td width="7%">交易号</td>
-                                        <td width="7%">付款方账号</td>
-                                        <td width="11%">收款方账号</td>
-                                        <td width="9%">收款机构信息</td>
-                                        <td width="15%"><a href="/SINOFAITH/zfbZzmx/seach?pageNo=1&orderby=dzsj">到账时间</a></td>
+                                        <td width="10%">交易号</td>
+                                        <td width="12%">付款方账号</td>
+                                        <td width="12%">收款方账号</td>
+                                        <td width="7%">收款机构信息</td>
+                                        <td width="10%"><a href="/SINOFAITH/zfbZzmx/seach?pageNo=1&orderby=dzsj">到账时间</a></td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmx/seach?pageNo=1&orderby=zzje">转账金额</a></td>
                                         <td width="9%">转账产品名称</td>
                                         <td width="8%">交易发生地</td>
-                                        <td width="8%">提现流水号</td>
+                                        <td width="6%">提现流水号</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
-                                            <td align="center">${item.jyh}</td>
-                                            <td align="center">${item.fkfzfbzh}</td>
-                                            <td align="center">${item.skfzfbzh}</td>
+                                            <td align="center" title="${item.jyh}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyh}</div></td>
+                                            <td align="center" title="${item.fkfzfbzh}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.fkfzfbzh}</div></td>
+                                            <td align="center" title="${item.skfzfbzh}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.skfzfbzh}</div></td>
                                             <td align="center">${item.skjgxx}</td>
                                             <td align="center">${item.dzsj}</td>
                                             <td align="center">${item.zzje}</td>
-                                            <td align="center">${item.zzcpmc}</td>
+                                            <td align="center" title="${item.zzcpmc}"><div style="width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zzcpmc}</div></td>
                                             <td align="center">${item.jyfsd}</td>
-                                            <td align="center" title="${item.txlsh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.txlsh}</div></td>
+                                            <td align="center" title="${item.txlsh}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.txlsh}</div></td>
                                         </tr>
                                     </c:forEach>
                                     <c:choose>

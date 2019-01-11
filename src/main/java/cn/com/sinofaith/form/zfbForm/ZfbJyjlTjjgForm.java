@@ -6,8 +6,35 @@ public class ZfbJyjlTjjgForm {
     private String dfzh;
     private String dfmc;
     private String dyxcsj;
+    private long jyzcs;
     private long skzcs;
     private BigDecimal skzje = new BigDecimal(0);
+    private long fkzcs;
+    private BigDecimal fkzje = new BigDecimal(0);
+
+    public long getJyzcs() {
+        return jyzcs;
+    }
+
+    public void setJyzcs(long jyzcs) {
+        this.jyzcs = jyzcs;
+    }
+
+    public long getFkzcs() {
+        return fkzcs;
+    }
+
+    public void setFkzcs(long fkzcs) {
+        this.fkzcs = fkzcs;
+    }
+
+    public BigDecimal getFkzje() {
+        return fkzje;
+    }
+
+    public void setFkzje(BigDecimal fkzje) {
+        this.fkzje = fkzje;
+    }
 
     public String getDfzh() {
         return dfzh;

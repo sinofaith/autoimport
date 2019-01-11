@@ -39,7 +39,7 @@
                                     <tr>
                                         <td colspan="12"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>交易记录对手账户(${aj.aj})</strong>
+                                                <strong>交易买家账户信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
@@ -47,7 +47,7 @@
                                         <td width="4%">序号</td>
                                         <td width="5%">买家用户Id</td>
                                         <td width="12%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=zfbzh">买家信息</a></td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=jyzt">交易状态</a></td>
+                                        <td width="6%">交易状态</td>
                                         <td width="5%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=dfzh">卖家用户Id</a></td>
                                         <td width="15%">卖家信息</td>
                                         <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
@@ -178,7 +178,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">支付宝交易记录对手详情<span id="title"></span></h4>
+                <h4 class="modal-title" id="myModalLabel">支付宝交易记录买家详情<span id="title"></span></h4>
             </div>
             <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">

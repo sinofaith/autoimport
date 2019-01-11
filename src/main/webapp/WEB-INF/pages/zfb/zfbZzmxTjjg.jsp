@@ -6,16 +6,21 @@
 
 <%--详情模块脚本--%>
 
-<link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/thirdparty/alertify/css/bootstrap.css"/> " rel="stylesheet">
 <link href="<c:url value="/resources/css/bootstrap-theme.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
+<script src="<c:url value="/resources/jquery/jquery.media.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
-<script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
-<script src="<c:url value="/resources/js/zfb/zfb.js"/> "></script>
+<script src="<c:url value="/resources/thirdparty/alertify/js/alertify.min.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/resources/thirdparty/gojs/js/jquery/jquery-ui.min.js"/> "></script>
+<script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
+<link href="<c:url value="/resources/css/bootstrap-select.css"/>" rel="stylesheet" media="screen">
+<script src="<c:url value="/resources/js/bootstrap-select.js"/> "></script>
+<script src="<c:url value="/resources/js/zfb/zfb.js"/> "></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){};
@@ -28,22 +33,66 @@
                     content += "<option value='"+data[i]+"'>"+data[i]+"</option>";
                 }
                 $("#select").append(content);
+                $(".selectpicker" ).selectpicker('refresh');
             }
         );
+
     });
     function SeachCode(){
+        var zzcpmcs = $(".selectpicker" ).val();
+        var content = null;
+        if(zzcpmcs!=null){
+            content = "";
+            for(i=0;i<zzcpmcs.length;i++){
+                content +=zzcpmcs[i]+",";
+            }
+        }
         $.ajax({
             type: "POST",//方法类型
             url: "/SINOFAITH/zfbZzmxTjjg/SeachCode",
-            data:{seachCondition:"zzcpmc",seachCode:$("#select").val()},
+            data:{seachCondition:"zzcpmc",seachCode:content},
             success: function () {
                 document.getElementById("seachDetail").submit()
-            },
+            }
         });
     }
 </script>
 <style type="text/css">
     .crimeterrace{ background-color: #636B75 !important;}
+    .dropdown-menu>li>a{
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.428571429;
+        border: 0px;
+        white-space: nowrap;
+    }
+    .filter-option-inner-inner{
+        background: white;
+        color: black;
+        font-size: 12px;
+        text-align:center;
+    }
+    .filter-option{
+        width:70px;
+        background: white;
+    }
+    .bootstrap-select.form-control{
+        height: 20px;
+    }
+    .ddr .dropdown ul{
+        overflow-x:hidden;
+        overflow-y:auto;
+        background: white;
+    }
+    :not(.input-group) > .bootstrap-select.form-control:not([class*="col-"]){
+         width: 70%;
+         left: -22px;
+    }
+    .dropdown-menu{
+        top:30px;
+    }
 </style>
 
 <div class="tab_div">
@@ -60,18 +109,18 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>转账明细统计结果(${aj.aj})</strong>
+                                                <strong style="font-weight: bold;line-height: normal;">转账明细统计结果(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
                                         <td width="4%">序号</td>
-                                        <td width="7%">支付宝账号</td>
+                                        <td width="10%">支付宝账号</td>
                                         <td width="12%"><a href="/SINOFAITH/zfbZzmxTjjg/seach?pageNo=1&orderby=zfbmc">账号名称</a></td>
                                         <td width="10%">
-                                            <select id="select" onchange="SeachCode()" style="width: 110px;">
-                                                <option >转账产品名称</option>
+                                            <select id="select" class="selectpicker form-control" style="width: 110px; position: absolute" multiple>
                                             </select>
+                                            <button  type="button" onclick="SeachCode()" class="sideBar_r_button" style="width: 45px;height: 24px;margin-left: -22px;position: absolute;">筛选</button>
                                         </td>
                                         <td width="8%"><a href="/SINOFAITH/zfbZzmxTjjg/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/zfbZzmxTjjg/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
@@ -83,9 +132,9 @@
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
-                                            <td align="center">${item.zfbzh}</td>
+                                            <td align="center" title="${item.zfbzh}"><div style="width:130px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbzh}</div></td>
                                             <td align="center">${item.zfbmc}</td>
-                                            <td align="center">${item.zzcpmc}</td>
+                                            <td align="center" title="${item.zfbzh}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zzcpmc}</div></td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.fkzcs}</td>
                                             <td align="center">${item.fkzje}</td>
@@ -190,7 +239,7 @@
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;margin-left: 5%;right: 5%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
@@ -203,9 +252,9 @@
                     <tr align="center">
                         <td width="3%">序号</td>
                         <td width="14%"><button onclick="orderByFilter('jyh')">交易号</button></td>
-                        <td width="8%">付款方账号</td>
+                        <td width="8%"><button onclick="orderByFilter('fkfzfbzh')">付款方账号</button></td>
                         <td width="8%">转账产品名称</td>
-                        <td width="8%">收款方账号</td>
+                        <td width="8%"><button onclick="orderByFilter('skfzfbzh')">收款方账号</button></td>
                         <td width="5%">收款机构信息</td>
                         <td width="7%"><button onclick="orderByFilter('dzsj')">到账时间</button></td>
                         <td width="4%"><button onclick="orderByFilter('zzje')">转账金额</button></td>

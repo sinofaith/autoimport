@@ -1,5 +1,7 @@
 package cn.com.sinofaith.dao.zfbDao;
 
+import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbJyjlEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
 import cn.com.sinofaith.dao.BaseDao;
@@ -12,6 +14,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
+import javax.naming.directory.SearchControls;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -27,18 +30,23 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
     /**
      * 获取收件人地址数据
      * @param id
+     * @param filterInput
      * @return
      */
-    public List<ZfbJyjlSjdzsEntity> selectJyjlSjdzs(long id) {
+    public List<ZfbJyjlSjdzsEntity> selectJyjlSjdzs(long id, String filterInput) {
+        String search = "";
+        if(filterInput!=null&&!"".equals(filterInput)){
+            search = " and upper(spmc) like '%"+filterInput.toUpperCase()+"%'";
+        }
         StringBuffer sql = new StringBuffer();
         List<ZfbJyjlSjdzsEntity> sjdzsList = null;
         sql.append("select mjyhid,mjxx,sum(sjcs) sjzcs,sum(czje) czzje,sjdzs from(");
         sql.append("select j1.*,j2.sjdzs from (select t.mjyhid,substr(mjxx,0,instr(mjxx,'(',1)-1) mjxx,");
         sql.append("sum(t.jyje) czje,count(1) sjcs from ZFBJYJL t where aj_id="+id);
-        sql.append(" and t.shrdz is not null group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) j1 ");
+        sql.append(" and t.shrdz is not null and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) j1 ");
         sql.append("left join(select mjyhid,count(1) sjdzs from(select t.mjyhid,");
         sql.append("t.mjxx,t.shrdz,count(1) sjcs from ZFBJYJL t where aj_id="+id+" and t.shrdz is not null ");
-        sql.append("group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) group by mjyhid) j2 ");
+        sql.append("and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) group by mjyhid) j2 ");
         sql.append("on j1.mjyhid=j2.mjyhid) group by mjyhid,mjxx,sjdzs");
         Session session = getSession();
         try {
@@ -152,5 +160,52 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
             session.close();
         }
         return forms;
+    }
+
+    /**
+     * 单个地址详情数据总条数
+     * @param search
+     * @return
+     */
+    public int getRowAllCount1(String search) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("select to_char(count(1)) NUM from (select t.*,row_number() over(partition by ");
+        sql.append("t.jyh order by t.id) su from zfbjyjl t where "+search+") where su=1");
+        List list = findBySQL(sql.toString());
+        Map map = (Map) list.get(0);
+        return Integer.parseInt((String)map.get("NUM"));
+    }
+
+    /**
+     * 单个地址详情分页数据
+     * @param currentPage
+     * @param pageSize
+     * @param search
+     * @param flag
+     * @return
+     */
+    public List<ZfbJyjlEntity> getDoPageSjdzs1(int currentPage, int pageSize, String search, boolean flag) {
+        List<ZfbJyjlEntity> jyjlList = null;
+        StringBuffer sql = new StringBuffer();
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM (");
+        }
+        sql.append("select * from (select t.*,row_number() over(partition by ");
+        sql.append("t.jyh order by t.id) su from zfbjyjl t where "+search+") where su=1");
+        if(flag){
+            sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
+        Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            jyjlList = session.createSQLQuery(sql.toString())
+                    .addEntity(ZfbJyjlEntity.class).list();
+            tx.commit();
+        }catch(Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return jyjlList;
     }
 }

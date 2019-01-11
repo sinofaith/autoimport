@@ -1,5 +1,6 @@
 package cn.com.sinofaith.util;
 
+import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -8,6 +9,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,13 +23,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * excel映射工具类
  * @author zd
  * create by 2018.11.23
  */
-public class ExcelMappingUtils {
+public class MappingUtils {
 
     public static String rowValue(Cell cell){
         String rawValue = null;
@@ -48,8 +55,9 @@ public class ExcelMappingUtils {
         }
         return rawValue;
     }
+
     /**
-     * 读取2007版数据映射
+     * 读取2007版数据映射 表头和一行数据
      * @param path
      * @return
      */
@@ -74,32 +82,27 @@ public class ExcelMappingUtils {
                 int temp = 0;
                 for(Row row : sheet){
                     if (row != null && temp < 2) {
+                        // 字段长度
                         int cellNum = row.getLastCellNum();
+                        // 字段少于三个不添加
+                        if(cellNum<3){
+                            continue;
+                        }
                         for (int i = 0; i < cellNum; i++) {
-                            String rawValue = null;
                             Cell cell = row.getCell(i);
-                            if(cell == null){
-                                rawValue = "";
-                            }else{
-                                switch (cell.getCellType()) {
-                                    case Cell.CELL_TYPE_STRING:
-                                        rawValue = cell.getRichStringCellValue().getString().trim();
-                                        break;
-                                    case Cell.CELL_TYPE_NUMERIC:
-                                        NumberFormat df = NumberFormat.getInstance();
-                                        rawValue = df.format(cell.getNumericCellValue());
-                                        break;
-                                    case Cell.CELL_TYPE_BOOLEAN:
-                                        rawValue =String.valueOf(cell.getBooleanCellValue());
-                                        break;
-                                    case Cell.CELL_TYPE_FORMULA:
-                                        rawValue =cell.getCellFormula();
-                                }
-                            }
-                            if(rawValue==null){
+                            String rowValue = rowValue(cell);
+                            if(rowValue==null){
                                 readList.add("");
                             }else{
-                                readList.add(rawValue);
+                                if(rowValue.contains("：")){
+                                    String reg = "[^：]+：(.+)";
+                                    Pattern pet = Pattern.compile(reg);
+                                    Matcher matcher = pet.matcher(rowValue);
+                                    while (matcher.find()) {
+                                        rowValue = matcher.group(1);
+                                    }
+                                }
+                                readList.add(rowValue);
                             }
                         }
                         temp++;
@@ -127,7 +130,7 @@ public class ExcelMappingUtils {
     }
 
     /**
-     * 获取2003版excel.xls版本数据
+     * 获取2003版excel.xls版本 表头和一行数据
      * @param path
      * @return
      */
@@ -143,10 +146,16 @@ public class ExcelMappingUtils {
                 if (sheet == null) {
                     continue;
                 }
-                for (int rowNum = 0; rowNum <= 1; rowNum++) {
+                int lastRowNum = sheet.getLastRowNum();
+                int temp = 0;
+                for (int rowNum = 0; rowNum <= lastRowNum; rowNum++) {
                     HSSFRow row = sheet.getRow(rowNum);
                     if (row != null) {
                         int cell = row.getLastCellNum();
+                        // 字段少于三个不添加
+                        if(cell<3){
+                            continue;
+                        }
                         for (int i = 0; i < cell; i++) {
                             String rawValue = null;
                             if(row.getCell(i)==null){
@@ -157,6 +166,10 @@ public class ExcelMappingUtils {
                             }
                             readList.add(rawValue);
                         }
+                        temp++;
+                    }
+                    if(temp>1){
+                        break;
                     }
                 }
                 if(readList.size()>0){
@@ -175,5 +188,60 @@ public class ExcelMappingUtils {
             }
         }
         return sheetMap;
+    }
+
+    /**
+     * 读取html文件table表头和一行数据
+     * @param path
+     * @return
+     */
+    public static List<String> getByJsoupHtml(String path) {
+        List<String> dataList = new ArrayList<>();
+        File in = new File(path);
+        try {
+            // 获取文档对象
+            Document doc = Jsoup.parse(in, "utf-8");
+            Element table = doc.select("table").get(1);
+            Elements trs = table.select("tr");
+            // 标题
+            if(trs.size()>2 && trs!=null){
+                for(int i=0;i<2;i++){
+                    Element element = trs.get(i);
+                    String text = element.text();
+                    String[] split = text.split(" ");
+                    for(int j=0;j<split.length;j++){
+                        if(split[j].contains("：")){
+                            String reg = "[^：]+：(.+)";
+                            Pattern pet = Pattern.compile(reg);
+                            Matcher matcher = pet.matcher(split[j]);
+                            while (matcher.find()) {
+                                split[j] = matcher.group(1);
+                            }
+                        }
+                        dataList.add(split[j]);
+                    }
+                }
+            }else if(trs!=null){
+                for(int i=0;i<trs.size();i++){
+                    Element element = trs.get(i);
+                    String text = element.text();
+                    String[] split = text.split(" ");
+                    for(int j=0;j<split.length;j++){
+                        if(split[j].contains("：")){
+                            String reg = "[^：]+：(.+)";
+                            Pattern pet = Pattern.compile(reg);
+                            Matcher matcher = pet.matcher(split[j]);
+                            while (matcher.find()) {
+                                split[j] = matcher.group(1);
+                            }
+                        }
+                        dataList.add(split[j]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dataList;
     }
 }

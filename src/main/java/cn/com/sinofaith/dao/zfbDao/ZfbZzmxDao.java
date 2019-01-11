@@ -90,7 +90,8 @@ public class ZfbZzmxDao extends BaseDao<ZfbZzmxEntity> {
         sql.append("select j3.* from(select * from (select t.*,row_number() over( ");
         sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) j3 ");
         if(!search.equals("")){
-            sql.append("left join (select j1.dyxcsj,min(j1.sksj) sksj from zfbjyjl j1 where j1.aj_id="+id+" "+search+" group by j1.dyxcsj) j4 on j3.dyxcsj = j4.dyxcsj where j3.dzsj>=j4.sksj");
+            sql.append("left join (select j1.dyxcsj,min(j1.sksj) sksj from zfbjyjl j1 where j1.aj_id="+id+" and j1.jyzt='交易成功' "+search);
+            sql.append(" group by j1.dyxcsj) j4 on j3.dyxcsj = j4.dyxcsj where j3.dzsj>=j4.sksj");
         }
         sql.append(") a left join(select * from (select t.*,row_number() over(");
         sql.append("partition by t.jyh order by t.id) su from zfbzhmx t where aj_id="+id+") where su=1) h on a.jyh=h.jyh ");

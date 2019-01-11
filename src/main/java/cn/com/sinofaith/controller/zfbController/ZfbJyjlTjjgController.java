@@ -29,7 +29,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 支付宝交易记录统计结果控制器
+ * 支付宝交易记录卖家信息控制器
  * @author zd
  * create by 2018.12.26
  */
@@ -71,7 +71,7 @@ public class ZfbJyjlTjjgController {
         String search = "";
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            if(seachCondition.equals("skzje")){
+            if(seachCondition.equals("skzje") || seachCondition.equals("fkzje")){
                 if(StringUtils.isNumeric(seachCode)){
                     long fz = Long.parseLong(seachCode);
                     BigDecimal big = BigDecimal.valueOf(fz);
@@ -157,14 +157,14 @@ public class ZfbJyjlTjjgController {
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         String search = " aj_id="+aj.getId();
         if(aj.getFilter()!=null){
-            search += " and jyzt='交易成功'";
+            //search += " and jyzt='交易成功'";
             search += " and upper(spmc) like '%"+aj.getFilter().toUpperCase()+"%'";
         }
         // 条件语句
         String lastOrder = (String) session.getAttribute("jyjlXQLastOrder");
         String desc = (String) session.getAttribute("jyjlXQDesc");
-        search += " and mijyhid='"+dfzh+"'";
-        search += " and mijxx like '%"+dfmc+"%'";
+        search += " and ((mijyhid='"+dfzh+"' and mijxx like '%"+dfmc+"%') or ";
+        search += "(mjyhid='"+dfzh+"' and mjxx like '%"+dfmc+"%'))";
         // 查询哪一个案件
         if("xxx".equals(order)){
             if("".equals(desc)){
@@ -222,12 +222,17 @@ public class ZfbJyjlTjjgController {
         String search = "";
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            if(seachCondition.equals("skzje")){
+            if(seachCondition.equals("skzje") || seachCondition.equals("fkzje")){
+                // 是否是纯数字
                 if(StringUtils.isNumeric(seachCode)){
                     long fz = Long.parseLong(seachCode);
                     BigDecimal big = new BigDecimal(fz);
-                    name = "--进账总金额大于"+big;
-                    search += " and skzje>"+big;
+                    if(seachCondition.equals("skzje")){
+                        name = "--进账总金额大于"+big;
+                    }else{
+                        name = "--出账总金额大于"+big;
+                    }
+                    search += " and "+seachCondition+">"+big;
                 }
             }else{
                 search += " and "+seachCondition+" like '%"+seachCode+"%'";
@@ -252,7 +257,7 @@ public class ZfbJyjlTjjgController {
             wb = zfbJyjlTjjgService.createExcel(tjjgs);
         }
         resp.setContentType("application/force-download");
-        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录统计结果(\""+aj.getAj()+")"+name+".xls").getBytes(), "ISO8859-1"));
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录卖家信息(\""+aj.getAj()+")"+name+".xls").getBytes(), "ISO8859-1"));
         OutputStream op = resp.getOutputStream();
         wb.write(op);
         op.flush();
@@ -273,14 +278,14 @@ public class ZfbJyjlTjjgController {
         // 条件语句
         String search = " aj_id="+aj.getId();
         if(aj.getFilter()!=null){
-            search += " and jyzt='交易成功'";
+            //search += " and jyzt='交易成功'";
             search += " and upper(spmc) like '%"+aj.getFilter().toUpperCase()+"%'";
         }
         // 条件语句
         String lastOrder = (String) session.getAttribute("jyjlXQLastOrder");
         String desc = (String) session.getAttribute("jyjlXQDesc");
-        search += " and mijyhid='"+dfzh+"'";
-        search += " and mijxx like '%"+dfmc+"%'";
+        search += " and ((mijyhid='"+dfzh+"' and mijxx like '%"+dfmc+"%') or ";
+        search += "(mjyhid='"+dfzh+"' and mjxx like '%"+dfmc+"%'))";
         if("".equals(desc)){
             search += " order by "+lastOrder+" desc  nulls last";
         }else{
@@ -291,10 +296,10 @@ public class ZfbJyjlTjjgController {
         // 创建工作簿
         HSSFWorkbook wb = null;
         if(tjjgs!=null){
-            wb = ZfbJyjlEntity.createExcel(tjjgs,"支付宝交易记录详情信息");
+            wb = ZfbJyjlEntity.createExcel(tjjgs,"支付宝交易记录卖家详情信息");
         }
         resp.setContentType("application/force-download");
-        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录统计详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝交易记录卖家("+dfmc+")详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = resp.getOutputStream();
         wb.write(op);
         op.flush();

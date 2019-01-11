@@ -257,87 +257,87 @@
                     <div class="row">
                         <div class="col-md-1">
                             <label for="c1">运单号</label>
-                            <select	 id="c1" placeholder="运单号">
+                            <select	 id="c1" placeholder="运单号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c2">寄件时间</label>
-                            <select	 id="c2" placeholder="寄件时间">
+                            <select	 id="c2" placeholder="寄件时间" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c3">寄件地址</label>
-                            <select	 id="c3" placeholder="寄件地址">
+                            <select	 id="c3" placeholder="寄件地址" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c4">寄件人</label>
-                            <select	 id="c4" placeholder="寄件人">
+                            <select	 id="c4" placeholder="寄件人" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c5">寄件电话</label>
-                            <select	id="c5" placeholder="寄件电话">
+                            <select	id="c5" placeholder="寄件电话" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c6">寄件手机</label>
-                            <select	id="c6" placeholder="寄件手机">
+                            <select	id="c6" placeholder="寄件手机" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c7">收件地址</label>
-                            <select id="c7" placeholder="收件地址">
+                            <select id="c7" placeholder="收件地址" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c8">收件人</label>
-                            <select	id="c8" placeholder="收件人">
+                            <select	id="c8" placeholder="收件人" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c9">收件电话</label>
-                            <select id="c9" placeholder="收件电话">
+                            <select id="c9" placeholder="收件电话" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c10">收件手机</label>
-                            <select	id="c10" placeholder="收件手机">
+                            <select	id="c10" placeholder="收件手机" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c11">收件员</label>
-                            <select	id="c11" placeholder="收件员">
+                            <select	id="c11" placeholder="收件员" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c12">托寄物</label>
-                            <select	id="c12" placeholder="托寄物">
+                            <select	id="c12" placeholder="托寄物" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c13">付款方式</label>
-                            <select	id="c13" placeholder="付款方式">
+                            <select	id="c13" placeholder="付款方式" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c14">代收货款</label>
-                            <select	id="c14" placeholder="代收货款">
+                            <select	id="c14" placeholder="代收货款" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c15">计费重量</label>
-                            <select	id="c15" placeholder="计费重量">
+                            <select	id="c15" placeholder="计费重量" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c16">件数</label>
-                            <select	id="c16" placeholder="件数">
+                            <select	id="c16" placeholder="件数" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
                             <label for="c17">运费</label>
-                            <select	id="c17" placeholder="运费">
+                            <select	id="c17" placeholder="运费" onchange="selectC()">
                             </select>
                         </div>
                     </div>

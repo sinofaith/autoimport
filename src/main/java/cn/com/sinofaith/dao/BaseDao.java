@@ -270,12 +270,12 @@ public class BaseDao<T>{
      * 获取所有条目
      * @return
      */
-    public int getRowAll(DetachedCriteria dc1) {
+    public int getRowAll(DetachedCriteria dc) {
         Session session = getSession();
         Long rowAll = 0l;
         try {
             Transaction tx = session.beginTransaction();
-            Criteria criteria = dc1.getExecutableCriteria(session);
+            Criteria criteria = dc.getExecutableCriteria(session);
             // 设置聚合查询函数
             criteria.setProjection(Projections.rowCount());
             rowAll = (Long) criteria.uniqueResult();

@@ -37,7 +37,7 @@ public class ZfbJyjlTjjgService {
         List<ZfbJyjlTjjgForm> tjjgForms = null;
         int rowAll = zfbJyjlTjjgDao.getRowAlls(search,id);
         if(rowAll>0){
-            tjjgForms = zfbJyjlTjjgDao.getPage(currentPage, pageSize,search, id);
+            tjjgForms = zfbJyjlTjjgDao.getPage(currentPage, pageSize,search, id, true);
             page.setPageNo(currentPage);
             page.setTotalRecords(rowAll);
             page.setList(tjjgForms);
@@ -83,7 +83,7 @@ public class ZfbJyjlTjjgService {
         List<ZfbJyjlTjjgForm> tjjgForms = null;
         int rowAll = zfbJyjlTjjgDao.getRowAlls(search,id);
         if(rowAll>0){
-            tjjgForms = zfbJyjlTjjgDao.getJyjlTjjgAll(search,id);
+            tjjgForms = zfbJyjlTjjgDao.getPage(0, 0,search, id, false);
         }
         return tjjgForms;
     }
@@ -95,38 +95,50 @@ public class ZfbJyjlTjjgService {
      */
     public HSSFWorkbook createExcel(List<ZfbJyjlTjjgForm> tjjgs) {
         HSSFWorkbook wb = new HSSFWorkbook();
-        Sheet sheet = wb.createSheet("支付宝交易统计信息");
+        Sheet sheet = wb.createSheet("支付宝交易卖家信息");
         Row row = sheet.createRow(0);
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
         cell = row.createCell(1);
         cell.setCellValue("店铺名");
         cell = row.createCell(2);
-        cell.setCellValue("支付宝账号");
+        cell.setCellValue("卖家账号");
         cell = row.createCell(3);
         cell.setCellValue("账户名称");
         cell = row.createCell(4);
-        cell.setCellValue("进账总次数");
+        cell.setCellValue("交易总次数");
         cell = row.createCell(5);
+        cell.setCellValue("进账总次数");
+        cell = row.createCell(6);
         cell.setCellValue("进账总金额");
+        cell = row.createCell(7);
+        cell.setCellValue("出账总次数");
+        cell = row.createCell(8);
+        cell.setCellValue("出账总金额");
         int b = 1;
         for(int i=0;i<tjjgs.size();i++) {
             ZfbJyjlTjjgForm wl = tjjgs.get(i);
             if ((i+b) >= 65536 && (i+b) % 65536 == 0) {
-                sheet = wb.createSheet("支付宝交易统计信息(" + b + ")");
+                sheet = wb.createSheet("支付宝交易卖家信息(" + b + ")");
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
                 cell.setCellValue("序号");
                 cell = row.createCell(1);
                 cell.setCellValue("店铺名");
                 cell = row.createCell(2);
-                cell.setCellValue("支付宝账号");
+                cell.setCellValue("卖家账号");
                 cell = row.createCell(3);
                 cell.setCellValue("账户名称");
                 cell = row.createCell(4);
-                cell.setCellValue("进账总次数");
+                cell.setCellValue("交易总次数");
                 cell = row.createCell(5);
+                cell.setCellValue("进账总次数");
+                cell = row.createCell(6);
                 cell.setCellValue("进账总金额");
+                cell = row.createCell(7);
+                cell.setCellValue("出账总次数");
+                cell = row.createCell(8);
+                cell.setCellValue("出账总金额");
                 b += 1;
             }
             row = sheet.createRow((i+b)%65536);
@@ -139,11 +151,17 @@ public class ZfbJyjlTjjgService {
             cell = row.createCell(3);
             cell.setCellValue(wl.getDfmc());
             cell = row.createCell(4);
-            cell.setCellValue(wl.getSkzcs());
+            cell.setCellValue(wl.getJyzcs());
             cell = row.createCell(5);
+            cell.setCellValue(wl.getSkzcs());
+            cell = row.createCell(6);
             cell.setCellValue(wl.getSkzje().toString());
+            cell = row.createCell(7);
+            cell.setCellValue(wl.getFkzcs());
+            cell = row.createCell(8);
+            cell.setCellValue(wl.getFkzje().toString());
             if((i+b)%65536==0) {
-                for (int a = 0; a < 6; a++) {
+                for (int a = 0; a < 9; a++) {
                     sheet.autoSizeColumn(a);
                 }
             }

@@ -33,20 +33,20 @@
         </svg><br>银行卡</a>
     <a href="/SINOFAITH/cft" class="sidebar_left_addative">
         <svg class="icon">
-            <use xlink:href="#icon-caifutong1"></use>
+            <use xlink:href="#icon-caifutong"></use>
         </svg><br>财付通</a>
     <a href="/SINOFAITH/zfb">
         <svg class="icon">
             <use xlink:href="#icon-zhifubao"></use>
         </svg><br>支付宝</a>
-    <%--<a href="/SINOFAITH/wuliu">--%>
-        <%--<svg class="icon">--%>
-            <%--<use xlink:href="#icon-wuliu"></use>--%>
-        <%--</svg><br>物流</a>--%>
-    <%--<a href="/SINOFAITH/pyramidSale">--%>
-        <%--<svg class="icon">--%>
-            <%--<use xlink:href="#icon-cengji"></use>--%>
-        <%--</svg><br>传销</a>--%>
+    <a href="/SINOFAITH/wuliu">
+        <svg class="icon">
+            <use xlink:href="#icon-wuliu"></use>
+        </svg><br>物流</a>
+    <a href="/SINOFAITH/pyramidSale">
+        <svg class="icon">
+            <use xlink:href="#icon-cengji"></use>
+        </svg><br>传销</a>
  </span>
 </aside>
 </body>

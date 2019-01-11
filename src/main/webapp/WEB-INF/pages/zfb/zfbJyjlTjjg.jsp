@@ -37,19 +37,22 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="7"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>交易记录统计结果(${aj.aj})</strong>
+                                                <strong>交易卖家账户信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
                                         <td width="4%">序号</td>
                                         <td width="6%">店铺名</td>
-                                        <td width="5%">支付宝账号</td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=dfzh">账户名称</a></td>
+                                        <td width="5%">卖家账号</td>
+                                        <td width="4%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=dfzh">账户名称</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
                                         <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=skzcs">进账总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=skzje">进账总金额</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=skzje">进账总金额</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjg/seach?pageNo=1&orderby=fkzje">出账总金额</a></td>
                                         <td width="3%">详情</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
@@ -58,8 +61,11 @@
                                             <td align="center">${item.dyxcsj}</td>
                                             <td align="center">${item.dfzh}</td>
                                             <td align="center" title="${item.dfmc}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfmc}</div></td>
+                                            <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.skzcs}</td>
                                             <td align="center">${item.skzje}</td>
+                                            <td align="center">${item.fkzcs}</td>
+                                            <td align="center">${item.fkzje}</td>
                                             <td align="center">
                                                 <button  data-toggle="modal" data-target="#myModal" onclick="getZfbJyjlTjjgDetails(this)">详情</button>
                                             </td>
@@ -68,7 +74,7 @@
                                     <c:choose>
                                         <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                             <tr>
-                                                <td colspan="7" align="center"> 无数据 </td>
+                                                <td colspan="10" align="center"> 无数据 </td>
                                             </tr>
                                         </c:when>
                                     </c:choose>
@@ -125,9 +131,10 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select id="seachCondition" name="seachCondition" class="width100" STYLE="margin-bottom: 20px;" onchange="seachChange()">
-                                            <option value="dfzh" <c:if test="${jyjlTjjgSeachCondition=='dfzh'}">selected="selected"</c:if>>支付宝账号</option>
+                                            <option value="dfzh" <c:if test="${jyjlTjjgSeachCondition=='dfzh'}">selected="selected"</c:if>>卖家账号</option>
                                             <option value="dfmc" <c:if test="${jyjlTjjgSeachCondition=='dfmc'}">selected="selected"</c:if>>账号名称</option>
                                             <option value="skzje"<c:if test="${jyjlTjjgSeachCondition=='skzje'}">selected="selected"</c:if>>进账总金额阀值</option>
+                                            <option value="fkzje"<c:if test="${jyjlTjjgSeachCondition=='fkzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                         </select>
                                         <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${jyjlTjjgSeachCode}</textarea>
                                     </div>
@@ -172,7 +179,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">支付宝交易记录统计详情<span id="title"></span></h4>
+                <h4 class="modal-title" id="myModalLabel">支付宝交易记录卖家详情<span id="title"></span></h4>
             </div>
             <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
@@ -180,11 +187,11 @@
                     <tr align="center">
                         <td width="3%">序号</td>
                         <td width="6%"><button onclick="orderByFilter('jyh')">交易号</button></td>
-                        <td width="8%">买家用户Id</td>
-                        <td width="8%">买家信息</td>
+                        <td width="8%"><button onclick="orderByFilter('mjyhid')">买家用户Id</button></td>
+                        <td width="8%"><button onclick="orderByFilter('mjxx')">买家信息</button></td>
                         <td width="4%">交易状态</td>
-                        <td width="8%">卖家用户Id</td>
-                        <td width="8%">卖家信息</td>
+                        <td width="8%"><button onclick="orderByFilter('mijyhid')">卖家用户Id</button></td>
+                        <td width="8%"><button onclick="orderByFilter('mijxx')">卖家信息</button></td>
                         <td width="7%"><button onclick="orderByFilter('jyje')">交易金额</button></td>
                         <td width="8%"><button onclick="orderByFilter('sksj')">收款时间</button></td>
                         <td width="13%">商品名称</td>

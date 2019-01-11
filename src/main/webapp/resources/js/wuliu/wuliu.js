@@ -14,9 +14,10 @@ function wuliuSkip(code) {
         location="/SINOFAITH/wuliu"+code+"/seach?pageNo="+onPage;
     }
 }
-var keyList;
 // 数据上传
+var optionSize;
 function UploadWuliu() {
+    optionSize = 0;
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
@@ -51,15 +52,18 @@ function UploadWuliu() {
             }
             var resp = xhr.responseText;
             keyList = JSON.parse(resp);
+            for(var key in keyList){
+                optionSize++;
+            }
             var jsonData = JSON.stringify(resp);
             var data = $.parseJSON(jsonData);
-            var i=1;
+            var temp = true;
             $("#excelName").append("<select class=\"form-control\" id=\"c18\" name=\"custSource\" onchange='insertSheet("+data+")'>");
             for(var key in keyList){
-                if(i==1){
+                if(temp){
                     $("#c18").append("<option value='"+key+"' selected='selected'>"+key+"</option></select>");
                     $("#c18").load(insertSheet(keyList));
-                    i++;
+                    temp = false;
                 }else{
                     $("#c18").append("<option value='"+key+"'>"+key+"</option></select>");
                 }
@@ -85,12 +89,12 @@ function insertSheet(data){
     var sheetName  = data[excelName];
     var jsonData = JSON.stringify(sheetName);
     $("#excelSheet").append("<select class=\"form-control\" id=\"c19\" name=\"custSource\" onchange='insertTable("+jsonData+")'></select>");
-    var i = 1;
+    var temp = true;
     for(var key in sheetName){
-        if(i==1){
+        if(temp){
             $("#c19").append("<option value='"+key+"' selected>"+key+"</option>");
             $("#c19").load(insertTable(sheetName));
-            i++;
+            temp = false;
         }else{
             $("#c19").append("<option value='"+key+"'>"+key+"</option>");
         }
@@ -102,20 +106,18 @@ function insertTable(sheetName){
     var sel = document.getElementById("c18");
     var index = sel.selectedIndex;
     var selectLength = sel.length-1;
-    if(selectLength==index && selectLength!=0){
+    if((selectLength==index && selectLength!=0) || optionSize==1){
         $("#nextSelect").attr("disabled",true);
     }else{
         $("#nextSelect").attr("disabled",false);
     }
     var key = $("#c19").val();
     $("#head").empty();
-    for(i=1;i<18;i++){
-        $("#c"+i).empty();
-    }
     var size = Math.ceil(sheetName[key].length/2);
     var content = "<thead style=\"display:table;width: 350%;table-layout:fixed;\">";
     content += "<tr align=\"center\">";
     for(j=1;j<18;j++){
+        $("#c"+j).empty();
         $("#c"+j).append("<option value=\"无\" selected>无</option>")
     }
     for(i=0;i<size;i++){
@@ -165,12 +167,6 @@ function wuliuCount(aj) {
         flg=1
     }
     var url = "/SINOFAITH/wuliujjxx/distinctCount?ajm="+aj+"&flg="+flg
-    // $.get(url,function (data) {
-    //     if(data == 303){
-    //         alertify.alert("数据分析中..请等待跳转")
-    //         setTimeout(function () {location="/SINOFAITH/wuliujjxx/seach?pageNo=1"},10000);
-    //     }
-    // })
     window.location=url;
 }
 
@@ -186,6 +182,11 @@ function progressFunction(evt) {
             alertify.success("文件上传成功,等待设置字段映射");
         }
     }
+}
+
+// 改变映射字段后
+function selectC() {
+    $("#mapping").attr("disabled",false);
 }
 
 // 封装参数
@@ -219,7 +220,6 @@ function uploadMapping(){
 
 //导入数据
 function uploadWuliuExcel() {
-
     if(excelData.length<1){
         alertify.set('notifier','position', 'top-center');
         alertify.error("请至少设置一个字段映射!");

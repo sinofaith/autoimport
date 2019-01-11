@@ -40,7 +40,7 @@ public class ZfbJyjlTjjgsDao extends BaseDao<ZfbJyjlTjjgsEntity>{
         sql.append("select a.mjyhid,substr(a.mjxx,1,instr(a.mjxx,')')) mjxx,a.jyzt,a.mijyhid,");
         sql.append("substr(a.mijxx,1,instr(a.mijxx,')')) mijxx,a.jyje from(");
         sql.append("select * from (select t.*,row_number() over(");
-        sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+id+") where su=1) a");
+        sql.append("partition by t.jyh order by t.id) su from zfbjyjl t where aj_id="+id+" and jyzt='交易成功') where su=1) a");
         Session session = getSession();
         try {
             // 开启事务
