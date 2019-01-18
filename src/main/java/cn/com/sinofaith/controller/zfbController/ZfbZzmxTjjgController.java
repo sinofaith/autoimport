@@ -6,6 +6,7 @@ import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.zfbService.ZfbZzmxTjjgService;
+import com.itextpdf.text.Document;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
@@ -119,6 +120,7 @@ public class ZfbZzmxTjjgController {
         }else if(desc==null){
             dc.addOrder(Order.desc("jyzcs").nulls(NullPrecedence.LAST));
             dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
+            session.setAttribute("zzmxTjjgLastOrder","jyzcs");
         }
         // 获取分页数据
         Page page = zfbZzmxTjjgService.queryForPage(pageNo,10,dc);
@@ -131,8 +133,6 @@ public class ZfbZzmxTjjgController {
         }
         if(orderby!=null){
             session.setAttribute("zzmxTjjgLastOrder",orderby);
-        }else{
-            session.setAttribute("zzmxTjjgLastOrder","jyzcs");
         }
         session.setAttribute("zzmxTjjgOrder",orderby);
         session.setAttribute("zzmxTjjgDesc",desc);
@@ -331,6 +331,19 @@ public class ZfbZzmxTjjgController {
         resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝转账明细统计详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = resp.getOutputStream();
         wb.write(op);
+        op.flush();
+        op.close();
+    }
+
+    @RequestMapping("/createPDF")
+    public void createPDF(HttpServletResponse resp,HttpSession session) throws IOException {
+        // 取出域中对象
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        String fileName = "支付宝分析报告("+aj.getAj()+").pdf";
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String((fileName).getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        Document doc = zfbZzmxTjjgService.createPDF(op, aj);
         op.flush();
         op.close();
     }

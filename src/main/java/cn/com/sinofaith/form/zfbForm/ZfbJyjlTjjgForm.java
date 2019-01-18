@@ -75,4 +75,10 @@ public class ZfbJyjlTjjgForm {
     public void setSkzje(BigDecimal skzje) {
         this.skzje = skzje;
     }
+
+    @Override
+    public String toString() {
+        return dyxcsj + "//"+ dfzh + "//" + dfmc + "//" + jyzcs +
+                "//" + skzcs +"//" + skzje +"//" + fkzcs +"//" + fkzje;
+    }
 }

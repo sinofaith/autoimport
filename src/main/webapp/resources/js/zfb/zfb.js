@@ -52,7 +52,6 @@ function UploadZfb() {
             form.append("file", fileObj.files[i]); // 文件对象
         }
     }
-    console.log(form.get("file"));
     // 上传文件为空
     if(form.get("file")==null){
         alertify.set('notifier','position', 'top-center');
@@ -373,7 +372,7 @@ function insert(data,tbody,zfbzh,temp){
             str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
         }
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
-            "<td width=\"14%\" title='"+data[i].jyh+"'>"+
+            "<td width=\"12%\" title='"+data[i].jyh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyh+"</div></td>"+
             "<td width=\"8%\" "+(data[i].fkfzfbzh==zfbzh?"style=color:red":"")+" title='"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</div></td>"+

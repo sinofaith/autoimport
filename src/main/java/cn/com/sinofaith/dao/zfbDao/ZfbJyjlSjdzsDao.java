@@ -208,4 +208,32 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
         }
         return jyjlList;
     }
+
+    /**
+     * 获取收件地址数大于等于10个的
+     * @param aj
+     * @return
+     */
+    public List<ZfbJyjlSjdzsForm> getDoPageSjdzsGE10(AjEntity aj) {
+        List<ZfbJyjlSjdzsForm> jyjlSjdzsForm = null;
+        StringBuffer sql = new StringBuffer();
+        sql.append("select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz,count(1) sjcs,");
+        sql.append("sum(jyje) czje from ZFBJYJL t where  aj_id="+aj.getId()+" and mjyhid in(");
+        sql.append("select mjyhid from ZFBJYJL_SJDZS t where aj_id="+aj.getId()+" and sjdzs>=10) and shrdz is not null ");
+        sql.append("and jyzt='交易成功' group by mjyhid,mjxx,shrdz order by mjyhid desc nulls last,sjcs desc");
+        Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            jyjlSjdzsForm = session.createSQLQuery(sql.toString())
+                    .addScalar("mjyhid").addScalar("mjxx")
+                    .addScalar("shrdz").addScalar("sjcs", StandardBasicTypes.LONG)
+                    .addScalar("czje", StandardBasicTypes.BIG_DECIMAL)
+                    .setResultTransformer(Transformers.aliasToBean(ZfbJyjlSjdzsForm.class)).list();
+            tx.commit();
+        }catch(Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return jyjlSjdzsForm;
+    }
 }

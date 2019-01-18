@@ -142,8 +142,8 @@
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">
-                               <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
+                          <%-- <c:if test="${!fn:contains(aj.aj, ',')}">
+                               <button class="sideBar_r_button">生成PDF报告文档</button>
                            </c:if>--%>
                            <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmx/download'"</c:if>>数据导出</button>
                        </span>

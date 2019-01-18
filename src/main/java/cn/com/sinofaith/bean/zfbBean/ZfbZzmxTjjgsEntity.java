@@ -146,6 +146,12 @@ public class ZfbZzmxTjjgsEntity {
         this.aj_id = aj_id;
     }
 
+    @Override
+    public String toString() {
+        return zfbzh +"//"+ zfbmc +"//"+ dfzh +"//"+ dfmc +"//"+jyzcs +"//" +
+                fkzcs +"//"+ fkzje +"//"+ skzcs +"//"+ skzje;
+    }
+
     /**
      * 将form数据转化成实体类
      * @param tjjgsForms
@@ -169,7 +175,7 @@ public class ZfbZzmxTjjgsEntity {
                     tjjgs = new ZfbZzmxTjjgsEntity();
                     tjjgs.setZfbzh(tjjgsForm.getYhid());
                     tjjgs.setZfbmc(tjjgsForm.getZhmc());
-                    tjjgs.setDfzh(tjjgsForm.getSkfzfbzh());
+                    tjjgs.setDfzh(tjjgsForm.getSkfzfbzh()!=null?tjjgsForm.getSkfzfbzh():"转账到银行卡");
                     if(tjjgsForm.getJydfxx().equals("")){
                         tjjgs.setDfmc(tjjgsForm.getSkfzfbzh());
                     }else{
@@ -201,7 +207,7 @@ public class ZfbZzmxTjjgsEntity {
                     tjjgs = new ZfbZzmxTjjgsEntity();
                     tjjgs.setZfbzh(tjjgsForm.getYhid());
                     tjjgs.setZfbmc(tjjgsForm.getZhmc());
-                    tjjgs.setDfzh(tjjgsForm.getFkfzfbzh());
+                    tjjgs.setDfzh(tjjgsForm.getFkfzfbzh()!=null?tjjgsForm.getFkfzfbzh():"转账到银行卡");
                     if(tjjgsForm.getJydfxx().equals("")){
                         tjjgs.setDfmc(tjjgsForm.getFkfzfbzh());
                     }else {

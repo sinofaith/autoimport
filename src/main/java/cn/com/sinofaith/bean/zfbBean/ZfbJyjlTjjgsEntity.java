@@ -124,6 +124,12 @@ public class ZfbJyjlTjjgsEntity {
         this.aj_id = aj_id;
     }
 
+    @Override
+    public String toString() {
+        return zfbzh + "//" + zfbmc + "//" + jyzt + "//" + dfzh + "//" +
+                dfmc + "//" + fkzcs + "//" + fkzje;
+    }
+
     /**
      * 将form数据转化成实体类
      * @param jyjlTjjgsForms

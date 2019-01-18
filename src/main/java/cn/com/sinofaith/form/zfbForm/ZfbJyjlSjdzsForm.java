@@ -65,6 +65,11 @@ public class ZfbJyjlSjdzsForm {
         this.czje = czje;
     }
 
+    @Override
+    public String toString() {
+        return mjyhid + "//" + mjxx + "//" + shrdz + "//" + sjcs + "//" + czje;
+    }
+
     /**
      * 详情数据生成excel表
      * @param jdszsForms

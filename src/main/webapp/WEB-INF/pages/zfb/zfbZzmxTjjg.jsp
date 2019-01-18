@@ -214,9 +214,7 @@
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">
-                               <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
-                           </c:if>--%>
+                           <button class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/createPDF'"</c:if>>生成PDF报告文档</button>
                            <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
@@ -251,7 +249,7 @@
                     <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
                     <tr align="center">
                         <td width="3%">序号</td>
-                        <td width="14%"><button onclick="orderByFilter('jyh')">交易号</button></td>
+                        <td width="12%"><button onclick="orderByFilter('jyh')">交易号</button></td>
                         <td width="8%"><button onclick="orderByFilter('fkfzfbzh')">付款方账号</button></td>
                         <td width="8%">转账产品名称</td>
                         <td width="8%"><button onclick="orderByFilter('skfzfbzh')">收款方账号</button></td>

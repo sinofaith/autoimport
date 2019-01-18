@@ -112,6 +112,7 @@ public class ZfbJyjlTjjgsController {
         }else if(desc==null){
             dc.addOrder(Order.desc("fkzje").nulls(NullPrecedence.LAST));
             dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
+            session.setAttribute("jyjlTjjgsLastOrder","fkzje");
         }
         // 获取分页数据
         Page page = zfbJyjlTjjgsService.queryForPage(pageNo,10,dc);
@@ -124,8 +125,6 @@ public class ZfbJyjlTjjgsController {
         }
         if(orderby!=null){
             session.setAttribute("jyjlTjjgsLastOrder",orderby);
-        }else{
-            session.setAttribute("jyjlTjjgsLastOrder","fkzje");
         }
         session.setAttribute("jyjlTjjgsOrder",orderby);
         session.setAttribute("jyjlTjjgsDesc",desc);

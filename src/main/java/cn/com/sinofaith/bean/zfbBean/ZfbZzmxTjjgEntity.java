@@ -133,6 +133,12 @@ public class ZfbZzmxTjjgEntity {
         this.aj_id = aj_id;
     }
 
+    @Override
+    public String toString() {
+        return zfbzh  + "//" + zfbmc+ "//" + zzcpmc + "//" + jyzcs + "//" + fkzcs +
+                "//" + fkzje + "//" + skzcs + "//" + skzje;
+    }
+
     /**
      * 转换
      * @param tjjgForms

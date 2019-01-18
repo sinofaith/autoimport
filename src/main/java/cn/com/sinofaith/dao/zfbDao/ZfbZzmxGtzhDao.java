@@ -27,10 +27,12 @@ public class ZfbZzmxGtzhDao extends BaseDao<ZfbZzmxTjjgsEntity>{
      */
     public int getCountRow(String search, long id) {
         StringBuffer sql = new StringBuffer();
-        sql.append("select to_char(count(1)) NUM from(select t3.zfbmc,t3.zfbzh,t3.dfzh,t4.gthys,t3.jyzcs,t3.fkzcs,t3.fkzje,t3.skzcs,t3.skzje from zfbzzmx_tjjgs t3 right join(");
+        sql.append("select to_char(count(1)) NUM from(select t3.zfbmc,t3.zfbzh,t3.dfzh,t4.gthys,t3.jyzcs,t3.fkzcs," +
+                "t3.fkzje,t3.skzcs,t3.skzje from zfbzzmx_tjjgs t3 right join(");
         sql.append("select t2.dfzh,count(1) gthys from zfbzzmx_tjjgs t2 where t2.dfzh not in");
         sql.append("(select distinct zfbzh from zfbzzmx_tjjgs where aj_id="+id+") and t2.aj_id="+id);
-        sql.append(" group by t2.dfzh having(count(1)>=2)) t4 on t4.dfzh=t3.dfzh where t3.aj_id="+id+") "+search);
+        sql.append(" group by t2.dfzh having(count(1)>=2)) t4 on t4.dfzh=t3.dfzh where t3.aj_id="+
+                    id+" and t3.dfzh<>'转账到银行卡') "+search);
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String) map.get("NUM"));
@@ -53,7 +55,7 @@ public class ZfbZzmxGtzhDao extends BaseDao<ZfbZzmxTjjgsEntity>{
         sql.append("select t3.zfbmc,t3.zfbzh,t3.dfzh,t4.gthys,t3.jyzcs,t3.fkzcs,t3.fkzje,t3.skzcs,t3.skzje from");
         sql.append(" zfbzzmx_tjjgs t3 right join(select t2.dfzh,count(1) gthys from zfbzzmx_tjjgs t2 where t2.dfzh not in");
         sql.append("(select distinct zfbzh from zfbzzmx_tjjgs where aj_id="+id+") and t2.aj_id="+id);
-        sql.append("group by t2.dfzh having(count(1)>=2)) t4 on t4.dfzh=t3.dfzh where t3.aj_id="+id+") "+search);
+        sql.append("group by t2.dfzh having(count(1)>=2)) t4 on t4.dfzh=t3.dfzh where t3.aj_id="+id+" and t3.dfzh<>'转账到银行卡') "+search);
         sql.append(")c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         Session session = getSession();
         try {
