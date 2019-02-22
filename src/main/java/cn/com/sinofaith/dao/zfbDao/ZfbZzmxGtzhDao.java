@@ -46,17 +46,21 @@ public class ZfbZzmxGtzhDao extends BaseDao<ZfbZzmxTjjgsEntity>{
      * @param id
      * @return
      */
-    public List<ZfbZzmxGtzhForm> queryForPage(int currentPage, int pageSize, String search, long id) {
+    public List<ZfbZzmxGtzhForm> queryForPage(int currentPage, int pageSize, String search, long id, boolean flag) {
         List<ZfbZzmxGtzhForm> zzmxGtzhForms = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * FROM ( ");
-        sql.append("SELECT c.*, ROWNUM rn FROM (");
+        if(flag){
+            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT c.*, ROWNUM rn FROM (");
+        }
         sql.append("select * from(");
         sql.append("select t3.zfbmc,t3.zfbzh,t3.dfzh,t4.gthys,t3.jyzcs,t3.fkzcs,t3.fkzje,t3.skzcs,t3.skzje from");
         sql.append(" zfbzzmx_tjjgs t3 right join(select t2.dfzh,count(1) gthys from zfbzzmx_tjjgs t2 where t2.dfzh not in");
         sql.append("(select distinct zfbzh from zfbzzmx_tjjgs where aj_id="+id+") and t2.aj_id="+id);
         sql.append("group by t2.dfzh having(count(1)>=2)) t4 on t4.dfzh=t3.dfzh where t3.aj_id="+id+" and t3.dfzh<>'转账到银行卡') "+search);
-        sql.append(")c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        if(flag){
+            sql.append(")c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
+        }
         Session session = getSession();
         try {
             Transaction tx = session.beginTransaction();
@@ -82,7 +86,7 @@ public class ZfbZzmxGtzhDao extends BaseDao<ZfbZzmxTjjgsEntity>{
      * @param search
      * @param id
      * @return
-     */
+     *//*
     public List<ZfbZzmxGtzhForm> getZfbZzmxGtzhAll(String search, long id) {
         List<ZfbZzmxGtzhForm> zzmxGtzhForms = null;
         StringBuffer sql = new StringBuffer();
@@ -109,5 +113,5 @@ public class ZfbZzmxGtzhDao extends BaseDao<ZfbZzmxTjjgsEntity>{
             session.close();
         }
         return zzmxGtzhForms;
-    }
+    }*/
 }

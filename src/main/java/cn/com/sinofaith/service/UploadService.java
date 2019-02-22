@@ -61,6 +61,8 @@ public class UploadService {
     @Autowired
     private ZfbZhmxDao zfbZhmxDao;
     @Autowired
+    private ZfbZhmxQxsjDao zfbZhmxQxsjDao;
+    @Autowired
     private ZfbDlrzDao zfbDlrzDao;
     @Autowired
     private ZfbJyjlDao zfbJyjlDao;
@@ -74,6 +76,14 @@ public class UploadService {
     private ZfbJyjlTjjgsDao zfbJyjlTjjgsDao;
     @Autowired
     private ZfbJyjlSjdzsDao zfbJyjlSjdzsDao;
+    @Autowired
+    private ZfbZhmxTjjgDao zfbZhmxTjjgDao;
+    @Autowired
+    private ZfbZhmxTjjgsDao zfbZhmxTjjgsDao;
+    @Autowired
+    private ZfbZhmxJczzDao zfbZhmxJczzDao;
+    @Autowired
+    private ZfbZhmxJylxDao zfbZhmxJylxDao;
 
 
     public int deleteAll(String uploadPath) {
@@ -255,40 +265,40 @@ public class UploadService {
         int i = bzzd.insertZzxx(listZzxx, aj_id, all);
 
         List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
-        Map<String,String> allBp = new HashMap<>();
-        for(int j=0;j<allbp.size();j++){
-            allBp.put((allbp.get(j).getYhkkh()).replace("null",""),null);
+        Map<String, String> allBp = new HashMap<>();
+        for (int j = 0; j < allbp.size(); j++) {
+            allBp.put((allbp.get(j).getYhkkh()).replace("null", ""), null);
         }
-        Map<String,BankPersonEntity> mapZ= new HashMap<>();
-            for (int g = 0; g < listZzxx.size(); g++) {
-                BankPersonEntity bp = new BankPersonEntity();
-                bp.setYhkkh(listZzxx.get(g).getDskh());
-                bp.setYhkzh(String.valueOf(aj_id));
-                bp.setXm(listZzxx.get(g).getDsxm());
+        Map<String, BankPersonEntity> mapZ = new HashMap<>();
+        for (int g = 0; g < listZzxx.size(); g++) {
+            BankPersonEntity bp = new BankPersonEntity();
+            bp.setYhkkh(listZzxx.get(g).getDskh());
+            bp.setYhkzh(String.valueOf(aj_id));
+            bp.setXm(listZzxx.get(g).getDsxm());
 //                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
 
-                if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
-                    if (bp.getXm().contains("支付宝")) {
-                        bp.setXm("支付宝（中国）网络技术有限公司");
-                    } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
-                        bp.setXm("财付通支付科技有限公司");
-                    }
-                    mapZ.put((bp.getYhkkh()).replace("null", ""), bp);
-                } else {
-                    continue;
+            if (bp.getYhkkh() != null && bp.getXm() != null && bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
+                if (bp.getXm().contains("支付宝")) {
+                    bp.setXm("支付宝（中国）网络技术有限公司");
+                } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
+                    bp.setXm("财付通支付科技有限公司");
                 }
+                mapZ.put((bp.getYhkkh()).replace("null", ""), bp);
+            } else {
+                continue;
             }
+        }
         List<String> str = new ArrayList<>();
         for (String o : mapZ.keySet()) {
             if (allBp.containsKey(o)) {
                 str.add(o);
             }
         }
-        for (int s = 0; s < str.size();s++) {
-                mapZ.remove(str.get(s));
-            }
-        allbp=new ArrayList<>(mapZ.values());
-        bpd.add(allbp,String.valueOf(aj_id));
+        for (int s = 0; s < str.size(); s++) {
+            mapZ.remove(str.get(s));
+        }
+        allbp = new ArrayList<>(mapZ.values());
+        bpd.add(allbp, String.valueOf(aj_id));
         return i;
     }
 
@@ -382,8 +392,11 @@ public class UploadService {
         new File(listPath).delete();
         return wls;
     }
-    *//**
+    */
+
+    /**
      * 解析2007excel
+     *
      * @return
      *//*
     private List<WuliuEntity> getByJjxxExcel(String listPath) {
@@ -454,7 +467,6 @@ public class UploadService {
 
         return wls;
     }*/
-
     public List<BankZzxxEntity> getByExcel(List<String> filepath) {
         final Map<String, Integer> title = new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
@@ -630,6 +642,7 @@ public class UploadService {
 
     /**
      * 获取文件
+     *
      * @param uploadPath
      * @return
      */
@@ -645,6 +658,7 @@ public class UploadService {
 
     /**
      * 支付宝数据导入
+     *
      * @param uploadPath
      * @param id
      * @return
@@ -653,57 +667,79 @@ public class UploadService {
         List<String> listPath = getZfbFileList(uploadPath);
         int sum = 0;
         for (String path : listPath) {
-            if(path.contains("注册信息")){
-                List<ZfbZcxxEntity> zcxxList = (List<ZfbZcxxEntity>) getZfbByCsv(path,1);
-                sum += zfbZcxxDao.insertZcxx(zcxxList,id);
-            }else if(path.contains("登陆日志")){
-                List<ZfbDlrzEntity> dlrzList = (List<ZfbDlrzEntity>) getZfbByCsv(path,2);
-                sum += zfbDlrzDao.insertDlrz(dlrzList,id);
-            }else if(path.contains("交易记录")){
-                List<ZfbJyjlEntity> jyjlList = (List<ZfbJyjlEntity>) getZfbByCsv(path,3);
-                sum += zfbJyjlDao.insertJyjl(jyjlList,id);
-            }else if(path.contains("账户明细")){
-                List<ZfbZhmxEntity> zhmxList = (List<ZfbZhmxEntity>) getZfbByCsv(path,4);
-                sum +=  zfbZhmxDao.insertZhmx(zhmxList,id);
-            }else if(path.contains("转账明细")){
-                List<ZfbZzmxEntity> zzmxList = (List<ZfbZzmxEntity>) getZfbByCsv(path,5);
-                sum += zfbZzmxDao.insertZzmx(zzmxList,id);
+            if (path.contains("注册信息")) {
+                List<ZfbZcxxEntity> zcxxList = (List<ZfbZcxxEntity>) getZfbByCsv(path, 1);
+                sum += zfbZcxxDao.insertZcxx(zcxxList, id);
+            } else if (path.contains("登陆日志")) {
+                List<ZfbDlrzEntity> dlrzList = (List<ZfbDlrzEntity>) getZfbByCsv(path, 2);
+                sum += zfbDlrzDao.insertDlrz(dlrzList, id);
+            } else if (path.contains("交易记录")) {
+                List<ZfbJyjlEntity> jyjlList = (List<ZfbJyjlEntity>) getZfbByCsv(path, 3);
+                sum += zfbJyjlDao.insertJyjl(jyjlList, id);
+            } else if (path.contains("账户明细")) {
+                List<ZfbZhmxEntity> zhmxList = (List<ZfbZhmxEntity>) getZfbByCsv(path, 4);
+                sum += zfbZhmxDao.insertZhmx(zhmxList, id);
+            } else if (path.contains("转账明细")) {
+                List<ZfbZzmxEntity> zzmxList = (List<ZfbZzmxEntity>) getZfbByCsv(path, 5);
+                sum += zfbZzmxDao.insertZzmx(zzmxList, id);
             }
         }
-        if(sum>0){
+        if (sum > 0) {
             // 修改交易记录表数据
-            String sql = "update zfbjyjl j set j.jyzt='交易成功' where j.jyzt='TRADE_SUCCESS' and j.aj_id="+id;
+            String sql = "update zfbjyjl j set j.jyzt='交易成功' where j.jyzt='TRADE_SUCCESS' and j.aj_id=" + id;
             zfbJyjlDao.updateBySql(sql);
         }
+        // 账户明细清洗表数据添加
+        int num = zfbZhmxQxsjDao.insertZhmxQxsj(id);
+        // 添加账户明细点对点统计(支付宝与支付宝交易)
+        List<ZfbZhmxTjjgEntity> zhmxTjjgList = zfbZhmxQxsjDao.selectTjjgList(id);
+        zfbZhmxTjjgDao.delAll(id);
+        zfbZhmxTjjgDao.insertZhmxTjjg(zhmxTjjgList, id);
+        // 添加账户明细账户与银行账户点对点统计
+        List<ZfbZhmxTjjgsEntity> zhmxTjjgsList = zfbZhmxQxsjDao.selectTjjgsList(id);
+        zfbZhmxTjjgsDao.delAll(id);
+        zfbZhmxTjjgsDao.insertZhmxTjjgs(zhmxTjjgsList, id);
+        // 支付宝账户明细进出总账统计
+        List<ZfbZhmxJczzEntity> zhmxJczzList = zfbZhmxQxsjDao.selectJczzList(id);
+        zfbZhmxJczzDao.delAll(id);
+        zfbZhmxJczzDao.insertZhmxJczz(zhmxJczzList, id);
+        // 支付宝账户与银行账户按交易类型进出总账统计
+        List<ZfbZhmxJylxEntity> zhmxJylxList = zfbZhmxQxsjDao.selectJylxList(id);
+        zfbZhmxJylxDao.delAll(id);
+        zfbZhmxJylxDao.insertZhmxJylx(zhmxJylxList, id);
+        // 删除数据清洗表数据
+        zfbZhmxQxsjDao.delAll();
+
         // 添加转账明细统计数据
         List<ZfbZzmxTjjgForm> tjjgForms = zfbZzmxTjjgDao.selectZzmxTjjg(id);
-        List<ZfbZzmxTjjgEntity> zzmxTjjgList = ZfbZzmxTjjgEntity.FormToList(tjjgForms,id);
+        List<ZfbZzmxTjjgEntity> zzmxTjjgList = ZfbZzmxTjjgEntity.FormToList(tjjgForms, id);
         zfbZzmxTjjgDao.delAll(id);
         zfbZzmxTjjgDao.insertZzmxTjjg(zzmxTjjgList);
         // 添加转账明细对手账户统计数据
         List<ZfbZzmxTjjgsForm> tjjgsForms = zfbZzmxTjjgsDao.selectZzmxTjjgs(id);
-        List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = ZfbZzmxTjjgsEntity.FormToList(tjjgsForms,id);
+        List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = ZfbZzmxTjjgsEntity.FormToList(tjjgsForms, id);
         zfbZzmxTjjgsDao.delAll(id);
         zfbZzmxTjjgsDao.insertZzmxTjjgs(zzmxTjjgsList);
         // 添加交易记录对手账户统计数据
         List<ZfbJyjlTjjgsForm> jyjlTjjgsForms = zfbJyjlTjjgsDao.selectJyjlTjjgs(id);
-        List<ZfbJyjlTjjgsEntity> jyjlTjjgsList = ZfbJyjlTjjgsEntity.FormToList(jyjlTjjgsForms,id);
+        List<ZfbJyjlTjjgsEntity> jyjlTjjgsList = ZfbJyjlTjjgsEntity.FormToList(jyjlTjjgsForms, id);
         zfbJyjlTjjgsDao.delAll(id);
         zfbJyjlTjjgsDao.insertJyjlTjjgs(jyjlTjjgsList);
         // 添加交易记录收件人地址统计数据
-        List<ZfbJyjlSjdzsEntity> jyjlSjdzsForms = zfbJyjlSjdzsDao.selectJyjlSjdzs(id,null);
+        List<ZfbJyjlSjdzsEntity> jyjlSjdzsForms = zfbJyjlSjdzsDao.selectJyjlSjdzs(id, null);
         zfbJyjlSjdzsDao.delAll(id);
-        zfbJyjlSjdzsDao.insertJyjlSjdzs(jyjlSjdzsForms,id);
-        return sum;
+        zfbJyjlSjdzsDao.insertJyjlSjdzs(jyjlSjdzsForms, id);
+        return sum > 0 && num > 0 ? 1 : 0;
     }
 
     /**
      * 支付宝数据读取
+     *
      * @param path
      * @param flag
      * @return
      */
-    private static Object getZfbByCsv(String path,int flag) {
+    private static Object getZfbByCsv(String path, int flag) {
         List<ZfbZcxxEntity> zcxxList = new ArrayList<>();
         List<ZfbDlrzEntity> dlrzList = new ArrayList<>();
         List<ZfbJyjlEntity> jyjlList = new ArrayList<>();
@@ -727,7 +763,7 @@ public class UploadService {
                     zfbZcxxEntity.setZhmc(csvReader.get("账户名称").trim());
                     zfbZcxxEntity.setZjlx(csvReader.get("证件类型").trim());
                     zfbZcxxEntity.setZjh(csvReader.get("证件号").trim());
-                    zfbZcxxEntity.setKyye(Double.parseDouble(csvReader.get("可用余额")));
+                    zfbZcxxEntity.setKyye(Double.parseDouble(!"".equals(csvReader.get("可用余额"))?csvReader.get("可用余额"):"0.0"));
                     zfbZcxxEntity.setBdsj(csvReader.get("绑定手机").trim());
                     zfbZcxxEntity.setBdyhk(csvReader.get("绑定银行卡").trim());
                     zfbZcxxEntity.setDyxcsj(csvReader.get("对应的协查数据").trim());
@@ -753,7 +789,8 @@ public class UploadService {
                     zfbJyjlEntity.setMjxx(csvReader.get("买家信息").trim());
                     zfbJyjlEntity.setMijyhId(csvReader.get("卖家用户id").trim());
                     zfbJyjlEntity.setMijxx(csvReader.get("卖家信息").trim());
-                    zfbJyjlEntity.setJyje(Double.parseDouble(csvReader.get("交易金额（元）")));
+                    zfbJyjlEntity.setJyje(Double.parseDouble(!"".equals(csvReader.get("交易金额（元）"))?
+                            csvReader.get("交易金额（元）"):"0.0"));
                     zfbJyjlEntity.setSksj(csvReader.get("收款时间").trim());
                     zfbJyjlEntity.setZhxgsj(csvReader.get("最后修改时间").trim());
                     zfbJyjlEntity.setCjsj(csvReader.get("创建时间").trim());
@@ -776,7 +813,8 @@ public class UploadService {
                     zfbZhmxEntity.setYhxx(csvReader.get("用户信息").trim());
                     zfbZhmxEntity.setJydfxx(csvReader.get("交易对方信息").trim());
                     zfbZhmxEntity.setXfmc(csvReader.get("消费名称").trim());
-                    zfbZhmxEntity.setJe(Double.parseDouble(csvReader.get("金额（元）")));
+                    zfbZhmxEntity.setJe(Double.parseDouble(!"".equals(csvReader.get("金额（元）"))?
+                            csvReader.get("金额（元）"):"0.0"));
                     zfbZhmxEntity.setSz(csvReader.get("收/支").trim());
                     zfbZhmxEntity.setJyzt(csvReader.get("交易状态").trim());
                     zfbZhmxEntity.setBz(csvReader.get("备注").trim());
@@ -790,7 +828,8 @@ public class UploadService {
                     zfbZzmxEntity.setSkfzfbzh(csvReader.get("收款方支付宝账号").trim());
                     zfbZzmxEntity.setSkjgxx(csvReader.get("收款机构信息").trim());
                     zfbZzmxEntity.setDzsj(csvReader.get("到账时间").trim());
-                    zfbZzmxEntity.setZzje(Double.parseDouble(csvReader.get("转账金额（元）")));
+                    zfbZzmxEntity.setZzje(Double.parseDouble(!"".equals(csvReader.get("转账金额（元）"))?
+                            csvReader.get("转账金额（元）"):"0.0"));
                     zfbZzmxEntity.setZzcpmc(csvReader.get("转账产品名称").trim());
                     zfbZzmxEntity.setJyfsd(csvReader.get("交易发生地").trim());
                     zfbZzmxEntity.setTxlsh(csvReader.get("提现流水号").trim());
@@ -801,20 +840,20 @@ public class UploadService {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(csvReader!=null){
+            if (csvReader != null) {
                 csvReader.close();
             }
         }
 
-        if(zcxxList.size()>0){
+        if (zcxxList.size() > 0) {
             return zcxxList;
-        }else if(dlrzList.size()>0){
+        } else if (dlrzList.size() > 0) {
             return dlrzList;
-        }else if(jyjlList.size()>0){
+        } else if (jyjlList.size() > 0) {
             return jyjlList;
-        }else if(zhmxList.size()>0){
+        } else if (zhmxList.size() > 0) {
             return zhmxList;
-        }else if(zzmxList.size()>0){
+        } else if (zzmxList.size() > 0) {
             return zzmxList;
         }
         return null;

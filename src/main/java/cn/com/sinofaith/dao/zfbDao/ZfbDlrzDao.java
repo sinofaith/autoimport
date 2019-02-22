@@ -81,8 +81,11 @@ public class ZfbDlrzDao extends BaseDao<ZfbDlrzEntity>{
      */
     public int getRowAlls(String search, long id) {
         StringBuffer sql = new StringBuffer();
-        sql.append("select to_char(count(1)) NUM from(select zfbyhid,aj_id,count(zfbyhid) dlzcs from zfbdlrz group by zfbyhid,aj_id) d ");
-        sql.append("left join zfbzcxx z on d.zfbyhid = z.yhid where d.aj_id="+id+" and z.aj_id="+id+search);
+        sql.append("select to_char(count(1)) NUM from(select zfbyhid,aj_id,count(zfbyhid) " +
+                "dlzcs from (select * from (select t.*,row_number() over(partition by t.zfbyhid,t.zhm,t.khdip,t.czfssj" +
+                " order by t.id) su from zfbdlrz t where aj_id="+id+") where su=1) where khdip <> '127.0.0.1' group by zfbyhid,aj_id) d ");
+        sql.append("left join (select * from (select t.*,row_number() over(partition by t.yhid order by t.id,t.dyxcsj) " +
+                "su from zfbzcxx t where aj_id="+id+") where su=1) z on d.zfbyhid = z.yhid where d.aj_id="+id+" and z.aj_id="+id+search);
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt(map.get("NUM").toString());
@@ -101,8 +104,11 @@ public class ZfbDlrzDao extends BaseDao<ZfbDlrzEntity>{
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * FROM ( ");
         sql.append("SELECT c.*, ROWNUM rn FROM (");
-        sql.append("select d.zfbyhid,z.zhmc,z.dlsj,z.zjlx,z.zjh,d.dlzcs from(select zfbyhid,aj_id,count(zfbyhid) dlzcs from zfbdlrz  where khdip <> '127.0.0.1' group by zfbyhid,aj_id) d ");
-        sql.append("left join zfbzcxx z on d.zfbyhid = z.yhid where d.aj_id="+id+" and z.aj_id="+id+search);
+        sql.append("select d.zfbyhid,z.zhmc,z.dlsj,z.zjlx,z.zjh,d.dlzcs from(select zfbyhid,aj_id,count(zfbyhid) dlzcs " +
+                "from(select * from (select t.*,row_number() over(partition by t.zfbyhid,t.zhm,t.khdip,t.czfssj order by" +
+                " t.id) su from zfbdlrz t where aj_id="+id+") where su=1) where khdip <> '127.0.0.1' group by zfbyhid,aj_id) d ");
+        sql.append("left join (select * from (select t.*,row_number() over(partition by t.yhid order by t.id,t.dyxcsj)" +
+                "su from zfbzcxx t where aj_id="+id+") where su=1) z on d.zfbyhid = z.yhid where d.aj_id="+id+" and z.aj_id="+id+search);
         sql.append(" ) c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         // 获取当前线程session
         Session session = getSession();

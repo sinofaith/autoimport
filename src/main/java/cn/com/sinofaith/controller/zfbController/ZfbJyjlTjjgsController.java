@@ -163,6 +163,9 @@ public class ZfbJyjlTjjgsController {
         String search = "";
         search += " and j.mjyhid='"+zfbzh+"' and j.mijyhid='"+dfzh+"'";
         search += " and j.jyzt='"+jyzt+"'";
+        if(aj.getFilter()!=null){
+            search += "and upper(j.spmc) like '%"+aj.getFilter().toUpperCase()+"%'";
+        }
         // 查询哪一个案件
         if("xxx".equals(order)){
             if("".equals(desc)){
@@ -281,6 +284,9 @@ public class ZfbJyjlTjjgsController {
         String lastOrder = (String) session.getAttribute("jyjlXQLastOrder");
         String desc = (String) session.getAttribute("jyjlXQDesc");
         String search = "";
+        if(aj.getFilter()!=null){
+            search += "and upper(j.spmc) like '%"+aj.getFilter().toUpperCase()+"%'";
+        }
         search += " and j.mjyhid='"+zfbzh+"' and j.mijyhid='"+dfzh+"'";
         search += " and j.jyzt='"+jyzt+"'";
         if(desc==null || desc.equals("")){
@@ -288,6 +294,7 @@ public class ZfbJyjlTjjgsController {
         }else{
             search += " order by j."+lastOrder;
         }
+
         // 获取所有数据数据
         List<ZfbJyjlEntity> tjjgs = zfbJyjlTjjgsService.getZfbJyjlDetails(search,aj);
         // 创建工作簿

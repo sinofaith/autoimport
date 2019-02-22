@@ -86,17 +86,22 @@ public class ZfbZzmxTjjgDao extends BaseDao<ZfbZzmxTjjgEntity> {
      */
     public List<ZfbZzmxTjjgForm> selectZzmxTjjg(long id) {
         List<ZfbZzmxTjjgForm> zzmxTjjgForms = null;
-        String sql1 = "select to_char(count(1)) NUM from zfbzcxx where aj_id="+id;
+        String sql1 = "select to_char(count(1)) NUM from(select * from (select t.*,row_number() over" +
+                "(partition by t.yhid order by t.id) su from zfbzcxx t where aj_id="+id+") where su=1)";
         List list = findBySQL(sql1.toString());
         Map map = (Map) list.get(0);
         int rowAll = Integer.parseInt((String) map.get("NUM"));
         StringBuffer sql = new StringBuffer();
         if(rowAll>0){
-            sql.append("select f.*,s.*,f.fkzcs+s.skzcs jyzcs from (");
-            sql.append("select c.zhmc fkzhmc,z.fkfzfbzh,z.zzcpmc fkzzcpmc,count(1) fkzcs,sum(z.zzje) fkzje from zfbzzmx z ");
-            sql.append("left join zfbzcxx c on c.dyxcsj = z.dyxcsj where c.yhid = z.fkfzfbzh and c.aj_id="+id+" and z.aj_id="+id);
+            sql.append("select f.*,s.*,f.fkzcs+s.skzcs jyzcs from (select c.zhmc fkzhmc,z.fkfzfbzh,z.zzcpmc fkzzcpmc,");
+            sql.append("count(1) fkzcs,sum(z.zzje) fkzje from(select * from (select t.*,row_number() over(partition by ");
+            sql.append("t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) z ");
+            sql.append("left join(select * from (select t.*,row_number() over(partition by t.yhid order by t.id) su from zfbzcxx t where aj_id="+id+") where su=1) c" +
+                    " on c.dyxcsj = z.dyxcsj where c.yhid = z.fkfzfbzh and c.aj_id="+id+" and z.aj_id="+id);
             sql.append(" group by c.zhmc,z.zzcpmc,z.fkfzfbzh) f full join( select c.zhmc skzhmc,z.skfzfbzh,z.zzcpmc skzzcpmc,count(1) skzcs,sum(z.zzje) skzje ");
-            sql.append(" from zfbzzmx z left join zfbzcxx c on c.dyxcsj = z.dyxcsj where c.yhid = z.skfzfbzh and c.aj_id="+id);
+            sql.append(" from(select * from (select t.*,row_number() over(partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) z " +
+                    "left join(select * from (select t.*,row_number() over(partition by t.yhid order by t.id) su from zfbzcxx t where aj_id="+id+") where su=1) c on " +
+                    "c.dyxcsj = z.dyxcsj where c.yhid = z.skfzfbzh and c.aj_id="+id);
             sql.append(" and z.aj_id="+id+" group by c.zhmc,z.zzcpmc,z.skfzfbzh) s on f.fkfzfbzh = s.skfzfbzh and f.fkzzcpmc = s.skzzcpmc");
         }else{
             sql.append("select b.*,a.*,b.fkzcs+a.skzcs jyzcs from(select '' fkzhmc,z.fkfzfbzh,z.zzcpmc fkzzcpmc,count(1) ");

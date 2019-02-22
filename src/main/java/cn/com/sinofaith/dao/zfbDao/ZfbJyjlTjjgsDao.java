@@ -115,7 +115,7 @@ public class ZfbJyjlTjjgsDao extends BaseDao<ZfbJyjlTjjgsEntity>{
     public int getRowAllCount(String search,AjEntity aj) {
         StringBuffer sql = new StringBuffer();
         sql.append("select to_char(count(1)) NUM from (select j.*,row_number() over(");
-        sql.append("partition by j.jyh order by j.id) su from zfbjyjl j where aj_id="+aj.getId()+search+")");
+        sql.append("partition by j.jyh order by j.id) su from zfbjyjl j where aj_id="+aj.getId()+search+") where su=1");
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
@@ -140,7 +140,7 @@ public class ZfbJyjlTjjgsDao extends BaseDao<ZfbJyjlTjjgsEntity>{
         sql.append("select j.jyh,j.mjyhid,substr(j.mjxx,1,instr(j.mjxx,')')) mjxx,j.jyzt,j.mijyhid,");
         sql.append("substr(j.mijxx,1,instr(j.mijxx,')')) mijxx,j.jyje,j.sksj,j.spmc,j.shrdz from (");
         sql.append("select j.*,row_number() over(");
-        sql.append("partition by j.jyh order by j.id) su from zfbjyjl j where aj_id="+aj.getId()+search+") j");
+        sql.append("partition by j.jyh order by j.id) su from zfbjyjl j where aj_id="+aj.getId()+search+") j where su=1");
         if(flag){
             sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         }

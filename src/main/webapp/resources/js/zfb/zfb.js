@@ -410,7 +410,8 @@ $(function () {
 // 阀值设置
 function seachChange() {
     var seachCondition = $("#seachCondition").val();
-    if(seachCondition === "fkzje" || seachCondition === "skzje"){
+    if(seachCondition === "fkzje" || seachCondition === "skzje" ||
+        seachCondition === "czzje" || seachCondition === "jzzje"){
         $("#seachCode").val("50000")
     }else{
         $("#seachCode").val("")
@@ -419,7 +420,8 @@ function seachChange() {
 
 function isNum(obj){
     var seachCondition = $("#seachCondition").val();
-    if(seachCondition === "fkzje" || seachCondition === "skzje"){
+    if(seachCondition === "fkzje" || seachCondition === "skzje" ||
+        seachCondition === "czzje" || seachCondition === "jzzje"){
         obj.value=obj.value.replace(/[^\d]/g,'')
     }
 }

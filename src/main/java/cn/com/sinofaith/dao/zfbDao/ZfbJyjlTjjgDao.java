@@ -30,8 +30,9 @@ public class ZfbJyjlTjjgDao extends BaseDao<ZfbJyjlTjjgsEntity>{
         StringBuffer sql = new StringBuffer();
         sql.append("select to_char(count(1)) NUM from(select a1.*,a1.skzcs+nvl(a2.fkzcs,0) jyzcs,nvl(a2.fkzcs,0) fkzcs,nvl(a2.fkzje,0) fkzje ");
         sql.append("from(select dfzh,substr(dfmc,1,instr(dfmc,'(',1)-1) dfmc,dyxcsj,sum(fkzcs) skzcs,sum(fkzje) ");
-        sql.append("skzje from(select * from zfbjyjl_tjjgs t where t.aj_id="+id+") t inner join(select * ");
-        sql.append("from zfbzcxx c where c.aj_id="+id+") c on c.yhid=t.dfzh group by dfzh,substr(dfmc,1,instr(");
+        sql.append("skzje from(select * from zfbjyjl_tjjgs t where t.aj_id="+id+") t inner join(");
+        sql.append("select * from (select t.*,row_number() over(partition by t.yhid order by t.id) su from zfbzcxx t where aj_id="+id);
+        sql.append(") where su=1) c on c.yhid=t.dfzh group by dfzh,substr(dfmc,1,instr(");
         sql.append("dfmc,'(',1)-1),dyxcsj) a1 left join(select zfbzh,substr(zfbmc,1,instr(zfbmc,'(',1)-1) zfbmc,");
         sql.append("sum(fkzcs) fkzcs,sum(fkzje) fkzje from(select * from zfbjyjl_tjjgs t where t.aj_id="+id+") t ");
         sql.append("group by zfbzh,substr(zfbmc,1,instr(zfbmc,'(',1)-1)) a2 on a1.dfzh=a2.zfbzh) where (1=1)" + search);
@@ -57,9 +58,10 @@ public class ZfbJyjlTjjgDao extends BaseDao<ZfbJyjlTjjgsEntity>{
             sql.append("SELECT c.*, ROWNUM rn FROM (select * from(");
         }
         sql.append("select a1.*,a1.skzcs+nvl(a2.fkzcs,0) jyzcs,nvl(a2.fkzcs,0) fkzcs,nvl(a2.fkzje,0) fkzje from(");
-        sql.append("select dfzh,substr(dfmc,1,instr(dfmc,'(',1)-1) dfmc,");
+       sql.append("select dfzh,substr(dfmc,1,instr(dfmc,'(',1)-1) dfmc,");
         sql.append("dyxcsj,sum(fkzcs) skzcs,sum(fkzje) skzje from(select * from zfbjyjl_tjjgs t where t.aj_id="+id+") t ");
-        sql.append("inner join(select * from zfbzcxx c where c.aj_id="+id+") c on c.yhid=t.dfzh ");
+        sql.append("inner join(select * from (select t.*,row_number() over(partition by t.yhid order by t.id) su from " +
+                "zfbzcxx t where aj_id="+id+") where su=1) c on c.yhid=t.dfzh ");
         sql.append("group by dfzh,substr(dfmc,1,instr(dfmc,'(',1)-1),dyxcsj) a1 ");
         sql.append("left join(select zfbzh,substr(zfbmc,1,instr(zfbmc,'(',1)-1) zfbmc,");
         sql.append("sum(fkzcs) fkzcs,sum(fkzje) fkzje from(select * from zfbjyjl_tjjgs t where t.aj_id="+id+") t ");

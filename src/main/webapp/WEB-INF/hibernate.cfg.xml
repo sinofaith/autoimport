@@ -26,6 +26,11 @@
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZcxxEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxQxsjEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxTjjgEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxTjjgsEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxJczzEntity"/>
+            <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZhmxJylxEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbDlrzEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity"/>

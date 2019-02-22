@@ -11,8 +11,11 @@ import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxGtzhForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.TimeFormatUtil;
+import cn.com.sinofaith.util.WatermarkImageUtils;
 import com.google.gson.Gson;
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -26,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.print.Doc;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.itextpdf.text.Font.FontFamily.UNDEFINED;
 
 /**
  * 支付宝转账明细业务层
@@ -56,6 +62,7 @@ public class ZfbZzmxTjjgService {
 
     /**
      * 分页数据
+     *
      * @param currentPage
      * @param pageSize
      * @param dc
@@ -79,6 +86,7 @@ public class ZfbZzmxTjjgService {
 
     /**
      * 统计结果详情数据
+     *
      * @param currentPage
      * @param pageSize
      * @param search
@@ -107,6 +115,7 @@ public class ZfbZzmxTjjgService {
 
     /**
      * 数据下载
+     *
      * @param dc
      * @return
      */
@@ -197,6 +206,7 @@ public class ZfbZzmxTjjgService {
 
     /**
      * 页面加载显示数据
+     *
      * @param dc
      * @return
      */
@@ -206,6 +216,7 @@ public class ZfbZzmxTjjgService {
 
     /**
      * 详情页数据导出
+     *
      * @param search
      * @param id
      * @return
@@ -222,6 +233,7 @@ public class ZfbZzmxTjjgService {
 
     /**
      * pdf导出
+     *
      * @param op
      * @param aj
      * @return
@@ -245,15 +257,19 @@ public class ZfbZzmxTjjgService {
         // 交易记录地址信息
         List<ZfbJyjlSjdzsForm> sjdzsForm = zfbJyjlSjdzsDao.getDoPageSjdzsGE10(aj);
         try {
-            //创建文件
+            // 创建文件
             Rectangle one = new Rectangle(1050, 1500);
             document.setPageSize(one);
-            PdfWriter.getInstance(document, op);
-            //打开文件
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, op);
+            // 插入水印
+            WatermarkImageUtils water = new WatermarkImageUtils();
+            pdfWriter.setPageEvent(water);
+            // 打开文件
             document.open();
-            pdfInsertTable(aj, document, czTjjgList, jzTjjgList,czTjjgsList,
+            // 插入表格
+            pdfInsertTable(aj, document, czTjjgList, jzTjjgList, czTjjgsList,
                     jzTjjgsList, gtzhList, jyjlTjjgForms, jyjlTjjgsList, sjdzsForm);
-            //关闭文档
+            // 关闭文档
             document.close();
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -266,15 +282,18 @@ public class ZfbZzmxTjjgService {
     }
 
     private void pdfInsertTable(AjEntity aj, Document document, List<ZfbZzmxTjjgEntity> czTjjgList, List<ZfbZzmxTjjgEntity> jzTjjgList,
-        List<ZfbZzmxTjjgsEntity> czTjjgsList, List<ZfbZzmxTjjgsEntity> jzTjjgsList,List<ZfbZzmxGtzhForm> gtzhList,
-        List<ZfbJyjlTjjgForm> jyjlTjjgForms, List<ZfbJyjlTjjgsEntity> jyjlTjjgsList, List<ZfbJyjlSjdzsForm> sjdzsForm)
+                                List<ZfbZzmxTjjgsEntity> czTjjgsList, List<ZfbZzmxTjjgsEntity> jzTjjgsList, List<ZfbZzmxGtzhForm> gtzhList,
+                                List<ZfbJyjlTjjgForm> jyjlTjjgForms, List<ZfbJyjlTjjgsEntity> jyjlTjjgsList, List<ZfbJyjlSjdzsForm> sjdzsForm)
             throws DocumentException, IOException {
-        //中文字体,解决中文不能显示问题
-        BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+        // 中文字体,解决中文不能显示问题
+//        BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+        BaseFont bfChinese = BaseFont.createFont("../../resources/font/SIMYOU.TTF", BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
         Font textFont = new Font(bfChinese, 12, Font.NORMAL); //正常
-        Font tableFont = new Font(bfChinese, 12, Font.NORMAL);
+        Font tableFont = new Font(bfChinese, 10, Font.NORMAL);
+        Font tableFont1 = new Font(bfChinese, 12, 1, BaseColor.RED); //正常
         Font boldFont = new Font(bfChinese, 13, Font.BOLD);
         Font blackFont = new Font(bfChinese, 16, Font.BOLD);//标题字体
+        Font boldFont1 = new Font(bfChinese, 13, 1, BaseColor.RED);
         blackFont.setColor(BaseColor.BLACK);
         // 转账统计出、进账
         PdfPTable table = null;
@@ -282,12 +301,12 @@ public class ZfbZzmxTjjgService {
                 "出账总次数", "出账总金额", "进账总次数", "进账总金额"};
         if (czTjjgList != null && czTjjgList.size() != 0) {
             createHead(document, "转账明细统计结果-<出账>", blackFont, textFont, aj.getAj());
-            table = createTable(czTjjgList, tableFont, boldFont, columnNames1);
+            table = createTable(czTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6);
             document.add(table);
         }
         if (jzTjjgList != null && jzTjjgList.size() != 0) {
             createHead(document, "转账明细统计结果-<进账>", blackFont, textFont, aj.getAj());
-            table = createTable(jzTjjgList, tableFont, boldFont, columnNames1);
+            table = createTable(jzTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8);
             document.add(table);
         }
         // 转账对手出、进账
@@ -295,12 +314,12 @@ public class ZfbZzmxTjjgService {
                 "出账总金额", "进账总次数", "进账总金额"};
         if (czTjjgsList != null && czTjjgsList.size() != 0) {
             createHead(document, "转账明细对手账户-<出账>", blackFont, textFont, aj.getAj());
-            table = createTable(czTjjgsList, tableFont, boldFont, columnNames2);
+            table = createTable(czTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 7);
             document.add(table);
         }
         if (jzTjjgsList != null && jzTjjgsList.size() != 0) {
             createHead(document, "转账明细对手账户-<进账>", blackFont, textFont, aj.getAj());
-            table = createTable(jzTjjgsList, tableFont, boldFont, columnNames2);
+            table = createTable(jzTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 9);
             document.add(table);
         }
         // 转账共同账户
@@ -308,7 +327,7 @@ public class ZfbZzmxTjjgService {
                 "出账总金额", "进账总次数", "进账总金额"};
         if (gtzhList != null && gtzhList.size() != 0) {
             createHead(document, "转账共同账户", blackFont, textFont, aj.getAj());
-            table = createTable(gtzhList, tableFont, boldFont, columnNames3);
+            table = createTable(gtzhList, tableFont, tableFont1, boldFont, boldFont1, columnNames3, 4);
             document.add(table);
         }
         // 交易卖家账户信息
@@ -316,22 +335,22 @@ public class ZfbZzmxTjjgService {
                 "出账总金额", "进账总次数", "进账总金额"};
         if (jyjlTjjgForms != null && jyjlTjjgForms.size() != 0) {
             createHead(document, "交易卖家账户信息", blackFont, textFont, aj.getAj());
-            table = createTable(jyjlTjjgForms, tableFont, boldFont, columnNames4);
+            table = createTable(jyjlTjjgForms, tableFont, tableFont1, boldFont, boldFont1, columnNames4, -1);
             document.add(table);
         }
         // 交易买家账户信息
-        String columnNames5[] = {"序号", "买家用户Id", "买家信息", "交易状态", "卖家用户Id", "卖家信息", "出账总次数",
-                "出账总金额"};
+        String columnNames5[] = {"序号", "买家用户Id", "买家信息", "交易状态", "卖家用户Id", "卖家信息", "购买总次数",
+                "购买总金额"};
         if (jyjlTjjgsList != null && jyjlTjjgsList.size() != 0) {
             createHead(document, "交易买家账户信息", blackFont, textFont, aj.getAj());
-            table = createTable(jyjlTjjgsList, tableFont, boldFont, columnNames5);
+            table = createTable(jyjlTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames5, 7);
             document.add(table);
         }
         // 交易记录地址信息
         String columnNames6[] = {"序号", "买家用户Id", "买家信息", "收货人地址", "收件次数", "出账金额"};
         if (sjdzsForm != null && sjdzsForm.size() != 0) {
             createHead(document, "交易记录地址信息", blackFont, textFont, aj.getAj());
-            table = createTable(sjdzsForm, tableFont, boldFont, columnNames6);
+            table = createTable(sjdzsForm, tableFont, tableFont1, boldFont, boldFont1, columnNames6, 4);
             document.add(table);
         }
     }
@@ -346,7 +365,7 @@ public class ZfbZzmxTjjgService {
         head.setLockedWidth(true); //锁定列宽
         head.setSpacingBefore(3f); // 前间距
         head.setSpacingAfter(3f); // 后间距
-        PdfPCell cell1 = new PdfPCell(new Phrase(ajName, textFont));
+        PdfPCell cell1 = new PdfPCell(new Phrase("案件名:"+ajName, textFont));
         cell1.setBorderWidth(0);
         cell1.setMinimumHeight(20); //设置单元格高度
         cell1.setHorizontalAlignment(Element.ALIGN_CENTER); //设置水平居中
@@ -355,7 +374,7 @@ public class ZfbZzmxTjjgService {
         document.add(head);
     }
 
-    public PdfPTable createTable(List list, Font tableFont, Font boldFont, String columnNames[]) {
+    public PdfPTable createTable(List list, Font tableFont, Font tableFont1, Font boldFont, Font boldFont1, String columnNames[], int cell) {
         PdfPTable table = new PdfPTable(columnNames.length);
         table.setWidthPercentage(100); // 宽度100%填充
         table.setSpacingBefore(10f); // 前间距
@@ -366,7 +385,11 @@ public class ZfbZzmxTjjgService {
         PdfPRow row = new PdfPRow(cells);
         //设置列名
         for (int i = 0; i < columnNames.length; i++) {
-            cells[i] = new PdfPCell(new Paragraph(columnNames[i], boldFont));//单元格内容
+            if (i == cell) {
+                cells[i] = new PdfPCell(new Paragraph(columnNames[i], boldFont1));//单元格内容
+            } else {
+                cells[i] = new PdfPCell(new Paragraph(columnNames[i], boldFont));//单元格内容
+            }
             cells[i].setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
             cells[i].setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
             cells[i].setFixedHeight(26f);
@@ -384,7 +407,11 @@ public class ZfbZzmxTjjgService {
                 cells1[0].setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
                 cells1[0].setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
                 for (int j = 0; j < zfb.length; j++) {
-                    cells1[j + 1] = new PdfPCell(new Paragraph(zfb[j] != null ? zfb[j] : "", tableFont));//单元格内容
+                    if (j + 1 == cell) {
+                        cells1[j + 1] = new PdfPCell(new Paragraph(!zfb[j].equals("null") ? zfb[j] : "", tableFont1));//单元格内容
+                    } else {
+                        cells1[j + 1] = new PdfPCell(new Paragraph(!zfb[j].equals("null") ? zfb[j] : "", tableFont));//单元格内容
+                    }
                     cells1[j + 1].setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
                     cells1[j + 1].setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
                 }
@@ -404,7 +431,7 @@ public class ZfbZzmxTjjgService {
 
     private List<ZfbZzmxGtzhForm> selectGtzhList(AjEntity aj) {
         String search = " order by dfzh desc";
-        List<ZfbZzmxGtzhForm> gtzhList = zfbZzmxGtzhDao.queryForPage(1, 10, search, aj.getId());
+        List<ZfbZzmxGtzhForm> gtzhList = zfbZzmxGtzhDao.queryForPage(0, 0, search, aj.getId(), false);
         return gtzhList;
     }
 

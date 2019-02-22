@@ -132,12 +132,15 @@ public class ZfbJyjlSjdzsController {
         return "redirect:/zfbJyjlSjdzs/seach?pageNo=1";
     }
 
+    public ZfbJyjlSjdzsController() {
+    }
+
     @RequestMapping("/getDetails")
     public @ResponseBody
     String getDetails(String mjyhid, String order, int page, HttpSession session) {
         // 获取Aj
         AjEntity aj = (AjEntity) session.getAttribute("aj");
-        String search = " aj_id=" + aj.getId();
+        String search = "(1=1)";
         if (aj.getFilter() != null) {
             search += " and upper(spmc) like '%" + aj.getFilter().toUpperCase() + "%'";
         }
@@ -156,6 +159,7 @@ public class ZfbJyjlSjdzsController {
             if (order.equals(lastOrder)) {
                 if (desc == null || desc.equals("")) {
                     search += " order by " + order;
+
                     desc = "desc";
                 } else {
                     search += " order by " + order + " desc nulls last";
@@ -170,7 +174,7 @@ public class ZfbJyjlSjdzsController {
         if (!order.equals("xxx")) {
             session.setAttribute("jyjlSjdzsXQLastOrder", order);
         }
-        return zfbJyjlSjdzsService.getZfbJyjlSjdzs(page, 100, search);
+        return zfbJyjlSjdzsService.getZfbJyjlSjdzs(page, 100, search, aj.getId());
     }
 
     /**
@@ -252,7 +256,7 @@ public class ZfbJyjlSjdzsController {
         // 条件语句
         String lastOrder = (String) session.getAttribute("jyjlSjdzsXQLastOrder");
         String desc = (String) session.getAttribute("jyjlSjdzsXQDesc");
-        String search = " aj_id=" + aj.getId();
+        String search = "(1=1)";
         if (aj.getFilter() != null) {
             search += " and upper(spmc) like '%" + aj.getFilter().toUpperCase() + "%'";
         }
@@ -263,7 +267,7 @@ public class ZfbJyjlSjdzsController {
             search += " order by " + lastOrder;
         }
         // 获取所有数据数据
-        List<ZfbJyjlSjdzsForm> jdszsForms = zfbJyjlSjdzsService.getZfbJyjlDetails(search);
+        List<ZfbJyjlSjdzsForm> jdszsForms = zfbJyjlSjdzsService.getZfbJyjlDetails(search, aj.getId());
         // 创建工作簿
         HSSFWorkbook wb = null;
         if (jdszsForms != null) {

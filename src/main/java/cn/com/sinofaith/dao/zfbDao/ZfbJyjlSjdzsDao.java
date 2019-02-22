@@ -42,10 +42,12 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
         List<ZfbJyjlSjdzsEntity> sjdzsList = null;
         sql.append("select mjyhid,mjxx,sum(sjcs) sjzcs,sum(czje) czzje,sjdzs from(");
         sql.append("select j1.*,j2.sjdzs from (select t.mjyhid,substr(mjxx,0,instr(mjxx,'(',1)-1) mjxx,");
-        sql.append("sum(t.jyje) czje,count(1) sjcs from ZFBJYJL t where aj_id="+id);
-        sql.append(" and t.shrdz is not null and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) j1 ");
+        sql.append("sum(t.jyje) czje,count(1) sjcs from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by t.id) su " +
+                "from zfbjyjl t where aj_id="+id+") where su=1) t where ");
+        sql.append("t.shrdz is not null and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) j1 ");
         sql.append("left join(select mjyhid,count(1) sjdzs from(select t.mjyhid,");
-        sql.append("t.mjxx,t.shrdz,count(1) sjcs from ZFBJYJL t where aj_id="+id+" and t.shrdz is not null ");
+        sql.append("t.mjxx,t.shrdz,count(1) sjcs from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by " +
+                "t.id) su from zfbjyjl t where aj_id="+id+") where su=1) t where t.shrdz is not null ");
         sql.append("and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) group by mjyhid) j2 ");
         sql.append("on j1.mjyhid=j2.mjyhid) group by mjyhid,mjxx,sjdzs");
         Session session = getSession();
@@ -118,9 +120,10 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
      * @param search
      * @return
      */
-    public int getRowAllCount(String search) {
+    public int getRowAllCount(String search, long id) {
         String sql = "select to_char(count(1)) NUM from(select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz," +
-                "count(1) sjcs,sum(jyje) czje from ZFBJYJL where "+search+")";
+                "count(1) sjcs,sum(jyje) czje from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj " +
+                "order by t.id) su from zfbjyjl t where aj_id="+id+") where su=1) where "+search+")";
         List list = findBySQL(sql);
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
@@ -134,15 +137,16 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
      * @param flag
      * @return
      */
-    public List<ZfbJyjlSjdzsForm> getDoPageSjdzs(int currentPage, int pageSize, String search, boolean flag) {
+    public List<ZfbJyjlSjdzsForm> getDoPageSjdzs(int currentPage, int pageSize, String search,long id, boolean flag) {
         List<ZfbJyjlSjdzsForm> forms = null;
         StringBuffer sql = new StringBuffer();
         if(flag){
-            sql.append("SELECT * FROM ( ");
+            sql.append("SELECT * FROM (");
             sql.append("SELECT c.*, ROWNUM rn FROM (");
         }
         sql.append("select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz,count(1) sjcs,");
-        sql.append("sum(jyje) czje from ZFBJYJL t where "+search);
+        sql.append("sum(jyje) czje from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by t.id) su" +
+                " from zfbjyjl t where aj_id="+id+") where su=1) t where "+search);
         if(flag){
             sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));
         }
@@ -218,7 +222,8 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
         List<ZfbJyjlSjdzsForm> jyjlSjdzsForm = null;
         StringBuffer sql = new StringBuffer();
         sql.append("select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz,count(1) sjcs,");
-        sql.append("sum(jyje) czje from ZFBJYJL t where  aj_id="+aj.getId()+" and mjyhid in(");
+        sql.append("sum(jyje) czje from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by t.id) " +
+                "su from zfbjyjl t where aj_id="+aj.getId()+") where su=1) t where mjyhid in(");
         sql.append("select mjyhid from ZFBJYJL_SJDZS t where aj_id="+aj.getId()+" and sjdzs>=10) and shrdz is not null ");
         sql.append("and jyzt='交易成功' group by mjyhid,mjxx,shrdz order by mjyhid desc nulls last,sjcs desc");
         Session session = getSession();

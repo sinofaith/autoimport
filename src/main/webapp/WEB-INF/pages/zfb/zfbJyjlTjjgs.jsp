@@ -50,8 +50,8 @@
                                         <td width="6%">交易状态</td>
                                         <td width="5%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=dfzh">卖家用户Id</a></td>
                                         <td width="15%">卖家信息</td>
-                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=fkzje">出账总金额</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=fkzcs">购买总次数</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/zfbJyjlTjjgs/seach?pageNo=1&orderby=fkzje">购买总金额</a></td>
                                         <td width="3%">详情</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">

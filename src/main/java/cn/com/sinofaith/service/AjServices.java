@@ -121,6 +121,11 @@ public class AjServices {
                     st.addBatch("DELETE zfbzzmx where aj_id="+ajid);
                     st.addBatch("DELETE zfbdlrz where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzhmx_tjjg where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzhmx_tjjgs where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzhmx_jczz where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzhmx_jylx where aj_id="+ajid);
+                    st.addBatch("DELETE zfbzhmx_qxsj where aj_id="+ajid);
                     st.addBatch("DELETE zfbzzmx_tjjg where aj_id="+ajid);
                     st.addBatch("DELETE zfbzzmx_tjjgs where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl_tjjgs where aj_id="+ajid);
@@ -175,7 +180,7 @@ public class AjServices {
         List<ZfbJyjlSjdzsEntity> sjdzsList = zfbJyjlSjdzsDao.selectJyjlSjdzs(aje.getId(), filterInput);
 
         // 修改数据
-        if(tjjgsList.size()>0&&jyjlTjjgsList.size()>0&&sjdzsList.size()>0){
+        if(tjjgsList.size()>0||jyjlTjjgsList.size()>0||sjdzsList.size()>0){
             zfbZzmxTjjgsDao.delAll(aje.getId());
             zfbZzmxTjjgsDao.insertZzmxTjjgs(tjjgsList);
             zfbJyjlTjjgsDao.delAll(aje.getId());
@@ -186,6 +191,6 @@ public class AjServices {
             aje.setFilter(filterInput);
             updateAj(aje);
         }
-        return tjjgsList.size()>0&&jyjlTjjgsList.size()>0&&sjdzsList.size()>0?1:0;
+        return tjjgsList.size()>0||jyjlTjjgsList.size()>0||sjdzsList.size()>0?1:0;
     }
 }

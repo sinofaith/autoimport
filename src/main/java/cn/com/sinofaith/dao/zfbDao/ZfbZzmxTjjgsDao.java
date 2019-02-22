@@ -43,7 +43,8 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
         sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1) a ");
         sql.append("left join(select * from (select t.*,row_number() over(");
         sql.append("partition by t.jyh order by t.id) su from zfbzhmx t where aj_id="+id+") where su=1) h on a.jyh=h.jyh ");
-        sql.append("left join zfbzcxx c on c.dyxcsj = a.dyxcsj and c.aj_id="+id);
+        sql.append("left join(select * from (select t.*,row_number() over(partition by t.yhid,t.dyxcsj order by t.id) su from zfbzcxx t where aj_id="+id+") where su=1) c on" +
+                " c.dyxcsj = a.dyxcsj and (a.fkfzfbzh=c.yhid or a.skfzfbzh=c.yhid)");
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();
@@ -120,7 +121,8 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
         sql.append("select to_char(count(1)) NUM from(select z.* from(select * from (");
         sql.append("select t.*,row_number() over( partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+aj.getId()+") ");
         sql.append("where su=1) z left join(");
-        sql.append("select f.yhid,f.dyxcsj from zfbzcxx f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj ");
+        sql.append("select f.yhid,f.dyxcsj from(select * from (select t.*,row_number() over(partition by t.yhid,t.dyxcsj order by t.id) su from zfbzcxx t where aj_id="+aj.getId()+")" +
+                " where su=1) f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj and (z.fkfzfbzh=c.yhid or z.skfzfbzh=c.yhid)");
         sql.append("where "+search+") z1");
         if(aj.getFilter()!=null){
             sql.append(" left join (select j.dyxcsj,min(sksj) sksj  from (select * from (select t.*,row_number() over(");
@@ -150,7 +152,8 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
         sql.append("select * from(select z.* from(select * from (");
         sql.append("select t.*,row_number() over( partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+aj.getId()+") ");
         sql.append("where su=1) z left join(");
-        sql.append("select f.yhid,f.dyxcsj from zfbzcxx f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj ");
+        sql.append("select f.yhid,f.dyxcsj from(select * from (select t.*,row_number() over(partition by t.yhid,t.dyxcsj order by t.id) su from zfbzcxx t where aj_id="+aj.getId()+") " +
+                "where su=1) f where aj_id="+aj.getId()+") c on c.dyxcsj = z.dyxcsj and (z.fkfzfbzh=c.yhid or z.skfzfbzh=c.yhid)");
         sql.append("where "+search+") z1");
         if(aj.getFilter()!=null){
             sql.append(" left join (select j.dyxcsj,min(sksj) sksj  from (select * from (select t.*,row_number() over(");
@@ -182,7 +185,7 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
         List<ZfbZzmxTjjgssForm> tjjgsForms = null;
         StringBuffer sql = new StringBuffer();
         sql.append("select fkfzfbzh,skfzfbzh,count(1) zzcs,sum(zzje) zzje from(select t.*,row_number() over(");
-        sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id=144) where su=1 group by fkfzfbzh,skfzfbzh");
+        sql.append("partition by t.jyh order by t.id) su from zfbzzmx t where aj_id="+id+") where su=1 group by fkfzfbzh,skfzfbzh");
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();

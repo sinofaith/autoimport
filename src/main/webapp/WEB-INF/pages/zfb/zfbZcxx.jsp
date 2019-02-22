@@ -53,12 +53,12 @@
                                         <td width="8%">登陆邮箱</td>
                                         <td width="10%">登陆手机</td>
                                         <td width="8%">账户名称</td>
-                                        <td width="10%">证件类型</td>
+                                        <td width="8%">证件类型</td>
                                         <td width="15%">证件号</td>
                                         <td width="6%">可用余额</td>
                                         <td width="10%">绑定手机</td>
                                         <td width="13%">绑定银行卡</td>
-                                        <td width="8%">店铺名</td>
+                                        <td width="8%">对应协查数据</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
@@ -67,7 +67,7 @@
                                             <td align="center">${item.dlyx}</td>
                                             <td align="center">${item.dlsj}</td>
                                             <td align="center" title="${item.zhmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zhmc}</div></td>
-                                            <td align="center">${item.zjlx}</td>
+                                            <td align="center"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjlx}</div></td>
                                             <td align="center">${item.zjh}</td>
                                             <td align="center">${item.kyye}</td>
                                             <td align="center">${item.bdsj}</td>

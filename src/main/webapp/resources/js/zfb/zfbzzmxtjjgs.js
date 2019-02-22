@@ -111,7 +111,6 @@ function scrollF() {
     }
 }
 
-
 // 转账明细插入表记录
 function insert(data,tbody,zfbzh,temp){
     var str = "";

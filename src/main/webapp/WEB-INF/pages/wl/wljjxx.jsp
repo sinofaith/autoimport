@@ -61,11 +61,11 @@
                                         <td width="8%">运单号</td>
                                         <td width="14%"><a href="/SINOFAITH/wuliujjxx/seach?pageNo=1&orderby=ship_time">寄件时间</a></td>
                                         <td width="6%">寄件人</td>
-                                        <td width="6%">寄件电话</td>
-                                        <td width="12%">寄件地址</td>
+                                        <td width="10%">寄件电话</td>
+                                        <td width="10%">寄件地址</td>
                                         <td width="6%">收件人</td>
                                         <td width="6%">收件电话</td>
-                                        <td width="12%">收件地址</td>
+                                        <td width="10%">收件地址</td>
                                         <td width="8%">托寄物</td>
                                         <td width="5%">付款方式</td>
                                         <td width="5%">代收货款</td>
@@ -79,11 +79,11 @@
                                             <td align="center">${item.ship_time}</td>
                                             <td align="center" title="${item.sender}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.sender}</div></td>
                                             <td align="center">${item.ship_phone}</td>
-                                            <td align="center" title="${item.ship_address}"><div style="width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.ship_address}</div></td>
+                                            <td align="center" title="${item.ship_address}"><div style="width:130px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.ship_address}</div></td>
                                             <td align="center">${item.addressee}</td>
                                             <td align="center">${item.sj_phone}</td>
                                             <td align="center" title="${item.sj_address}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.sj_address}</div></td>
-                                            <td align="center" title="${item.tjw}"><div style="width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.tjw}</div></td>
+                                            <td align="center" title="${item.tjw}"><div style="width:130px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.tjw}</div></td>
                                             <td align="center">${item.payment}</td>
                                             <td align="center">${item.dshk}</td>
                                             <td align="center">${item.freight}</td>

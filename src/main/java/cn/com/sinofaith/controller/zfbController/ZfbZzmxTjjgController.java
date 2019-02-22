@@ -118,9 +118,9 @@ public class ZfbZzmxTjjgController {
             dc.addOrder(Order.asc(lastOrder));
             dc.addOrder(Order.asc("id"));
         }else if(desc==null){
-            dc.addOrder(Order.desc("jyzcs").nulls(NullPrecedence.LAST));
+            dc.addOrder(Order.desc("fkzje").nulls(NullPrecedence.LAST));
             dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
-            session.setAttribute("zzmxTjjgLastOrder","jyzcs");
+            session.setAttribute("zzmxTjjgLastOrder","fkzje");
         }
         // 获取分页数据
         Page page = zfbZzmxTjjgService.queryForPage(pageNo,10,dc);

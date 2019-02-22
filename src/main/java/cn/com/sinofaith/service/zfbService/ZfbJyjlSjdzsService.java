@@ -58,12 +58,12 @@ public class ZfbJyjlSjdzsService {
      * @param search
      * @return
      */
-    public String getZfbJyjlSjdzs(int currentPage, int pageSize, String search) {
+    public String getZfbJyjlSjdzs(int currentPage, int pageSize, String search, long id) {
         Gson gson = new Gson();
         Page page = null;
-        int rowAll = zfbJyjlSjdzsDao.getRowAllCount(search);
+        int rowAll = zfbJyjlSjdzsDao.getRowAllCount(search,id);
         if(rowAll>0){
-            List<ZfbJyjlSjdzsForm> sjdzsList = zfbJyjlSjdzsDao.getDoPageSjdzs(currentPage, pageSize, search, true);
+            List<ZfbJyjlSjdzsForm> sjdzsList = zfbJyjlSjdzsDao.getDoPageSjdzs(currentPage, pageSize, search, id, true);
             for (int i =0;i<sjdzsList.size();i++) {
                 sjdzsList.get(i).setId((currentPage-1)*pageSize+i+1);
             }
@@ -160,11 +160,11 @@ public class ZfbJyjlSjdzsService {
      * @param search
      * @return
      */
-    public List<ZfbJyjlSjdzsForm> getZfbJyjlDetails(String search) {
+    public List<ZfbJyjlSjdzsForm> getZfbJyjlDetails(String search, long id) {
         List<ZfbJyjlSjdzsForm> sjdzs = null;
-        int rowAll = zfbJyjlSjdzsDao.getRowAllCount(search);
+        int rowAll = zfbJyjlSjdzsDao.getRowAllCount(search, id);
         if(rowAll>0){
-            sjdzs = zfbJyjlSjdzsDao.getDoPageSjdzs(0, 0, search, false);
+            sjdzs = zfbJyjlSjdzsDao.getDoPageSjdzs(0, 0, search, id, false);
         }
         return sjdzs;
     }

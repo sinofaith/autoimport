@@ -1,7 +1,5 @@
 package cn.com.sinofaith.service.zfbService;
 
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
 import cn.com.sinofaith.dao.zfbDao.ZfbZzmxGtzhDao;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxGtzhForm;
 import cn.com.sinofaith.page.Page;
@@ -37,7 +35,7 @@ public class ZfbZzmxGtzhService {
         List<ZfbZzmxGtzhForm> jyjlForms = null;
         int rowAll = zfbZzmxGtzhDao.getCountRow(search,id);
         if(rowAll>0){
-            jyjlForms = zfbZzmxGtzhDao.queryForPage(currentPage,pageSize,search,id);
+            jyjlForms = zfbZzmxGtzhDao.queryForPage(currentPage,pageSize,search,id, true);
             for (int i =0;i<jyjlForms.size();i++) {
                 jyjlForms.get(i).setId((currentPage-1)*pageSize+i+1);
             }
@@ -61,7 +59,7 @@ public class ZfbZzmxGtzhService {
         List<ZfbZzmxGtzhForm> jyjlForms = null;
         int rowAll = zfbZzmxGtzhDao.getCountRow(search,id);
         if(rowAll>0) {
-            jyjlForms = zfbZzmxGtzhDao.getZfbZzmxGtzhAll(search, id);
+            jyjlForms = zfbZzmxGtzhDao.queryForPage(0,0,search,id, false);
         }
         return jyjlForms;
     }
@@ -163,7 +161,7 @@ public class ZfbZzmxGtzhService {
         List<ZfbZzmxGtzhForm> gtzhForms = null;
         int rowAll = zfbZzmxGtzhDao.getCountRow(search,id);
         if(rowAll>0) {
-            gtzhForms = zfbZzmxGtzhDao.getZfbZzmxGtzhAll(search, id);
+            gtzhForms = zfbZzmxGtzhDao.queryForPage(0,0,search,id, true);
         }
         return gtzhForms;
     }

@@ -6,7 +6,15 @@
         <a href="#" onclick="skip('a1','zfb')" <c:if test="${flag=='a1'}">class="addactive"</c:if> id="dropdownMenu1" data-toggle="dropdown">支付宝注册信息</a>
     </span>
     <span class="dropdown">
-        <a href="#" onclick="skip('a2','zfbZhmx')" <c:if test="${flag=='a2'}">class="addactive"</c:if> id="dropdownMenu2" data-toggle="dropdown">支付宝账户明细</a>
+        <a href="#" onclick="skip('a2','zfbZhmx')" <c:if test="${flag=='a2'||flag=='a12'||flag=='a13'||flag=='a14'||flag=='a15'}">class="addactive"</c:if> id="dropdownMenu2" data-toggle="dropdown">支付宝账户明细</a>
+        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -283px">
+            <li role="presentation">
+                <a id="a14" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a14','zfbZhmxJczz')" style="width: 265px; height: 30px; <c:if test="${flag=='a14'}">background: #09CEB8</c:if>">账户明细进出总账统计</a>
+                <a id="a12" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a12','zfbZhmxTjjg')" style="width: 265px; height: 30px; <c:if test="${flag=='a12'}">background: #09CEB8</c:if>">账户明细账户与账户统计</a>
+                <a id="a13" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a13','zfbZhmxTjjgs')" style="width: 265px; height: 30px; <c:if test="${flag=='a13'}">background: #09CEB8</c:if>">账户明细账户与银行卡统计</a>
+                <a id="a15" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a15','zfbZhmxJylx')" style="width: 265px; height: 30px; <c:if test="${flag=='a15'}">background: #09CEB8</c:if>">账户明细账户交易类型统计</a>
+            </li>
+        </span>
     </span>
     <span class="dropdown">
         <a href="#" onclick="skip('a3','zfbZzmx')" <c:if test="${flag=='a3'||flag=='a4'||flag=='a5'||flag=='a6'}">class="addactive"</c:if> id="dropdownMenu3" data-toggle="dropdown">支付宝转账明细</a>

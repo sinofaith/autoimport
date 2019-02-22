@@ -108,8 +108,8 @@ public class ZfbZzmxGtzhController {
         }else if("desc".equals(desc)){
             search += " order by "+lastOrder;
         }else if(desc==null){
-            search += " order by dfzh desc";
-            session.setAttribute("zzmxGLtzhastOrder","dfzh");
+            search += " order by gthys desc";
+            session.setAttribute("zzmxGLtzhastOrder","gthys");
         }
         // 获取分页数据
         Page page = zfbZzmxGtzhService.queryForPage(pageNo,10,search,aj.getId());
@@ -238,7 +238,7 @@ public class ZfbZzmxGtzhController {
                 search += " order by "+lastOrder+" desc";
             }
         }else{
-            search += " order by dfzh desc";
+            search += " order by gthys desc";
         }
         // 获取所有数据数据
         List<ZfbZzmxGtzhForm> tjjgs = zfbZzmxGtzhService.getZfbZzmxGtzhAll(aj.getId(),search);
@@ -271,7 +271,7 @@ public class ZfbZzmxGtzhController {
         String desc = (String) session.getAttribute("zzmxGtzhXQDesc");
         String search = "where dfzh='"+dfzh+"'";
         if("".equals(desc)){
-            search += " order by "+lastOrder+" desc  nulls last";
+            search += " order by "+lastOrder+" desc nulls last";
         }else{
             search +=  " order by "+lastOrder;
         }

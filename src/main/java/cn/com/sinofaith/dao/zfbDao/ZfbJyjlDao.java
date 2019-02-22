@@ -264,7 +264,8 @@ public class ZfbJyjlDao extends BaseDao<ZfbJyjlEntity>{
         if(!search.equals("")){
             sql.append(" "+search);
         }
-        sql.append(") where su=1) j left join(select * from zfbzcxx where aj_id="+id+") c on c.dyxcsj=j.dyxcsj");
+        sql.append(") where su=1) j left join(select * from (select t.*,row_number() over(partition by t.yhid order by t.id) " +
+                "su from zfbzcxx t where aj_id="+id+") where su=1) c on c.dyxcsj=j.dyxcsj and (j.mjyhid=c.yhid or j.mijyhid=c.yhid)");
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();
