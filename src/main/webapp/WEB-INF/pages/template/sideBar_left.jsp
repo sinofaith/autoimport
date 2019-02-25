@@ -11,7 +11,7 @@
 <html>
 <%--新加样式--%>
 <head>
-    <title>SINOFAITH</title>
+    <title>数据清洗展示模型</title>
     <style type="text/css">
         .icon {
             width: 32px; height: 32px;
@@ -33,7 +33,7 @@
         </svg><br>银行卡</a>
     <a href="/SINOFAITH/cft" class="sidebar_left_addative">
         <svg class="icon">
-            <use xlink:href="#icon-caifutong"></use>
+            <use xlink:href="#icon-caifutong1"></use>
         </svg><br>财付通</a>
     <a href="/SINOFAITH/zfb">
         <svg class="icon">

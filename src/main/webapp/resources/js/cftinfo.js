@@ -573,6 +573,13 @@ function getZzDetails(obj) {
             var data = msg.list
             var str = ""
             for (i in data){
+                if(data[i].fsje===0){
+                    data[i].fsje="";
+                }
+
+                if(data[i].jsje===0){
+                    data[i].jsje="";
+                }
                 if(i%2==0){
                     str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
                 }else{

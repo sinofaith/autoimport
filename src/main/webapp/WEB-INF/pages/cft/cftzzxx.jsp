@@ -67,12 +67,12 @@
                                                 <td align="center">${item.jdlx}</td>
                                                 <td align="center">${item.jylx}</td>
                                                 <td align="center">${item.shmc}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
+                                                <td align="center">${item.jyje}</td>
                                                 <td align="center">${item.jssj eq null? item.jysj:item.jssj}</td>
                                                 <td align="center">${item.fsf}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.fsje}" pattern="#,##0.0#"/></td>
+                                                <td align="center">${item.fsje eq 0 ? "":item.fsje}</td>
                                                 <td align="center">${item.jsf}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jsje}" pattern="#,##0.0#"/></td>
+                                                <td align="center">${item.jsje eq 0 ? "":item.jsje}</td>
                                             </tr>
 
                                         </c:forEach>

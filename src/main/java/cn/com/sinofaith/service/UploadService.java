@@ -186,7 +186,13 @@ public class UploadService {
                     while ((txtString = br.readLine()) != null) {
                         String[] s = txtString.split("\t");
                         zcxxStr = Arrays.asList(s);
-                        if (txtString.contains("账户状态")) {
+                        if(txtString.equals("")||txtString.length()==0){
+                            continue;
+                        }
+                        if(txtString.startsWith("注销信息")){
+                            break;
+                        }
+                        if (txtString.contains("账户状态")||txtString.contains("账号")) {
                             for (int j = 0; j < zcxxStr.size(); j++) {
                                 if (zcxxStr.get(j).contains("账户状态")) {
                                     map.put("zhzt", j);
@@ -210,7 +216,7 @@ public class UploadService {
                             continue;
                         }
                         //---------------------------------
-                        if (line > 1) {
+                        if (line > 1&&listZcxx.size()>0) {
                             if (zcxxStr.get(0).isEmpty()) {
                                 zcxxStr.set(0, listZcxx.get(0).getZhzt());
                             }
@@ -269,7 +275,7 @@ public class UploadService {
         for (int j = 0; j < allbp.size(); j++) {
             allBp.put((allbp.get(j).getYhkkh()).replace("null", ""), null);
         }
-        Map<String, BankPersonEntity> mapZ = new HashMap<>();
+        Map<String,BankPersonEntity> mapZ= new HashMap<>();
         for (int g = 0; g < listZzxx.size(); g++) {
             BankPersonEntity bp = new BankPersonEntity();
             bp.setYhkkh(listZzxx.get(g).getDskh());
@@ -277,7 +283,7 @@ public class UploadService {
             bp.setXm(listZzxx.get(g).getDsxm());
 //                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
 
-            if (bp.getYhkkh() != null && bp.getXm() != null && bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
+                if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
                 if (bp.getXm().contains("支付宝")) {
                     bp.setXm("支付宝（中国）网络技术有限公司");
                 } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
@@ -789,7 +795,7 @@ public class UploadService {
                     zfbJyjlEntity.setMjxx(csvReader.get("买家信息").trim());
                     zfbJyjlEntity.setMijyhId(csvReader.get("卖家用户id").trim());
                     zfbJyjlEntity.setMijxx(csvReader.get("卖家信息").trim());
-                    zfbJyjlEntity.setJyje(Double.parseDouble(!"".equals(csvReader.get("交易金额（元）"))?
+                    zfbJyjlEntity.setJyje(Double.parseDouble(csvReader.get("交易金额（元）")));
                             csvReader.get("交易金额（元）"):"0.0"));
                     zfbJyjlEntity.setSksj(csvReader.get("收款时间").trim());
                     zfbJyjlEntity.setZhxgsj(csvReader.get("最后修改时间").trim());
@@ -813,7 +819,7 @@ public class UploadService {
                     zfbZhmxEntity.setYhxx(csvReader.get("用户信息").trim());
                     zfbZhmxEntity.setJydfxx(csvReader.get("交易对方信息").trim());
                     zfbZhmxEntity.setXfmc(csvReader.get("消费名称").trim());
-                    zfbZhmxEntity.setJe(Double.parseDouble(!"".equals(csvReader.get("金额（元）"))?
+                    zfbZhmxEntity.setJe(Double.parseDouble(csvReader.get("金额（元）")));
                             csvReader.get("金额（元）"):"0.0"));
                     zfbZhmxEntity.setSz(csvReader.get("收/支").trim());
                     zfbZhmxEntity.setJyzt(csvReader.get("交易状态").trim());
@@ -828,7 +834,7 @@ public class UploadService {
                     zfbZzmxEntity.setSkfzfbzh(csvReader.get("收款方支付宝账号").trim());
                     zfbZzmxEntity.setSkjgxx(csvReader.get("收款机构信息").trim());
                     zfbZzmxEntity.setDzsj(csvReader.get("到账时间").trim());
-                    zfbZzmxEntity.setZzje(Double.parseDouble(!"".equals(csvReader.get("转账金额（元）"))?
+                    zfbZzmxEntity.setZzje(Double.parseDouble(csvReader.get("转账金额（元）")));
                             csvReader.get("转账金额（元）"):"0.0"));
                     zfbZzmxEntity.setZzcpmc(csvReader.get("转账产品名称").trim());
                     zfbZzmxEntity.setJyfsd(csvReader.get("交易发生地").trim());
