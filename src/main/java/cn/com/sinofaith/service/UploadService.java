@@ -795,8 +795,7 @@ public class UploadService {
                     zfbJyjlEntity.setMjxx(csvReader.get("买家信息").trim());
                     zfbJyjlEntity.setMijyhId(csvReader.get("卖家用户id").trim());
                     zfbJyjlEntity.setMijxx(csvReader.get("卖家信息").trim());
-                    zfbJyjlEntity.setJyje(Double.parseDouble(csvReader.get("交易金额（元）")));
-                            csvReader.get("交易金额（元）"):"0.0"));
+                    zfbJyjlEntity.setJyje(Double.parseDouble(!"".equals(csvReader.get("交易金额（元）"))?csvReader.get("交易金额（元）"):"0.0"));
                     zfbJyjlEntity.setSksj(csvReader.get("收款时间").trim());
                     zfbJyjlEntity.setZhxgsj(csvReader.get("最后修改时间").trim());
                     zfbJyjlEntity.setCjsj(csvReader.get("创建时间").trim());
@@ -819,8 +818,7 @@ public class UploadService {
                     zfbZhmxEntity.setYhxx(csvReader.get("用户信息").trim());
                     zfbZhmxEntity.setJydfxx(csvReader.get("交易对方信息").trim());
                     zfbZhmxEntity.setXfmc(csvReader.get("消费名称").trim());
-                    zfbZhmxEntity.setJe(Double.parseDouble(csvReader.get("金额（元）")));
-                            csvReader.get("金额（元）"):"0.0"));
+                    zfbZhmxEntity.setJe(Double.parseDouble(!"".equals(csvReader.get("金额（元）"))?csvReader.get("金额（元）"):"0.0"));
                     zfbZhmxEntity.setSz(csvReader.get("收/支").trim());
                     zfbZhmxEntity.setJyzt(csvReader.get("交易状态").trim());
                     zfbZhmxEntity.setBz(csvReader.get("备注").trim());
@@ -834,8 +832,7 @@ public class UploadService {
                     zfbZzmxEntity.setSkfzfbzh(csvReader.get("收款方支付宝账号").trim());
                     zfbZzmxEntity.setSkjgxx(csvReader.get("收款机构信息").trim());
                     zfbZzmxEntity.setDzsj(csvReader.get("到账时间").trim());
-                    zfbZzmxEntity.setZzje(Double.parseDouble(csvReader.get("转账金额（元）")));
-                            csvReader.get("转账金额（元）"):"0.0"));
+                    zfbZzmxEntity.setZzje(Double.parseDouble(!"".equals(csvReader.get("转账金额（元）"))?csvReader.get("转账金额（元）"):"0.0"));
                     zfbZzmxEntity.setZzcpmc(csvReader.get("转账产品名称").trim());
                     zfbZzmxEntity.setJyfsd(csvReader.get("交易发生地").trim());
                     zfbZzmxEntity.setTxlsh(csvReader.get("提现流水号").trim());
