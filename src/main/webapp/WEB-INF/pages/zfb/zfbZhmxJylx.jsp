@@ -199,9 +199,8 @@
                         <td width="7%"><button onclick="orderByFilter('jyzt','zfbZhmxJylx')">交易状态</button></td>
                     </tr>
                     <input name="label" id="jyzfbzh" hidden="hidden" value="">
-                    <input name="label" id="dszfbzh" hidden="hidden" value="">
                     <input name="label" id="zhmc" hidden="hidden" value="">
-                    <input name="label" id="dsmc" hidden="hidden" value="">
+                    <input name="label" id="xfmc" hidden="hidden" value="">
                     <input name="label" id="allRow" hidden="hidden" value="">
                     </thead>
                     <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF('zfbZhmxJylx')">

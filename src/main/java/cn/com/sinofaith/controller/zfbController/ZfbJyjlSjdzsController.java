@@ -132,9 +132,6 @@ public class ZfbJyjlSjdzsController {
         return "redirect:/zfbJyjlSjdzs/seach?pageNo=1";
     }
 
-    public ZfbJyjlSjdzsController() {
-    }
-
     @RequestMapping("/getDetails")
     public @ResponseBody
     String getDetails(String mjyhid, String order, int page, HttpSession session) {
@@ -144,7 +141,8 @@ public class ZfbJyjlSjdzsController {
         if (aj.getFilter() != null) {
             search += " and upper(spmc) like '%" + aj.getFilter().toUpperCase() + "%'";
         }
-        search += " and mjyhid='" + mjyhid + "' and shrdz is not null and jyzt='交易成功' group by mjyhid,mjxx,shrdz";
+        search += " and mjyhid='" + mjyhid + "' and shrdz is not null and jyzt='交易成功' group by mjyhid," +
+                "substr(mjxx,0,instr(mjxx,'(',1)-1),shrdz";
         // 获取desc
         String desc = (String) session.getAttribute("jyjlSjdzsXQDesc");
         String lastOrder = (String) session.getAttribute("jyjlSjdzsXQLastOrder");
@@ -159,7 +157,6 @@ public class ZfbJyjlSjdzsController {
             if (order.equals(lastOrder)) {
                 if (desc == null || desc.equals("")) {
                     search += " order by " + order;
-
                     desc = "desc";
                 } else {
                     search += " order by " + order + " desc nulls last";

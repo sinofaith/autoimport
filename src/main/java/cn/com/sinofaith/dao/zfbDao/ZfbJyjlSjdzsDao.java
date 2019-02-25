@@ -45,11 +45,11 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
         sql.append("sum(t.jyje) czje,count(1) sjcs from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by t.id) su " +
                 "from zfbjyjl t where aj_id="+id+") where su=1) t where ");
         sql.append("t.shrdz is not null and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) j1 ");
-        sql.append("left join(select mjyhid,count(1) sjdzs from(select t.mjyhid,");
-        sql.append("t.mjxx,t.shrdz,count(1) sjcs from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by " +
+        sql.append("left join(select mjyhid,count(1) sjdzs from(select t.mjyhid ");
+        sql.append("from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by " +
                 "t.id) su from zfbjyjl t where aj_id="+id+") where su=1) t where t.shrdz is not null ");
-        sql.append("and t.jyzt='交易成功' "+search+" group by t.mjyhid,t.mjxx,t.shrdz order by mjyhid) group by mjyhid) j2 ");
-        sql.append("on j1.mjyhid=j2.mjyhid) group by mjyhid,mjxx,sjdzs");
+        sql.append("and t.jyzt='交易成功' "+search+" group by t.mjyhid,substr(t.mjxx,0,instr(t.mjxx,'(',1)-1),t.shrdz ");
+        sql.append("order by mjyhid) group by mjyhid) j2 on j1.mjyhid=j2.mjyhid) group by mjyhid,mjxx,sjdzs");
         Session session = getSession();
         try {
             Transaction tx = session.beginTransaction();
@@ -121,7 +121,7 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
      * @return
      */
     public int getRowAllCount(String search, long id) {
-        String sql = "select to_char(count(1)) NUM from(select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz," +
+        String sql = "select to_char(count(1)) NUM from(select mjyhid,substr(mjxx,0,instr(mjxx,'(',1)-1) mjxx,shrdz," +
                 "count(1) sjcs,sum(jyje) czje from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj " +
                 "order by t.id) su from zfbjyjl t where aj_id="+id+") where su=1) where "+search+")";
         List list = findBySQL(sql);
@@ -144,7 +144,7 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
             sql.append("SELECT * FROM (");
             sql.append("SELECT c.*, ROWNUM rn FROM (");
         }
-        sql.append("select mjyhid,substr(mjxx,1,instr(mjxx,')',1)) mjxx,shrdz,count(1) sjcs,");
+        sql.append("select mjyhid,substr(mjxx,0,instr(mjxx,'(',1)-1) mjxx,shrdz,count(1) sjcs,");
         sql.append("sum(jyje) czje from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by t.id) su" +
                 " from zfbjyjl t where aj_id="+id+") where su=1) t where "+search);
         if(flag){
