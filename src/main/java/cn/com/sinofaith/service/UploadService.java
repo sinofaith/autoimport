@@ -283,7 +283,7 @@ public class UploadService {
             bp.setXm(listZzxx.get(g).getDsxm());
 //                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
 
-                if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
+            if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
                 if (bp.getXm().contains("支付宝")) {
                     bp.setXm("支付宝（中国）网络技术有限公司");
                 } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
