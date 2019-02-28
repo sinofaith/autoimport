@@ -162,13 +162,13 @@ public class CftZzxxService {
                     cell.setCellValue(map.get("FSF").toString());
                 }
                 cell = row.createCell(9);
-                cell.setCellValue(map.get("FSJE").toString());
+                cell.setCellValue(map.get("FSJE").toString().equals("0") ? "":map.get("FSJE").toString());
                 cell = row.createCell(10);
                 if (map.get("JSF") != null && map.get("JSF").toString().length() > 0) {
                     cell.setCellValue(map.get("JSF").toString());
                 }
                 cell = row.createCell(11);
-                cell.setCellValue(map.get("JSJE").toString());
+                cell.setCellValue(map.get("JSJE").toString().equals("0") ? "":map.get("JSJE").toString());
                 if(i%65536==0){
                     for (int a = 0; a < 13; a++) {
                         sheet.autoSizeColumn(a);
@@ -184,7 +184,7 @@ public class CftZzxxService {
 
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            if("khxm".equals(seachCondition)){
+            if("xm".equals(seachCondition)){
                 seach.append(" and s."+seachCondition + " like "+"'"+seachCode+"'");
             }else {
                 seach.append(" and c." + seachCondition + " like " + "'" + seachCode + "'");
