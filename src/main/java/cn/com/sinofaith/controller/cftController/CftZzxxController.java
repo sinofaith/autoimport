@@ -104,7 +104,7 @@ public class CftZzxxController {
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getDetails(@RequestParam("jyzh") String jyzh,@RequestParam("jylx")String jylx,
-                             @RequestParam("type") String type,@RequestParam("page")int page,
+                             @RequestParam("sum") String sum,@RequestParam("type") String type,@RequestParam("page")int page,
                              @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
 
@@ -131,7 +131,7 @@ public class CftZzxxController {
         ses.setAttribute("xqdesc",desc);
 
 
-        return cftzzs.getByJyzhlx(jyzh,jylx,type,aj!=null ? aj:new AjEntity(),page,orders);
+        return cftzzs.getByJyzhlx(jyzh,jylx,sum,type,aj!=null ? aj:new AjEntity(),page,orders);
     }
 
     @RequestMapping(value = "/downDetailJylx")

@@ -403,6 +403,7 @@ function scrollF() {
                     data: {
                         jyzh: jyzh,
                         jylx: jylx,
+                        sum:allRow,
                         order:'xx',
                         type: type,
                         page: parseInt(window.page)
@@ -495,6 +496,7 @@ function orderByFilter(filter) {
     }
     var jyzh = $("#zh").val();
     var jylx = $("#jylx").val();
+    var allRow = $("#allRow").val()
     window.page = 1
     var type = ""
     if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
@@ -510,6 +512,7 @@ function orderByFilter(filter) {
         data:{
             jyzh:jyzh,
             jylx:jylx,
+            sum:allRow,
             order:filter,
             type:type,
             page:parseInt(page)
@@ -549,6 +552,7 @@ function orderByFilter(filter) {
 function getZzDetails(obj) {
     var jyzh = $(obj).closest("tr").find("td:eq(2)").text()
     var jylx = $(obj).closest("tr").find("td:eq(3)").text()
+    var sum = $(obj).closest("tr").find("td:eq(4)").text()
     window.page = 1
     var type = ""
     if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
@@ -565,6 +569,7 @@ function getZzDetails(obj) {
         data:{
             jyzh:jyzh,
             jylx:jylx,
+            sum:sum,
             order:'jysj',
             type:type,
             page:parseInt(page)

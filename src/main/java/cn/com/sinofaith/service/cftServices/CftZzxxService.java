@@ -202,7 +202,7 @@ public class CftZzxxService {
         cftzzd.deleteByAjid(id);
     }
 
-    public String getByJyzhlx(String zh,String jylx,String type,AjEntity aj,int page,String orders){
+    public String getByJyzhlx(String zh,String jylx,String sum,String type,AjEntity aj,int page,String orders){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
         String ajid = getAjidByAjm(aj);
@@ -230,10 +230,9 @@ public class CftZzxxService {
         }
         seach += "and aj_id in("+ajid+") "+orders;
 
-        int allRow = cftzzd.getAllRowCount(seach);
+//        int allRow = cftzzd.getAllRowCount(seach);
+        int allRow = Integer.parseInt(sum);
         List zzList = cftzzd.getDoPage(seach,page,100);
-
-
 
         List<CftZzxxForm> zzFs = new ArrayList<>();
         CftZzxxForm zzf = new CftZzxxForm();
