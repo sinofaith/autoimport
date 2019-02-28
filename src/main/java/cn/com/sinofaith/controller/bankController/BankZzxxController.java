@@ -107,6 +107,7 @@ public class BankZzxxController {
     @ResponseBody
     public String removeDesc(HttpSession ses){
         ses.removeAttribute("xqdesc");
+        ses.removeAttribute("dddesc");
         return "200";
     }
 

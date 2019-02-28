@@ -106,16 +106,43 @@ public class CftGtzhController {
     }
     @RequestMapping("/getDetails")
     @ResponseBody
-    public String getDetails(@RequestParam("dfzh") String dfzh,@RequestParam("page")int page, HttpServletRequest req){
+    public String getDetails(@RequestParam("dfzh") String dfzh,@RequestParam("order") String order,
+                             @RequestParam("page")int page, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        String desc = (String) ses.getAttribute("dddesc");
+        String lastOrder = (String) ses.getAttribute("ddlastOrder");
+        String orders ="";
+        if(!"xx".equals(order)) {
+            if (order.equals(lastOrder)) {
+                if (desc == null || " ,c.id ".equals(desc)) {
+                    desc = " desc ";
+                } else {
+                    desc = " ,c.id ";
+                }
+            } else {
+                desc = " desc ";
+            }
+            orders = " order by c." + order + desc+" nulls last,c.jyzcs desc ";
+        }else{
+            orders = " order by c."+lastOrder+desc + " nulls last,c.jyzcs desc ";
+            order=lastOrder;
+        }
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId() + " order by jyzcs desc ";
+        String seach = " and c.dfzh='"+dfzh+"' and c.aj_id="+aj.getId() + orders;
+
+        ses.setAttribute("ddOrder",order);
+        ses.setAttribute("ddlastOrder",order);
+        ses.setAttribute("dddesc",desc);
         return gson.toJson(cfttjss.queryForPageGt(page,300,seach,aj!=null ? aj.getId():-1));
     }
     @RequestMapping("/downgtlxr")
-    public void downGtlxr(@RequestParam("dfzh") String dfzh,HttpServletRequest req,HttpServletResponse rep)throws Exception{
+    public void downGtlxr(@RequestParam("dfzh") String dfzh,HttpServletRequest req,
+            HttpSession ses,HttpServletResponse rep)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId();
+        String desc = (String) ses.getAttribute("dddesc");
+        String lastOrder = (String) ses.getAttribute("ddlastOrder");
+        String seach = " and c.dfzh='"+dfzh+"' and aj_id="+aj.getId()
+                + " order by c."+lastOrder+desc + " nulls last,c.jyzcs desc ";
         cfttjss.downloadFile(seach,rep,aj!=null?aj.getAj():"","共同",req);
     }
 }

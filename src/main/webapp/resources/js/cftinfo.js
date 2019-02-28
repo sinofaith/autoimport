@@ -443,6 +443,52 @@ function scrollF() {
     }
 }
 
+function getZzGtlxrByorder(filter) {
+    var tbody = window.document.getElementById("result")
+    if(tbody!=null) {
+        tbody.innerHTML = ""
+    }
+    var dfzh = $("#dfzh").val();
+    window.page = 1
+    var tbody = window.document.getElementById("result")
+    var url = "/SINOFAITH/cftgtzh/getDetails"
+    $.ajax({
+        type:"post",
+        dataType:"json",
+        url:url,
+        data:{
+            dfzh:dfzh,
+            order:filter,
+            page:page
+        },
+        success:function (msg) {
+            var data = msg.list
+            var str = ""
+            for (i in data) {
+                if (i % 2 == 0) {
+                    str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
+                } else {
+                    str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
+                }
+                str += "<td width=\"7%\">" + data[i].id + "</td>" +
+                    "<td width=\"7%\">" + data[i].name + "</td>" +
+                    "<td width=\"9%\">" + data[i].jyzh + "</td>" +
+                    "<td width=\"9%\">" + data[i].dfzh + "</td>" +
+                    "<td width=\"8%\">" + data[i].count + "</td>" +
+                    "<td width=\"8%\">" + data[i].jyzcs + "</td>" +
+                    "<td width=\"8%\">" + data[i].jzzcs + "</td>" +
+                    "<td width=\"10%\">" + data[i].jzzje + "</td>" +
+                    "<td width=\"8%\">" + data[i].czzcs + "</td>" +
+                    "<td width=\"10%\">" + data[i].czzje + "</td>" +
+                    "</tr>";
+            }
+            tbody.innerHTML = str
+            $("#dfzh").attr("value", dfzh);
+            $("#allRow").attr("value", msg.totalRecords)
+        }
+    })
+}
+
 function getZzGtlxr(obj) {
     var dfzh = $(obj).closest("tr").find("td:eq(3)").text()
     window.page = 1
@@ -454,6 +500,7 @@ function getZzGtlxr(obj) {
         url:url,
         data:{
             dfzh:dfzh,
+            order:"jyzcs",
             page:page
         },
         success:function (msg) {
