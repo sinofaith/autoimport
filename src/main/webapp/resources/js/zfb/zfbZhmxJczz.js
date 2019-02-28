@@ -54,7 +54,6 @@ function orderByFilter(filter, url){
         url:url,
         data:{
             jyzfbzh:jyzfbzh,
-            zhmc:zhmc,
             order:filter,
             page:parseInt(page)
         },
@@ -170,8 +169,8 @@ function isNum(obj){
 }
 
 // 数据导出
-// function downDetailInfo(){
-//     var zfbzh = $("#zfbzh").val();
-//     var zzcpmc = $("#zzcpmc").val();
-//     location = "/SINOFAITH/zfbZhmxTjjg/downDetailInfo?zfbzh="+zfbzh+'&zzcpmc='+zzcpmc;
-// }
+function downZhmxJczzDetailInfo(){
+    var jyzfbzh = $("#jyzfbzh").val();
+    console.log(jyzfbzh);
+    location = "/SINOFAITH/zfbZhmxJczz/downDetailInfo?jyzfbzh="+jyzfbzh;
+}

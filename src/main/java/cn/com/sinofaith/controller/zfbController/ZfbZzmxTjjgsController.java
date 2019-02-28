@@ -256,7 +256,7 @@ public class ZfbZzmxTjjgsController {
                 dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
             }
         }else{
-            dc.addOrder(Order.desc("jyzcs").nulls(NullPrecedence.LAST));
+            dc.addOrder(Order.desc("fkzje").nulls(NullPrecedence.LAST));
             dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
         }
         // 获取所有数据数据

@@ -1,9 +1,13 @@
 package cn.com.sinofaith.controller.zfbController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZhmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZhmxJczzEntity;
+import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.zfbService.ZfbZhmxJczzService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -16,7 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 支付宝账户进出总账统计控制器
@@ -56,7 +65,16 @@ public class ZfbZhmxJczzController {
         String seachCode = (String) session.getAttribute("zhmxJczzSeachCode");
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
+            if(seachCondition.equals("czzje") || seachCondition.equals("jzzje")){
+                if(StringUtils.isNumeric(seachCode)) {
+                    Double fz = Double.parseDouble(seachCode);
+                    dc.add(Restrictions.gt(seachCondition,fz));
+                }else{
+                    return "/zfb/zfbZzmxTjjg";
+                }
+            }else{
+                dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));
+            }
         }
         // 排序字段
         String lastOrder = (String) session.getAttribute("zhmxJczzLastOrder");
@@ -114,6 +132,14 @@ public class ZfbZhmxJczzController {
         return "redirect:/zfbZhmxJczz/seach?pageNo=1";
     }
 
+    /**
+     * 详情分页数据
+     * @param jyzfbzh
+     * @param order
+     * @param page
+     * @param session
+     * @return
+     */
     @RequestMapping("/getDetails")
     public @ResponseBody
     String getDetails(String jyzfbzh, String order, int page, HttpSession session){
@@ -164,5 +190,93 @@ public class ZfbZhmxJczzController {
         ses.removeAttribute("zhmxXQDesc");
         ses.removeAttribute("zhmxXQLastOrder");
         return "200";
+    }
+
+    @RequestMapping("/download")
+    public void download(HttpServletResponse resp, HttpSession session) throws IOException {
+        // 创建离线查询对象
+        DetachedCriteria dc = DetachedCriteria.forClass(ZfbZhmxJczzEntity.class);
+        // 获得session中对象
+        String seachCondition = (String) session.getAttribute("zhmxJczzSeachCondition");
+        String seachCode = (String) session.getAttribute("zhmxJczzSeachCode");
+        String name = "";
+        if(seachCode!=null) {
+            seachCode = seachCode.replace("\r\n", "").replace("，", "").replace(" ", "").replace(" ", "").replace("\t", "");
+            if (seachCondition.equals("jzzje") || seachCondition.equals("czzje")) {
+                Double fz = Double.parseDouble(seachCode);
+                if (seachCondition.equals("czzje")) {
+                    name = "--出账总金额大于" + fz;
+                } else {
+                    name = "--进账总金额大于" + fz;
+                }
+                dc.add(Restrictions.gt(seachCondition, fz));
+            }else{
+                dc.add(Restrictions.eq(seachCondition,seachCode));
+            }
+        }
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        dc.add(Restrictions.eq("aj_id",aj.getId()));
+        String lastOrder = (String) session.getAttribute("zhmxJczzLastOrder");
+        String desc = (String) session.getAttribute("zhmxJczzDesc");
+        if(lastOrder!=null && desc!=null){
+            if(desc.equals("desc")){
+                dc.addOrder(Order.asc(lastOrder));
+                dc.addOrder(Order.asc("id"));
+            }else{
+                dc.addOrder(Order.desc(lastOrder).nulls(NullPrecedence.LAST));
+                dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
+            }
+        }else{
+            dc.addOrder(Order.desc("czzje").nulls(NullPrecedence.LAST));
+            dc.addOrder(Order.desc("id").nulls(NullPrecedence.LAST));
+        }
+        // 获取所有数据数据
+        List<ZfbZhmxJczzEntity> jczzs = zfbZhmxJczzService.getZfbZhmxJczzAll(dc);
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(jczzs!=null){
+            wb = zfbZhmxJczzService.createExcel(jczzs);
+        }
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝账户明细进出总账统计(\""+aj.getAj()+")"+name+".xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
+    }
+
+    /**
+     * 详情页数据导出
+     * @param resp
+     * @param session
+     * @throws IOException
+     */
+    @RequestMapping("/downDetailInfo")
+    public void downloadDetails(String jyzfbzh, HttpServletResponse resp,HttpSession session) throws IOException {
+        // 取出域中对象
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 条件语句
+        String lastOrder = (String) session.getAttribute("zhmxXQLastOrder");
+        String desc = (String) session.getAttribute("zhmxXQDesc");
+        String search = "t.yhxx like '"+jyzfbzh+"%' and (t.jyzt like '%成功%' " +
+                "or t.jyzt like '%SUCCESS%' or t.jyzt='完成') and t.jydfxx is not null";
+        if("".equals(desc)){
+            search += " order by "+lastOrder+" desc  nulls last";
+        }else{
+            search += " order by "+lastOrder;
+        }
+        // 获取所有数据数据
+        List<ZfbZhmxEntity> zhmxList = zfbZhmxJczzService.getZfbZhmxJczzDetails(search,aj.getId());
+        // 创建工作簿
+        HSSFWorkbook wb = null;
+        if(zhmxList!=null){
+            wb = ZfbZhmxEntity.createExcel(zhmxList,"账户明细进出总账统计");
+        }
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String(("支付宝账户明细进出总账统计详情信息(\""+aj.getAj()+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
     }
 }

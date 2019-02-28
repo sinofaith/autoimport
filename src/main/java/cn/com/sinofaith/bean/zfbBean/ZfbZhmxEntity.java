@@ -1,6 +1,12 @@
 package cn.com.sinofaith.bean.zfbBean;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "ZfbZhmx")
@@ -217,5 +223,99 @@ public class ZfbZhmxEntity {
                 ", inserttime='" + inserttime + '\'' +
                 ", aj_id=" + aj_id +
                 '}';
+    }
+
+    /**
+     * 账户明细分析数据excel导出
+     * @param zhmxList
+     * @param excelName
+     * @return
+     */
+    public static HSSFWorkbook createExcel(List<ZfbZhmxEntity> zhmxList, String excelName) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet(excelName);
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("序号");
+        cell = row.createCell(1);
+        cell.setCellValue("交易号");
+        cell = row.createCell(2);
+        cell.setCellValue("商户订单号");
+        cell = row.createCell(3);
+        cell.setCellValue("付款时间");
+        cell = row.createCell(4);
+        cell.setCellValue("类型");
+        cell = row.createCell(5);
+        cell.setCellValue("用户信息");
+        cell = row.createCell(6);
+        cell.setCellValue("交易对方信息");
+        cell = row.createCell(7);
+        cell.setCellValue("消费名称");
+        cell = row.createCell(8);
+        cell.setCellValue("金额");
+        cell = row.createCell(9);
+        cell.setCellValue("收/支");
+        cell = row.createCell(10);
+        cell.setCellValue("交易状态");
+        int b = 1;
+        for (int i = 0; i < zhmxList.size(); i++) {
+            ZfbZhmxEntity wl = zhmxList.get(i);
+            if ((i + b) >= 65536 && (i + b) % 65536 == 0) {
+                sheet = wb.createSheet(excelName + "(" + b + ")");
+                row = sheet.createRow(0);
+                cell = row.createCell(0);
+                cell.setCellValue("序号");
+                cell = row.createCell(1);
+                cell.setCellValue("交易号");
+                cell = row.createCell(2);
+                cell.setCellValue("商户订单号");
+                cell = row.createCell(3);
+                cell.setCellValue("付款时间");
+                cell = row.createCell(4);
+                cell.setCellValue("类型");
+                cell = row.createCell(5);
+                cell.setCellValue("用户信息");
+                cell = row.createCell(6);
+                cell.setCellValue("交易对方信息");
+                cell = row.createCell(7);
+                cell.setCellValue("消费名称");
+                cell = row.createCell(8);
+                cell.setCellValue("金额");
+                cell = row.createCell(9);
+                cell.setCellValue("收/支");
+                cell = row.createCell(10);
+                cell.setCellValue("交易状态");
+                b += 1;
+            }
+            row = sheet.createRow((i + b) % 65536);
+            cell = row.createCell(0);
+            cell.setCellValue(i + 1);
+            cell = row.createCell(1);
+            cell.setCellValue(wl.getJyh());
+            cell = row.createCell(2);
+            cell.setCellValue(wl.getShddh());
+            cell = row.createCell(3);
+            cell.setCellValue(wl.getFksj());
+            cell = row.createCell(4);
+            cell.setCellValue(wl.getLx());
+            cell = row.createCell(5);
+            cell.setCellValue(wl.getYhxx());
+            cell = row.createCell(6);
+            cell.setCellValue(wl.getJydfxx());
+            cell = row.createCell(7);
+            cell.setCellValue(wl.getXfmc());
+            cell = row.createCell(8);
+            cell.setCellValue(wl.getJe());
+            cell = row.createCell(9);
+            cell.setCellValue(wl.getSz());
+            cell = row.createCell(10);
+            cell.setCellValue(wl.getJyzt());
+            if ((i + b) % 65536 == 0) {
+                for (int a = 0; a < 11; a++) {
+                    sheet.autoSizeColumn(a);
+                }
+            }
+        }
+        return wb;
     }
 }

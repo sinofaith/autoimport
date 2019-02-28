@@ -225,7 +225,7 @@ public class ZfbJyjlSjdzsDao extends BaseDao<ZfbJyjlSjdzsEntity>{
         sql.append("sum(jyje) czje from(select * from (select t.*,row_number() over(partition by t.jyh,t.dyxcsj order by t.id) " +
                 "su from zfbjyjl t where aj_id="+aj.getId()+") where su=1) t where mjyhid in(");
         sql.append("select mjyhid from ZFBJYJL_SJDZS t where aj_id="+aj.getId()+" and sjdzs>=10) and shrdz is not null ");
-        sql.append("and jyzt='交易成功' group by mjyhid,mjxx,shrdz order by mjyhid desc nulls last,sjcs desc");
+        sql.append("and jyzt='交易成功' group by mjyhid,mjxx,shrdz order by sjcs desc,czje desc,mjyhid desc");
         Session session = getSession();
         try{
             Transaction tx = session.beginTransaction();

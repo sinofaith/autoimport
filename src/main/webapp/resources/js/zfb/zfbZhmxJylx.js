@@ -186,8 +186,12 @@ function isNum(obj){
 }
 
 // 数据导出
-// function downDetailInfo(){
-//     var zfbzh = $("#zfbzh").val();
-//     var zzcpmc = $("#zzcpmc").val();
-//     location = "/SINOFAITH/zfbZhmxTjjg/downDetailInfo?zfbzh="+zfbzh+'&zzcpmc='+zzcpmc;
-// }
+function downZhmxJylxDetailInfo(){
+    var jyzfbzh = $("#jyzfbzh").val();
+    var zhmc = $("#zhmc").val();
+    var xfmc = $("#xfmc").val();
+    console.log(jyzfbzh)
+    console.log(zhmc)
+    console.log(xfmc)
+    location = "/SINOFAITH/zfbZhmxJylx/downDetailInfo?jyzfbzh="+jyzfbzh+"&zhmc="+zhmc+"&xfmc="+xfmc;
+}
