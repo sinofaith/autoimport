@@ -450,7 +450,6 @@ function getZzGtlxrByorder(filter) {
     }
     var dfzh = $("#dfzh").val();
     window.page = 1
-    var tbody = window.document.getElementById("result")
     var url = "/SINOFAITH/cftgtzh/getDetails"
     $.ajax({
         type:"post",

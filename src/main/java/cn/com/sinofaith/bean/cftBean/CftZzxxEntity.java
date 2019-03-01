@@ -25,10 +25,10 @@ public class CftZzxxEntity {
     private String yhlx="";
     private String jysm="";
     private String shmc="";
-    private String fsf="";
+    private String fsf=null;
     private BigDecimal fsje = new BigDecimal(0);
-    private String jsf="";
-    private String jssj="";
+    private String jsf=null;
+    private String jssj=null;
     private BigDecimal jsje = new BigDecimal(0);
     private long aj_id;
     private String inserttime="";
@@ -248,10 +248,10 @@ public class CftZzxxEntity {
                 a.setYhlx(s.get(7));
                 a.setJysm(RemoveMessy.rMessy(s.get(8)).equals("") ? null: RemoveMessy.rMessy(s.get(8)));
                 a.setShmc(s.get(9).equals("") ? null:s.get(9));
-                a.setFsf(s.get(10).replace("null",""));
+                a.setFsf(s.get(10).replace("null","").equals("") ? null:s.get(10).replace("null",""));
                 a.setFsje(new BigDecimal(Long.parseLong(s.get(11).replace("null","0"))).divide(new BigDecimal(100)));
-                a.setJsf(s.get(12).replace("null",""));
-                a.setJssj(s.get(13));
+                a.setJsf(s.get(12).replace("null","").equals("") ? null:s.get(12).replace("null",""));
+                a.setJssj(s.get(13).equals("") ? null:s.get(13));
                 a.setJsje(new BigDecimal(Long.parseLong(s.get(14).replace("null","0"))).divide(new BigDecimal(100)));
             }
             if(s.size()<11){

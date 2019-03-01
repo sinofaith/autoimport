@@ -16,6 +16,7 @@ import cn.com.sinofaith.service.wlService.WuliuJjxxService;
 import cn.com.sinofaith.service.wlService.WuliuShipService;
 import cn.com.sinofaith.service.wlService.WuliuSjService;
 import cn.com.sinofaith.service.zfbService.*;
+import org.apache.xpath.SourceTree;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -77,6 +78,7 @@ public class UploadController {
     @ResponseBody
     public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                                    @RequestParam("checkBox") long checkBox, HttpServletRequest request){
+        long start = System.currentTimeMillis();
         String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
         String filePath ="";
         String fileName="";
@@ -114,10 +116,11 @@ public class UploadController {
 
             us.deleteAll(uploadPath);
             uploadPathd.delete();
-
-            List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(),checkBox);
-            tjs.count(listZzxx,aje.getId());
-            tjss.count(listZzxx,aje.getId());
+            if(b!=0) {
+                List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(), checkBox);
+                tjs.count(listZzxx, aje.getId());
+                tjss.count(listZzxx, aje.getId());
+            }
         }
 
         if(a+b>0){
@@ -126,14 +129,14 @@ public class UploadController {
             result = "";
         }
         request.getSession().setAttribute("aj",aje);
+        System.out.println(System.currentTimeMillis()-start);
         return result;
     }
 
-    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST)
     @ResponseBody
-    public String uploadBank(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
-                             HttpServletRequest request) {
-        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
+    public Map<String,Map<String,List<String>>> uploadBank(@RequestParam("file") List<MultipartFile> file, HttpServletRequest req) {
+        String uploadPath = req.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
         String filePath ="";
         String fileName="";
         String result = "";
@@ -146,40 +149,79 @@ public class UploadController {
             fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
             filePath = uploadPath + fileName;
             if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+
                 uploadFile = new File(filePath);
                 try {
-                    file.get(i).transferTo(uploadFile);
+                    if(fileName.contains("开户")||fileName.contains("交易明细")) {
+                        file.get(i).transferTo(uploadFile);
+                    }
                 }catch (IOException e){
                     e.printStackTrace();
                 }
             }
         }
-        int a = 0;
-        int b = 0;
 
-        AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
-            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
-            us.insertBankZcxx(uploadPath,aje.getId());
-            us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
-            us.deleteAll(uploadPath);
-            uploadPathd.delete();
-            listZzxx = bzs.getAll(aje.getId());
-            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
-            listZzxx = new ArrayList<>(setB);
-            setB = null;
-            btjs.count(listZzxx,aje.getId());
-            btjss.count(listZzxx,aje.getId());
+            req.getSession().setAttribute("bankPath",uploadPath);
+            Map<String,Map<String,List<String>>> excelMap = bzs.readExcel(uploadPath);
+            if(excelMap!=null){
+                return excelMap;
+            }
         }
-
-        if(a+b>0){
-            result = String.valueOf(a+b);
-        }else {
-            result = "";
-        }
-        request.getSession().setAttribute("aj",aje);
-        return result;
+        return null;
     }
+
+//    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+//    @ResponseBody
+//    public String uploadBank(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+//                             HttpServletRequest request) {
+//        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
+//        String filePath ="";
+//        String fileName="";
+//        String result = "";
+//        File uploadFile = null;
+//        File uploadPathd = new File(uploadPath);
+//        if(!uploadPathd.exists()){
+//            uploadPathd.mkdirs();
+//        }
+//        for(int i=0;i<file.size();i++){
+//            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+//            filePath = uploadPath + fileName;
+//            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+//                uploadFile = new File(filePath);
+//                try {
+//                    file.get(i).transferTo(uploadFile);
+//                }catch (IOException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        int a = 0;
+//        int b = 0;
+//
+//        AjEntity aje = ajs.findByName(aj).get(0);
+//        if(uploadPathd.listFiles()!=null) {
+//            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
+//            us.insertBankZcxx(uploadPath,aje.getId());
+//            us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
+//            us.deleteAll(uploadPath);
+//            uploadPathd.delete();
+//            listZzxx = bzs.getAll(aje.getId());
+//            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+//            listZzxx = new ArrayList<>(setB);
+//            setB = null;
+//            btjs.count(listZzxx,aje.getId());
+//            btjss.count(listZzxx,aje.getId());
+//        }
+//
+//        if(a+b>0){
+//            result = String.valueOf(a+b);
+//        }else {
+//            result = "";
+//        }
+//        request.getSession().setAttribute("aj",aje);
+//        return result;
+//    }
 
     /**
      * 物流字段映射

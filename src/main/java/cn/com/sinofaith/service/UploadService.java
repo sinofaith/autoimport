@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Me. on 2018/5/23
@@ -112,13 +113,14 @@ public class UploadService {
 
     public int insertZzxx(String filepath, String filter, long aj) {
         List<String> listPath = getFileList(filepath, filter);
-        List<CftZzxxEntity> listZzxx = getZzxxByTxt(listPath);
-        int i = zzd.insertZzxx(listZzxx, aj);
-        return i;
+        return  getZzxxByTxt(listPath,aj);
+//        int i = zzd.insertZzxx(listZzxx, aj);
     }
 
-    public List<CftZzxxEntity> getZzxxByTxt(List<String> listPath) {
+    public int getZzxxByTxt(List<String> listPath,long aj) {
+        Set<String> zhList = zzd.getGroupByZh(aj);
         List<CftZzxxEntity> zzxxs = new ArrayList<>();
+        int count = 0;
         File file = null;
         BufferedReader br = null;
         FileInputStream fis = null;
@@ -142,6 +144,16 @@ public class UploadService {
                             zzxxs.add(CftZzxxEntity.listToObj(zzxxStr));
                         }
                     }
+                    if((i+1)%30==0){
+                        if(zhList.size()>0) {
+                            zzxxDb(zzxxs,zhList,aj);
+                        }
+                        if(zzxxs.size()>0) {
+                            zzxxs = new ArrayList<>(new HashSet<>(zzxxs));
+                            count += zzd.insertZzxx(zzxxs, aj);
+                        }
+                        zzxxs.clear();
+                    }
                     br.close();
                     file.delete();
                 } catch (IOException e) {
@@ -157,7 +169,45 @@ public class UploadService {
                     }
                 }
             }
+                if(zhList.size()>0) {
+                    zzxxDb(zzxxs,zhList,aj);
+                }
+                if(zzxxs.size()>0) {
+                    zzxxs = new ArrayList<>(new HashSet<>(zzxxs));
+                    count += zzd.insertZzxx(zzxxs, aj);
+                }
+                zzxxs.clear();
+            }
+        return count;
+    }
+
+    public List<CftZzxxEntity> zzxxDb (List<CftZzxxEntity> zzxxs,Set<String> zhList,long aj){
+        List<CftZzxxEntity> all  = new ArrayList<>();
+        String sql = " and zh in (";
+        Map<String,List<CftZzxxEntity>> map = zzxxs.stream().collect(Collectors.groupingBy(CftZzxxEntity::getZh));
+        List<CftZzxxEntity> flag = new ArrayList<>();
+        zzxxs.clear();
+        for(String key:map.keySet()){
+            if(!zhList.contains(key)){
+                zzxxs.addAll(map.get(key));
+            }else{
+                sql += ",'"+key+"'";
+                flag.addAll(map.get(key));
+            }
         }
+        if(sql.contains(",")) {
+            all = zzd.getAlla(aj, sql.replaceFirst(",", "") + ")");
+        }
+        if(all.size()>0) {
+            Set<CftZzxxEntity> set = new HashSet<>(all);
+            all.clear();
+            for (CftZzxxEntity x : flag) {
+                if (!set.contains(x)) {
+                    zzxxs.add(x);
+                }
+            }
+        }
+
         return zzxxs;
     }
 

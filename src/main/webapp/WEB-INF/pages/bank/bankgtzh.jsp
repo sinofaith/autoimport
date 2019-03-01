@@ -207,11 +207,21 @@
                         <td width="12%">对方账户</td>
                         <td width="5%">对方姓名</td>
                         <td width="8%">共同联系人数</td>
-                        <td width="7%">交易总次数</td>
-                        <td width="7%">进账总次数</td>
-                        <td width="10%">进账总金额(元)</td>
-                        <td width="7%">出账总次数</td>
-                        <td width="10%">出账总金额(元)</td>
+                        <td width="7%">
+                            <button onclick="getZzGtlxrByorder('jyzcs')">交易总次数</button>
+                        </td>
+                        <td width="7%">
+                            <button onclick="getZzGtlxrByorder('jzzcs')">进账总次数</button>
+                        </td>
+                        <td width="10%">
+                            <button onclick="getZzGtlxrByorder('jzzje')">进账总金额(元)</button>
+                        </td>
+                        <td width="7%">
+                            <button onclick="getZzGtlxrByorder('czzcs')">出账总次数</button>
+                        </td>
+                        <td width="10%">
+                            <button onclick="getZzGtlxrByorder('czzje')">出账总金额(元)</button>
+                        </td>
                     </tr>
                     <input name="label" id="dfkh" hidden="hidden" value="">
                     <input name="label" id="allRow" hidden="hidden" value="">
