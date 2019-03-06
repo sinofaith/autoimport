@@ -19,10 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +60,7 @@ public class MappingUtils {
      */
     public static Map<String,List<String>> getBy2007Excel(String path) {
         // 所有sheet工作簿数据
-        Map<String,List<String>> sheetMap = new HashMap<>();
+        Map<String,List<String>> sheetMap = new LinkedHashMap<>();
         // 数据内容
         File file = new File(path);
         FileInputStream fi = null;
@@ -136,7 +133,7 @@ public class MappingUtils {
      */
     public static Map<String,List<String>> getBy2003Excel(String path) {
         InputStream is = null;
-        Map<String,List<String>> sheetMap = new HashMap<>();
+        Map<String,List<String>> sheetMap = new LinkedHashMap<>();
         try{
             is = new FileInputStream(path);
             HSSFWorkbook wb = new HSSFWorkbook(is);
