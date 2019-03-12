@@ -97,7 +97,7 @@ public class BankTjjgServices {
             seach.append(" and c.zhlx=" + code);
         }
         if(hcode!=0){
-            seach.append(" and s.khxm not like '%财付通%' and s.khxm not like '%支付宝%' and s.khxm not like '%清算%' or s.khxm is null ");
+            seach.append(" and (s.khxm not like '%财付通%' and s.khxm not like '%支付宝%' and s.khxm not like '%清算%' or s.khxm is null) ");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -343,16 +343,16 @@ public class BankTjjgServices {
                     if((bz.getCzzje().subtract(btt.getCzzje())).compareTo(new BigDecimal(0)) == 0){
                         temps = new BigDecimal(2);
                     }else if((bz.getJzzje().subtract(btt.getJzzje())).compareTo(new BigDecimal(0)) == 0){
-                        temps = new BigDecimal(0.2);
+                        temps = new BigDecimal(0.1);
                     }else{
                         temps = (bz.getJzzje().subtract(btt.getJzzje())).divide(bz.getCzzje().subtract(btt.getCzzje()), 5, ROUND_UP);
                     }
                 } else {
                     temps = bz.getJzzje().divide(bz.getCzzje(), 5, ROUND_UP);
                 }
-                if (temps.doubleValue() < 0.5) {
+                if (temps.doubleValue() <= 0.15) {
                     temp = "来源账户";
-                } else if (temps.doubleValue() <= 1.5) {
+                } else if (temps.doubleValue() <= 1.35) {
                     temp = "中转账户";
                 } else {
                     temp = "汇聚账户";

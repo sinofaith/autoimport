@@ -20,26 +20,54 @@ import java.util.*;
 
 public abstract class ExcelReader extends DefaultHandler {
 
-    // 共享字符串表
     private SharedStringsTable sst;
-
-    // 上一次的内容
+    //上一次的内容
     private String lastContents;
     private boolean nextIsString;
 
     private int sheetIndex = -1;
-    private List<String> rowList = new ArrayList<String>();
-
-    // 当前行
+    private List<String> rowlist = new ArrayList<String>();
+    //当前行
     private int curRow = 0;
-    // 当前列
+    //当前列
     private int curCol = 0;
-    // 日期标志
+    //日期标志
     private boolean dateFlag;
-    // 数字标志
+    //数字标志
     private boolean numberFlag;
+    //前一个单元格的xy
+    private String preXy = "";
+    //当前单元格的xy
+    private String currXy = "";
+    //前一个单元格的x
+    private String preX = "";
+    //当前单元格的x
+    private String currX = "";
+    //是否跳过了单元格
+    private boolean isSkipCeil = false;
 
     private boolean isTElement;
+    //两个不为空的单元格之间隔了多少个空的单元格
+    private int flag = 0;
+
+    /**只遍历一个电子表格，其中sheetId为要遍历的sheet索引，从1开始，1-3
+     * @param filename
+     * @param sheetId
+     * @throws Exception
+     */
+    public void processOneSheet(String filename,int sheetId) throws Exception {
+        OPCPackage pkg = OPCPackage.open(filename);
+        XSSFReader r = new XSSFReader(pkg);
+        SharedStringsTable sst = r.getSharedStringsTable();
+        XMLReader parser = fetchSheetParser(sst);
+
+        // 根据 rId# 或 rSheet# 查找sheet
+        InputStream sheet2 = r.getSheet("rId"+sheetId);
+        sheetIndex++;
+        InputSource sheetSource = new InputSource(sheet2);
+        parser.parse(sheetSource);
+        sheet2.close();
+    }
 
     /**
      * 遍历工作簿中所有的电子表格
@@ -60,43 +88,38 @@ public abstract class ExcelReader extends DefaultHandler {
             parser.parse(sheetSource);
             sheet.close();
         }
-        pkg.flush();
-        pkg.close();
-    }
-
-    /**
-     * 只遍历一个电子表格，其中sheetId为要遍历的sheet索引，从1开始，1-3
-     * @param filename
-     * @param sheetId
-     * @throws Exception
-     */
-    public void process(String filename, int sheetId) throws Exception {
-        OPCPackage pkg = OPCPackage.open(filename);
-        XSSFReader r = new XSSFReader(pkg);
-        SharedStringsTable sst = r.getSharedStringsTable();
-        XMLReader parser = fetchSheetParser(sst);
-        // 根据 rId# 或 rSheet# 查找sheet
-        InputStream sheet2 = r.getSheet("rId" + sheetId);
-        sheetIndex++;
-        InputSource sheetSource = new InputSource(sheet2);
-        parser.parse(sheetSource);
-        sheet2.close();
-        pkg.flush();
-        pkg.close();
     }
 
     public XMLReader fetchSheetParser(SharedStringsTable sst)
             throws SAXException {
-        XMLReader parser = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+        XMLReader parser = XMLReaderFactory
+                .createXMLReader("org.apache.xerces.parsers.SAXParser");
         this.sst = sst;
         parser.setContentHandler(this);
         return parser;
     }
+    public int twentyToDecimai(String s) {
 
+        int result = 0;
+        if (s == null || s.length() == 0) {
+            return result;
+        }
+
+        char[] charArray = s.toCharArray();
+        //遍历字符数组，从数组的尾部开始计算
+        for (int i = charArray.length - 1 ; i >= 0; i--) {
+            //拿到对应字符对应的数字
+            int val = charArray[i] - 64;
+            //拿到指数
+            int exp = charArray.length - i - 1;
+            result += val * Math.pow(26, exp);
+        }
+        return result;
+    }
+
+    //读取单元格的格式
     public void startElement(String uri, String localName, String name,
                              Attributes attributes) throws SAXException {
-
-//      System.out.println("startElement: " + localName + ", " + name + ", " + attributes);
 
         // c => 单元格
         if ("c".equals(name)) {
@@ -107,23 +130,38 @@ public abstract class ExcelReader extends DefaultHandler {
             } else {
                 nextIsString = false;
             }
-            // 日期格式
+            //日期格式
             String cellDateType = attributes.getValue("s");
-            if ("1".equals(cellDateType)) {
+            if ("1".equals(cellDateType)){
                 dateFlag = true;
             } else {
                 dateFlag = false;
             }
             String cellNumberType = attributes.getValue("s");
-            if ("2".equals(cellNumberType)) {
+            if("2".equals(cellNumberType)){
                 numberFlag = true;
             } else {
                 numberFlag = false;
             }
+            //与判断空单元格有关
+            isSkipCeil = false;
+            String cellXy =  attributes.getValue("r");
+            if("".equals(preXy)) {
+                preXy = cellXy;
+            }
+            currXy = cellXy;
+            preX = preXy.replaceAll("\\d", "").trim();
+            currX = currXy.replaceAll("\\d", "").trim();
 
+            flag = twentyToDecimai(currX) - twentyToDecimai(preX);
+
+            if(flag != 0 && flag != 1 && flag > 0) {
+                isSkipCeil = true;
+            }
+            preXy = cellXy;
         }
-        // 当元素为t时
-        if ("t".equals(name)) {
+        //当元素为t时
+        if("t".equals(name)){
             isTElement = true;
         } else {
             isTElement = false;
@@ -133,10 +171,9 @@ public abstract class ExcelReader extends DefaultHandler {
         lastContents = "";
     }
 
+    //读取单元格的内容
     public void endElement(String uri, String localName, String name)
             throws SAXException {
-
-//      System.out.println("endElement: " + localName + ", " + name);
 
         // 根据SST的索引值的到单元格的真正要存储的字符串
         // 这时characters()方法可能会被调用多次
@@ -149,39 +186,47 @@ public abstract class ExcelReader extends DefaultHandler {
 
             }
         }
-        // t元素也包含字符串
-        if (isTElement) {
+        //t元素也包含字符串
+        if(isTElement){
             String value = lastContents.trim();
-            rowList.add(curCol, value);
+            rowlist.add(curCol, value);
             curCol++;
             isTElement = false;
             // v => 单元格的值，如果单元格是字符串则v标签的值为该字符串在SST中的索引
             // 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
         } else if ("v".equals(name)) {
             String value = lastContents.trim();
-            value = value.equals("") ? " " : value;
-            try {
-                // 日期格式处理
-                if (dateFlag) {
-                    Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    value = dateFormat.format(date);
-                }
-                // 数字类型处理
-                if (numberFlag) {
-                    BigDecimal bd = new BigDecimal(value);
-                    value = bd.setScale(3, BigDecimal.ROUND_UP).toString();
-                }
-            } catch (Exception e) {
-                // 转换失败仍用读出来的值
+            value = value.equals("")?" ":value;
+            //日期格式处理
+           /*if(dateFlag){
+                 Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
+                 SimpleDateFormat dateFormat = new SimpleDateFormat(
+                 "dd/MM/yyyy");
+                 value = dateFormat.format(date);
+            }*/
+            //数字类型处理
+            if(numberFlag){
+                BigDecimal bd = new BigDecimal(value);
+                value = bd.setScale(3,BigDecimal.ROUND_UP).toString();
             }
-            rowList.add(curCol, value);
+            //当某个单元格的数据为空时，其后边连续的单元格也可能为空
+            if(isSkipCeil == true) {
+                for(int i = 0; i < (flag-1); i++) {
+                    rowlist.add(curCol + i, "");
+                }
+                curCol += (flag-1);
+            }
+            rowlist.add(curCol, value);
             curCol++;
-        } else {
-            // 如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
+        }else {
+            //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
             if (name.equals("row")) {
-                getRows(sheetIndex + 1, curRow, rowList);
-                rowList.clear();
+                try {
+                    getRows(sheetIndex,curRow,rowlist);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rowlist.clear();
                 curRow++;
                 curCol = 0;
             }
@@ -191,9 +236,10 @@ public abstract class ExcelReader extends DefaultHandler {
 
     public void characters(char[] ch, int start, int length)
             throws SAXException {
-        // 得到单元格内容的值
+        //得到单元格内容的值
         lastContents += new String(ch, start, length);
     }
+
 
     /**
      * 获取行数据回调
@@ -208,11 +254,11 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-        String file = "D:\\work\\数据模型\\资金\\二局张煜-资金数据\\5月29日结果\\2301760420180522094319\\账户交易明细表.xlsx";
+        String file = "D:\\work\\数据模型\\资金\\柏顺福资金\\账户交易明细表.xlsx";
         final Map<String,Integer> title=new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 
-        ExcelReader reader = new ExcelReader() {
+        Excel2007Reader reader = new Excel2007Reader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
                 if(curRow==0){
                     for(int i = 0;i<rowList.size(); i++){

@@ -125,7 +125,7 @@ public class BankZcxxServices {
         cell = row.createCell(2);
         cell.setCellValue("交易卡号");
         cell = row.createCell(3);
-        cell.setCellValue("交易帐号");
+        cell.setCellValue("交易账号");
         cell = row.createCell(4);
         cell.setCellValue("开户姓名");
         cell = row.createCell(5);

@@ -39,8 +39,8 @@ public class CftTjjgController {
         ModelAndView mav = new ModelAndView("redirect:/cfttjjg/seach?pageNo=1");
         httpSession.removeAttribute("tjseachCondition"); //查询条件
         httpSession.removeAttribute("tjseachCode");//查询内容
-        httpSession.setAttribute("orderby","xm");
-        httpSession.setAttribute("lastOrder","xm");
+        httpSession.setAttribute("orderby","jyzcs");
+        httpSession.setAttribute("lastOrder","jyzcs");
         httpSession.setAttribute("desc"," desc ");
         return mav;
     }

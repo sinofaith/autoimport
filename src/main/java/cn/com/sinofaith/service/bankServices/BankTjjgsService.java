@@ -116,6 +116,8 @@ public class BankTjjgsService {
                  seach.append(" and c."+ seachCondition + " >= "+seachCode);
             }else if("khxm".equals(seachCondition)){
                 seach.append(" and s."+ seachCondition+" = "+"'"+ seachCode+"'");
+            }else if("dsxm".equals(seachCondition)){
+                seach.append(" and d.khxm = "+"'"+ seachCode+"'");
             }
             else{
                 seach.append(" and c."+ seachCondition+" = "+"'"+ seachCode +"'");
