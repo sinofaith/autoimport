@@ -52,12 +52,12 @@
                                         <td width="6%">借贷类型</td>
                                         <td width="8%">交易类型</td>
                                         <td width="14%">商户名称</td>
-                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=jyje">交易金额(元)</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=jyje">交易金额</a></td>
                                         <td width="15%">交易时间</td>
                                         <td width="8%">发送方</td>
-                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=fsje">发送金额(元)</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=fsje">发送金额</a></td>
                                         <td width="8%">接收方</td>
-                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=jsje">接收金额(元)</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cftzzxx/order?orderby=jsje">接收金额</a></td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">

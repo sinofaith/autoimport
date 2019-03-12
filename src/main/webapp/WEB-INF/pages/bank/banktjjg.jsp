@@ -77,11 +77,11 @@
                                                         href="/SINOFAITH/banktjjg/order?orderby=jyzcs">交易总次数</a></td>
                                                 <td width="8%"><a
                                                         href="/SINOFAITH/banktjjg/order?orderby=jzzcs">进账总次数</a></td>
-                                                <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=jzzje">进账总金额(元)</a>
+                                                <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=jzzje">进账总金额</a>
                                                 </td>
                                                 <td width="8%"><a
                                                         href="/SINOFAITH/banktjjg/order?orderby=czzcs">出账总次数</a></td>
-                                                <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=czzje">出账总金额(元)</a>
+                                                <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=czzje">出账总金额</a>
                                                 </td>
                                                 <td width="10%"><a href="/SINOFAITH/banktjjg/order?orderby=zhlb">账户类别</a>
                                                 </td>
@@ -105,10 +105,10 @@
                                                     <td align="center">${item.jyzcs}</td>
                                                     <td align="center">${item.jzzcs}</td>
                                                     <td align="center"><fmt:formatNumber value="${item.jzzje}"
-                                                                                         pattern="#,##0.0#"/></td>
+                                                                                         pattern="#,##0"/></td>
                                                     <td align="center">${item.czzcs}</td>
                                                     <td align="center"><fmt:formatNumber value="${item.czzje}"
-                                                                                         pattern="#,##0.0#"/></td>
+                                                                                         pattern="#,##0"/></td>
                                                     <td align="center">${item.zhlb}</td>
                                                     <td align="center">
                                                         <button data-toggle="modal" data-target="#myModal"
@@ -285,9 +285,9 @@
                                     <button onclick="orderByFilter('tjjg','jysj')">交易时间</button>
                                 </td>
                                 <td width="7%">
-                                    <button onclick="orderByFilter('tjjg','jyje')">交易金额(元)</button>
+                                    <button onclick="orderByFilter('tjjg','jyje')">交易金额</button>
                                 </td>
-                                <td width="7%">交易余额(元)</td>
+                                <td width="7%">交易余额</td>
                                 <td width="7%">
                                     <button onclick="orderByFilter('tjjg','sfbz')">收付标志</button>
 
@@ -353,12 +353,12 @@
                         <td width="7%">
                             进账总次数
                         </td>
-                        <td width="7%">进账总金额(元)</td>
+                        <td width="7%">进账总金额</td>
                         <td width="7%">
                             出账总次数
                         </td>
                         <td width="7%">
-                            出账总金额(元)
+                            出账总金额
                         </td>
                         <td width="7%">
                             账户类型

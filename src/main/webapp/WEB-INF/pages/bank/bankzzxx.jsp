@@ -49,9 +49,9 @@
                                         <td width="5%">序号</td>
                                         <td width="12%">交易账卡号</td>
                                         <td width="6%">交易户名</td>
-                                        <td width="15%">交易时间</td>
-                                        <td width="9%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额(元)</a></td>
-                                        <td width="9%">交易余额(元)</td>
+                                        <td width="12%">交易时间</td>
+                                        <td width="9%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额</a></td>
+                                        <td width="9%">交易余额</td>
                                         <td width="5%">收付标志</td>
                                         <td width="12%">对手账卡号</td>
                                         <td width="6%">对手户名</td>
@@ -66,10 +66,10 @@
                                                 <td align="center">${item.yhkkh}</td>
                                                 <td align="center" title="${item.jyxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyxm}</div></td>
                                                 <td align="center">${item.jysj}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0.0#"/></td>
-                                                <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0"/></td>
                                                 <td align="center">${item.sfbz}</td>
-                                                <td align="center" title="${item.dskh}"><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dskh}</div></td>
+                                                <td align="center" title="${item.dskh}"><div style="width:140px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dskh}</div></td>
                                                 <td align="center" title="${item.dsxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsxm}</div></td>
                                                 <td align="center" title="${item.zysm}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zysm}</div></td>
                                                 <td align="center" title="${item.jyfsd}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyfsd}</div></td>

@@ -53,9 +53,9 @@
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=jzzcs">进账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/cftgtzh/order?orderby=jzzje">进账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/cftgtzh/order?orderby=jzzje">进账总金额</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cftgtzh/order?orderby=czzcs">出账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/cftgtzh/order?orderby=czzje">出账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/cftgtzh/order?orderby=czzje">出账总金额</a></td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -69,9 +69,9 @@
                                                 </td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
@@ -207,13 +207,13 @@
                             <button onclick="getZzGtlxrByorder('jzzcs')">进账总次数</button>
                         </td>
                         <td width="10%">
-                            <button onclick="getZzGtlxrByorder('jzzje')">进账总金额(元)</button>
+                            <button onclick="getZzGtlxrByorder('jzzje')">进账总金额</button>
                         </td>
                         <td width="8%">
                             <button onclick="getZzGtlxrByorder('czzcs')">出账总次数</button>
                         </td>
                         <td width="10%">
-                            <button onclick="getZzGtlxrByorder('czzje')">出账总金额(元)</button>
+                            <button onclick="getZzGtlxrByorder('czzje')">出账总金额</button>
                         </td>
                     </tr>
                     <input name="label" id="dfzh" hidden="hidden" value="">

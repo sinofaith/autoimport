@@ -61,9 +61,9 @@
                                         <td width="7%">对方户名</td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzje">进账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzje">进账总金额</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzcs">出账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzje">出账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzje">出账总金额</a></td>
                                         <td width="4%">详情</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
@@ -88,9 +88,9 @@
                                                 <td align="center"title="${item.dfxm}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div></td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
                                                 <td align="center">
                                                     <button  data-toggle="modal" data-target="#myModal" onclick="getZzDetails(this,'tjjgs')">详情</button>
                                                 </td>
@@ -150,6 +150,7 @@
                                             <option value="jyzh"<c:if test="${tjsseachCondition=='jyzh'}">selected="selected"</c:if>>交易账卡号</option>
                                             <option value="khxm"<c:if test="${tjsseachCondition=='khxm'}">selected="selected"</c:if>>姓名</option>
                                             <option value="dfzh" <c:if test="${tjsseachCondition=='dfzh'}">selected="selected"</c:if> >对方账号</option>
+                                            <option value="dsxm" <c:if test="${tjsseachCondition=='dfzh'}">selected="selected"</c:if> >对方户名</option>
                                             <option value="jzzje"<c:if test="${tjsseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${tjsseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <%--<option value="sfzhm" <c:if test="${seachCondition=='sfzhm'}">selected="selected"</c:if> >身份证号码</option>--%>
@@ -210,9 +211,9 @@
                             <button onclick="orderByFilter('tjjgs','jysj')">交易时间</button>
                         </td>
                         <td width="7%">
-                            <button onclick="orderByFilter('tjjgs','jyje')">交易金额(元)</button>
+                            <button onclick="orderByFilter('tjjgs','jyje')">交易金额</button>
                         </td>
-                        <td width="7%">交易余额(元)</td>
+                        <td width="7%">交易余额</td>
                         <td width="7%">
                             <button onclick="orderByFilter('tjjgs','sfbz')">收付标志</button>
                         </td>

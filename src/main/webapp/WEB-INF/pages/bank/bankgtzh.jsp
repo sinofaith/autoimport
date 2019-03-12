@@ -57,9 +57,9 @@
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jzzcs">进账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/bankgtzh/order?orderby=jzzje">进账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/bankgtzh/order?orderby=jzzje">进账总金额</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=czzcs">出账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/bankgtzh/order?orderby=czzje">出账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/bankgtzh/order?orderby=czzje">出账总金额</a></td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -75,9 +75,9 @@
                                                 </td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
@@ -133,6 +133,7 @@
                                             <option value="jyzh"<c:if test="${gtseachCondition=='jyzh'}">selected="selected"</c:if>>交易账卡号</option>
                                             <option value="khxm"<c:if test="${gtseachCondition=='khxm'}">selected="selected"</c:if>>姓名</option>
                                             <option value="dfzh" <c:if test="${gtseachCondition=='dfzh'}">selected="selected"</c:if> >对方账户</option>
+                                            <option value="dsxm" <c:if test="${gtseachCondition=='dfzh'}">selected="selected"</c:if> >对方户名</option>
                                             <option value="jzzje"<c:if test="${gtseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${gtseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <%--<option value="sfzhm" <c:if test="${seachCondition=='sfzhm'}">selected="selected"</c:if> >身份证号码</option>--%>
@@ -214,13 +215,13 @@
                             <button onclick="getZzGtlxrByorder('jzzcs')">进账总次数</button>
                         </td>
                         <td width="10%">
-                            <button onclick="getZzGtlxrByorder('jzzje')">进账总金额(元)</button>
+                            <button onclick="getZzGtlxrByorder('jzzje')">进账总金额</button>
                         </td>
                         <td width="7%">
                             <button onclick="getZzGtlxrByorder('czzcs')">出账总次数</button>
                         </td>
                         <td width="10%">
-                            <button onclick="getZzGtlxrByorder('czzje')">出账总金额(元)</button>
+                            <button onclick="getZzGtlxrByorder('czzje')">出账总金额</button>
                         </td>
                     </tr>
                     <input name="label" id="dfkh" hidden="hidden" value="">

@@ -51,9 +51,9 @@
                                         <td width="9%">对方账户</td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzcs">进账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzje">进账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzje">进账总金额</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=czzcs">出账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=czzje">出账总金额(元)</a></td>
+                                        <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=czzje">出账总金额</a></td>
                                         <td width="7%">详情</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
@@ -64,9 +64,9 @@
                                                 <td align="center">${item.dfzh}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
                                                 <td align="center">${item.czzcs}</td>
-                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0.0#"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
                                                 <td align="center">
                                                     <button  data-toggle="modal" data-target="#myModal" onclick="getZzDetails(this)">详情</button>
                                                 </td>
@@ -204,7 +204,7 @@
                         </td>
                         <td width="14%">商户名称</td>
                         <td width="8%">
-                            <button onclick="orderByFilter('jyje')">交易金额(元)</button>
+                            <button onclick="orderByFilter('jyje')">交易金额</button>
                         </td>
                         <td width="13%">
                             <button onclick="orderByFilter('jysj')">交易时间</button>
@@ -213,13 +213,13 @@
                             <button onclick="orderByFilter('fsf')">发送方</button>
                         </td>
                         <td width="8%">
-                            <button onclick="orderByFilter('fsje')">发送金额(元)</button>
+                            <button onclick="orderByFilter('fsje')">发送金额</button>
                         </td>
                         <td width="15%">
                             <button onclick="orderByFilter('jsf')">接收方</button>
                         </td>
                         <td width="8%">
-                            <button onclick="orderByFilter('jsje')">接收金额(元)</button>
+                            <button onclick="orderByFilter('jsje')">接收金额</button>
                         </td>
                     </tr>
                     <input name="label" id="zh" hidden="hidden" value="">
