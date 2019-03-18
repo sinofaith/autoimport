@@ -157,8 +157,7 @@ $(document).ready(function(){
     //     $("#dbfile").val('');
     //     alert("上传成功，请等待处理！");
     // });
-
-
+    //这里给所有ajax请求添加一个complete函数
 });
 
 // function AddCrimeterrace() {
@@ -227,7 +226,6 @@ function seachChange() {
             seachCode.val("")
         }
 }
-
 
 
 //
@@ -311,7 +309,8 @@ function UploadCft() {
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
-        alertify.alert('请选择要上传的文件夹')
+        alertify.set('notifier','position', 'top-center');
+        alertify.success('请选择要上传的文件夹')
         return;
     }
     var aj = $("#aj").val();
@@ -320,7 +319,8 @@ function UploadCft() {
         checkBox=1
     }
     if(aj==''){
-        alertify.alert('请填写案件名称')
+        alertify.set('notifier','position', 'top-center');
+        alertify.error('请填写案件名称')
         return
     }
     var FileController = "/SINOFAITH/uploadCft"; // 接收上传文件的后台地址
@@ -333,7 +333,7 @@ function UploadCft() {
         var index1=fileName.lastIndexOf(".");
         var index2=fileName.length;
         var suffix=fileName.substring(index1,index2);
-        if(suffix==".txt"||suffix==".doc"||suffix==".docx") {
+        if((suffix==".txt"||suffix==".doc"||suffix==".docx")&&fileName.indexOf("~$")!=0) {
             form.append("file", fileObj.files[i]); // 文件对象
         }
     }
@@ -341,11 +341,14 @@ function UploadCft() {
     xhr.open("post", FileController, true);
     xhr.onload = function() {
         if(this.status == 200||this.status == 304){
-            alertify.alert("导入完成!");
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("导入完成!");
             $('#myModal').modal('hide');
             setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
         }else{
-            alertify.alert("错误!请联系管理员")
+            alertify.set('notifier','position', 'top-center');
+            alertify.set('notifier','delay', 0);
+            alertify.error("错误!请联系管理员")
             return
         }
     };
@@ -374,6 +377,7 @@ function progressFunction(evt) {
 }
 
 
+zzbds = /^[\u4E00-\u9FA5\uF900-\uFA2D]*$/
 
 var page = 1
 var is_running = false
@@ -390,7 +394,7 @@ function scrollF() {
                 window.page = page += 1
 
                 var type = ""
-                if (/^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)) {
+                if (!zzbds.test(jylx)) {
                     type = "dfzh"
                 } else {
                     type = "jylx"
@@ -545,7 +549,7 @@ function orderByFilter(filter) {
     var allRow = $("#allRow").val()
     window.page = 1
     var type = ""
-    if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+    if(!zzbds.test(jylx)){
         type="dfzh"
     }else{
         type="jylx"
@@ -600,8 +604,9 @@ function getZzDetails(obj) {
     var jylx = $(obj).closest("tr").find("td:eq(3)").text()
     var sum = $(obj).closest("tr").find("td:eq(4)").text()
     window.page = 1
+
     var type = ""
-    if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+    if(!zzbds.test(jylx)){
         type="dfzh"
     }else{
         type="jylx"
@@ -673,7 +678,7 @@ function downDetailJylx(){
   var jylx =$("#jylx").val();
   var type = ""
 
-    if( /^[a-zA-Z]([-_a-zA-Z0-9])*$/.test(jylx)){
+    if(zzbds.test(jylx)){
         type="dfzh"
     }else{
         type="jylx"
