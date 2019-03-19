@@ -40,6 +40,9 @@ public class ZfbJyjlTjjgsService {
         int rowAll = zfbJyjlTjjgsDao.getRowAll(dc);
         if(rowAll>0){
             List<ZfbJyjlTjjgsEntity> zcxxList = zfbJyjlTjjgsDao.getDoPage(currentPage, pageSize, dc);
+            for (int i =0;i<zcxxList.size();i++) {
+                zcxxList.get(i).setId((currentPage-1)*pageSize+i+1);
+            }
             if(zcxxList!=null){
                 page = new Page();
                 page.setPageNo(currentPage);

@@ -50,7 +50,10 @@ public class MappingUtils {
                     rawValue =cell.getCellFormula();
             }
         }
-        return rawValue;
+        if(rawValue==null)
+            return "";
+        else
+            return rawValue;
     }
 
     /**

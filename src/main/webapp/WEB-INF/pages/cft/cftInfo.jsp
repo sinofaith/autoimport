@@ -7,6 +7,7 @@
 <%--详情模块脚本--%>
 
 <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/build.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/bootstrap-theme.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
@@ -14,6 +15,7 @@
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
+<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
 <script src="<c:url value="/resources/js/cftinfo.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
@@ -188,13 +190,23 @@
                 <span id="percentage" style="color:blue;"></span> <br>
                 <br>
                 <div class="file-box">
-                    文件夹:<input type='text' name='textfield' id='textfield' class='txt'/>
+                    文&nbsp;&nbsp;件&nbsp;&nbsp;夹:<input type='text' name='textfield' id='textfield' class='txt'/>
                     <input type='button' class='btn' value='浏览...' />
                     <input
                         type="file" name="file" webkitdirectory class="file" id="file" size="28"
                         onchange="document.getElementById('textfield').value=this.value;" />
                 <br>
-                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
+                    案&nbsp;&nbsp;件&nbsp;&nbsp;名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
+                    <br>
+                    文件类型:
+                    <div class="radio radio-info radio-inline">
+                        <input type="radio" id="inlineRadio1" value="txt" name="radioInline" checked>
+                        <label for="inlineRadio1"> txt </label>
+                    </div>
+                    <div class="radio radio-inline">
+                        <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
+                        <label for="inlineRadio2"> xls/xlsx </label>
+                    </div>
                     <br>
                     <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">
                     <label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>

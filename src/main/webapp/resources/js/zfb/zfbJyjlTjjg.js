@@ -105,12 +105,12 @@ function insert(data,tbody,dfzh,temp){
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"6%\" title='"+data[i].jyh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyh+"</div></td>"+
-            "<td width=\"8%\" "+(data[i].mjyhId==dfzh?"style=color:red":"")+">"+data[i].mjyhId+"</td>"+
-            "<td width=\"8%\" "+(data[i].mjyhId==dfzh?"style=color:red":"")+" title='"+data[i].mjxx+"'>"+
+            "<td width=\"8%\" "+(data[i].mjyhId==dfzh?"style=color:blue":"")+">"+data[i].mjyhId+"</td>"+
+            "<td width=\"8%\" "+(data[i].mjyhId==dfzh?"style=color:blue":"")+" title='"+data[i].mjxx+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].mjxx+"</div></td>"+
             "<td width=\"4%\">"+data[i].jyzt+"</td>"+
-            "<td width=\"8%\" "+(data[i].mijyhId==dfzh?"style=color:red":"")+">"+data[i].mijyhId+ "</td>"+
-            "<td width=\"8%\" "+(data[i].mijyhId==dfzh?"style=color:red":"")+" title='"+data[i].mijxx+"'>"+
+            "<td width=\"8%\" "+(data[i].mijyhId==dfzh?"style=color:blue":"")+">"+data[i].mijyhId+ "</td>"+
+            "<td width=\"8%\" "+(data[i].mijyhId==dfzh?"style=color:blue":"")+" title='"+data[i].mijxx+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].mijxx+"</div></td>"+
             "<td width=\"7%\">"+data[i].jyje+"</td>"+
             "<td width=\"8%\">"+(data[i].sksj!=null?data[i].sksj:"")+"</td>"+

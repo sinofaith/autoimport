@@ -38,6 +38,9 @@ public class ZfbJyjlTjjgService {
         int rowAll = zfbJyjlTjjgDao.getRowAlls(search,id);
         if(rowAll>0){
             tjjgForms = zfbJyjlTjjgDao.getPage(currentPage, pageSize,search, id, true);
+            for (int i =0;i<tjjgForms.size();i++) {
+                tjjgForms.get(i).setId((currentPage-1)*pageSize+i+1);
+            }
             page.setPageNo(currentPage);
             page.setTotalRecords(rowAll);
             page.setList(tjjgForms);

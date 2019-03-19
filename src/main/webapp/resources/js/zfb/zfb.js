@@ -24,7 +24,6 @@ function UploadZfb() {
     var file = $("#file").val();
     if(file==''){
         alertify.set('notifier','position', 'top-center');
-        alertify.set('notifier','delay', 0);
         alertify.error('请选择要上传的文件夹')
         return;
     }
@@ -48,7 +47,7 @@ function UploadZfb() {
         var index1=fileName.lastIndexOf(".");
         var index2=fileName.length;
         var suffix=fileName.substring(index1,index2);
-        if(suffix=="."+checkVal || (suffix==".xls" && checkVal=="xlsx")) {
+        if(suffix=="."+checkVal || (suffix==".xls" && checkVal==".xlsx")) {
             form.append("file", fileObj.files[i]); // 文件对象
         }
     }
@@ -62,7 +61,7 @@ function UploadZfb() {
     xhr.open("post", FileController, true);
     xhr.onload = function() {
         if(this.status == 200||this.status == 304){
-            if(checkVal=="xlsx"){
+            if(checkVal=="xlsx"||checkVal=="xls"){
                 if($("#c18")!=null){
                     $("#c18").remove();
                 }
@@ -302,7 +301,7 @@ function orderByFilter(filter){
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
-    window.page = 1;
+    page = 1;
     var url = "/SINOFAITH/zfbZzmxTjjg/getDetails";
     $.ajax({
         type:"post",
@@ -374,11 +373,11 @@ function insert(data,tbody,zfbzh,temp){
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"12%\" title='"+data[i].jyh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyh+"</div></td>"+
-            "<td width=\"8%\" "+(data[i].fkfzfbzh==zfbzh?"style=color:red":"")+" title='"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"'>"+
+            "<td width=\"8%\" "+(data[i].fkfzfbzh==zfbzh?"style=color:blue":"")+" title='"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</div></td>"+
             "<td width=\"8%\" title='"+data[i].zzcpmc+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zzcpmc+"</div></td>"+
-            "<td width=\"8%\" "+(data[i].skfzfbzh==zfbzh?"style=color:red":"")+" title='"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"'>"+
+            "<td width=\"8%\" "+(data[i].skfzfbzh==zfbzh?"style=color:blue":"")+" title='"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"</div></td>"+
             "<td width=\"5%\">"+(data[i].skjgxx!=null?data[i].skjgxx:"")+ "</td>"+
             "<td width=\"7%\">"+data[i].dzsj+"</td>"+
@@ -405,6 +404,15 @@ $(function () {
         }
         $.ajax({url:"/SINOFAITH/zfbZzmxTjjg/removeDesc"});
     });
+    $('#myModal2').on('hide.bs.modal', function () {
+        var dataTable = window.document.getElementById("dataTable");
+        page = 1;
+        if(dataTable!=null) {
+            $("#czje").attr("value",'');
+            $("#jzje").attr("value",'');
+            dataTable.innerHTML = "";
+        }
+    });
 });
 
 // 阀值设置
@@ -418,6 +426,7 @@ function seachChange() {
     }
 }
 
+// 输入是否是纯数字
 function isNum(obj){
     var seachCondition = $("#seachCondition").val();
     if(seachCondition === "fkzje" || seachCondition === "skzje" ||

@@ -73,6 +73,9 @@ public class ZfbZzmxTjjgService {
         int rowAll = zfbZzmxTjjgDao.getRowAll(dc);
         if (rowAll > 0) {
             List<ZfbZzmxTjjgEntity> zcxxList = zfbZzmxTjjgDao.getDoPage(currentPage, pageSize, dc);
+            for (int i = 0; i < zcxxList.size(); i++) {
+                zcxxList.get(i).setId((currentPage - 1) * pageSize + i + 1);
+            }
             if (zcxxList != null) {
                 page = new Page();
                 page.setPageNo(currentPage);
@@ -331,8 +334,8 @@ public class ZfbZzmxTjjgService {
             document.add(table);
         }
         // 交易卖家账户信息
-        String columnNames4[] = {"序号", "店铺名", "卖家账号", "账户名称", "交易总次数", "出账总次数",
-                "出账总金额", "进账总次数", "进账总金额"};
+        String columnNames4[] = {"序号", "店铺名", "卖家账号", "账户名称", "交易总次数", "进账总次数",
+                "进账总金额", "出账总次数", "出账总金额"};
         if (jyjlTjjgForms != null && jyjlTjjgForms.size() != 0) {
             createHead(document, "交易卖家账户信息", blackFont, textFont, aj.getAj());
             table = createTable(jyjlTjjgForms, tableFont, tableFont1, boldFont, boldFont1, columnNames4, -1);

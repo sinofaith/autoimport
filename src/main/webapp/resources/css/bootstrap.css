@@ -2324,7 +2324,7 @@ th {
   background-color: #32316b;
 }
 .table-striped > tbody > tr:nth-of-type(even) {
-  background-color: #1d1b59;
+  /*background-color: #1d1b59;*/
 }
 .table-hover > tbody > tr:hover {
   background-color: #0fa792;

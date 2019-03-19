@@ -8,12 +8,16 @@
 <%--详情模块脚本--%>
 
 <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/build.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/bootstrap-theme.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
+<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/cftinfo.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
@@ -63,15 +67,15 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.name}</td>
-                                                <td align="center">${item.zh}</td>
+                                                <td align="center" title="${item.zh}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zh}</div></td>
                                                 <td align="center">${item.jdlx}</td>
                                                 <td align="center">${item.jylx}</td>
                                                 <td align="center">${item.shmc}</td>
                                                 <td align="center">${item.jyje}</td>
                                                 <td align="center">${item.jssj eq null? item.jysj:item.jssj}</td>
-                                                <td align="center">${item.fsf}</td>
+                                                <td align="center" title="${item.fsf}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.fsf}</div></td>
                                                 <td align="center">${item.fsje eq 0 ? "":item.fsje}</td>
-                                                <td align="center">${item.jsf}</td>
+                                                <td align="center" title="${item.jsf}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jsf}</div></td>
                                                 <td align="center">${item.jsje eq 0 ? "":item.jsje}</td>
                                             </tr>
 
@@ -197,15 +201,24 @@
                 <span id="percentage" style="color:blue;"></span> <br>
                 <br>
                 <div class="file-box">
-                    文件夹:<input type='text' name='textfield' id='textfield' class='txt' />
+                    文&nbsp;&nbsp;件&nbsp;&nbsp;夹:<input type='text' name='textfield' id='textfield' class='txt' />
                     <input type='button' class='btn' value='浏览...' />
                     <input
                             type="file" name="file" webkitdirectory class="file" id="file" size="28"
                             onchange="document.getElementById('textfield').value=this.value;" />
                     <br>
-                    案件名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
+                    案&nbsp;&nbsp;件&nbsp;&nbsp;名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
                     <input type="submit" name="submit" class="btn" value="上传"
-                           onclick="UploadCft()" />
+                           onclick="UploadCft()" /><br>
+                    文件类型:
+                    <div class="radio radio-info radio-inline">
+                        <input type="radio" id="inlineRadio1" value="txt" name="radioInline" checked>
+                        <label for="inlineRadio1"> txt </label>
+                    </div>
+                    <div class="radio radio-inline">
+                        <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
+                        <label for="inlineRadio2"> xls/xlsx </label>
+                    </div>
                     <br>
                     <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">
                     <label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>
@@ -222,5 +235,120 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal -->
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">多文件字段映射</h4>
+            </div>
+            <div class="modal-body" >
+                <div class="form-group">
+                    <div class="row" style="width: 600px;">
+                        <span class="col-md-1" id="excelName" style="width: 350px;">
+                            <label for="excelName">Excel名</label>
+                        </span>
+                        <span class="col-md-1" id="excelSheet" style="width: 200px;">
+                            <label for="excelSheet">Sheet名</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div id="roll" style="overflow-x: auto; overflow-y: auto; height: 100px; width:1300px;">
+                        <table id="head" class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc;">
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <label for="c1">账号</label>
+                            <select	 id="c1" placeholder="账号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c2">交易单号</label>
+                            <select	 id="c2" placeholder="交易单号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c3">借贷类型</label>
+                            <select	 id="c3" placeholder="借贷类型" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c4">交易类型</label>
+                            <select	 id="c4" placeholder="交易类型" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c5">交易金额</label>
+                            <select	id="c5" placeholder="交易金额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c6">账户余额</label>
+                            <select	id="c6" placeholder="账户余额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c7">交易时间</label>
+                            <select id="c7" placeholder="交易时间" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c8">银行类型</label>
+                            <select	id="c8" placeholder="银行类型" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c9">交易说明</label>
+                            <select id="c9" placeholder="交易说明" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c10">商户名称</label>
+                            <select	id="c10" placeholder="商户名称" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c11">发送方</label>
+                            <select	id="c11" placeholder="发送方" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c12">发送金额</label>
+                            <select	id="c12" placeholder="发送金额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c13">接收方</label>
+                            <select	id="c13" placeholder="接收方" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c14">接收时间</label>
+                            <select	id="c14" placeholder="接收时间" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c15">接收金额</label>
+                            <select	id="c15" placeholder="接收金额" onchange="selectC()">
+                            </select>
+                        </div>
+                    </div>
+                    <button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextSelect()">下一个</button>
+                    <button id="mapping" type="button" style="margin-left: 1280px" class="btn btn-primary" onclick="uploadMapping()">提交映射</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="uploadCftExcel()">导入数据</button>
+            </div>
+        </div>
+    </div>
 </div>
 <%@include file="../template/newfooter.jsp" %>

@@ -250,7 +250,9 @@ a:hover{ transition: color 0.2s;}
 }
 
 .sideBar_r_button{ padding:2px 10px;  background: #aaa; width: 45%; color:#fff;}
+.sideBar_l_button{ margin-top: 3px; padding:2px 10px;  background: #aaa; width: 45%; color:#fff;}
 .sideBar_r_button:hover{background-color: #2dbd9e;}
+.sideBar_l_button:hover{background-color: #2dbd9e;}
 .page_nmber{ width: 100%; text-align: center; display: block; font-size: 12px;}
 .page_nmber div{ margin-bottom: 10px;}
 .page_nmber a{color: #333; margin: 0 3px; padding:  5px;  font-size: 12px !important;}

@@ -25,7 +25,7 @@
 <script src="<c:url value="/resources/js/echars/dataTool.min.js"/> "></script>
 <script src="<c:url value="/resources/js/echars/china.js"/> "></script>
 <script src="<c:url value="/resources/js/echars/world.js"/> "></script>
-<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<%--<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>--%>
 <script src="<c:url value="/resources/js/echars/bmap.min.js"/> "></script>
 <script src="<c:url value="/resources/js/echars/simplex.js"/> "></script>
 

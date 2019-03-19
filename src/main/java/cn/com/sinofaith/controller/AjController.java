@@ -104,7 +104,7 @@ public class AjController {
         } else if(type==4){
             mav = new ModelAndView("redirect:/pyramidSale/seach?pageNo=1");
         } else if(type==5){
-            mav = new ModelAndView("redirect:/zfbZzmx?flag=a3");
+            mav = new ModelAndView("redirect:/zfbZhmx?flag=a2");
         }
 
         httpSession.removeAttribute("zcseachCode");

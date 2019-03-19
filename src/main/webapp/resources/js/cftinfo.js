@@ -305,25 +305,29 @@ function cftSkip(code){
 //     window.open("http://10.38.14.209.83:9000/matrix2.html#" + check_val);
 // }
 
+var optionSize;
 function UploadCft() {
+    optionSize = 0;
+    var checkVal = $('input[name="radioInline"]:checked').val();
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
     if(file==''){
         alertify.set('notifier','position', 'top-center');
-        alertify.success('请选择要上传的文件夹')
+        alertify.alert('请选择要上传的文件夹')
         return;
     }
     var aj = $("#aj").val();
-    var checkBox = 0
+    var checkBox = 0;
     if($("#checkbox1").is(':checked')){
         checkBox=1
     }
     if(aj==''){
         alertify.set('notifier','position', 'top-center');
-        alertify.error('请填写案件名称')
+        alertify.set('notifier','delay', 0);
+        alertify.error('请填写案件名称');
         return
     }
-    var FileController = "/SINOFAITH/uploadCft"; // 接收上传文件的后台地址
+    var FileController = "/SINOFAITH/uploadCft"+checkVal; // 接收上传文件的后台地址
     // FormData 对象
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
@@ -333,51 +337,230 @@ function UploadCft() {
         var index1=fileName.lastIndexOf(".");
         var index2=fileName.length;
         var suffix=fileName.substring(index1,index2);
-        if((suffix==".txt"||suffix==".doc"||suffix==".docx")&&fileName.indexOf("~$")!=0) {
+        if(fileName.indexOf("~$") != 0 && (suffix=="."+checkVal || (suffix==".xls" && checkVal==".xlsx"))) {
             form.append("file", fileObj.files[i]); // 文件对象
         }
+    }
+    // 上传文件为空
+    if(form.get("file")==null){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("请至少上传一个选择的"+checkVal+"文件!");
+        return;
     }
     var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
     xhr.open("post", FileController, true);
     xhr.onload = function() {
         if(this.status == 200||this.status == 304){
-            alertify.set('notifier','position', 'top-center');
-            alertify.success("导入完成!");
-            $('#myModal').modal('hide');
-            setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
+            if(checkVal == 'txt'){
+                alertify.set('notifier','position', 'top-center');
+                alertify.success("导入完成!");
+                $('#myModal').modal('hide');
+                setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
+            }else if(checkVal == 'xlsx'){
+                if($("#c18")!=null){
+                    $("#c18").remove();
+                }
+                var resp = xhr.responseText;
+                keyList = JSON.parse(resp);
+                for(var key in keyList){
+                    optionSize++;
+                }
+                var jsonData = JSON.stringify(resp);
+                var data = $.parseJSON(jsonData);
+                var temp = true;
+                $("#excelName").append("<select class=\"form-control\" id=\"c18\" name=\"custSource\" onchange='insertSheet("+data+")'>");
+                for(var key in keyList){
+
+                    if(temp){
+                        $("#c18").append("<option value='"+key+"' selected='selected'>"+key+"</option></select>");
+                        $("#c18").load(insertSheet(keyList));
+                        temp = false;
+                    }else{
+                        $("#c18").append("<option value='"+key+"'>"+key+"</option></select>");
+                    }
+                }
+                $('#myModal').modal('hide');
+                $('#myModal1').modal('show');
+            }
         }else{
             alertify.set('notifier','position', 'top-center');
             alertify.set('notifier','delay', 0);
-            alertify.error("错误!请联系管理员")
-            return
+            alertify.error("错误!请联系管理员");
+            return;
         }
     };
     xhr.upload.addEventListener("progress", progressFunction, false);
     xhr.send(form);
 }
 
+// 拼接sheet字符
+function insertSheet(data){
+    if($("#c19")!=null){
+        $("#c19").remove();
+    }
+    var excelName = $("#c18").val();
+    var sheetName  = data[excelName];
+    var jsonData = JSON.stringify(sheetName);
+    $("#excelSheet").append("<select class=\"form-control\" id=\"c19\" name=\"custSource\" onchange='insertTable("+jsonData+")'></select>");
+    var temp = true;
+    for(var key in sheetName){
+        if(temp){
+            $("#c19").append("<option value='"+key+"' selected>"+key+"</option>");
+            $("#c19").load(insertTable(sheetName));
+            temp = false;
+        }else{
+            $("#c19").append("<option value='"+key+"'>"+key+"</option>");
+        }
+    }
+}
+
+// 拼接table
+function insertTable(sheetName){
+    var sel = document.getElementById("c18");
+    var index = sel.selectedIndex;
+    var selectLength = sel.length-1;
+    if((selectLength==index && selectLength!=0) || optionSize==1){
+        $("#nextSelect").attr("disabled",true);
+    }else{
+        $("#nextSelect").attr("disabled",false);
+    }
+    var key = $("#c19").val();
+    $("#head").empty();
+    var size = Math.ceil(sheetName[key].length/2);
+    var content = "<thead style=\"display:table;width: 350%;table-layout:fixed;\">";
+    content += "<tr align=\"center\">";
+    for(j=1;j<16;j++){
+        $("#c"+j).empty();
+        $("#c"+j).append("<option value=\"无\" selected>无</option>")
+    }
+    for(i=0;i<size;i++){
+        content += "<td width='10%' title='"+sheetName[key][i]+"'><div style='width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;'>"+sheetName[key][i]+"</div></td>";
+        for(j=1;j<16;j++){
+            if((sheetName[key][i].indexOf("付款支付帐号")!=-1&&j==1) ||(sheetName[key][i].indexOf("交易流水号")!=-1&&j==2&&sheetName[key][i]!="*银行外部渠道交易流水号")||
+                (sheetName[key][i].indexOf("*交易主体的出入账标识")!=-1&&j==3) ||(sheetName[key][i].indexOf("交易类型")!=-1&&j==4)||
+                (sheetName[key][i].indexOf("交易金额")!=-1&&j==5)||(sheetName[key][i].indexOf("交易余额")!=-1&&j==6)||
+                (sheetName[key][i].indexOf("交易时间")!=-1&&j==7) || (sheetName[key][i].indexOf("银行类型")!=-1&&j==8)||
+                (sheetName[key][i].indexOf("交易说明")!=-1&&j==9) || (sheetName[key][i].indexOf("商户名称")!=-1&&j==10)||
+                (sheetName[key][i].indexOf("付款支付帐号")!=-1&&j==11) || (sheetName[key][i].indexOf("交易金额")!=-1&&j==12)||
+                (sheetName[key][i].indexOf("收款支付帐号")!=-1&&j==13) || (sheetName[key][i].indexOf("接收时间")!=-1&&j==14)||
+                (sheetName[key][i].indexOf("接收金额")!=-1&&j==15)){
+                $("#c"+j).append("<option value='"+sheetName[key][i]+"' selected>"+sheetName[key][i]+"</option>");
+            }else{
+                $("#c"+j).append("<option value='"+sheetName[key][i]+"'>"+sheetName[key][i]+"</option>");
+            }
+        }
+    }
+    for(j=1;j<16;j++){
+        $("#c"+j).selectOrDie();
+        $("#c"+j).selectOrDie("update");
+    }
+    content += "</tr></thead>";
+    var tbody = "<tbody style=\"display:table;width: 350%;table-layout:fixed;\"><tr align='center'>";
+    for(var i=size;i<sheetName[key].length;i++){
+        tbody += "<td width=\"10%\" title='"+sheetName[key][i]+"'><div style='width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;'>"+sheetName[key][i]+"</div></td>";
+    }
+    tbody += "</tr></tbody>";
+    $("#head").append(content);
+    $("#head").append(tbody);
+    $("#mapping").attr("disabled",false);
+}
+
+// 封装参数
+var excelData = [];
+function uploadMapping(){
+    var fieldList = [];
+    var excelName = $("#c18").val();
+    fieldList.push(excelName);
+    var excelSheet = $("#c19").val();
+    fieldList.push(excelSheet);
+    for(i=1;i<16;i++){
+        fieldList.push($("#c"+i).val());
+    }
+    if(excelData.length>0){
+        for(j=0;j<excelData.length;j++){
+            var field = excelData[j];
+            if(field[0]==fieldList[0]&&field[1]==fieldList[1]){
+                excelData[j] = fieldList;
+                break;
+            }else if(j==excelData.length-1){
+                excelData.push(fieldList);
+            }
+        }
+    }else{
+        excelData.push(fieldList);
+    }
+    $("#mapping").attr("disabled",true);
+    alertify.set('notifier','position', 'top-center');
+    alertify.success(excelSheet+"</br>"+"映射成功!");
+}
+
+//导入数据
+function uploadCftExcel() {
+    if(excelData.length<1){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("请至少设置一个字段映射!");
+        return;
+    }
+    var list = JSON.stringify(excelData);
+    $.ajax({
+        type:"post",
+        url:"/SINOFAITH/uploadCftExcel",
+        contentType : 'application/json;charset=utf-8',
+        data:list,
+        success:function (data) {
+            if(data=="200"){
+                alertify.set('notifier','position', 'top-center');
+                alertify.success("导入完成!");
+                setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
+            }else{
+                alertify.set('notifier','position', 'top-center');
+                alertify.set('notifier','delay', 0);
+                alertify.error("错误!请联系管理员");
+                return;
+            }
+        },
+        dataType:"json"
+    });
+    alertify.set('notifier','position', 'top-center');
+    alertify.set('notifier','delay', 0);
+    alertify.success("正在导入数据，请等待.....");
+}
+
+// 下一个
+function nextSelect(){
+    var sel = document.getElementById("c18");
+    var index = sel.selectedIndex;
+    var selectLength = sel.length-1;
+    if(index<sel.length-1){
+        sel[index+1].selected=true;
+    }
+    insertSheet(keyList);
+    if(selectLength==index+1){
+        $("#nextSelect").attr("disabled",true);
+    }
+}
+
+// 改变映射字段后
+function selectC() {
+    $("#mapping").attr("disabled",false);
+}
+
 function progressFunction(evt) {
-
     var progressBar = document.getElementById("progressBar");
-
     var percentageDiv = document.getElementById("percentage");
-
     if (evt.lengthComputable) {
-
         progressBar.max = evt.total;
-
         progressBar.value = evt.loaded;
-
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
-
         if((evt.loaded/evt.total) ==1 ){
-            alertify.alert("文件夹上传成功\n请等待数据导入...");
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("文件夹上传成功\n等待导入/映射");
         }
     }
 }
 
 
-zzbds = /^[\u4E00-\u9FA5\uF900-\uFA2D]*$/
+zzbds = /^[\u4E00-\u9FA5\uF900-\uFA2D]/
 
 var page = 1
 var is_running = false
@@ -421,18 +604,22 @@ function scrollF() {
                             } else {
                                 str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                             }
-                                str+="<td width=\"4%\">" + data[i].id + "</td>" +
-                                "<td width=\"5%\">" + data[i].name + "</td>" +
-                                "<td width=\"15%\">" + data[i].zh + "</td>" +
-                                "<td width=\"6%\">" + data[i].jdlx + "</td>" +
-                                "<td width=\"10%\">" + data[i].jylx + "</td>" +
-                                "<td width=\"14%\">" + data[i].shmc + "</td>" +
-                                "<td width=\"8%\">" + data[i].jyje + "</td>" +
-                                "<td width=\"13%\">" + data[i].jysj + "</td>" +
-                                "<td width=\"15%\">" + data[i].fsf + "</td>" +
-                                "<td width=\"8%\">" + data[i].fsje + "</td>" +
-                                "<td width=\"15%\">" + data[i].jsf + "</td>" +
-                                "<td width=\"8%\">" + data[i].jsje + "</td>" +
+                            str+="<td width=\"4%\">"+data[i].id+"</td>"+
+                                "<td width=\"5%\">"+data[i].name+"</td>"+
+                                "<td width=\"15%\" title='"+(data[i].zh!=null?data[i].zh:"")+"'>"+
+                                "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].zh!=null?data[i].zh:"")+"</div></td>"+
+                                "<td width=\"6%\">"+data[i].jdlx+"</td>"+
+                                "<td width=\"10%\">"+data[i].jylx+"</td>"+
+                                "<td width=\"14%\" title='"+(data[i].shmc!=null?data[i].shmc:"")+"'>"+
+                                "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].shmc!=null?data[i].shmc:"")+"</div></td>"+
+                                "<td width=\"8%\">"+data[i].jyje+"</td>"+
+                                "<td width=\"13%\">"+data[i].jysj+"</td>"+
+                                "<td width=\"15%\" title='"+(data[i].fsf!=null?data[i].fsf:"")+"'>"+
+                                "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fsf!=null?data[i].fsf:"")+"</div></td>"+
+                                "<td width=\"8%\">"+data[i].fsje+"</td>"+
+                                "<td width=\"15%\" title='"+(data[i].jsf!=null?data[i].jsf:"")+"'>"+
+                                "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].jsf!=null?data[i].jsf:"")+"</div></td>"+
+                                "<td width=\"8%\">"+data[i].jsje+"</td>"+
                                 "</tr>";
                         }
                         $("#result").append(str)
@@ -578,15 +765,19 @@ function orderByFilter(filter) {
                 }
                 str+="<td width=\"4%\">"+data[i].id+"</td>"+
                     "<td width=\"5%\">"+data[i].name+"</td>"+
-                    "<td width=\"15%\">"+data[i].zh+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].zh!=null?data[i].zh:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].zh!=null?data[i].zh:"")+"</div></td>"+
                     "<td width=\"6%\">"+data[i].jdlx+"</td>"+
                     "<td width=\"10%\">"+data[i].jylx+"</td>"+
-                    "<td width=\"14%\">"+data[i].shmc+"</td>"+
+                    "<td width=\"14%\" title='"+(data[i].shmc!=null?data[i].shmc:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].shmc!=null?data[i].shmc:"")+"</div></td>"+
                     "<td width=\"8%\">"+data[i].jyje+"</td>"+
                     "<td width=\"13%\">"+data[i].jysj+"</td>"+
-                    "<td width=\"15%\">"+data[i].fsf+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].fsf!=null?data[i].fsf:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fsf!=null?data[i].fsf:"")+"</div></td>"+
                     "<td width=\"8%\">"+data[i].fsje+"</td>"+
-                    "<td width=\"15%\">"+data[i].jsf+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].jsf!=null?data[i].jsf:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].jsf!=null?data[i].jsf:"")+"</div></td>"+
                     "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
@@ -641,17 +832,21 @@ function getZzDetails(obj) {
                 }else{
                     str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                 }
-                    str+="<td width=\"4%\">"+data[i].id+"</td>"+
+                str+="<td width=\"4%\">"+data[i].id+"</td>"+
                     "<td width=\"5%\">"+data[i].name+"</td>"+
-                    "<td width=\"15%\">"+data[i].zh+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].zh!=null?data[i].zh:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].zh!=null?data[i].zh:"")+"</div></td>"+
                     "<td width=\"6%\">"+data[i].jdlx+"</td>"+
                     "<td width=\"10%\">"+data[i].jylx+"</td>"+
-                    "<td width=\"14%\">"+data[i].shmc+"</td>"+
+                    "<td width=\"14%\" title='"+(data[i].shmc!=null?data[i].shmc:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].shmc!=null?data[i].shmc:"")+"</div></td>"+
                     "<td width=\"8%\">"+data[i].jyje+"</td>"+
                     "<td width=\"13%\">"+data[i].jysj+"</td>"+
-                    "<td width=\"15%\">"+data[i].fsf+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].fsf!=null?data[i].fsf:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fsf!=null?data[i].fsf:"")+"</div></td>"+
                     "<td width=\"8%\">"+data[i].fsje+"</td>"+
-                    "<td width=\"15%\">"+data[i].jsf+"</td>"+
+                    "<td width=\"15%\" title='"+(data[i].jsf!=null?data[i].jsf:"")+"'>"+
+                    "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].jsf!=null?data[i].jsf:"")+"</div></td>"+
                     "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }

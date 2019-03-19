@@ -214,7 +214,6 @@
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <button class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/createPDF'"</c:if>>生成PDF报告文档</button>
                            <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/download'"</c:if>>数据导出</button>
                        </span>
                                     </div>
@@ -268,6 +267,7 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <span style="position:absolute;width:250px;height:20px;margin-left: -1250px;color: blue;font-size: 13px">提示：蓝色标注为已调单账户</span>
                 <button type="button" class="btn btn-default" onclick="downDetailInfo()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>

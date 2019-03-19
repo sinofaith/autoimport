@@ -69,6 +69,9 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
             String time = TimeFormatUtil.getDate("/");
             for(int i=0;i<listZzxx.size();i++){
                 zzxx = listZzxx.get(i);
+                if("".equals(zzxx.getZh()) ||("".equals(zzxx.getFsf()) && "".equals(zzxx.getJsf()))){
+                    continue;
+                }
                 pstm.setString(1,zzxx.getZh());
                 pstm.setString(2,zzxx.getJydh());
                 pstm.setString(3,zzxx.getJdlx());
@@ -91,12 +94,12 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
                     pstm.executeBatch();
                     con.commit();
                 }
+                a++;
             }
             pstm.executeBatch();
             con.commit();
             DBUtil.closeStatement(pstm);
             DBUtil.closeConnection(con);
-            a=listZzxx.size();
 //            con.close();
             listZzxx.clear();
 //            newList.clear();

@@ -74,7 +74,7 @@ public class UploadController {
     @Autowired
     private AjServices ajs;
 
-    @RequestMapping(value = "/uploadCft",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/uploadCfttxt",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                                    @RequestParam("checkBox") long checkBox, HttpServletRequest request){
@@ -129,53 +129,87 @@ public class UploadController {
             result = "";
         }
         request.getSession().setAttribute("aj",aje);
-        System.out.println(System.currentTimeMillis()-start);
         return result;
     }
 
-    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String,Map<String,List<String>>> uploadBank(@RequestParam("file") List<MultipartFile> file, HttpServletRequest req) {
-        String uploadPath = req.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
-        String filePath ="";
-        String fileName="";
-        String result = "";
+    /**
+     * 财付通字段映射
+     * @param file
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/uploadCftxlsx",method = RequestMethod.POST)
+    public @ResponseBody Map<String,Map<String,List<String>>> fieldMappingCft(@RequestParam("file") List<MultipartFile> file,
+                     @RequestParam("aj") String aj,@RequestParam("checkBox") long checkBox,HttpServletRequest req){
+        // 创建一个路径
+        String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
+        String filePath = "";
+        String fileName = "";
         File uploadFile = null;
         File uploadPathd = new File(uploadPath);
-        if(!uploadPathd.exists()){
+        if (!uploadPathd.exists()) {
             uploadPathd.mkdirs();
         }
-        for(int i=0;i<file.size();i++){
-            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+        // 将文件上传到服务器
+        for(int i=0;i<file.size();i++) {
+            fileName = file.get(i).getOriginalFilename();
             filePath = uploadPath + fileName;
-            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
-
+            if(filePath.endsWith(".xlsx") || filePath.endsWith(".xls")){
                 uploadFile = new File(filePath);
                 try {
-                    if(fileName.contains("开户")||fileName.contains("交易明细")) {
-                        file.get(i).transferTo(uploadFile);
-                    }
+                    file.get(i).transferTo(uploadFile);
                 }catch (IOException e){
                     e.printStackTrace();
                 }
             }
         }
-
+        AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
-            req.getSession().setAttribute("bankPath",uploadPath);
-            Map<String,Map<String,List<String>>> excelMap = bzs.readExcel(uploadPath);
-            if(excelMap!=null){
-                return excelMap;
+            if (aje.getFlg() != checkBox) {
+                aje.setFlg(checkBox);
+                ajs.updateAj(aje);
             }
+        }
+        req.getSession().setAttribute("cftPath",uploadPath);
+        // 读取服务器的excel表
+        Map<String,Map<String,List<String>>> excelMap = zfbZzmxService.readExcel(uploadPath);
+        if(excelMap!=null){
+            return excelMap;
         }
         return null;
     }
 
-//    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    /**
+     * 财付通数据存入数据库
+     * @param field
+     * @return
+     */
+    @RequestMapping(value = "/uploadCftExcel",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public @ResponseBody String uploadCftExcel(@RequestBody List<List<String>> field, HttpSession session) {
+        // 读取域中数据
+        String path = (String) session.getAttribute("cftPath");
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 将数据插入数据库
+        int sum = zzs.insertCft(path,field,aj.getId());
+        // 删除文件
+//        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(path);
+        zzs.deleteFile(uploadPathd);
+        // 统计数据
+        List<CftZzxxEntity> listZzxx = zzs.getAll(aj.getId(),aj.getFlg());
+        tjs.count(listZzxx,aj.getId());
+        tjss.count(listZzxx,aj.getId());
+        if(sum>0){
+            return "200";
+        } else {
+            return "400";
+        }
+    }
+
+//    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST)
 //    @ResponseBody
-//    public String uploadBank(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
-//                             HttpServletRequest request) {
-//        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
+//    public Map<String,Map<String,List<String>>> uploadBank(@RequestParam("file") List<MultipartFile> file, HttpServletRequest req) {
+//        String uploadPath = req.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
 //        String filePath ="";
 //        String fileName="";
 //        String result = "";
@@ -188,40 +222,79 @@ public class UploadController {
 //            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
 //            filePath = uploadPath + fileName;
 //            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+//
 //                uploadFile = new File(filePath);
 //                try {
-//                    file.get(i).transferTo(uploadFile);
+//                    if(fileName.contains("开户")||fileName.contains("交易明细")) {
+//                        file.get(i).transferTo(uploadFile);
+//                    }
 //                }catch (IOException e){
 //                    e.printStackTrace();
 //                }
 //            }
 //        }
-//        int a = 0;
-//        int b = 0;
 //
-//        AjEntity aje = ajs.findByName(aj).get(0);
 //        if(uploadPathd.listFiles()!=null) {
-//            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
-//            us.insertBankZcxx(uploadPath,aje.getId());
-//            us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
-//            us.deleteAll(uploadPath);
-//            uploadPathd.delete();
-//            listZzxx = bzs.getAll(aje.getId());
-//            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
-//            listZzxx = new ArrayList<>(setB);
-//            setB = null;
-//            btjs.count(listZzxx,aje.getId());
-//            btjss.count(listZzxx,aje.getId());
+//            req.getSession().setAttribute("bankPath",uploadPath);
+//            Map<String,Map<String,List<String>>> excelMap = bzs.readExcel(uploadPath);
+//            if(excelMap!=null){
+//                return excelMap;
+//            }
 //        }
-//
-//        if(a+b>0){
-//            result = String.valueOf(a+b);
-//        }else {
-//            result = "";
-//        }
-//        request.getSession().setAttribute("aj",aje);
-//        return result;
+//        return null;
 //    }
+
+    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String uploadBank(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+                             HttpServletRequest request) {
+        String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
+        String filePath ="";
+        String fileName="";
+        String result = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if(!uploadPathd.exists()){
+            uploadPathd.mkdirs();
+        }
+        for(int i=0;i<file.size();i++){
+            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        int a = 0;
+        int b = 0;
+
+        AjEntity aje = ajs.findByName(aj).get(0);
+        if(uploadPathd.listFiles()!=null) {
+            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
+            us.insertBankZcxx(uploadPath,aje.getId());
+            us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
+            us.deleteAll(uploadPath);
+            uploadPathd.delete();
+            listZzxx = bzs.getAll(aje.getId());
+            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+            listZzxx = new ArrayList<>(setB);
+            setB = null;
+            btjs.count(listZzxx,aje.getId());
+            btjss.count(listZzxx,aje.getId());
+        }
+
+        if(a+b>0){
+            result = String.valueOf(a+b);
+        }else {
+            result = "";
+        }
+        request.getSession().setAttribute("aj",aje);
+        return result;
+    }
 
     /**
      * 物流字段映射
@@ -282,8 +355,8 @@ public class UploadController {
         // wuliu_sj表添加数据
         wlsjService.insertSj(aj.getId());
         // 删除文件
-        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
-        File uploadPathd = new File(uploadPath);
+//        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(path);
         wjs.deleteFile(uploadPathd);
         if(sum>0){
             return "200";
@@ -348,8 +421,8 @@ public class UploadController {
         // 插入计算会员当前层级和推荐路径数据
         int sum1 = pyramidSaleService.insertPsHierarchy(aj.getId());
         // 删除文件
-        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
-        File uploadPathd = new File(uploadPath);
+//        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(path);
         pyramidSaleService.deleteFile(uploadPathd);
         if(sum>0 && sum1>0){
             return "200";
@@ -462,8 +535,8 @@ public class UploadController {
         // 将数据插入数据库
         int sum = zfbZzmxService.insertZfb(path,field,aj.getId());
         // 删除文件
-        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
-        File uploadPathd = new File(uploadPath);
+//        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
+        File uploadPathd = new File(path);
         zfbZzmxService.deleteFile(uploadPathd);
         if(sum>0){
             return "200";

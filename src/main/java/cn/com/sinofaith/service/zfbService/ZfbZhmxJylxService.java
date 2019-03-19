@@ -41,6 +41,9 @@ public class ZfbZhmxJylxService {
         int rowAll = zfbZhmxJylxDao.getRowAll(dc);
         if(rowAll>0){
             List<ZfbZhmxJylxEntity> zhmxJylx = zfbZhmxJylxDao.getDoPage(currentPage, pageSize, dc);
+            for (int i = 0; i < zhmxJylx.size(); i++) {
+                zhmxJylx.get(i).setId((currentPage - 1) * pageSize + i + 1);
+            }
             if(zhmxJylx!=null){
                 page = new Page();
                 page.setPageNo(currentPage);

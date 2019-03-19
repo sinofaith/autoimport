@@ -123,10 +123,10 @@ function insert(data,tbody,zfbzh,temp){
         str+="<td width=\"3%\">"+data[i].id+"</td>"+
             "<td width=\"14%\" title='"+data[i].jyh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyh+"</div></td>"+
-            "<td width=\"10%\" "+(data[i].fkfzfbzh==zfbzh?"style=color:red":"")+" title='"+data[i].fkfzfbzh+"'>"+
+            "<td width=\"10%\" "+(data[i].fkfzfbzh==zfbzh?"style=color:blue":"")+" title='"+data[i].fkfzfbzh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].fkfzfbzh!=null?data[i].fkfzfbzh:"")+"</div></td>"+
             "<td width=\"8%\">"+data[i].zzcpmc+"</td>"+
-            "<td width=\"10%\" "+(data[i].skfzfbzh==zfbzh?"style=color:red":"")+" title='"+data[i].skfzfbzh+"'>"+
+            "<td width=\"10%\" "+(data[i].skfzfbzh==zfbzh?"style=color:blue":"")+" title='"+data[i].skfzfbzh+"'>"+
             "<div style=\"width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+(data[i].skfzfbzh!=null?data[i].skfzfbzh:"")+"</div></td>"+
             "<td width=\"5%\">"+(data[i].skjgxx!=null?data[i].skjgxx:"")+"</td>"+
             "<td width=\"7%\">"+data[i].dzsj+"</td>"+

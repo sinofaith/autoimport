@@ -207,6 +207,7 @@
                 </table>
             </div>
             <div class="modal-footer">
+                <span style="position:absolute;width:250px;height:20px;margin-left: -1250px;color: blue;font-size: 13px">提示：蓝色标注为已调单账户</span>
                 <button type="button" class="btn btn-default" onclick="downJyjlTjjgDetailInfo()">导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>

@@ -32,7 +32,7 @@ public class CftTjjgEntity implements Serializable {
         this.id = id;
     }
     @Id
-    @Column(name = "jyzh",nullable = false,length = 30)
+    @Column(name = "jyzh",nullable = false,length = 100)
     public String getJyzh() {
         return jyzh;
     }
@@ -42,7 +42,7 @@ public class CftTjjgEntity implements Serializable {
     }
 
     @Id
-    @Column(name="jylx",nullable = false,length = 20)
+    @Column(name="jylx",nullable = false,length = 100)
     public String getJylx() {
         return jylx;
     }

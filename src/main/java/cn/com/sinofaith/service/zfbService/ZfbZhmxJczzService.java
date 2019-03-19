@@ -38,6 +38,9 @@ public class ZfbZhmxJczzService {
         int rowAll = zfbZhmxJczzDao.getRowAll(dc);
         if(rowAll>0){
             List<ZfbZhmxJczzEntity> jczzList = zfbZhmxJczzDao.getDoPage(currentPage, pageSize, dc);
+            for (int i = 0; i < jczzList.size(); i++) {
+                jczzList.get(i).setId((currentPage - 1) * pageSize + i + 1);
+            }
             if(jczzList!=null){
                 page = new Page();
                 page.setPageSize(pageSize);

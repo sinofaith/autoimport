@@ -3,6 +3,7 @@ package cn.com.sinofaith.form.zfbForm;
 import java.math.BigDecimal;
 
 public class ZfbJyjlTjjgForm {
+    private int id;
     private String dfzh;
     private String dfmc;
     private String dyxcsj;
@@ -74,6 +75,14 @@ public class ZfbJyjlTjjgForm {
 
     public void setSkzje(BigDecimal skzje) {
         this.skzje = skzje;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
