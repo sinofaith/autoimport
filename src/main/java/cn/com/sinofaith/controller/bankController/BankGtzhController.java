@@ -42,6 +42,22 @@ public class BankGtzhController {
         return mav;
     }
 
+    @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String removeDesc(HttpSession ses){
+        ses.removeAttribute("dddesc");
+        return "200";
+    }
+
+    @RequestMapping(value = "/seachByUrl")
+    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");
+        ses.setAttribute("gtseachCondition","jyzh");
+        ses.setAttribute("gtseachCode",yhkkh.replace("#",""));
+        ses.setAttribute("hcode",0);
+        return mav;
+    }
+
     @RequestMapping(value = "/order")
     public ModelAndView order(@RequestParam("orderby") String orderby, HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");

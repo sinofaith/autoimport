@@ -554,7 +554,8 @@ function progressFunction(evt) {
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
         if((evt.loaded/evt.total) ==1 ){
             alertify.set('notifier','position', 'top-center');
-            alertify.success("文件夹上传成功\n等待导入/映射");
+            alertify.set('notifier','delay', 0);
+            alertify.success("文件夹上传成功\n请等待数据导入...");
         }
     }
 }
@@ -635,7 +636,7 @@ function scrollF() {
 }
 
 function getZzGtlxrByorder(filter) {
-    var tbody = window.document.getElementById("result")
+    var tbody = window.document.getElementById("result1")
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
@@ -664,17 +665,17 @@ function getZzGtlxrByorder(filter) {
                     "<td width=\"7%\">" + data[i].name + "</td>" +
                     "<td width=\"9%\">" + data[i].jyzh + "</td>" +
                     "<td width=\"9%\">" + data[i].dfzh + "</td>" +
-                    "<td width=\"8%\">" + data[i].count + "</td>" +
                     "<td width=\"8%\">" + data[i].jyzcs + "</td>" +
                     "<td width=\"8%\">" + data[i].jzzcs + "</td>" +
                     "<td width=\"10%\">" + data[i].jzzje + "</td>" +
                     "<td width=\"8%\">" + data[i].czzcs + "</td>" +
                     "<td width=\"10%\">" + data[i].czzje + "</td>" +
+                    "<td width=\"5%\"><button  data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"getZzDetails(this)\">详情</button></td>"+
                     "</tr>";
             }
             tbody.innerHTML = str
             $("#dfzh").attr("value", dfzh);
-            $("#allRow").attr("value", msg.totalRecords)
+            $("#allRow1").attr("value", msg.totalRecords)
         }
     })
 }
@@ -682,7 +683,7 @@ function getZzGtlxrByorder(filter) {
 function getZzGtlxr(obj) {
     var dfzh = $(obj).closest("tr").find("td:eq(3)").text()
     window.page = 1
-    var tbody = window.document.getElementById("result")
+    var tbody = window.document.getElementById("result1")
     var url = "/SINOFAITH/cftgtzh/getDetails"
     $.ajax({
         type:"post",
@@ -706,17 +707,17 @@ function getZzGtlxr(obj) {
                     "<td width=\"7%\">" + data[i].name + "</td>" +
                     "<td width=\"9%\">" + data[i].jyzh + "</td>" +
                     "<td width=\"9%\">" + data[i].dfzh + "</td>" +
-                    "<td width=\"8%\">" + data[i].count + "</td>" +
                     "<td width=\"8%\">" + data[i].jyzcs + "</td>" +
                     "<td width=\"8%\">" + data[i].jzzcs + "</td>" +
                     "<td width=\"10%\">" + data[i].jzzje + "</td>" +
                     "<td width=\"8%\">" + data[i].czzcs + "</td>" +
                     "<td width=\"10%\">" + data[i].czzje + "</td>" +
+                    "<td width=\"5%\"><button  data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"getZzDetails(this)\">详情</button></td>"+
                     "</tr>";
             }
             tbody.innerHTML = str
             $("#dfzh").attr("value", dfzh);
-            $("#allRow").attr("value", msg.totalRecords)
+            $("#allRow1").attr("value", msg.totalRecords)
         }
     })
 }
@@ -859,12 +860,20 @@ function getZzDetails(obj) {
     })
 }
 $(function () { $('#myModal').on('hide.bs.modal', function () {
-
     var tbody = window.document.getElementById("result")
     if(tbody!=null) {
         tbody.innerHTML = ""
     }
     $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
+    })
+});
+
+$(function () { $('#myModal1').on('hide.bs.modal', function () {
+    var tbody = window.document.getElementById("result1")
+    if(tbody!=null) {
+        tbody.innerHTML = ""
+    }
+    $.ajax({url:"/SINOFAITH/bankgtzh/removeDesc"})
 })
 });
 

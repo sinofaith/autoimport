@@ -43,7 +43,7 @@ public class CftZcxxEntity {
     }
 
     @Basic
-    @Column(name="zh",nullable = true,length = 20)
+    @Column(name="zh",nullable = true,length = 100)
     public String getZh() {
         return zh;
     }
@@ -53,7 +53,7 @@ public class CftZcxxEntity {
     }
 
     @Basic
-    @Column(name="xm",nullable = true,length = 20)
+    @Column(name="xm",nullable = true,length = 200)
     public String getXm() {
         return xm;
     }
@@ -83,7 +83,7 @@ public class CftZcxxEntity {
     }
 
     @Basic
-    @Column(name = "bdsj",nullable = true,length = 11)
+    @Column(name = "bdsj",nullable = true,length = 20)
     public String getBdsj() {
         return bdsj;
     }
@@ -93,7 +93,7 @@ public class CftZcxxEntity {
     }
 
     @Basic
-    @Column(name = "khh",nullable = true,length = 30)
+    @Column(name = "khh",nullable = true,length = 300)
     public String getKhh() {
         return khh;
     }
@@ -103,7 +103,7 @@ public class CftZcxxEntity {
     }
 
     @Id
-    @Column(name="yhzh",nullable = false,length = 20)
+    @Column(name="yhzh",nullable = false,length = 100)
     public String getYhzh() {
         return yhzh;
     }

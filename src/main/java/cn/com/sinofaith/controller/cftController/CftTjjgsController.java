@@ -43,6 +43,17 @@ public class CftTjjgsController {
         return mav;
     }
 
+    @RequestMapping(value = "/seachByUrl")
+    public ModelAndView getByUrl(@RequestParam("wxzh") String wxzh,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
+        ses.setAttribute("tjsseachCondition","jyzh");
+        ses.setAttribute("tjsseachCode",wxzh.replace("#",""));
+        ses.setAttribute("sorderby","jyzcs");
+        ses.setAttribute("slastOrder","jyzcs");
+        ses.setAttribute("sdesc"," desc ");
+        return mav;
+    }
+
     @RequestMapping(value = "/order")
     public ModelAndView order(@RequestParam("orderby") String orderby,HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");

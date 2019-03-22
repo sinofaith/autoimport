@@ -90,9 +90,9 @@ public class AjController {
     public ModelAndView jump(@RequestParam("aj") String aj,@RequestParam("type") long type, HttpSession httpSession){
         ModelAndView mav = null;
         if(type==1){
-             mav = new ModelAndView("redirect:/cftzzxx/seach?pageNo=1");
+             mav = new ModelAndView("redirect:/cft/seach?pageNo=1");
         } else if(type==2){
-            mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
+            mav = new ModelAndView("redirect:/bank/seach?pageNo=1");
             httpSession.removeAttribute("bzzseachCondition"); //查询条件
             httpSession.removeAttribute("bzzseachCode");//查询内容
 
@@ -168,8 +168,9 @@ public class AjController {
             aje = ajs.findByName(ajm).get(0);
             req.getSession().setAttribute("aj",aje);
             List<CftZzxxEntity> listZz = ajs.getCftList(aje);
-            tjs.count(listZz, aje.getId());
-            tjss.count(listZz, aje.getId());
+            tjs.countHb(listZz,aje.getId(),flg);
+//            tjs.count(listZz, aje.getId());
+//            tjss.count(listZz, aje.getId());
             return "200";
         }else {
             return "303";

@@ -60,8 +60,14 @@ function UploadBank() {
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
     // form.append("checkBox",checkBox);
-    for(i=0;i<fileObj.files.length;i++){
-        form.append("file", fileObj.files[i]); // 文件对象
+    for(var i=0;i<fileObj.files.length;i++){
+        var fileName = fileObj.files[i].name;
+        var index1=fileName.lastIndexOf(".");
+        var index2=fileName.length;
+        var suffix=fileName.substring(index1,index2);
+        if(fileName.indexOf("~$") != 0 && (suffix==".xlx"||suffix==".xlsx")) {
+            form.append("file", fileObj.files[i]); // 文件对象
+        }
     }
     var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
     xhr.open("post", FileController, true);
@@ -82,6 +88,7 @@ function UploadBank() {
     xhr.send(form);
 }
 
+
 function progressFunction(evt) {
 
     var progressBar = document.getElementById("progressBar");
@@ -99,61 +106,24 @@ function progressFunction(evt) {
         if((evt.loaded/evt.total) ==1){
             alertify.set('notifier','position', 'top-center');
             alertify.set('notifier','delay', 0);
-            alertify.success("文件夹上传成功\n请等待数据导入...");
+            alertify.success("文件夹上传成功!请等待数据导入...");
         }
     }
 }
 
-function getZzGtlxr(obj) {
-    var dfkh = $(obj).closest("tr").find("td:eq(3)").text()
-    window.page = 1
-    var tbody = window.document.getElementById("result")
-    var url = "/SINOFAITH/bankgtzh/getDetails"
-    $.ajax({
-        type:"post",
-        dataType:"json",
-        url:url,
-        data:{
-            dfzh:dfkh,
-            page:page
-        },
-        success:function (msg) {
-            var data = msg.list
-            var str = ""
-            for (i in data) {
-                if (i % 2 == 0) {
-                    str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
-                } else {
-                    str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
-                }
-                str += "<td width=\"5%\">" + data[i].id + "</td>" +
-                    "<td width=\"5%\">" + data[i].name + "</td>" +
-                    "<td width=\"12%\">" + data[i].jyzh + "</td>" +
-                    "<td width=\"12%\">" + data[i].dfzh + "</td>" +
-                    "<td width=\"5%\" title=\""+data[i].dfxm+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfxm+"</div></td>"+
-                    "<td width=\"8%\">" + data[i].count + "</td>" +
-                    "<td width=\"7%\">" + data[i].jyzcs + "</td>" +
-                    "<td width=\"7%\">" + data[i].jzzcs + "</td>" +
-                    "<td width=\"10%\">" + data[i].jzzje + "</td>" +
-                    "<td width=\"7%\">" + data[i].czzcs + "</td>" +
-                    "<td width=\"10%\">" + data[i].czzje + "</td>" +
-                    "</tr>";
-            }
-            tbody.innerHTML = str
-            $("#dfkh").attr("value", dfkh);
-            $("#allRow").attr("value", msg.totalRecords)
-        }
-    })
-}
+
 
 
 function getZzDetails(obj,type) {
-    var yhkkh = $(obj).closest("tr").find("td:eq(1)").text()
-    var dfkh = $(obj).closest("tr").find("td:eq(3)").text()
+    var yhkkh = $(obj).closest("tr").find("td:eq(1)").text();
+    var dfkh = $(obj).closest("tr").find("td:eq(3)").text();
     window.page = 1
-
+    var tjsum = $(obj).closest("tr").find("td:eq(3)").text();
+    var tssum = $(obj).closest("tr").find("td:eq(5)").text();
+    var sum = tssum;
     if(type=="tjjg"){
         dfkh=""
+        sum = tjsum;
     }
 
     var tbody = window.document.getElementById("result")
@@ -167,6 +137,7 @@ function getZzDetails(obj,type) {
             dfkh:dfkh,
             order:"jysj",
             type:type,
+            sum:sum,
             page:parseInt(page)
         },
         success:function (msg) {
@@ -211,6 +182,7 @@ function orderByFilter(type,filter) {
     }
     var yhkkh = $("#yhkkh").val();
     var dfkh = $("#dfkh").val();
+    var sum = $("#allRow").val();
     window.page = 1
 
     if(type=="tjjg"){
@@ -226,6 +198,7 @@ function orderByFilter(type,filter) {
             dfkh:dfkh,
             order:filter,
             type:type,
+            sum:sum,
             page:parseInt(page)
         },
         success:function (msg) {
@@ -291,6 +264,7 @@ function scrollF(type) {
                     dfkh:dfkh,
                     order:"xx",
                     type:type,
+                    sum:allRow,
                     page: parseInt(window.page)
                 },
                 success: function (msg) {

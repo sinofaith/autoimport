@@ -5,6 +5,8 @@ import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.cftDao.CftZcxxDao;
 import cn.com.sinofaith.page.Page;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Me. on 2018/5/22
@@ -29,6 +33,37 @@ public class CftZcxxService {
     private CftZcxxDao czd;
     @Autowired
     private CftZzxxService cfts;
+
+    public String getBq(String yhkh,long ajid){
+        String sql = " select to_char(c.zzsum) zzsum ,to_char(j.tjsum) tjsum" +
+                " ,to_char(s.tssum) tssum,to_char(g.gtsum) gtsum from cft_zcxx z left join (" +
+                " select zh,count(1) as zzsum from cft_zzxx where aj_id ="+ajid+" group by zh" +
+                " ) c on z.zh = c.zh" +
+                " left join ( select jyzh,count(1) as tjsum from cft_tjjg  where aj_id="+ajid+" group by jyzh" +
+                ") j on z.zh = j.jyzh " +
+                " left join ( select jyzh,count(1) as tssum from cft_tjjgs where aj_id="+ajid+" group by jyzh" +
+                ") s on z.zh = s.jyzh" +
+                " left join (select c.jyzh,count(c.jyzh) as gtsum from cft_tjjgs c " +
+                "right join ( select t.dfzh,count(1) as num from cft_tjjgs t " +
+                " where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) " +
+                "and t.aj_id="+ajid+" group by dfzh having(count(1)>=2) ) a on c.dfzh = a.dfzh    " +
+                " where a.num is not null  and aj_id ="+ajid+" and ( 1=1 ) " +
+                "group by c.jyzh) g on z.zh = g.jyzh" +
+                " where z.aj_id ="+ajid+" and z.zh = '"+yhkh+"'";
+        List list = czd.findBySQL(sql);
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Map<String,String> mapResult = new HashMap<>();
+        for(int i=0; i<list.size();i++){
+            Map map = (Map)list.get(i);
+            mapResult.put("zzsum",(String)map.get("ZZSUM"));
+//            mapResult.put("zzrsum",(String)map.get("ZZRSUM"));
+            mapResult.put("tjsum",(String)map.get("TJSUM"));
+            mapResult.put("tssum",(String)map.get("TSSUM"));
+            mapResult.put("gtsum",(String)map.get("GTSUM"));
+        }
+
+        return gson.toJson(mapResult);
+    }
 
 
     public Page queryForPage(int currentPage,int pageSize,String seach){

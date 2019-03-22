@@ -37,6 +37,7 @@
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity"/>
+            <mapping class="cn.com.sinofaith.bean.UserEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

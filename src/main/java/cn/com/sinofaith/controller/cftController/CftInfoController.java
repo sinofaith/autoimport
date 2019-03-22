@@ -76,4 +76,11 @@ public class CftInfoController {
         String seach = cftzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
         cftzcs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
+    @RequestMapping(value =  "/getBq",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getBq(@RequestParam("wxzh") String wxzh,HttpSession ses){
+        AjEntity aj = (AjEntity) ses.getAttribute("aj");
+
+        return cftzcs.getBq(wxzh,aj.getId());
+    }
 }

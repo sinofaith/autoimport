@@ -532,7 +532,7 @@ public class UploadService {
                 if (curRow == 0) {
                     for (int i = 0; i < rowList.size(); i++) {
                         String temp = rowList.get(i);
-                        if (temp.contains("交易账卡号")) {
+                        if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
                             title.put("yhkkh", i);
                         } else if (temp.contains("交易账号")) {
                             title.put("yhkzh", i);
@@ -540,17 +540,19 @@ public class UploadService {
                             title.put("jyxm", i);
                         } else if (temp.contains("交易证件号")) {
                             title.put("jyzjh", i);
-                        } else if (temp.contains("交易日期")) {
+                        } else if (temp.contains("交易日期")||temp.contains("交易时间")) {
                             title.put("jysj", i);
-                        } else if (temp.contains("交易时间")) {
-                            title.put("jysfm", i);
-                        } else if (temp.contains("交易金额")) {
+                        }
+//                        else if (temp.contains("交易时间")) {
+//                            title.put("jysfm", i);
+//                        }
+                        else if (temp.contains("交易金额")) {
                             title.put("jyje", i);
                         } else if (temp.contains("交易余额") && !temp.contains("对手")) {
                             title.put("jyye", i);
                         } else if (temp.contains("收付标志")) {
                             title.put("sfbz", i);
-                        } else if (temp.contains("对手账号")) {
+                        } else if (temp.contains("对手账号")||temp.contains("对手账卡号")) {
                             title.put("dskh", i);
                         } else if (temp.contains("对手卡号")) {
                             title.put("dszh", i);
@@ -597,6 +599,7 @@ public class UploadService {
 
     public int insertBankZcxx(String filePath, long aj_id) {
         List<String> listPath = getFileLists(filePath, "开户");
+        listPath.addAll(getFileLists(filePath,"账户信息"));
         List<BankZcxxEntity> listZcxx = getBzcxxByExcel(listPath);
         int i = bzcd.saveZcxx(listZcxx, aj_id);
         BankPersonEntity bpe = new BankPersonEntity();

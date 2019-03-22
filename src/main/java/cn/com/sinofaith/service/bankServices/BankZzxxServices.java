@@ -8,6 +8,7 @@ import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.form.bankForm.BankZzxxForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.ExcelReader;
+import cn.com.sinofaith.util.MappingUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.OutputStream;
 import java.util.*;
 
@@ -193,7 +195,7 @@ public class BankZzxxServices {
         return row;
     }
 
-    public String getByYhkkh(String zh,String jylx,String type,AjEntity aj,int page,String order){
+    public String getByYhkkh(String zh,String jylx,String type,String sum,AjEntity aj,int page,String order){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
         String ajid = getAjidByAjm(aj);
@@ -211,7 +213,8 @@ public class BankZzxxServices {
         seach += "and c.aj_id in("+ajid+") "+order;
 
 
-        int allRow = bankzzd.getCount(seach);
+//        int allRow = bankzzd.getCount(seach);
+        int allRow = Integer.parseInt(sum);
         List zzList = bankzzd.getDoPageDis(seach,page,100);
 
 
@@ -236,4 +239,32 @@ public class BankZzxxServices {
        return zz;
     }
 
+    public Map<String,Map<String,List<String>>> readExcel(String uploadPath) {
+        Map<String,Map<String,List<String>>> excelMap = new HashMap<>();
+        Map<String,List<String>> sheetMap = new HashMap<>();
+        // 读取
+        List<String> listPath = getFileList(uploadPath);
+        String excelName = null;
+        for (String path : listPath) {
+            excelName = path.substring(path.lastIndexOf("\\")+1);
+            if(path.endsWith(".xlsx")){
+                sheetMap = MappingUtils.getBy2007Excel(path);
+            }else if(path.endsWith(".xls")){
+                sheetMap = MappingUtils.getBy2003Excel(path);
+            }
+            // 将单个excel表数据放入map中
+            excelMap.put(excelName,sheetMap);
+        }
+        return excelMap;
+    }
+
+    private List<String> getFileList(String uploadPath) {
+        List<String> listPath = new ArrayList<>();
+        File dir = new File(uploadPath);
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            listPath.add(file.getAbsolutePath());
+        }
+        return listPath;
+    }
 }

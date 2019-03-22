@@ -150,10 +150,7 @@ public class AjServices {
         List<CftZzxxEntity> listZz = new ArrayList<>();
         String [] ajm = aj.getAj().split(",");
         long [] ajid = new long[ajm.length];
-        String seach = "";
-        if(aj.getFlg()==1){
-            seach = "and shmc not like '%红包%'";
-        }
+        String seach = "and shmc  like '%红包%'";
         for(int i=0;i<ajm.length;i++){
             ajid[i] = findByName(ajm[i]).get(0).getId();
             listZz.addAll(zzd.getAlla(ajid[i],seach));

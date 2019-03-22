@@ -29,7 +29,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡转账信息</a>
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡交易信息</a>
         <a href="/SINOFAITH/banktjjg" >银行卡账户信息</a><a href="/SINOFAITH/banktjjgs" class="addactive">银行卡对手账户信息</a>
         <a href="/SINOFAITH/bankgtzh">银行卡共同账户信息</a></span>    <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">

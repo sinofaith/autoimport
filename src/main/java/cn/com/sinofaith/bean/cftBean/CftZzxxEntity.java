@@ -43,7 +43,7 @@ public class CftZzxxEntity {
         this.id = id;
     }
     @Basic
-    @Column(name = "zh",nullable = true,length = 100)
+    @Column(name = "zh",nullable = true,length = 200)
     public String getZh() {
         return zh;
     }
@@ -72,7 +72,7 @@ public class CftZzxxEntity {
         this.jdlx = jdlx;
     }
     @Basic
-    @Column(name="jylx",nullable = true,length = 20)
+    @Column(name="jylx",nullable = true,length = 200)
     public String getJylx() {
         return jylx;
     }
@@ -121,7 +121,7 @@ public class CftZzxxEntity {
     }
 
     @Basic
-    @Column(name = "jysm",nullable = true,length = 50)
+    @Column(name = "jysm",nullable = true,length = 300)
     public String getJysm() {
         return jysm;
     }
@@ -131,7 +131,7 @@ public class CftZzxxEntity {
     }
 
     @Basic
-    @Column(name = "shmc",nullable = true,length = 50)
+    @Column(name = "shmc",nullable = true,length = 300)
     public String getShmc() {
         return shmc;
     }
@@ -140,7 +140,7 @@ public class CftZzxxEntity {
         this.shmc = shmc;
     }
     @Basic
-    @Column(name = "fsf",nullable = true,length = 100)
+    @Column(name = "fsf",nullable = true,length = 200)
     public String getFsf() {
         return fsf;
     }
@@ -159,7 +159,7 @@ public class CftZzxxEntity {
         this.fsje = fsje;
     }
     @Basic
-    @Column(name = "jsf",nullable = true,length = 100)
+    @Column(name = "jsf",nullable = true,length = 200)
     public String getJsf() {
         return jsf;
     }

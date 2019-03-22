@@ -12,21 +12,87 @@
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
+<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
+
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
+    running = true;
+    function getBq(obj){
+        var yhkh = obj.innerText
+        var skip = window.document.getElementById("skip"+obj.parentElement.rowIndex)
+        if(skip.innerText==""&&running) {
+            running = false;
+            $.get("/SINOFAITH/bank/getBq?yhkh="+yhkh,function (result) {
+                var str = "";
+                if (result.zzsum>0) {
+                    str += "<a href='/SINOFAITH/bankzzxx/seachByUrl?yhkkh=" + yhkh + "'>交易信息</a>"
+                }
+                if(result.tjsum>0){
+                    str += "<a href='/SINOFAITH/banktjjg/seachByUrl?yhkkh=" + yhkh + "'>账户信息</a>"
+                }
+                if(result.tssum>0){
+                    str += "<a href='/SINOFAITH/banktjjgs/seachByUrl?yhkkh=" + yhkh + "'>对手账户信息</a>"
+                }
+                if(result.gtsum>0){
+                    str += "<a href='/SINOFAITH/bankgtzh/seachByUrl?yhkkh=" + yhkh + "'>共同账户信息</a>"
+                }
+                if(result.zzsum+result.tjsum+result.tssum+result.gtsum==0){
+                    str+="<a href='#'>无更多信息</a>"
+                }
+                skip.innerHTML = str;
+                running=true;
+            },"json")
+
+        }
+    }
 </script>
 <style type="text/css">
     .crimeterrace{ background-color: #636B75 !important;}
+
+    .dropCss {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropCss-content {
+        display: none;
+        position: absolute;
+        top:-10%;
+        left:100%;
+        background-color: #f9f9f9;
+        min-width: 100px;
+        box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.4);
+        border-radius: 6px;
+    }
+
+    .dropCss-content a {
+        color: black;
+        padding: 3px 3px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropCss-content a:hover {
+        background-color: #bbb;
+    }
+
+    .dropCss:hover .dropCss-content {
+        display: block;
+    }
+
+
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" class="addactive">银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡转账信息</a>
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" class="addactive">银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡交易信息</a>
         <a href="/SINOFAITH/banktjjg">银行卡账户信息</a><a href="/SINOFAITH/banktjjgs">银行卡对手账户信息</a>
         <a href="/SINOFAITH/bankgtzh">银行卡共同账户信息</a></span>
     <ul >
@@ -60,7 +126,13 @@
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <td align="center">${item.yhkkh}</td>
+                                                <td align="center" onmouseout="getBq(this)">
+                                                     <div class="dropCss">
+                                                         <span style="color: #6698ce">${item.yhkkh}</span>
+                                                         <div class="dropCss-content" id="skip${st.index+2}">
+                                                         </div>
+                                                     </div>
+                                                </td>
                                                 <td align="center">${item.yhkzh}</td>
                                                 <td align="center" title="${item.khxm}" ><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.khxm}</div></td>
                                                 <td align="center">${item.khzjh}</td>
@@ -123,7 +195,7 @@
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="yhkkh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易卡号</option>
-                                            <option value="yhkzh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易帐号</option>
+                                            <option value="yhkzh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易账号</option>
                                             <option value="khxm" <c:if test="${bzcseachCondition=='khxm'}">selected="selected"</c:if> >开户姓名</option>
                                             <option value="khzjh" <c:if test="${bzcseachCondition=='khzjh'}">selected="selected"</c:if> >开户证件号</option>
                                             <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>
@@ -217,5 +289,95 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal -->
+</div>
+
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">多文件字段映射</h4>
+            </div>
+            <div class="modal-body" >
+                <div class="form-group">
+                    <div class="row" style="width: 600px;">
+
+                        <span class="col-md-1" id="excelName" style="width: 350px;">
+                            <label for="excelName">Excel名</label>
+
+                        </span>
+                        <span class="col-md-1" id="excelSheet" style="width: 200px;">
+                            <label for="excelSheet">Sheet名</label>
+
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div id="roll" style="overflow-x: auto; overflow-y: auto; height: 100px; width:1300px;">
+                        <table id="head" class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc;">
+
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <label for="c1">交易卡号</label>
+                            <select	 id="c1" placeholder="交易卡号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c2">交易账号</label>
+                            <select	 id="c2" placeholder="交易账号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c3">开户姓名</label>
+                            <select	 id="c3" placeholder="开户姓名" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c4">开户证件号</label>
+                            <select	 id="c4" placeholder="开户证件号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c5">账户余额</label>
+                            <select	id="c5" placeholder="账户余额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c6">可用余额</label>
+                            <select	id="c6" placeholder="可用余额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c7">开户时间</label>
+                            <select id="c7" placeholder="开户时间" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c8">账户状态</label>
+                            <select	id="c8" placeholder="账户状态" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c9">开户网点</label>
+                            <select id="c9" placeholder="开户网点" onchange="selectC()">
+                            </select>
+                        </div>
+                    </div>
+                    <button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextSelect()">下一个</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="uploadWuliuExcel()">导入数据</button>
+            </div>
+        </div>
+    </div>
 </div>
 <%@include file="../template/newfooter.jsp" %>

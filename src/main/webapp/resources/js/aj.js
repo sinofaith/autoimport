@@ -120,36 +120,45 @@ function deleteAj(obj) {
 
 function deleteAjByFilter() {
     var ajm = $("#aj1").val();
-    obj = document.getElementsByName("deleteAj");
+    var obj = document.getElementsByName("deleteAj");
     var check_val = [];
-    for(k in obj){
-        if(obj[k].checked)
+    var check_text = [];
+    for(var k in obj){
+        if(obj[k].checked) {
             check_val.push(obj[k].value);
+            check_text.push(obj[k].nextSibling.nodeValue);
+        }
     }
     if(check_val.length>0){
-        alertify.set('notifier','delay', 0);
-        alertify.success("删除中")
-        $.ajax({
-            type:"post",
-            dataType:"json",
-            url:"/SINOFAITH/aj/delete",
-            data:{
-                ajm:ajm,
-                list:check_val.toString()
-        },
-        success:function (data) {
-            if(data==303){
-                alertify.success("请先删除包含此案件的并案案件")
-                return
-            }
-            setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
-            if(data==200){
-                alertify.success("删除成功")
-            }
-        },
-            error:function (e) {
-                alertify.error("错误")}
-    })
+        alertify.confirm("确认删除 \""+ajm+"\" 内 \""+check_text+"\" 数据？", function () {
+            // 用户点击"ok"按钮
+            alertify.set('notifier','delay', 0);
+            alertify.success("删除中")
+            $.ajax({
+                type:"post",
+                dataType:"json",
+                url:"/SINOFAITH/aj/delete",
+                data:{
+                    ajm:ajm,
+                    list:check_val.toString()
+                },
+                success:function (data) {
+                    if(data==303){
+                        alertify.success("请先删除包含此案件的并案案件")
+                        return
+                    }
+                    setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
+                    if(data==200){
+                        alertify.success("删除成功")
+                    }
+                },
+                error:function (e) {
+                    alertify.error("错误")}
+            })
+        }, function() {
+            // 用户点击"cancel"按钮
+            return
+        });
     }else{
         alertify.error("请选择要删除的数据")
     }

@@ -21,7 +21,7 @@ public class CftPersonEntity {
         this.id = id;
     }
     @Basic
-    @Column(name="xm",nullable = true)
+    @Column(name="xm",nullable = true,length = 200)
     public String getXm() {
         return xm;
     }
@@ -30,7 +30,7 @@ public class CftPersonEntity {
         this.xm = xm;
     }
     @Basic
-    @Column(name="sfzhm",nullable = true)
+    @Column(name="sfzhm",nullable = true,length = 18)
     public String getSfzhm() {
         return sfzhm;
     }
@@ -39,7 +39,7 @@ public class CftPersonEntity {
         this.sfzhm = sfzhm;
     }
     @Basic
-    @Column(name="zh",nullable = false)
+    @Column(name="zh",nullable = false,length = 50)
     public String getZh() {
         return zh;
     }

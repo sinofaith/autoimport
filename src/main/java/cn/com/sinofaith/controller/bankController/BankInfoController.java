@@ -70,4 +70,12 @@ public class BankInfoController {
         String seach = bankzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
         bankzcs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
+
+    @RequestMapping(value =  "/getBq",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getBq(@RequestParam("yhkh") String yhkh,HttpSession ses){
+        AjEntity aj = (AjEntity) ses.getAttribute("aj");
+
+        return bankzcs.getBq(yhkh,aj.getId());
+    }
 }

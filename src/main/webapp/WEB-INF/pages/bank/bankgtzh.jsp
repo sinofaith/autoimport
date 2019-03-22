@@ -28,7 +28,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡转账信息</a>
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡交易信息</a>
         <a href="/SINOFAITH/banktjjg">银行卡账户信息</a><a href="/SINOFAITH/banktjjgs">银行卡对手账户信息</a>
         <a href="/SINOFAITH/bankgtzh" class="addactive">银行卡共同账户信息</a></span>    <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
@@ -71,7 +71,7 @@
                                                     <div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div>
                                                 </td>
                                                 <td align="center">
-                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzGtlxr(this)">${item.count}</button>
+                                                    <button  data-toggle="modal" data-target="#myModal1" onclick="getZzGtlxr(this)">${item.count}</button>
                                                 </td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
@@ -189,25 +189,24 @@
 </div>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+    <div class="modal-dialog" style="top: 0%; min-width: 96%;left: 2%;right: 2%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
+                <h4 class="modal-title" id="myModalLabel1">共同账户详情<span id="title1"></span></h4>
             </div>
             <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                     <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
                     <tr align="center">
                         <td width="5%">序号</td>
-                        <td width="5%">姓名</td>
                         <td width="12%">交易账卡号</td>
+                        <td width="5%">姓名</td>
                         <td width="12%">对方账户</td>
                         <td width="5%">对方姓名</td>
-                        <td width="8%">共同联系人数</td>
                         <td width="7%">
                             <button onclick="getZzGtlxrByorder('jyzcs')">交易总次数</button>
                         </td>
@@ -223,11 +222,12 @@
                         <td width="10%">
                             <button onclick="getZzGtlxrByorder('czzje')">出账总金额</button>
                         </td>
+                        <td width="4%">详情</td>
                     </tr>
-                    <input name="label" id="dfkh" hidden="hidden" value="">
-                    <input name="label" id="allRow" hidden="hidden" value="">
+                    <input name="label" id="dfkh1" hidden="hidden" value="">
+                    <input name="label" id="allRow1" hidden="hidden" value="">
                     </thead>
-                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF('dfkh')">
+                    <tbody id="result1" style="display:block;height:500px;overflow-y:scroll;" >
 
                     </tbody>
                 </table>
@@ -241,4 +241,59 @@
     </div>
     <!-- /.modal -->
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 96%;left: 2%;right: 2%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 "
+                       style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="4%">序号</td>
+                        <td width="13%">交易账卡号</td>
+                        <td width="5%">交易户名</td>
+                        <td width="10%">
+                            <button onclick="orderByFilter('tjjgs','jysj')">交易时间</button>
+                        </td>
+                        <td width="7%">
+                            <button onclick="orderByFilter('tjjgs','jyje')">交易金额</button>
+                        </td>
+                        <td width="7%">交易余额</td>
+                        <td width="7%">
+                            <button onclick="orderByFilter('tjjgs','sfbz')">收付标志</button>
+                        </td>
+                        <td width="13%">对手账卡号</td>
+                        <td width="13%">对手户名</td>
+                        <td width="7%">摘要说明</td>
+                        <td width="7%">交易发生地</td>
+                        <td width="7%">交易网点名称</td>
+                        <td width="7%">备注</td>
+                        <%--<td width="8%">接收金额(元)</td>--%>
+                    </tr>
+                    <input name="label" id="yhkkh" hidden="hidden" value="">
+                    <input name="label" id="dfkh" hidden="hidden" value="">
+                    <input name="label" id="allRow" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;"
+                           onscroll="scrollF('tjjgs')">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="downDetailZh()">导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
 <%@include file="../template/newfooter.jsp" %>

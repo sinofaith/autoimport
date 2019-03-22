@@ -38,6 +38,14 @@ public class BankZzxxController {
         return mav;
     }
 
+    @RequestMapping(value = "/seachByUrl")
+    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
+        ses.setAttribute("bzzseachCondition","yhkkh");
+        ses.setAttribute("bzzseachCode",yhkkh.replace("#",""));
+        return mav;
+    }
+
     @RequestMapping(value = "/seach")
     public ModelAndView getCftzzxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("bank/bankzzxx");
@@ -107,7 +115,6 @@ public class BankZzxxController {
     @ResponseBody
     public String removeDesc(HttpSession ses){
         ses.removeAttribute("xqdesc");
-        ses.removeAttribute("dddesc");
         return "200";
     }
 
@@ -115,7 +122,7 @@ public class BankZzxxController {
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getDetails(@RequestParam("yhkkh") String yhkkh,@RequestParam("dfkh")String dfkh,
-                             @RequestParam("type") String type, @RequestParam("page")int page,
+                             @RequestParam("type") String type,@RequestParam("sum") String sum, @RequestParam("page")int page,
                              @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String desc = (String) ses.getAttribute("xqdesc");
@@ -139,7 +146,7 @@ public class BankZzxxController {
         ses.setAttribute("xqOrder",order);
         ses.setAttribute("xqlastOrder",order);
         ses.setAttribute("xqdesc",desc);
-        return bankzzs.getByYhkkh(yhkkh.replace("\n","").trim(),dfkh.replace("\n","").trim(),type,aj!=null ? aj:new AjEntity(),page,orders);
+        return bankzzs.getByYhkkh(yhkkh.replace("\n","").trim(),dfkh.replace("\n","").trim(),type,sum,aj!=null ? aj:new AjEntity(),page,orders);
     }
 
     @RequestMapping(value = "/downDetailZh")

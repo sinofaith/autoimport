@@ -61,6 +61,11 @@ public class CftZzxxService {
         return page;
     }
 
+    public int getCountBySeach(String filter){
+        int sum = cftzzd.getAllRowCount(filter);
+        return sum/500000 ==0?sum/500000:sum/500000+1;
+    }
+
 //    public Page queryForPage(int currentPage, int pageSize, String seach){
 //        Page page = new Page();
 //        //总记录数

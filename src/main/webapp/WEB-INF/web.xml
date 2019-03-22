@@ -104,7 +104,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>mvc-dispatcher</servlet-name>
-    <url-pattern>/aj</url-pattern>
+    <url-pattern>/homepage</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>mvc-dispatcher</servlet-name>
@@ -112,6 +112,6 @@
   </servlet-mapping>
 
   <welcome-file-list>
-    <welcome-file>aj</welcome-file>
+    <welcome-file>homepage</welcome-file>
   </welcome-file-list>
 </web-app>

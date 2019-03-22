@@ -182,6 +182,9 @@ public class BankZcxxEntity {
             b.setZhzt(map.get(title.get("zhzt")).toString());
             b.setYhkkh(map.get(title.get("yhkkh")).toString().replace("_156_1","").trim());
             b.setYhkzh(map.get(title.get("yhkzh")).toString().replace("_156_1","").trim());
+            if("".equals(b.getYhkkh())){
+                b.setYhkkh(b.getYhkzh());
+            }
             b.setKhxm(map.get(title.get("khxm")).toString());
             b.setKhzjh(map.get(title.get("khzjh")).toString());
             b.setKhsj(map.get(title.get("khsj")).toString());

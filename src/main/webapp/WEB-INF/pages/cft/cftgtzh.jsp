@@ -65,7 +65,7 @@
                                                 <td align="center">${item.dfzh}</td>
                                                 <td align="center">${item.dfxm}</td>
                                                 <td align="center">
-                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzGtlxr(this)">${item.count}</button>
+                                                    <button  data-toggle="modal" data-target="#myModal1" onclick="getZzGtlxr(this)">${item.count}</button>
                                                 </td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
@@ -182,14 +182,14 @@
 </div>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
+                <h4 class="modal-title" id="myModalLabel1">共同账户详情<span id="title1"></span></h4>
             </div>
             <div class="modal-body">
                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
@@ -199,7 +199,6 @@
                         <td width="7%">姓名</td>
                         <td width="9%">微信账户</td>
                         <td width="9%">对方账户</td>
-                        <td width="8%">共同联系人数</td>
                         <td width="8%">
                             <button onclick="getZzGtlxrByorder('jyzcs')">交易总次数</button>
                         </td>
@@ -215,11 +214,14 @@
                         <td width="10%">
                             <button onclick="getZzGtlxrByorder('czzje')">出账总金额</button>
                         </td>
+                        <td width="5%">
+                            详情
+                        </td>
                     </tr>
                     <input name="label" id="dfzh" hidden="hidden" value="">
-                    <input name="label" id="allRow" hidden="hidden" value="">
+                    <input name="label" id="allRow1" hidden="hidden" value="">
                     </thead>
-                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF()">
+                    <tbody id="result1" style="display:block;height:500px;overflow-y:scroll;" >
 
                     </tbody>
                 </table>
@@ -233,4 +235,64 @@
     </div>
     <!-- /.modal -->
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 80%;left: 10%;right: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">转账详情<span id="title"></span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="4%">序号</td>
+                        <td width="5%">姓名</td>
+                        <td width="15%">微信账户</td>
+                        <td width="6%">
+                            <button onclick="orderByFilter('jdlx')">借贷类型</button>
+                        </td>
+                        <td width="10%">
+                            <button onclick="orderByFilter('jylx')">交易类型</button>
+                        </td>
+                        <td width="14%">商户名称</td>
+                        <td width="8%">
+                            <button onclick="orderByFilter('jyje')">交易金额</button>
+                        </td>
+                        <td width="13%">
+                            <button onclick="orderByFilter('jysj')">交易时间</button>
+                        </td>
+                        <td width="15%">
+                            <button onclick="orderByFilter('fsf')">发送方</button>
+                        </td>
+                        <td width="8%">
+                            <button onclick="orderByFilter('fsje')">发送金额</button>
+                        </td>
+                        <td width="15%">
+                            <button onclick="orderByFilter('jsf')">接收方</button>
+                        </td>
+                        <td width="8%">
+                            <button onclick="orderByFilter('jsje')">接收金额</button>
+                        </td>
+                    </tr>
+                    <input name="label" id="zh" hidden="hidden" value="">
+                    <input name="label" id="jylx" hidden="hidden" value="">
+                    <input name="label" id="allRow" hidden="hidden" value="">
+                    </thead>
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;" onscroll="scrollF()">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="downDetailJylx()">导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
 <%@include file="../template/newfooter.jsp" %>

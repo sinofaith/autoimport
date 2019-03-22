@@ -358,6 +358,9 @@ public class BankZzxxEntity {
         BankZzxxEntity b = new BankZzxxEntity();
         b.setYhkkh("".equals(list.get(title.get("yhkkh")).trim()) ? null:list.get(title.get("yhkkh")).replace("_156_1","").trim());
         b.setYhkzh("".equals(list.get(title.get("yhkzh")).trim()) ? null:list.get(title.get("yhkzh")).replace("_156_1","").trim());
+        if(b.getYhkkh()==null){
+            b.setYhkkh(b.getYhkzh());
+        }
         if(title.containsKey("jysfm")){
             b.setJysj(
                     ("".equals(list.get(title.get("jysj")).trim())? null:list.get(title.get("jysj")).trim()) + " " +
@@ -365,19 +368,23 @@ public class BankZzxxEntity {
         }else{
             b.setJysj("".equals(list.get(title.get("jysj")).trim())? null:list.get(title.get("jysj")).trim());
         }
-        b.setJyje(new BigDecimal( list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")):"0" ));
-        b.setJyye(new BigDecimal(list.get(title.get("jyye")).trim().length()>0 ? list.get(title.get("jyye")):"0" ));
-        b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).trim());
+        b.setJyje(new BigDecimal(list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")).trim():"0" ));
+        b.setJyye(new BigDecimal(list.get(title.get("jyye")).trim().length()>0 ? list.get(title.get("jyye")).trim():"0" ));
+        b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).replace("付","出").replace("收","入").trim());
         b.setDskh("".equals(list.get(title.get("dskh")).trim())? null:list.get(title.get("dskh")).replace("_156_1","").trim());
-        b.setDszh("".equals(list.get(title.get("dszh")).trim())? null:list.get(title.get("dszh")).replace("_156_1","").trim());
+        if(title.containsKey("dszh")) {
+            b.setDszh("".equals(list.get(title.get("dszh")).trim()) ? null : list.get(title.get("dszh")).replace("_156_1", "").trim());
+        }
         b.setDsxm("".equals(list.get(title.get("dsxm")).trim())? null:list.get(title.get("dsxm")).trim());
         b.setDssfzh("".equals(list.get(title.get("dssfzh")).trim())? null:list.get(title.get("dssfzh")).trim());
         b.setDskhh("".equals(list.get(title.get("dskhh")).trim())? null:list.get(title.get("dskhh")).trim());
         b.setZysm("".equals(list.get(title.get("zysm")).trim())? null:list.get(title.get("zysm")).trim());
         b.setJysfcg("".equals(list.get(title.get("jysfcg")).trim())? null:list.get(title.get("jysfcg")).trim());
         b.setJywdmc("".equals(list.get(title.get("jywdmc")).trim())? null:list.get(title.get("jywdmc")).trim());
-        b.setDsjyye(new BigDecimal(list.get(title.get("dsjyye")).trim().length()>0 ?  list.get(title.get("dsjyye")):"0"));
-        b.setDsye(new BigDecimal(list.get(title.get("dsye")).trim().length()>0 ? list.get(title.get("dsye")):"0"));
+        b.setDsjyye(new BigDecimal(list.get(title.get("dsjyye")).trim().length()>0 ?  list.get(title.get("dsjyye")).trim():"0"));
+        if (title.containsKey("dsye")) {
+            b.setDsye(new BigDecimal(list.get(title.get("dsye")).trim().length() > 0 ? list.get(title.get("dsye")).trim() : "0"));
+        }
         b.setBz("".equals(list.get(title.get("bz")).trim())? null:list.get(title.get("bz")).trim());
         b.setJyzjh("".equals(list.get(title.get("jyzjh")).trim())? null:list.get(title.get("jyzjh")).trim());
         b.setJyxm("".equals(list.get(title.get("jyxm")).trim())? null:list.get(title.get("jyxm")).trim());

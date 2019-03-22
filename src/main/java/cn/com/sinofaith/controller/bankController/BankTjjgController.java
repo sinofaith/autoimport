@@ -45,6 +45,19 @@ public class BankTjjgController {
             return mav;
         }
 
+        @RequestMapping(value = "/seachByUrl")
+        public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
+            ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
+            ses.setAttribute("btjseachCondition","jyzh");
+            ses.setAttribute("btjseachCode",yhkkh.replace("#",""));
+            ses.setAttribute("code",-1);
+            ses.setAttribute("hcode",0);
+            ses.setAttribute("borderby", "jyzcs");
+            ses.setAttribute("blastOrder", "jyzcs");
+            ses.setAttribute("bdesc", " desc ");
+            return mav;
+        }
+
         @RequestMapping(value = "/order")
         public ModelAndView order(@RequestParam("orderby") String orderby, HttpSession ses) {
             ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");

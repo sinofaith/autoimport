@@ -5,6 +5,8 @@ import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -26,6 +30,40 @@ public class BankZcxxServices {
 
     @Autowired
     private BankZcxxDao bzcd;
+
+    public String getBq(String yhkh,long ajid){
+        String sql = " select to_char(c.zzsum) zzsum ,to_char(r.zzrsum) zzrsum ,to_char(j.tjsum) tjsum" +
+                " ,to_char(s.tssum) tssum,to_char(g.gtsum) gtsum from bank_zcxx z left join (" +
+                " select yhkkh,count(1) as zzsum from bank_zzxx where aj_id ="+ajid+" group by yhkkh" +
+                " ) c on z.yhkkh = c.yhkkh" +
+                " left join (" +
+                " select dskh,count(1) as zzrsum from bank_zzxx where aj_id ="+ajid+" group by dskh" +
+                ") r on z.yhkkh = r.dskh " +
+                " left join ( select jyzh,count(1) as tjsum from bank_tjjg  where aj_id="+ajid+" group by jyzh" +
+                ") j on z.yhkkh = j.jyzh " +
+                " left join ( select jyzh,count(1) as tssum from bank_tjjgs where aj_id="+ajid+" group by jyzh" +
+                ") s on z.yhkkh = s.jyzh" +
+                " left join (select c.jyzh,count(c.jyzh) as gtsum from bank_tjjgs c " +
+                "right join ( select t.dfzh,count(1) as num from bank_tjjgs t " +
+                " where t.dfzh not in( select distinct t1.jyzh from bank_tjjgs t1) " +
+                "and t.aj_id="+ajid+" group by dfzh having(count(1)>=2) ) a on c.dfzh = a.dfzh    " +
+                " where a.num is not null  and aj_id ="+ajid+" and ( 1=1 ) " +
+                "group by c.jyzh) g on z.yhkkh = g.jyzh" +
+                " where z.aj_id ="+ajid+" and z.yhkkh = '"+yhkh+"'";
+        List list = bzcd.findBySQL(sql);
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Map<String,String> mapResult = new HashMap<>();
+        for(int i=0; i<list.size();i++){
+            Map map = (Map)list.get(i);
+            mapResult.put("zzsum",(String)map.get("ZZSUM"));
+            mapResult.put("zzrsum",(String)map.get("ZZRSUM"));
+            mapResult.put("tjsum",(String)map.get("TJSUM"));
+            mapResult.put("tssum",(String)map.get("TSSUM"));
+            mapResult.put("gtsum",(String)map.get("GTSUM"));
+        }
+
+        return gson.toJson(mapResult);
+    }
 
     public String getSeach(String seachCode, String seachCondition, AjEntity aj){
         StringBuffer seach = new StringBuffer();

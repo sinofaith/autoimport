@@ -127,7 +127,7 @@
     <%--<a class="logo"><img src="<c:url value="/resources/img/logo02.png"/>"style=" width: 63px ;float: left"/></a>--%>
 
     <span  class="fl_l padd_l_100  font15 color_black" style="margin-left: 75px;">
-          数据清洗展示模型
+          电子数据综合分析系统
         </span>
     <!-- /.navbar-header -->
     <%--<div class="top_nav" style="width: 100%;">
@@ -161,7 +161,7 @@
         </ul>
     </div>--%>
         <span class="fl_r font_075 padd_r_30">
-            <%--<span>警员：${USERINFO.name}</span>，您已登录，<a id="btnLogout" href="/AMD/logout" class="color_black">退出系统</a>--%>
+            <span>${user.username}</span>，您已登录&nbsp;<a id="btnLogout" href="/SINOFAITH/logout" onclick="window.location.href='http://localhost:8080/SINOFAITH/'" style="color:  #6698ce" class="color_black">退出系统</a>
         </span>
 
 

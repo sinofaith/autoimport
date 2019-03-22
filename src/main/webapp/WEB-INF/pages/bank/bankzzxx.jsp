@@ -26,7 +26,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx" class="addactive">银行卡转账信息</a>
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx" class="addactive">银行卡交易信息</a>
         <a href="/SINOFAITH/banktjjg">银行卡账户信息</a><a href="/SINOFAITH/banktjjgs">银行卡对手账户信息</a>
         <a href="/SINOFAITH/bankgtzh">银行卡共同账户信息</a></span>
     <ul >
@@ -55,9 +55,9 @@
                                         <td width="5%">收付标志</td>
                                         <td width="12%">对手账卡号</td>
                                         <td width="6%">对手户名</td>
-                                        <td width="5%">摘要说明</td>
-                                        <td width="5%">交易发生地</td>
-                                        <td width="5%">交易网点名称</td>
+                                        <td width="4%">摘要说明</td>
+                                        <td width="4%">交易发生地</td>
+                                        <td width="4%">交易网点名称</td>
                                         <td width="5%">备注</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
@@ -71,7 +71,7 @@
                                                 <td align="center">${item.sfbz}</td>
                                                 <td align="center" title="${item.dskh}"><div style="width:140px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dskh}</div></td>
                                                 <td align="center" title="${item.dsxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsxm}</div></td>
-                                                <td align="center" title="${item.zysm}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zysm}</div></td>
+                                                <td align="center" title="${item.zysm}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zysm}</div></td>
                                                 <td align="center" title="${item.jyfsd}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyfsd}</div></td>
                                                 <td align="center" title="${item.jywdmc}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jywdmc}</div></td>
                                                 <td align="center" title="${item.bz}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.bz}</div></td>

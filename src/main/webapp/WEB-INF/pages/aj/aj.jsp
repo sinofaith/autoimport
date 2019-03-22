@@ -226,11 +226,11 @@
                     <br>
                     <br>
                     <label><input id="sel_1" onchange="selectAll()" type="checkbox" value="0"/>全选/全不选</label>
-                    <label><input name="deleteAj" type="checkbox" value="1"/>财付通</label>
                     <label><input name="deleteAj" type="checkbox" value="2"/>银行卡</label>
+                    <label><input name="deleteAj" type="checkbox" value="1"/>财付通</label>
                     <label><input name="deleteAj" type="checkbox" value="5"/>支付宝</label>
                     <label><input name="deleteAj" type="checkbox" value="3"/>物流</label>
-                    <label><input name="deleteAj" type="checkbox" value="4"/>传销</label>
+                    <%--<label><input name="deleteAj" type="checkbox" value="4"/>传销</label>--%>
                 </div>
             </div>
             <div class="modal-footer">

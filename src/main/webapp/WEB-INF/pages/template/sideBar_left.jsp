@@ -11,7 +11,7 @@
 <html>
 <%--新加样式--%>
 <head>
-    <title>数据清洗展示模型</title>
+    <title>电子数据综合分析系统</title>
     <style type="text/css">
         .icon {
             width: 32px; height: 32px;
@@ -43,10 +43,10 @@
         <svg class="icon">
             <use xlink:href="#icon-wuliu"></use>
         </svg><br>物流</a>
-    <a href="/SINOFAITH/pyramidSale">
-        <svg class="icon">
-            <use xlink:href="#icon-cengji"></use>
-        </svg><br>传销</a>
+    <%--<a href="/SINOFAITH/pyramidSale">--%>
+        <%--<svg class="icon">--%>
+            <%--<use xlink:href="#icon-cengji"></use>--%>
+        <%--</svg><br>传销</a>--%>
  </span>
 </aside>
 </body>

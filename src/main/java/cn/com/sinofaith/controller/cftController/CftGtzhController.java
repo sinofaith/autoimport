@@ -39,6 +39,15 @@ public class CftGtzhController {
         return mav;
     }
 
+    @RequestMapping(value = "/seachByUrl")
+    public ModelAndView getByUrl(@RequestParam("wxzh") String wxzh,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");
+        ses.setAttribute("gtseachCondition","jyzh");
+        ses.setAttribute("gtseachCode",wxzh.replace("#",""));
+//        ses.setAttribute("hcode",0);
+        return mav;
+    }
+
     @RequestMapping(value = "/order")
     public ModelAndView order(@RequestParam("orderby") String orderby, HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/cftgtzh/seach?pageNo=1");

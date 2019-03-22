@@ -42,7 +42,7 @@ public class CftTjjgEntity implements Serializable {
     }
 
     @Id
-    @Column(name="jylx",nullable = false,length = 100)
+    @Column(name="jylx",nullable = false,length = 300)
     public String getJylx() {
         return jylx;
     }

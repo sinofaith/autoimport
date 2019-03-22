@@ -43,6 +43,10 @@ public abstract class ExcelReader extends DefaultHandler {
     private String preX = "";
     //当前单元格的x
     private String currX = "";
+    //定义该文档一行最大的单元格数,用来补全一行最后可能缺失的单元格
+    private String maxRef = null;
+    //定义该文档一行最小的单元格数,用来补全开头缺失的单元格
+    private String minRef = null;
     //是否跳过了单元格
     private boolean isSkipCeil = false;
 
@@ -149,9 +153,25 @@ public abstract class ExcelReader extends DefaultHandler {
             if("".equals(preXy)) {
                 preXy = cellXy;
             }
+            if(minRef==null){
+                minRef = cellXy;
+            }
             currXy = cellXy;
             preX = preXy.replaceAll("\\d", "").trim();
             currX = currXy.replaceAll("\\d", "").trim();
+
+            int cur = Integer.parseInt(currXy.replaceAll("\\D",""));
+            int pre = Integer.parseInt(preXy.replaceAll("\\D",""));
+            String min = minRef.replaceAll("\\d","");
+            if(cur-pre>0){
+                int len = twentyToDecimai(currX)-twentyToDecimai(min);
+                if(len>0){
+                    for(int i=0;i<len;i++){
+                        rowlist.add(curCol, "");
+                        curCol++;
+                    }
+                }
+            }
 
             flag = twentyToDecimai(currX) - twentyToDecimai(preX);
 
@@ -205,10 +225,10 @@ public abstract class ExcelReader extends DefaultHandler {
                  value = dateFormat.format(date);
             }*/
             //数字类型处理
-            if(numberFlag){
-                BigDecimal bd = new BigDecimal(value);
-                value = bd.setScale(3,BigDecimal.ROUND_UP).toString();
-            }
+//            if(numberFlag){
+//                BigDecimal bd = new BigDecimal(value);
+//                value = bd.setScale(3,BigDecimal.ROUND_UP).toString();
+//            }
             //当某个单元格的数据为空时，其后边连续的单元格也可能为空
             if(isSkipCeil == true) {
                 for(int i = 0; i < (flag-1); i++) {
@@ -221,6 +241,16 @@ public abstract class ExcelReader extends DefaultHandler {
         }else {
             //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
             if (name.equals("row")) {
+                if(curRow==0){
+                    maxRef = currXy;
+                }
+                if(maxRef != null){
+                    int len = twentyToDecimai(maxRef.replaceAll("\\d", ""))-twentyToDecimai(currXy.replaceAll("\\d", ""));
+                    for(int i=0;i<len;i++){
+                        rowlist.add(curCol, "");
+                        curCol++;
+                    }
+                }
                 try {
                     getRows(sheetIndex,curRow,rowlist);
                 } catch (Exception e) {
@@ -254,16 +284,16 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-        String file = "D:\\work\\数据模型\\资金\\柏顺福资金\\账户交易明细表.xlsx";
+        String file = "D:\\work\\数据模型\\资金\\假HP第一批\\陶国龙、梁明霞、张仁蛟、钟高艺\\交易明细信息 (26).xlsx";
         final Map<String,Integer> title=new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 
-        Excel2007Reader reader = new Excel2007Reader() {
+        ExcelReader reader = new ExcelReader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
                 if(curRow==0){
                     for(int i = 0;i<rowList.size(); i++){
                         String temp = rowList.get(i);
-                        if(temp.contains("交易账卡号")){
+                        if(temp.contains("交易账卡号")||temp.contains("交易卡号")){
                             title.put("yhkkh",i);
                         }else if(temp.contains("交易账号")){
                             title.put("yhkzh",i);
@@ -271,7 +301,7 @@ public abstract class ExcelReader extends DefaultHandler {
                             title.put("jyxm",i);
                         }else if(temp.contains("交易证件号")){
                             title.put("jyzjh",i);
-                        }else if(temp.contains("交易日期")){
+                        }else if(temp.contains("交易日期")||temp.contains("交易时间")){
                             title.put("jysj",i);
                         }else if(temp.contains("交易金额")){
                             title.put("jyje",i);
@@ -279,7 +309,7 @@ public abstract class ExcelReader extends DefaultHandler {
                             title.put("jyye",i);
                         }else if(temp.contains("收付标志")){
                             title.put("sfbz",i);
-                        }else if(temp.contains("对手账号")){
+                        }else if(temp.contains("对手账号")||temp.contains("对手账卡号")){
                             title.put("dskh",i);
                         }else if(temp.contains("对手卡号")){
                             title.put("dszh",i);
@@ -306,7 +336,7 @@ public abstract class ExcelReader extends DefaultHandler {
                         }
                     }
                 }
-                if(!rowList.get(0).equals("交易账卡号")) {
+                if(!rowList.get(0).equals("交易卡号")) {
                     System.out.println(rowList);
                     listB.add(BankZzxxEntity.listToObj(rowList, title));
                 }

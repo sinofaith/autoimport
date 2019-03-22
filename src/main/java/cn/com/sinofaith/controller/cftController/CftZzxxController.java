@@ -35,6 +35,14 @@ public class CftZzxxController {
         return mav;
     }
 
+    @RequestMapping(value = "/seachByUrl")
+    public ModelAndView getByUrl(@RequestParam("wxzh") String wxzh,HttpSession ses){
+        ModelAndView mav = new ModelAndView("redirect:/cftzzxx/seach?pageNo=1");
+        ses.setAttribute("zzseachCondition","zh");
+        ses.setAttribute("zzseachCode",wxzh.replace("#",""));
+        return mav;
+    }
+
     @RequestMapping(value = "/seach")
     public ModelAndView getCftzzxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("cft/cftzzxx");
