@@ -26,6 +26,18 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         return Integer.parseInt((String) map.get("NUM"));
     }
 
+    public List<String> getYhkkhDis(long aj_id){
+        List<String> result = new ArrayList<>();
+        String sql = " select distinct t.yhkkh from bank_zzxx t where t.aj_id = "+aj_id;
+        List list = findBySQL(sql);
+        Map map ;
+        for(int i=0;i<list.size();i++){
+            map = (Map) list.get(i);
+            result.add(map.get("YHKKH").toString());
+        }
+        return result;
+    }
+
     public int getCount(String seachCode){
         String sql ="select to_char(count(1)) num from( " +
                 "select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj) su from bank_zzxx c " +

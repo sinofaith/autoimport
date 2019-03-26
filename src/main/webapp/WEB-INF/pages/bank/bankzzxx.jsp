@@ -26,10 +26,9 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx" class="addactive">银行卡交易信息</a>
-        <a href="/SINOFAITH/banktjjg">银行卡账户信息</a><a href="/SINOFAITH/banktjjgs">银行卡对手账户信息</a>
-        <a href="/SINOFAITH/bankgtzh">银行卡共同账户信息</a></span>
-    <ul >
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx" class="addactive">资金交易明细</a>
+        <a href="/SINOFAITH/banktjjg" >账户统计信息</a><a href="/SINOFAITH/banktjjgs">账户点对点统计信息</a>
+        <a href="/SINOFAITH/bankgtzh">公共账户统计信息</a></span>    <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
                 <div class="cantent_block ">
@@ -41,7 +40,7 @@
                                     <tr>
                                         <td colspan="13"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>银行卡转账信息(${aj.aj})</strong>
+                                                <strong>资金交易明细(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>

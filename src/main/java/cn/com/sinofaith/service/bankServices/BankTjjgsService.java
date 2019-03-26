@@ -8,6 +8,7 @@ import cn.com.sinofaith.bean.cftBean.CftTjjgsEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.dao.bankDao.BankTjjgsDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
+import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.dao.cftDao.CftTjjgsDao;
 import cn.com.sinofaith.form.bankForm.BankTjForm;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
@@ -38,6 +39,9 @@ public class BankTjjgsService {
 
     @Autowired
     private BankZcxxDao bzcd;
+
+    @Autowired
+    private BankZzxxDao bzzd;
 
     public Page queryForPage(int currentPage, int pageSize, String seach){
         Page page = new Page();
@@ -217,11 +221,8 @@ public class BankTjjgsService {
                     }
             }
         }
-        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
-        List<String> zczh = new ArrayList<>();
-        for(int i=0 ;i<listZcxx.size();i++){
-            zczh.add(listZcxx.get(i).getYhkkh());
-        }
+//        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
+        List<String> zczh = bzzd.getYhkkhDis(aj);
         List<BankTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
         for (int i =0;i<listTjjgs.size();i++){
             BankTjjgsEntity bz = listTjjgs.get(i);

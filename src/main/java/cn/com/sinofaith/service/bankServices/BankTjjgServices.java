@@ -7,6 +7,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.*;
 import cn.com.sinofaith.dao.bankDao.BankTjjgDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
+import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.GetBank;
@@ -40,6 +41,9 @@ public class BankTjjgServices {
 
     @Autowired
     private BankZcxxDao bzcd;
+
+    @Autowired
+    private BankZzxxDao bzzd;
 
     @Autowired
     private BankPersonServices bps;
@@ -316,11 +320,8 @@ public class BankTjjgServices {
 //                    }
 //                }
 //            }
-        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
-        List<String> zczh = new ArrayList<>();
-        for(int i=0 ;i<listZcxx.size();i++){
-            zczh.add(listZcxx.get(i).getYhkkh());
-        }
+//        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
+        List<String> zczh = bzzd.getYhkkhDis(aj);
         listTjjg = new ArrayList<>(map.values());
         for (int i =0;i<listTjjg.size();i++){
             BankTjjgEntity bz = listTjjg.get(i);
@@ -387,18 +388,20 @@ public class BankTjjgServices {
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
         cell = row.createCell(1);
-        cell.setCellValue("姓名");
+        cell.setCellValue("账户类型");
         cell = row.createCell(2);
-        cell.setCellValue("交易账卡号");
+        cell.setCellValue("姓名");
         cell = row.createCell(3);
-        cell.setCellValue("交易总次数");
+        cell.setCellValue("交易账卡号");
         cell = row.createCell(4);
-        cell.setCellValue("进账总次数");
+        cell.setCellValue("交易总次数");
         cell = row.createCell(5);
-        cell.setCellValue("进账总金额(元)");
+        cell.setCellValue("进账总次数");
         cell = row.createCell(6);
-        cell.setCellValue("出账总次数");
+        cell.setCellValue("进账总金额(元)");
         cell = row.createCell(7);
+        cell.setCellValue("出账总次数");
+        cell = row.createCell(8);
         cell.setCellValue("出账总金额(元)");
         for(int i=0;i<listTjjg.size();i++){
             if(i>=65535&& i%65535==0){
@@ -407,18 +410,20 @@ public class BankTjjgServices {
                 cell = row.createCell(0);
                 cell.setCellValue("序号");
                 cell = row.createCell(1);
-                cell.setCellValue("姓名");
+                cell.setCellValue("账户类型");
                 cell = row.createCell(2);
-                cell.setCellValue("交易账卡号");
+                cell.setCellValue("姓名");
                 cell = row.createCell(3);
-                cell.setCellValue("交易总次数");
+                cell.setCellValue("交易账卡号");
                 cell = row.createCell(4);
-                cell.setCellValue("进账总次数");
+                cell.setCellValue("交易总次数");
                 cell = row.createCell(5);
-                cell.setCellValue("进账总金额(元)");
+                cell.setCellValue("进账总次数");
                 cell = row.createCell(6);
-                cell.setCellValue("出账总次数");
+                cell.setCellValue("进账总金额(元)");
                 cell = row.createCell(7);
+                cell.setCellValue("出账总次数");
+                cell = row.createCell(8);
                 cell.setCellValue("出账总金额(元)");
                 b+=1;
             }
@@ -427,20 +432,22 @@ public class BankTjjgServices {
             cell = row.createCell(0);
             cell.setCellValue(i+1);
             cell = row.createCell(1);
+            cell.setCellValue("0".equals(map.get("ZHLX").toString()) ? "已调单账户" :"未调单账户");
+            cell = row.createCell(2);
             if(map.get("KHXM") != null && map.get("KHXM").toString().length()>0){
                 cell.setCellValue(map.get("KHXM").toString());
             }
-            cell = row.createCell(2);
-            cell.setCellValue(map.get("JYZH").toString());
             cell = row.createCell(3);
-            cell.setCellValue(map.get("JYZCS").toString());
+            cell.setCellValue(map.get("JYZH").toString());
             cell = row.createCell(4);
-            cell.setCellValue(map.get("JZZCS").toString());
+            cell.setCellValue(map.get("JYZCS").toString());
             cell = row.createCell(5);
-            cell.setCellValue(map.get("JZZJE").toString());
+            cell.setCellValue(map.get("JZZCS").toString());
             cell = row.createCell(6);
-            cell.setCellValue(map.get("CZZCS").toString());
+            cell.setCellValue(map.get("JZZJE").toString());
             cell = row.createCell(7);
+            cell.setCellValue(map.get("CZZCS").toString());
+            cell = row.createCell(8);
             cell.setCellValue(map.get("CZZJE").toString());
             if(i%65536==0) {
                 for (int a = 0; a < 10; a++) {

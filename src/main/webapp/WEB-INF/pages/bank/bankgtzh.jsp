@@ -28,9 +28,9 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡交易信息</a>
-        <a href="/SINOFAITH/banktjjg">银行卡账户信息</a><a href="/SINOFAITH/banktjjgs">银行卡对手账户信息</a>
-        <a href="/SINOFAITH/bankgtzh" class="addactive">银行卡共同账户信息</a></span>    <ul >
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx">资金交易明细</a>
+        <a href="/SINOFAITH/banktjjg" >账户统计信息</a><a href="/SINOFAITH/banktjjgs">账户点对点统计信息</a>
+        <a href="/SINOFAITH/bankgtzh" class="addactive">公共账户统计信息</a></span>    <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
                 <div class="cantent_block ">
@@ -42,7 +42,7 @@
                                     <tr>
                                         <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>银行卡共同账户信息(${aj.aj})</strong>
+                                                <strong>公共账户统计信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
@@ -133,7 +133,7 @@
                                             <option value="jyzh"<c:if test="${gtseachCondition=='jyzh'}">selected="selected"</c:if>>交易账卡号</option>
                                             <option value="khxm"<c:if test="${gtseachCondition=='khxm'}">selected="selected"</c:if>>姓名</option>
                                             <option value="dfzh" <c:if test="${gtseachCondition=='dfzh'}">selected="selected"</c:if> >对方账户</option>
-                                            <option value="dsxm" <c:if test="${gtseachCondition=='dfzh'}">selected="selected"</c:if> >对方户名</option>
+                                            <option value="dsxm" <c:if test="${gtseachCondition=='dsxm'}">selected="selected"</c:if> >对方户名</option>
                                             <option value="jzzje"<c:if test="${gtseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${gtseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>
                                             <%--<option value="sfzhm" <c:if test="${seachCondition=='sfzhm'}">selected="selected"</c:if> >身份证号码</option>--%>

@@ -42,9 +42,9 @@
         </style>
 
         <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >银行卡开户信息</a><a href="/SINOFAITH/bankzzxx">银行卡交易信息</a>
-        <a href="/SINOFAITH/banktjjg" class="addactive">银行卡账户信息</a><a href="/SINOFAITH/banktjjgs">银行卡对手账户信息</a>
-        <a href="/SINOFAITH/bankgtzh">银行卡共同账户信息</a></span>
+    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx">资金交易明细</a>
+        <a href="/SINOFAITH/banktjjg" class="addactive">账户统计信息</a><a href="/SINOFAITH/banktjjgs">账户点对点统计信息</a>
+        <a href="/SINOFAITH/bankgtzh">公共账户统计信息</a></span>
             <ul>
                 <div class="main-container-inner " style="margin-bottom: 10px">
                     <div class="width_100 pos_re_block">
@@ -59,7 +59,7 @@
                                                 <td colspan="10" align="center" class="dropdown_index"
                                                     style="background-color: #eee;">
                                                     <div class="dropdown " style="color: #333">
-                                                        <strong>银行卡账户信息(${aj.aj})</strong>
+                                                        <strong>账户统计信息(${aj.aj})</strong>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -333,7 +333,7 @@
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">×
                 </button>
-                <h4 class="modal-title" id="myModalLabel1">银行卡账户信息</h4>
+                <h4 class="modal-title" id="myModalLabel1">账户统计信息</h4>
                 出账总金额阀值:<input type="number" min="50000" style="width:120px" class="txt" id="czje">
                 进账总金额阀值:<input type="number" min="50000" style="width:120px"  class="txt" id="jzje">
                 <input type="button" class="btn btn-default" value="预览数据" onclick="getZhxxByFilter()">
