@@ -23,10 +23,12 @@ import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.ReadExcelUtils;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import com.csvreader.CsvReader;
+import com.csvreader.CsvWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -523,6 +525,56 @@ public class UploadService {
 
         return wls;
     }*/
+
+    public  void getBzzxxTitle(String temp,int i,Map<String,Integer> title){
+            if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
+                title.put("yhkkh", i);
+            } else if (temp.contains("交易账号")) {
+                title.put("yhkzh", i);
+            } else if (temp.contains("交易户名")) {
+                title.put("jyxm", i);
+            } else if (temp.contains("交易证件号")) {
+                title.put("jyzjh", i);
+            } else if (temp.contains("交易日期")||temp.contains("交易时间")) {
+                title.put("jysj", i);
+            }
+//                        else if (temp.contains("交易时间")) {
+//                            title.put("jysfm", i);
+//                        }
+            else if (temp.contains("交易金额")) {
+                title.put("jyje", i);
+            } else if (temp.contains("交易余额") && !temp.contains("对手")) {
+                title.put("jyye", i);
+            } else if (temp.contains("收付标志")) {
+                title.put("sfbz", i);
+            } else if (temp.contains("对手账号")||temp.contains("对手账卡号")) {
+                title.put("dskh", i);
+            } else if (temp.contains("对手卡号")) {
+                title.put("dszh", i);
+            } else if (temp.contains("对手户名")) {
+                title.put("dsxm", i);
+            } else if (temp.contains("对手身份证号")) {
+                title.put("dssfzh", i);
+            } else if (temp.contains("对手开户银行")) {
+                title.put("dskhh", i);
+            } else if (temp.contains("摘要说明")) {
+                title.put("zysm", i);
+            } else if (temp.contains("交易网点名称")) {
+                title.put("jywdmc", i);
+            } else if (temp.contains("交易发生地")) {
+                title.put("jyfsd", i);
+            } else if (temp.contains("交易是否成功")) {
+                title.put("jysfcg", i);
+            } else if (temp.contains("对手交易余额")) {
+                title.put("dsjyye", i);
+            } else if (temp.contains("对手余额")) {
+                title.put("dsye", i);
+            } else if (temp.contains("备注")) {
+                title.put("bz", i);
+            }
+        }
+
+
     public List<BankZzxxEntity> getByExcel(List<String> filepath) {
         final Map<String, Integer> title = new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
@@ -532,51 +584,7 @@ public class UploadService {
                 if (curRow == 0) {
                     for (int i = 0; i < rowList.size(); i++) {
                         String temp = rowList.get(i);
-                        if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
-                            title.put("yhkkh", i);
-                        } else if (temp.contains("交易账号")) {
-                            title.put("yhkzh", i);
-                        } else if (rowList.get(i).contains("交易户名")) {
-                            title.put("jyxm", i);
-                        } else if (temp.contains("交易证件号")) {
-                            title.put("jyzjh", i);
-                        } else if (temp.contains("交易日期")||temp.contains("交易时间")) {
-                            title.put("jysj", i);
-                        }
-//                        else if (temp.contains("交易时间")) {
-//                            title.put("jysfm", i);
-//                        }
-                        else if (temp.contains("交易金额")) {
-                            title.put("jyje", i);
-                        } else if (temp.contains("交易余额") && !temp.contains("对手")) {
-                            title.put("jyye", i);
-                        } else if (temp.contains("收付标志")) {
-                            title.put("sfbz", i);
-                        } else if (temp.contains("对手账号")||temp.contains("对手账卡号")) {
-                            title.put("dskh", i);
-                        } else if (temp.contains("对手卡号")) {
-                            title.put("dszh", i);
-                        } else if (temp.contains("对手户名")) {
-                            title.put("dsxm", i);
-                        } else if (temp.contains("对手身份证号")) {
-                            title.put("dssfzh", i);
-                        } else if (temp.contains("对手开户银行")) {
-                            title.put("dskhh", i);
-                        } else if (temp.contains("摘要说明")) {
-                            title.put("zysm", i);
-                        } else if (temp.contains("交易网点名称")) {
-                            title.put("jywdmc", i);
-                        } else if (temp.contains("交易发生地")) {
-                            title.put("jyfsd", i);
-                        } else if (temp.contains("交易是否成功")) {
-                            title.put("jysfcg", i);
-                        } else if (temp.contains("对手交易余额")) {
-                            title.put("dsjyye", i);
-                        } else if (temp.contains("对手余额")) {
-                            title.put("dsye", i);
-                        } else if (temp.contains("备注")) {
-                            title.put("bz", i);
-                        }
+                        getBzzxxTitle(temp,i,title);
                     }
                 } else {
                     listB.add(BankZzxxEntity.listToObj(rowList, title));
@@ -586,8 +594,23 @@ public class UploadService {
 
         for (int i = 0; i < filepath.size(); i++) {
             try {
-                reader.process(filepath.get(i));
-                new File(filepath.get(i)).delete();
+                if(filepath.get(i).endsWith(".xlsx")) {
+                    reader.process(filepath.get(i));
+                    new File(filepath.get(i)).delete();
+                }
+                if(filepath.get(i).endsWith(".csv")){
+                    CsvReader csv = new CsvReader(filepath.get(i),',',Charset.forName("GBK"));
+                    csv.readHeaders();
+                    csv.setSafetySwitch(false);
+                    String[] titles = csv.getHeaders();
+                    for(int j=0;j<titles.length;j++){
+                        getBzzxxTitle(titles[j],j,title);
+                    }
+                    csv.setSafetySwitch(false);
+                    while (csv.readRecord()){
+                        listB.add(BankZzxxEntity.listToObj(Arrays.asList(csv.getValues()), title));
+                    }
+                }
             } catch (Exception e) {
                 e.getStackTrace();
             }
@@ -600,7 +623,7 @@ public class UploadService {
     public int insertBankZcxx(String filePath, long aj_id) {
         List<String> listPath = getFileLists(filePath, "开户");
         listPath.addAll(getFileLists(filePath,"账户信息"));
-        List<BankZcxxEntity> listZcxx = getBzcxxByExcel(listPath);
+        List<BankZcxxEntity> listZcxx = getBzcxxByFile(listPath);
         int i = bzcd.saveZcxx(listZcxx, aj_id);
         BankPersonEntity bpe = new BankPersonEntity();
         for (BankZcxxEntity bce : listZcxx) {
@@ -614,47 +637,79 @@ public class UploadService {
         return i;
     }
 
-    public List<BankZcxxEntity> getBzcxxByExcel(List<String> listPath) {
+    public  Map<String,Integer> getBzcxxTitle(String[] titles){
+        Map<String, Integer> title = new HashMap<>();
+        for (int i = 0; i < titles.length; i++) {
+            String str = titles[i];
+            String lb = "";
+            if (str != null && str.length() > 0) {
+                if (str.contains("账户开户名称")) {
+                    lb = "khxm";
+                } else if (str.contains("开户人证件号码")) {
+                    lb = "khzjh";
+                } else if (str.contains("交易卡号")) {
+                    lb = "yhkkh";
+                } else if (str.contains("交易账号")) {
+                    lb = "yhkzh";
+                } else if (str.contains("账号开户时间")) {
+                    lb = "khsj";
+                } else if (str.contains("开户网点")) {
+                    lb = "khh";
+                } else if (str.contains("账户状态")) {
+                    lb = "zhzt";
+                } else if (str.contains("账户余额")) {
+                    lb = "zhye";
+                } else if (str.contains("可用余额")) {
+                    lb = "kyye";
+                }
+                if (!"".endsWith(lb)) {
+                    title.put(lb, i);
+                }
+            }
+        }
+        return title;
+    }
+
+    public List<BankZcxxEntity> getBzcxxByFile(List<String> listPath) {
         List<BankZcxxEntity> zcxxs = new ArrayList<>();
+        Map<String, Integer> title = new HashMap<>();
         for (String path : listPath) {
             try {
-                ReadExcelUtils excelReader = new ReadExcelUtils(path);
-                String[] titles = excelReader.readExcelTitle();
-                List<String> strTitle = new ArrayList<>(Arrays.asList(titles));
-                Map<String, Integer> title = new HashMap<>();
-                for (int i = 0; i < strTitle.size(); i++) {
-                    String str = strTitle.get(i);
-                    String lb = "";
-                    if (str != null && str.length() > 0) {
-                        if (str.contains("账户开户名称")) {
-                            lb = "khxm";
-                        } else if (str.contains("开户人证件号码")) {
-                            lb = "khzjh";
-                        } else if (str.contains("交易卡号")) {
-                            lb = "yhkkh";
-                        } else if (str.contains("交易账号")) {
-                            lb = "yhkzh";
-                        } else if (str.contains("账号开户时间")) {
-                            lb = "khsj";
-                        } else if (str.contains("开户网点")) {
-                            lb = "khh";
-                        } else if (str.contains("账户状态")) {
-                            lb = "zhzt";
-                        } else if (str.contains("账户余额")) {
-                            lb = "zhye";
-                        } else if (str.contains("可用余额")) {
-                            lb = "kyye";
-                        }
-                        if (!"".endsWith(lb)) {
-                            title.put(lb, i);
+                if (path.endsWith(".xls") || path.endsWith(".xlsx")) {
+                    ReadExcelUtils excelReader = new ReadExcelUtils(path);
+                    String[] titles = excelReader.readExcelTitle();
+                    title = getBzcxxTitle(titles);
+                    Map<Integer, Map<Integer, Object>> map = excelReader.readExcelContent();
+                    for (int i = 1; i <= map.size(); i++) {
+                        if (!zcxxs.contains(BankZcxxEntity.mapToObj(map.get(i), title))) {
+                            zcxxs.add(BankZcxxEntity.mapToObj(map.get(i), title));
                         }
                     }
                 }
-
-                Map<Integer, Map<Integer, Object>> map = excelReader.readExcelContent();
-                for (int i = 1; i <= map.size(); i++) {
-                    if (!zcxxs.contains(BankZcxxEntity.mapToObj(map.get(i), title))) {
-                        zcxxs.add(BankZcxxEntity.mapToObj(map.get(i), title));
+                if(path.endsWith(".csv")){
+                    CsvReader csv = new CsvReader(path,',',Charset.forName("GBK"));
+                    csv.readHeaders();
+                    csv.setSafetySwitch(false);
+                    title = getBzcxxTitle(csv.getHeaders());
+                    BankZcxxEntity zcxx = null;
+                    while (csv.readRecord()){
+                        zcxx = new BankZcxxEntity();
+                        zcxx.setZhzt(csv.get(title.get("zhzt")).replace("\t","").trim());
+                        zcxx.setKhxm(csv.get(title.get("khxm")).replace("\t","").trim());
+                        zcxx.setYhkkh(csv.get(title.get("yhkkh")).replace("_156_1", "").replace("\t","").trim());
+                        zcxx.setYhkzh(csv.get(title.get("yhkzh")).replace("_156_1", "").replace("\t","").trim());
+                        if ("".equals(zcxx.getYhkkh())) {
+                            zcxx.setYhkkh(zcxx.getYhkzh());
+                        }
+                        zcxx.setKhxm(csv.get(title.get("khxm")).replace("\t","").trim());
+                        zcxx.setKhzjh(csv.get(title.get("khzjh")).replace("\t","").trim());
+                        zcxx.setKhsj(csv.get(title.get("khsj")).replace("\t","").trim());
+                        zcxx.setKhh(csv.get(title.get("khh")).replace("\t","").trim());
+                        zcxx.setKyye(new BigDecimal(csv.get(title.get("kyye")).replace("\t","").trim().equals("")? "0":csv.get(title.get("kyye")).replace("\t","").trim()));
+                        zcxx.setZhye(new BigDecimal(csv.get(title.get("zhye")).replace("\t","").trim().equals("")? "0":csv.get(title.get("zhye")).replace("\t","").trim()));
+                        if (!zcxxs.contains(zcxx)) {
+                            zcxxs.add(zcxx);
+                        }
                     }
                 }
             } catch (FileNotFoundException e) {
@@ -673,7 +728,7 @@ public class UploadService {
         File dir = new File(filePath);
         File[] files = dir.listFiles();
         for (File file : files) {
-            if (file.getName().contains(filter)) {
+            if (file.getName().contains(filter)&&!file.getName().contains("子账户信息")) {
                 listPath.add(file.getAbsolutePath());
             }
         }

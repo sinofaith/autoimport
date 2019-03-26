@@ -65,7 +65,7 @@ function UploadBank() {
         var index1=fileName.lastIndexOf(".");
         var index2=fileName.length;
         var suffix=fileName.substring(index1,index2);
-        if(fileName.indexOf("~$") != 0 && (suffix==".xlx"||suffix==".xlsx")) {
+        if(fileName.indexOf("~$") != 0 && (suffix==".xlx"||suffix==".xlsx"||suffix==".csv")) {
             form.append("file", fileObj.files[i]); // 文件对象
         }
     }

@@ -882,7 +882,7 @@ function downDetailJylx(){
   var jylx =$("#jylx").val();
   var type = ""
 
-    if(zzbds.test(jylx)){
+    if(!zzbds.test(jylx)){
         type="dfzh"
     }else{
         type="jylx"

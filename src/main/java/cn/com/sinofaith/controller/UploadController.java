@@ -260,7 +260,7 @@ public class UploadController {
         for(int i=0;i<file.size();i++){
             fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
             filePath = uploadPath + fileName;
-            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")||fileName.endsWith(".csv")){
                 uploadFile = new File(filePath);
                 try {
                     file.get(i).transferTo(uploadFile);
