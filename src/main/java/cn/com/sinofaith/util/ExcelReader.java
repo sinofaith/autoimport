@@ -284,12 +284,17 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
+<<<<<<< Updated upstream
         String file = "D:\\work\\数据模型\\资金\\假HP第一批\\陶国龙、梁明霞、张仁蛟、钟高艺\\交易明细信息 (26).xlsx";
+=======
+        String file = "C:\\Users\\zheng\\Desktop\\工作文件\\传销\\传销数据3\\第一部分.xlsx";
+>>>>>>> Stashed changes
         final Map<String,Integer> title=new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 
         ExcelReader reader = new ExcelReader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                System.out.println(rowList);
                 if(curRow==0){
                     for(int i = 0;i<rowList.size(); i++){
                         String temp = rowList.get(i);

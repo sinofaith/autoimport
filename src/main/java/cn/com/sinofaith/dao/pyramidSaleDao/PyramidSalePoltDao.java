@@ -65,4 +65,22 @@ public class PyramidSalePoltDao extends BaseDao<PsHierarchyEntity> {
         }
         return psPoltForms;
     }
+
+    public List<PsPoltForm> geTreeNode(String psid) {
+        String sql = "";
+        if(psid==null){
+            sql = "select t.psid,t.sponsorid,t.nick_name name from PYRAMIDSALE t where t.sponsorid is null and aj_id=281";
+        }else{
+            sql = "select t.psid,t.sponsorid,t.nick_name name from PYRAMIDSALE t where t.sponsorid="+psid+" and aj_id=281";
+        }
+        Session session = getSession();
+        Transaction tx = session.beginTransaction();
+        List<PsPoltForm> list = session.createSQLQuery(sql)
+                .addScalar("psid")
+                .addScalar("sponsorid")
+                .addScalar("name")
+                .setResultTransformer(Transformers.aliasToBean(PsPoltForm.class)).list();
+        tx.commit();
+        return list;
+    }
 }

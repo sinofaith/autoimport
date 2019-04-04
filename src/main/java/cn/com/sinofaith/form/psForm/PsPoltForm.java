@@ -9,7 +9,12 @@ public class PsPoltForm {
     private String name;
     private Long tier;
     private Long value;
-    private List<PsPoltForm> children = new ArrayList<>();
+    private Long lineal; // 直系
+    private Long contain = 0l; // 包含
+    private Long containNum = 0l; // 下线数
+    private String path;
+    private List<PsPoltForm> children = new ArrayList<>();// 孩子节点
+    private PsPoltForm parentNode;// 父节点
 
     public String getPsid() {
         return psid;
@@ -61,5 +66,45 @@ public class PsPoltForm {
 
     public void setChildren(List<PsPoltForm> children) {
         this.children = children;
+    }
+
+    public Long getLineal() {
+        return lineal;
+    }
+
+    public void setLineal(Long lineal) {
+        this.lineal = lineal;
+    }
+
+    public Long getContain() {
+        return contain;
+    }
+
+    public void setContain(Long contain) {
+        this.contain = contain;
+    }
+
+    public Long getContainNum() {
+        return containNum;
+    }
+
+    public void setContainNum(Long containNum) {
+        this.containNum = containNum;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public PsPoltForm getParentNode() {
+        return parentNode;
+    }
+
+    public void setParentNode(PsPoltForm parentNode) {
+        this.parentNode = parentNode;
     }
 }

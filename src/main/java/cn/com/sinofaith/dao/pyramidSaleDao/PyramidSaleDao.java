@@ -3,6 +3,8 @@ package cn.com.sinofaith.dao.pyramidSaleDao;
 import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.dao.BaseDao;
 import cn.com.sinofaith.util.DBUtil;
+import oracle.sql.CLOB;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,11 +12,14 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 传销dao层
@@ -58,7 +63,7 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
                 pstm.setLong(12,aj_id);
                 pstm.addBatch();
                 a++;
-                // 有5000条添加一次
+                // 有50000条添加一次
                 if ((i + 1) % 50000 == 0) {
                     pstm.executeBatch();
                     pstm.clearParameters();
@@ -73,6 +78,29 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
             e.printStackTrace();
         }
         return a;
+    }
+
+    /**
+     * 获取根节点数据
+     * @param id
+     * @return
+     */
+    public List<String> getRootNode(long id) {
+        String sql = "select distinct(sponsorid) from pyramidsale t where not exists(select t1.psid from " +
+                "pyramidsale t1 where t.sponsorid=t1.psid and aj_id="+id+") and aj_id="+id;
+        List<String> rootNodes = null;
+        // 获得当前session
+        Session session = getSession();
+        try {
+            // 开启事务
+            Transaction tx = session.beginTransaction();
+            rootNodes = (List) session.createSQLQuery(sql).list();
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return rootNodes;
     }
 
     /**
@@ -93,13 +121,17 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
             List<String> sponsorid = (List) session.createSQLQuery(sql1).list();
             tx.commit();
             if(sponsorid.size()>1){
+                List<PyramidSaleEntity> pList = new ArrayList<>();
                 for (String s : sponsorid) {
                     PyramidSaleEntity ps = new PyramidSaleEntity();
                     ps.setPsId(s);
                     ps.setSponsorId("根节点");
-                    ps.setAj_id(id);
-                    save(ps);
+//                    ps.setAj_id(id);
+                    pList.add(ps);
+                    //save(ps);
                 }
+                if(pList.size()>0)
+                    insertPyramidSale(pList,id);
                 //delete("delete from PyramidSaleEntity where aj_id="+id);
                 //return psHierList;
             }
@@ -117,13 +149,24 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
                 sql.append("select distinct t.psid,t.sponsorid,t.nick_name,t.aj_id from PYRAMIDSALE t where t.aj_id="+id+") y start with sponsorid = '"+temp+"' connect by prior psid=sponsorid) t ");
                 sql.append("left join(select * from (select psid,count(1)-1 directReferNum from ( select * from ( ");
                 sql.append("select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id) su from PYRAMIDSALE t where aj_id="+id+") where su=1 ) ");
-                sql.append("connect by psid= prior sponsorid group by psid ) where directReferNum > 0) p on t.psid=p.psid ");
+                sql.append("connect by NOCYCLE psid=prior sponsorid group by psid ) where directReferNum > 0) p on t.psid=p.psid ");
                 sql.append("left join(select h1.sponsorid,count(1) directDrive from pyramidsale h1 where aj_id="+id+" group by h1.sponsorid) d on d.sponsorid=t.psid ");
-                sql.append("left join(select psid,max(level)-1 containsTier from(select b.psid,b.sponsorid from pyramidsale b where b.aj_id="+id+") c connect by c.psid=prior c.sponsorid ");
+                sql.append("left join(select psid,max(level)-1 containsTier from(select b.psid,b.sponsorid from pyramidsale b where b.aj_id="+id+") c connect by NOCYCLE c.psid=prior c.sponsorid ");
                 sql.append("group by c.psid) p1 on p1.psid=t.psid where t.tier>0");
-
                 SQLQuery sqlQuery = session.createSQLQuery(sql.toString());
                 rowNum = sqlQuery.executeUpdate();
+//                List<PsHierarchyEntity> phList = session.createSQLQuery(sql.toString())
+//                        .addScalar("psId")
+//                        .addScalar("sponsorId")
+//                        .addScalar("nick_name")
+//                        .addScalar("path")
+//                        .addScalar("tier",StandardBasicTypes.LONG)
+//                        .addScalar("aj_id",StandardBasicTypes.LONG)
+//                        .addScalar("directReferNum",StandardBasicTypes.LONG)
+//                        .addScalar("containsTier",StandardBasicTypes.LONG)
+//                        .addScalar("directDrive",StandardBasicTypes.LONG)
+//                        .setResultTransformer(Transformers.aliasToBean(PsHierarchyEntity.class)).list();
+//                rowNum = phList.size();
                 // 提交事务
                 tx1.commit();
                 // 删除添加的数据
@@ -140,22 +183,43 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
     }
 
     /**
-     * 详情数据总和
+     * 直推详情数据总和
      * @param seach
      * @return
      */
-    public int getRowAllBySql(String seach, boolean temp, String psId) {
-        String sql = "";
-        if(temp){
-            sql = "select to_char(count(1)) num from (select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)su from PYRAMIDSALE t where "+seach+") where su=1)";
-        }else {
-            sql = "select to_char(count(1)) num from (select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)su " +
-                    "from PYRAMIDSALE t where (1=1) "+seach+") where su=1)start with sponsorid = '"+psId+"' connect by prior psid=sponsorid";
-        }
-        List list = findBySQL(sql);
-        Map map = (Map) list.get(0);
-        return Integer.parseInt((String)map.get("NUM"));
+    public int getRowAllBySql(String seach) {
+        String sql = "select to_char(count(1)) num from (select * from (select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)su from PYRAMIDSALE t where "+seach+") where su=1)";
+            List list = findBySQL(sql);
+            Map map = (Map) list.get(0);
+            return Integer.parseInt((String)map.get("NUM"));
     }
+
+    /**
+     * 下线会员数
+     * @param seach
+     * @param psId
+     * @return
+     */
+    public Set<String> getRowAllBySqls(String seach, String psId) {
+        Set<String> p = null;
+        String sql = "select path from ps_hierarchy where psid="+psId + seach;
+        Session session = getSession();
+        try{
+            Transaction tx = session.beginTransaction();
+            List path = session.createSQLQuery(sql).addScalar("path", StandardBasicTypes.STRING).list();
+            String[] paths = ((String)path.get(0)).split("/");
+            p = new HashSet<>();
+            for (int i = 0; i < paths.length; i++) {
+                p.add(paths[i]);
+            }
+            tx.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            session.close();
+        }
+        return p;
+    }
+
 
     /**
      * 详情分页加载数据
@@ -165,7 +229,7 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
      * @param flag
      * @return
      */
-    public List<PyramidSaleEntity> getDoPageBySql(int currentPage, int pageSize, String seach, boolean temp, String psId, boolean flag) {
+    public List<PyramidSaleEntity> getDoPageBySql(int currentPage, int pageSize, String seach, boolean temp, Set<String> p, boolean flag) {
         List<PyramidSaleEntity> psList = null;
         StringBuffer sql = new StringBuffer();
         if(flag){
@@ -177,9 +241,30 @@ public class PyramidSaleDao extends BaseDao<PyramidSaleEntity>{
             sql.append("select t.*,row_number() over(partition by t.psid,t.sponsorid order by t.id)su ");
             sql.append("from PYRAMIDSALE t where "+seach+") where su=1)");
         }else{
+//            sql.append("select * from PYRAMIDSALE where ");
+//            List<String> s = new ArrayList<>();
+//            s.addAll(p);
+//            int length = (int) Math.ceil((double)s.size() / 1000);
+//            for(int i=0;i<length;i++){
+//                String str = "";
+//                if(i==length-1){
+//                    for(int j=i*1000;j<s.size();j++){
+//                        str += s.get(j)+",";
+//                    }
+//                    str = str.substring(0,str.length() - 1);
+//                    sql.append("psid in ("+str+") "+ seach);
+//                }else{
+//                    for(int j=0;j<1000;j++){
+//                        str += s.get(i*1000+j)+",";
+//                    }
+//                    str = str.substring(0,str.length() - 1);
+//                    sql.append("psid in ("+str+") or ");
+////                    break;
+//                }
+//            }
             sql.append("select * from (select t.*,row_number() over(");
             sql.append("partition by t.psid,t.sponsorid order by t.id)su from PYRAMIDSALE t where (1=1) "+seach+") where su=1 ");
-            sql.append("start with sponsorid = '"+psId+"' connect by prior psid=sponsorid");
+            sql.append("start with sponsorid = '3' connect by prior psid=sponsorid");
         }
         if(flag){
             sql.append(") c WHERE ROWNUM <= "+currentPage * pageSize+") WHERE rn >= " + ((currentPage - 1) * pageSize + 1));

@@ -373,7 +373,7 @@ public class UploadController {
      * @return
      */
     @RequestMapping(value = "/uploadPyramidSale", method = RequestMethod.POST)
-    public @ResponseBody Map<String,List<String>> uploadPyramidSale(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
+    public @ResponseBody Map<String,Map<String,List<String>>> uploadPyramidSale(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                               HttpServletRequest req) {
         // 设置服务器文件上传路径
         String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
@@ -399,7 +399,7 @@ public class UploadController {
         }
         req.getSession().setAttribute("path",uploadPath);
         // 读取服务器的excel表
-        Map<String,List<String>> excelMap = pyramidSaleService.readExcel(uploadPath);
+        Map<String,Map<String,List<String>>> excelMap = pyramidSaleService.readExcel(uploadPath);
         if(excelMap!=null){
             return excelMap;
         }
@@ -412,14 +412,15 @@ public class UploadController {
      * @return
      */
     @RequestMapping(value = "/uploadPsSheet",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
-    public @ResponseBody String uploadPsSheet(@RequestBody ArrayList<String> field, HttpSession session){
+    public @ResponseBody String uploadPsSheet(@RequestBody List<List<String>> field, HttpSession session){
         // 读取域中数据
         String path = (String) session.getAttribute("path");
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         // 将数据插入数据库
         int sum = pyramidSaleService.insertPyramidSale(path,field,aj.getId());
         // 插入计算会员当前层级和推荐路径数据
-        int sum1 = pyramidSaleService.insertPsHierarchy(aj.getId());
+//        int sum1 = pyramidSaleService.insertPsHierarchy(aj.getId());
+        int sum1 = 1;
         // 删除文件
 //        String uploadPath = session.getServletContext().getRealPath("/") + "upload/temp/";
         File uploadPathd = new File(path);

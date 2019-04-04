@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 层级信息业务层
@@ -64,9 +65,16 @@ public class PyramidSaleTierService {
     public String getPyramidSale(int currentPage, int pageSize, String seach, boolean temp, String psId) {
         Gson gson = new Gson();
         Page page = new Page();
-        int rowAll = pyramidSaleDao.getRowAllBySql(seach,temp,psId);
+        int rowAll = 0;
+        Set<String> p = null;
+        if (temp){
+            rowAll = pyramidSaleDao.getRowAllBySql(seach);
+        }else{
+            p = pyramidSaleDao.getRowAllBySqls(seach,psId);
+            rowAll = p.size();
+        }
         if(rowAll>0){
-            List<PyramidSaleEntity> psList = pyramidSaleDao.getDoPageBySql(currentPage,pageSize,seach,temp,psId,true);
+            List<PyramidSaleEntity> psList = pyramidSaleDao.getDoPageBySql(currentPage,pageSize,seach,temp,p,true);
             for (int i = 0; i < psList.size(); i++) {
                 psList.get(i).setId((currentPage-1)*pageSize+i+1);
             }
@@ -175,9 +183,16 @@ public class PyramidSaleTierService {
      */
     public List<PyramidSaleEntity> downDetailInfo(String search, boolean temp, String psId) {
         List<PyramidSaleEntity> psList = null;
-        int rowAll = pyramidSaleDao.getRowAllBySql(search,temp,psId);
+        int rowAll = 0;
+        Set<String> p = null;
+        if (temp){
+            rowAll = pyramidSaleDao.getRowAllBySql(search);
+        }else{
+            p = pyramidSaleDao.getRowAllBySqls(search,psId);
+            rowAll = p.size();
+        }
         if(rowAll>0){
-            psList = pyramidSaleDao.getDoPageBySql(0,0,search,temp,psId,false);
+            psList = pyramidSaleDao.getDoPageBySql(0,0,search,temp,p,false);
         }
         return psList;
     }

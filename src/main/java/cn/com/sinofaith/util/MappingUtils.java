@@ -1,6 +1,5 @@
 package cn.com.sinofaith.util;
 
-import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -70,7 +69,7 @@ public class MappingUtils {
         try {
             fi = new FileInputStream(file);
             Workbook wk = StreamingReader.builder()
-                    .rowCacheSize(2)  //缓存到内存中的行数，默认是10
+                    .rowCacheSize(10)  //缓存到内存中的行数，默认是10
                     .bufferSize(512)  //读取资源时，缓存到内存的字节大小，默认是1024
                     .open(fi);  //打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件
             for (int numSheet = 0; numSheet < wk.getNumberOfSheets(); numSheet++) {
@@ -80,10 +79,13 @@ public class MappingUtils {
                     continue;
                 }
                 int temp = 0;
+                // 字段长度
+                int cellNum = 0;
                 for(Row row : sheet){
                     if (row != null && temp < 2) {
-                        // 字段长度
-                        int cellNum = row.getLastCellNum();
+                        if(temp==0){
+                            cellNum = row.getLastCellNum();
+                        }
                         // 字段少于三个不添加
                         if(cellNum<3){
                             continue;

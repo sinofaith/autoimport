@@ -1,4 +1,5 @@
 // 传销数据导入
+var optionSize;
 function UploadPyramidSale(){
     var fileObj = document.getElementById("file");// js 获取文件对象
     var file = $("#file").val();
@@ -24,28 +25,30 @@ function UploadPyramidSale(){
     xhr.open("post", FileController, true);
     xhr.onload = function(e) {
         if(this.status == 200||this.status == 304){
-            $("#c").empty();
+            if ($("#c18") != null) {
+                $("#c18").remove();
+            }
             var resp = xhr.responseText;
-            var keyList = JSON.parse(resp);
+            keyList = JSON.parse(resp);
+            for (var key in keyList) {
+                optionSize++;
+            }
             var jsonData = JSON.stringify(resp);
             var data = $.parseJSON(jsonData);
-            var i=1;
-            $("#c").append("<label for=\"c12\">Sheet名</label>");
-            $("#c").append("<select\tclass=\"form-control\" id=\"c12\" name=\"custSource\" onchange='insertTable("+data+")'>");
-            for(var key in keyList){
-                if(i==1){
-                    $("#c12").append("<option value='"+key+"' selected>"+key+"</option>");
-                    $("#c12").load(insertTable(keyList));
-                    i++;
-                }else{
-                    $("#c12").append("<option value='"+key+"'>"+key+"</option>");
+            var i = 1;
+            var temp = true;
+            $("#excelName").append("<select class=\"form-control\" id=\"c18\" name=\"custSource\" onchange='insertSheet(" + data + ")'>");
+            for (var key in keyList) {
+                if (temp) {
+                    $("#c18").append("<option value='" + key + "' selected='selected'>" + key + "</option></select>");
+                    $("#c18").load(insertSheet(keyList));
+                    temp = false;
+                } else {
+                    $("#c18").append("<option value='" + key + "'>" + key + "</option></select>");
                 }
             }
-            $("#c").append("</select>");
-
             $('#myModal').modal('hide');
             $('#myModal1').modal('show');
-
         }else{
             alertify.set('notifier','delay', 0);
             alertify.error("错误!请联系管理员");
@@ -70,26 +73,56 @@ function progressFunction(evt) {
     }
 }
 
-function insertTable(data){
-    $("#head").empty();
-    for(i=1;i<12;i++){
-        $("#c"+i).empty();
+// 拼接sheet字符
+function insertSheet(data){
+    if($("#c19")!=null){
+        $("#c19").remove();
     }
-    var key = $('#c12').val();
+    var excelName = $("#c18").val();
+    var sheetName  = data[excelName];
+    var jsonData = JSON.stringify(sheetName);
+    $("#excelSheet").append("<select class=\"form-control\" id=\"c19\" name=\"custSource\" onchange='insertTable("+jsonData+")'></select>");
+    var temp = true;
+    for(var key in sheetName){
+        if(temp){
+            $("#c19").append("<option value='"+key+"' selected>"+key+"</option>");
+            $("#c19").load(insertTable(sheetName));
+            temp = false;
+        }else{
+            $("#c19").append("<option value='"+key+"'>"+key+"</option>");
+        }
+    }
+}
+
+function insertTable(data){
+    var sel = document.getElementById("c18");
+    var index = sel.selectedIndex;
+    var selectLength = sel.length-1;
+    if((selectLength==index && selectLength!=0) || optionSize==1){
+        $("#nextSelect").attr("disabled",true);
+    }else{
+        $("#nextSelect").attr("disabled",false);
+    }
+    var key = $("#c19").val();
+    $("#head").empty();
     var content = "<thead style=\"display:table;width: 350%;table-layout:fixed;\">";
     content += "<tr align=\"center\">";
     var size = Math.ceil(data[key].length/2);
     for(j=1;j<12;j++){
+        $("#c"+j).empty();
         $("#c"+j).append("<option value=\"无\" selected>无</option>")
     }
     for(i=0;i<size;i++){
         content += "<td width='10%' title='"+data[key][i]+"'><div style='width: 100%;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;'>"+data[key][i]+"</div></td>";
         for(j=1;j<12;j++){
-            if((i==0&&j==1)||(data[key][i].indexOf("推荐人")!=-1&&j==2)||(data[key][i].indexOf("mobile")!=-1&&j==3)||
-                (data[key][i].indexOf("telphone")!=-1&&j==4)||(data[key][i].indexOf("用户名")!=-1&&j==5)||
-                (data[key][i].indexOf("性别")!=-1&&j==6)||(data[key][i].indexOf("详细地址")!=-1&&j==7)||
-                (data[key][i].indexOf("身份证")!=-1&&j==8)||(data[key][i].indexOf("开户行")!=-1&&j==9)||
-                (data[key][i].indexOf("持卡人")!=-1&&j==10)||(data[key][i].indexOf("银行卡")!=-1&&j==11)){
+            if(((i==0||data[key][i].indexOf("id1")!=-1)&&j==1 )||((data[key][i].indexOf("推荐人")!=-1||data[key][i].indexOf("tuijian")!=-1)&&j==2)||
+                ((data[key][i].indexOf("mobile")!=-1||data[key][i].indexOf("tel")!=-1)&&j==3)||
+                (data[key][i].indexOf("telphone")!=-1&&j==4)||((data[key][i].indexOf("用户名")!=-1||data[key][i].indexOf("cnname")!=-1)&&j==5)||
+                (data[key][i].indexOf("性别")!=-1&&j==6)||((data[key][i].indexOf("详细地址")!=-1||data[key][i].indexOf("address")!=-1)&&j==7)||
+                ((data[key][i].indexOf("身份证")!=-1||data[key][i].indexOf("sfz")!=-1)&&j==8)||
+                ((data[key][i].indexOf("开户行")!=-1||data[key][i].indexOf("bank")!=-1)&&j==9)||
+                ((data[key][i].indexOf("持卡人")!=-1||data[key][i].indexOf("username")!=-1)&&j==10)||
+                ((data[key][i].indexOf("银行卡")!=-1||data[key][i].indexOf("bankcard")!=-1)&&j==11)){
                 $("#c"+j).append("<option value='"+data[key][i]+"' selected>"+data[key][i]+"</option>");
             }else{
                 $("#c"+j).append("<option value='"+data[key][i]+"'>"+data[key][i]+"</option>");
@@ -108,16 +141,46 @@ function insertTable(data){
     tbody += "</tr></tbody>";
     $("#head").append(content);
     $("#head").append(tbody);
+    $("#mapping").attr("disabled",false);
 }
 
-function uploadPsSheet(){
-    var key = $('#c12').val();
-    var field = [];
-    field.push(key);
+// 封装参数
+var excelData = [];
+function uploadMapping(){
+    var fieldList = [];
+    var excelName = $("#c18").val();
+    fieldList.push(excelName);
+    var excelSheet = $("#c19").val();
+    fieldList.push(excelSheet);
     for(i=1;i<12;i++){
-        field.push($('#c'+i).val());
+        fieldList.push($("#c"+i).val());
     }
-    var list = JSON.stringify(field);
+    if(excelData.length>0){
+        for(j=0;j<excelData.length;j++){
+            var field = excelData[j];
+            if(field[0]==fieldList[0]&&field[1]==fieldList[1]){
+                excelData[j] = fieldList;
+                break;
+            }else if(j==excelData.length-1){
+                excelData.push(fieldList);
+            }
+        }
+    }else{
+        excelData.push(fieldList);
+    }
+    $("#mapping").attr("disabled",true);
+    alertify.set('notifier','position', 'top-center');
+    alertify.success(excelSheet+"</br>"+"映射成功!");
+}
+
+// 导入数据
+function uploadPsSheet(){
+    if(excelData.length<1){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("请至少设置一个字段映射!");
+        return;
+    }
+    var list = JSON.stringify(excelData);
     $.ajax({
         type:"post",
         url:"/SINOFAITH/uploadPsSheet",
@@ -128,11 +191,6 @@ function uploadPsSheet(){
                alertify.set('notifier','position', 'top-center');
                alertify.success("导入完成!");
                setTimeout(function () {document.getElementById("seachDetail").submit()},1500);
-           }else if(data=="403"){
-               alertify.set('notifier','position', 'top-center');
-               alertify.set('notifier','delay', 0);
-               alertify.error("错误!该EXCEL文件存在多个根会员");
-               return;
            }else{
                alertify.set('notifier','position', 'top-center');
                alertify.set('notifier','delay', 0);
@@ -145,6 +203,25 @@ function uploadPsSheet(){
     alertify.set('notifier','position', 'top-center');
     alertify.set('notifier','delay', 0);
     alertify.success("正在导入数据，请等待.....");
+}
+
+// 下一个
+function nextSelect(){
+    var sel = document.getElementById("c18");
+    var index = sel.selectedIndex;
+    var selectLength = sel.length-1;
+    if(index<sel.length-1){
+        sel[index+1].selected=true;
+    }
+    insertSheet(keyList);
+    if(selectLength==index+1){
+        $("#nextSelect").attr("disabled",true);
+    }
+}
+
+// 改变映射字段后
+function selectC() {
+    $("#mapping").attr("disabled",false);
 }
 
 // 跳转页面

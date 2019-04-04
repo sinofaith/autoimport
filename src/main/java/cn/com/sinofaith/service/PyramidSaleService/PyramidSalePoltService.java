@@ -20,6 +20,7 @@ public class PyramidSalePoltService {
     @Autowired
     private PyramidSalePoltDao pyramidSalePoltDao;
 
+    public List<PsPoltForm> pss = new ArrayList<>();
     /**
      * 获取数据
      * @param id
@@ -28,11 +29,23 @@ public class PyramidSalePoltService {
     public List<PsPoltForm> getTreeData(long id,String psId) {
         List<PsPoltForm> psPoltForms = pyramidSalePoltDao.getTreeData(id,psId);
         List<PsPoltForm> psList = formatTree(psPoltForms);
+//        List<PsPoltForm> psList = pyramidSalePoltDao.geTreeNode(psId);
+//        for(PsPoltForm ps : psList){
+//            // 当前层级
+//            ps.setTier(tier);
+//            //查询cid下的所有子节点(SELECT * FROM tb_tree t WHERE t.pid=?)
+//            if(!ps.getPsid().equals(ps.getSponsorid())){
+//                List<PsPoltForm> n = getTreeData(id,ps.getPsid(),tier+1); //递归
+//                // 直系个数
+//                ps.setLineal(n.size());
+//                ps.setChildren(n);
+//            }
+//        }
         return psList;
     }
 
 
-    public static List<PsPoltForm> formatTree(List<PsPoltForm> list ){
+    public static List<PsPoltForm> formatTree(List<PsPoltForm> list){
         PsPoltForm root = new PsPoltForm();
         PsPoltForm node = new PsPoltForm();
         List<PsPoltForm> treelist = new ArrayList<>();//拼凑好的Json数据

@@ -10,7 +10,7 @@ public class PsHierarchyEntity {
     private String sponsorId;
     private String nick_name;
     private String path;
-    private long tier;
+    private Long tier;
     private long aj_id;
     private Long directReferNum;
     private Long containsTier;
