@@ -33,7 +33,6 @@ public class PyramidSaleService {
     private PyramidSaleDao pyramidSaleDao;
     @Autowired
     private PsHierarchyDao psHierarchyDao;
-    private static Long contain = 0l;
      /**
      * 读取excel表
      * @param uploadPath
@@ -110,7 +109,7 @@ public class PyramidSaleService {
             }else{
                 list = getTreeData(null, rootNode, listMap,1l, pfLists);
             }
-            contain = 0l;
+
         }
         psHierarchyDao.insertPsHierarchy(pfLists,aj_id);
     }
@@ -138,7 +137,6 @@ public class PyramidSaleService {
     private void getChildNode(List<PsPoltForm> pfList,Long tier, Map<String, List<PyramidSaleEntity>> listMap,
                               List<PsPoltForm> pfLists) {
         for(PsPoltForm ps : pfList){
-            //ps.setPath(ps.getPsid());
             // 当前层级
             ps.setTier(tier);
             //查询Psid下的所有子节点
@@ -148,16 +146,8 @@ public class PyramidSaleService {
                     // 下线会员数
                     for(PsPoltForm n : ns){
                         ps.setContainNum(ps.getContainNum()+n.getContainNum());
-
-                        ps.setPath(ps.getPath()+"/"+n.getPsid());
                     }
-//                    if(ps.getParentNode()!=null){
-//                        ps.getParentNode().setPath(ps.getParentNode().getPath()+"/"+ps.getPath());
-//                    }
-
                     ps.setContainNum(ps.getContainNum()+ns.size());
-                    // 包含层级数
-                    ps.setContain(contain-ps.getTier());
                     // 直系会员数
                     ps.setLineal(Long.parseLong(String.valueOf(ns.size())));
                     // 下线人
@@ -169,8 +159,13 @@ public class PyramidSaleService {
                     ps.setContain(0l);
                     // 下线会员数
                     ps.setContainNum(0l);
-                    if(ps.getTier()>contain){
-                        contain = ps.getTier();
+                    // 返回当前ps的所有父级
+                    List<PsPoltForm> elders = ps.getElders();
+                    // 计算包含层级
+                    for(int i=0;i<elders.size();i++){
+                        if(elders.get(i).getContain()<elders.size()-(i+1) || elders.get(i).getContain()==0){
+                            elders.get(i).setContain(Long.parseLong(String.valueOf(elders.size()-i)));
+                        }
                     }
                 }
             }else{

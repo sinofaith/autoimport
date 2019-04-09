@@ -107,4 +107,20 @@ public class PsPoltForm {
     public void setParentNode(PsPoltForm parentNode) {
         this.parentNode = parentNode;
     }
+
+    /**
+     * 返回当前节点的所有父辈节点
+     */
+    public List<PsPoltForm> getElders() {
+        List<PsPoltForm> elders = new ArrayList<>();
+        PsPoltForm parentNode = this.parentNode;
+        if (parentNode == null) {
+            return elders;
+        } else {
+            // 倒序插入
+            elders.add(0, parentNode);
+            elders.addAll(0, parentNode.getElders());
+            return elders;
+        }
+    }
 }
