@@ -16,7 +16,7 @@ public class BankZzxxEntity {
     private String yhkzh;
     private String jysj;
     private BigDecimal jyje = new BigDecimal(0);
-    private BigDecimal jyye = new BigDecimal(0);
+    private BigDecimal jyye = new BigDecimal(-1);
     private String sfbz;
     private String dskh;
     private String dszh;
@@ -26,8 +26,8 @@ public class BankZzxxEntity {
     private String zysm;
     private String jysfcg;
     private String jywdmc;
-    private BigDecimal dsjyye = new BigDecimal(0);
-    private BigDecimal dsye =new BigDecimal(0);
+    private BigDecimal dsjyye = new BigDecimal(-1);
+    private BigDecimal dsye =new BigDecimal(-1);
     private String bz;
     private String jyzjh;
     private String jyxm;
@@ -353,11 +353,18 @@ public class BankZzxxEntity {
         result = 31 * result + (dskh != null ? dskh.hashCode() : 0);
         return result;
     }
+    public  String remove_(String yhkkh){
+        if(yhkkh.indexOf("_")>5){
+            return yhkkh.split("_")[0];
+        }else {
+            return yhkkh;
+        }
+    }
 
     public static BankZzxxEntity listToObj(List<String> list, Map<String,Integer> title){
         BankZzxxEntity b = new BankZzxxEntity();
-        b.setYhkkh("".equals(list.get(title.get("yhkkh")).trim()) ? null:list.get(title.get("yhkkh")).replace("_156_1","").trim());
-        b.setYhkzh("".equals(list.get(title.get("yhkzh")).trim()) ? null:list.get(title.get("yhkzh")).replace("_156_1","").trim());
+        b.setYhkkh("".equals(list.get(title.get("yhkkh")).trim()) ? null:b.remove_(list.get(title.get("yhkkh"))).trim());
+        b.setYhkzh("".equals(list.get(title.get("yhkzh")).trim()) ? null:b.remove_(list.get(title.get("yhkzh"))).trim());
         if(b.getYhkkh()==null){
             b.setYhkkh(b.getYhkzh());
         }
@@ -371,9 +378,9 @@ public class BankZzxxEntity {
         b.setJyje(new BigDecimal(list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")).trim():"0" ));
         b.setJyye(new BigDecimal(list.get(title.get("jyye")).trim().length()>0 ? list.get(title.get("jyye")).trim():"0" ));
         b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).replace("付","出").replace("收","入").trim());
-        b.setDskh("".equals(list.get(title.get("dskh")).trim())? null:list.get(title.get("dskh")).replace("_156_1","").trim());
+        b.setDskh("".equals(list.get(title.get("dskh")).trim())? null:b.remove_(list.get(title.get("dskh"))).trim());
         if(title.containsKey("dszh")) {
-            b.setDszh("".equals(list.get(title.get("dszh")).trim()) ? null : list.get(title.get("dszh")).replace("_156_1", "").trim());
+            b.setDszh("".equals(list.get(title.get("dszh")).trim()) ? null : b.remove_(list.get(title.get("dszh"))).trim());
         }
         b.setDsxm("".equals(list.get(title.get("dsxm")).trim())? null:list.get(title.get("dsxm")).trim());
         b.setDssfzh("".equals(list.get(title.get("dssfzh")).trim())? null:list.get(title.get("dssfzh")).trim());

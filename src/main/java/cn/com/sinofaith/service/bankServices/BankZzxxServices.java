@@ -169,7 +169,7 @@ public class BankZzxxServices {
         Cell cell = row.createCell(0);
         cell.setCellValue("序号");
         cell = row.createCell(1);
-        cell.setCellValue("交易账卡号");
+        cell.setCellValue("交易卡号");
         cell = row.createCell(2);
         cell.setCellValue("交易户名");
         cell = row.createCell(3);
@@ -181,7 +181,7 @@ public class BankZzxxServices {
         cell = row.createCell(6);
         cell.setCellValue("收付标志");
         cell = row.createCell(7);
-        cell.setCellValue("对手账卡号");
+        cell.setCellValue("对手卡号");
         cell = row.createCell(8);
         cell.setCellValue("对手户名");
         cell = row.createCell(9);
@@ -202,7 +202,7 @@ public class BankZzxxServices {
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach=" and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' or c.bcsm like '"+zh+"') ";
+            seach="and c.sfbz is not null and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' or c.bcsm like '"+zh+"') ";
         }else{
             seach=" and (c.yhkkh='"+zh+"') ";
             seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";

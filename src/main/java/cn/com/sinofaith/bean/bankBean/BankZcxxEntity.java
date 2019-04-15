@@ -1,5 +1,7 @@
 package cn.com.sinofaith.bean.bankBean;
 
+import cn.com.sinofaith.util.TimeFormatUtil;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -15,8 +17,9 @@ public class BankZcxxEntity {
     private String khzjh;
     private String khsj;
     private String khh;
-    private BigDecimal zhye = new BigDecimal(0);
-    private BigDecimal kyye = new BigDecimal(0);
+    private BigDecimal zhye = new BigDecimal(-1);
+    private BigDecimal kyye = new BigDecimal(-1);
+    private long zhlx =1;
     private long aj_id;
     private String inserttime;
 
@@ -140,6 +143,16 @@ public class BankZcxxEntity {
     }
 
     @Basic
+    @Column(name = "zhlx",nullable = false,precision = 0)
+    public long getZhlx() {
+        return zhlx;
+    }
+
+    public void setZhlx(long zhlx) {
+        this.zhlx = zhlx;
+    }
+
+    @Basic
     @Column(name="aj_id",nullable = true,precision = 0)
     public long getAj_id(){ return aj_id;}
     public void setAj_id(long aj_id){this.aj_id = aj_id;}
@@ -148,16 +161,23 @@ public class BankZcxxEntity {
     @Column(name = "inserttime",nullable = true,length = 20)
     public String getInserttime(){return inserttime;}
     public void setInserttime(String inserttime){this.inserttime=inserttime;}
+
     @Override
     public String toString() {
         return "BankZcxxEntity{" +
                 "id=" + id +
                 ", zhzt='" + zhzt + '\'' +
+                ", yhkkh='" + yhkkh + '\'' +
                 ", yhkzh='" + yhkzh + '\'' +
                 ", khxm='" + khxm + '\'' +
                 ", khzjh='" + khzjh + '\'' +
                 ", khsj='" + khsj + '\'' +
                 ", khh='" + khh + '\'' +
+                ", zhye=" + zhye +
+                ", kyye=" + kyye +
+                ", zhlx=" + zhlx +
+                ", aj_id=" + aj_id +
+                ", inserttime='" + inserttime + '\'' +
                 '}';
     }
 
@@ -176,18 +196,26 @@ public class BankZcxxEntity {
         return yhkkh != null ? yhkkh.hashCode() : 0;
     }
 
+    public  String remove_(String yhkkh){
+        if(yhkkh.indexOf("_")>5){
+            return yhkkh.split("_")[0];
+        }else {
+            return yhkkh;
+        }
+    }
+
     public static BankZcxxEntity mapToObj(Map<Integer,Object> map, Map<String,Integer> title){
         BankZcxxEntity b = new BankZcxxEntity();
         try{
             b.setZhzt(map.get(title.get("zhzt")).toString());
-            b.setYhkkh(map.get(title.get("yhkkh")).toString().replace("_156_1","").trim());
-            b.setYhkzh(map.get(title.get("yhkzh")).toString().replace("_156_1","").trim());
+            b.setYhkkh(b.remove_(map.get(title.get("yhkkh")).toString().trim()));
+            b.setYhkzh(b.remove_(map.get(title.get("yhkzh")).toString().trim()));
             if("".equals(b.getYhkkh())){
                 b.setYhkkh(b.getYhkzh());
             }
             b.setKhxm(map.get(title.get("khxm")).toString());
             b.setKhzjh(map.get(title.get("khzjh")).toString());
-            b.setKhsj(map.get(title.get("khsj")).toString());
+            b.setKhsj(TimeFormatUtil.getDateSwitchTimestamp(map.get(title.get("khsj")).toString()));
             b.setKhh(map.get(title.get("khh")).toString());
             b.setKyye(new BigDecimal(map.get(title.get("kyye")).toString()));
             b.setZhye(new BigDecimal(map.get(title.get("zhye")).toString()));

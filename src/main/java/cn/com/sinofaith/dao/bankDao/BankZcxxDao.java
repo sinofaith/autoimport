@@ -18,7 +18,7 @@ public class BankZcxxDao extends BaseDao<BankZcxxEntity>{
     }
 
     public List<BankZcxxEntity> getDoPage(String seachCode, int offset, int length){
-        List<BankZcxxEntity> result = doPage("from BankZcxxEntity  where 1=1" +seachCode +"order by inserttime desc, khzjh nulls last ",offset,length);
+        List<BankZcxxEntity> result = doPage("from BankZcxxEntity  where 1=1" +seachCode +"order by kyye desc, zhye desc ",offset,length);
         return result;
     }
 

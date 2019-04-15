@@ -10,10 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
@@ -26,8 +23,8 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
         return Integer.parseInt((String) map.get("NUM"));
     }
 
-    public List<String> getYhkkhDis(long aj_id){
-        List<String> result = new ArrayList<>();
+    public Set<String> getYhkkhDis(long aj_id){
+        Set<String> result = new HashSet<>();
         String sql = " select distinct t.yhkkh from bank_zzxx t where t.aj_id = "+aj_id;
         List list = findBySQL(sql);
         Map map ;
@@ -132,10 +129,11 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
             try {
                 con.setAutoCommit(false);
                 pstm = con.prepareStatement(sql);
+                String time = TimeFormatUtil.getDate("/");
                 for (int j = 0; j < b.size(); j++) {
 
                     zzxx = b.get(j);
-                    if(zzxx.getYhkkh()==null){
+                    if(zzxx.getYhkkh()==null || zzxx.getSfbz()==null){
                         continue;
                     }
 //                    zzxx.setAj_id(aj_id);
@@ -152,7 +150,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                     pstm.setString(9, zzxx.getZysm());
                     pstm.setString(10, zzxx.getJysfcg());
                     pstm.setLong(11, aj_id);
-                    pstm.setString(12, TimeFormatUtil.getDate("/"));
+                    pstm.setString(12, time);
                     pstm.setString(13, zzxx.getYhkzh());
                     pstm.setString(14, zzxx.getDszh());
                     pstm.setString(15, zzxx.getDskhh());

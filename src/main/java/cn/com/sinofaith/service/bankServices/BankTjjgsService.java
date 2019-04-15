@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Me. on 2018/5/23
@@ -119,12 +116,12 @@ public class BankTjjgsService {
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                  seach.append(" and c."+ seachCondition + " >= "+seachCode);
             }else if("khxm".equals(seachCondition)){
-                seach.append(" and s."+ seachCondition+" = "+"'"+ seachCode+"'");
+                seach.append(" and s."+ seachCondition+" like '%"+ seachCode+"%'");
             }else if("dsxm".equals(seachCondition)){
-                seach.append(" and d.khxm = "+"'"+ seachCode+"'");
+                seach.append(" and d.khxm like '%"+ seachCode+"%'");
             }
             else{
-                seach.append(" and c."+ seachCondition+" = "+"'"+ seachCode +"'");
+                seach.append(" and c."+ seachCondition+" like '%"+ seachCode +"%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
@@ -134,7 +131,11 @@ public class BankTjjgsService {
             seach.append(" and c.zhlx=" + code);
         }
         if(hcode!=0){
-            seach.append(" and (d.khxm not like '%财付通%' and d.khxm not like '%支付宝%' and d.khxm not like '%清算%' or d.khxm is null) ");
+            seach.append(" and (d.khxm not like '%财付通%' and d.khxm not like '%支付%' " +
+                         " and d.khxm not like '%清算%' and d.khxm not like '%特约%' " +
+                         " and d.khxm not like '%备付金%' and d.khxm not like '%银行%' " +
+                         " and d.khxm not like '%银联%' and d.khxm not like '%保险%' " +
+                         " and d.khxm not like '%过渡%' or d.khxm is null) ");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -222,7 +223,7 @@ public class BankTjjgsService {
             }
         }
 //        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
-        List<String> zczh = bzzd.getYhkkhDis(aj);
+        Set<String> zczh = bzzd.getYhkkhDis(aj);
         List<BankTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
         for (int i =0;i<listTjjgs.size();i++){
             BankTjjgsEntity bz = listTjjgs.get(i);
@@ -290,9 +291,9 @@ public class BankTjjgsService {
             cell = row.createCell(1);
             cell.setCellValue("姓名");
             cell = row.createCell(2);
-            cell.setCellValue("交易账户");
+            cell.setCellValue("交易卡号");
             cell = row.createCell(3);
-            cell.setCellValue("对手账户");
+            cell.setCellValue("对手卡号");
             cell = row.createCell(4);
             cell.setCellValue("对手姓名");
             cell = row.createCell(5);
@@ -313,9 +314,9 @@ public class BankTjjgsService {
             cell = row.createCell(1);
             cell.setCellValue("姓名");
             cell = row.createCell(2);
-            cell.setCellValue("交易账户");
+            cell.setCellValue("交易卡号");
             cell = row.createCell(3);
-            cell.setCellValue("对手账户");
+            cell.setCellValue("对手卡号");
             cell = row.createCell(4);
             cell.setCellValue("对手姓名");
             cell = row.createCell(5);
@@ -345,9 +346,9 @@ public class BankTjjgsService {
                     cell = row.createCell(1);
                     cell.setCellValue("姓名");
                     cell = row.createCell(2);
-                    cell.setCellValue("交易账户");
+                    cell.setCellValue("交易卡号");
                     cell = row.createCell(3);
-                    cell.setCellValue("对手账户");
+                    cell.setCellValue("对手卡号");
                     cell = row.createCell(4);
                     cell.setCellValue("对手姓名");
                     cell = row.createCell(5);
@@ -366,9 +367,9 @@ public class BankTjjgsService {
                     cell = row.createCell(1);
                     cell.setCellValue("姓名");
                     cell = row.createCell(2);
-                    cell.setCellValue("交易账户");
+                    cell.setCellValue("交易卡号");
                     cell = row.createCell(3);
-                    cell.setCellValue("对手账户");
+                    cell.setCellValue("对手卡号");
                     cell = row.createCell(4);
                     cell.setCellValue("对手姓名");
                     cell = row.createCell(5);

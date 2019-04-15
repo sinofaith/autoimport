@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.com.sinofaith.util.ZipFile.ZipFiles;
@@ -90,9 +87,9 @@ public class BankTjjgServices {
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                 seach.append( " and c."+ seachCondition + " >= "+seachCode);
             }else if("khxm".equals(seachCondition)){
-                seach.append(" and s."+ seachCondition+" like "+"'"+ seachCode+"'");
+                seach.append(" and s."+ seachCondition+" like '%"+ seachCode+"%'");
             }else{
-                seach.append(" and c."+ seachCondition+" like "+"'"+ seachCode +"'");
+                seach.append(" and c."+ seachCondition+" like '%"+ seachCode +"%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
@@ -101,7 +98,11 @@ public class BankTjjgServices {
             seach.append(" and c.zhlx=" + code);
         }
         if(hcode!=0){
-            seach.append(" and (s.khxm not like '%财付通%' and s.khxm not like '%支付宝%' and s.khxm not like '%清算%' or s.khxm is null) ");
+            seach.append(" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
+                    " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
+                    " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
+                    " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
+                    " and s.khxm not like '%过渡%' or s.khxm is null) ");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -129,7 +130,7 @@ public class BankTjjgServices {
         return temp;
     }
 
-    public int count(List<BankZzxxEntity> listZzxx, long aj){
+    public int count(List<BankZzxxEntity> listZzxx, long aj,List<BankZcxxEntity> listzcxx){
         List<BankTjjgEntity> listTjjg = null;
         Map<String,BankTjjgEntity> map = new HashMap();
         Map<String,BankTjjgEntity> mapElse = new HashMap<>();
@@ -321,8 +322,14 @@ public class BankTjjgServices {
 //                }
 //            }
 //        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
-        List<String> zczh = bzzd.getYhkkhDis(aj);
+        Set<String> zczh = bzzd.getYhkkhDis(aj);
         listTjjg = new ArrayList<>(map.values());
+        listzcxx.forEach(zcxx ->{
+            if(zczh.contains(zcxx.getYhkkh())){
+                zcxx.setZhlx(0);
+            }
+        });
+        bzcd.saveZcxx(listzcxx,aj);
         for (int i =0;i<listTjjg.size();i++){
             BankTjjgEntity bz = listTjjg.get(i);
             if(!zczh.contains(bz.getJyzh())){
@@ -392,7 +399,7 @@ public class BankTjjgServices {
         cell = row.createCell(2);
         cell.setCellValue("姓名");
         cell = row.createCell(3);
-        cell.setCellValue("交易账卡号");
+        cell.setCellValue("交易卡号");
         cell = row.createCell(4);
         cell.setCellValue("交易总次数");
         cell = row.createCell(5);
@@ -414,7 +421,7 @@ public class BankTjjgServices {
                 cell = row.createCell(2);
                 cell.setCellValue("姓名");
                 cell = row.createCell(3);
-                cell.setCellValue("交易账卡号");
+                cell.setCellValue("交易卡号");
                 cell = row.createCell(4);
                 cell.setCellValue("交易总次数");
                 cell = row.createCell(5);

@@ -103,7 +103,7 @@ public class BankZcxxServices {
         List<BankZcxxEntity> listZcxx = bzcd.find("from BankZcxxEntity where 1=1"+seach+" order by inserttime,khzjh nulls last desc");
         HSSFWorkbook wb = createExcel(listZcxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-Disposition","attachment;filename="+new String(("银行卡开户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-Disposition","attachment;filename="+new String(("银行卡开户信息\""+aj+".xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
