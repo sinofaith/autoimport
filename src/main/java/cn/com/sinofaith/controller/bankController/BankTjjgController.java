@@ -37,8 +37,8 @@ public class BankTjjgController {
             ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
             httpSession.removeAttribute("btjseachCondition"); //查询条件
             httpSession.removeAttribute("btjseachCode");//查询内容
-            httpSession.setAttribute("borderby", "jyzcs");
-            httpSession.setAttribute("blastOrder", "jyzcs");
+            httpSession.setAttribute("borderby", "czzje");
+            httpSession.setAttribute("blastOrder", "czzje");
             httpSession.setAttribute("bdesc", " desc ");
             httpSession.setAttribute("code",-1);
             httpSession.setAttribute("hcode",0);

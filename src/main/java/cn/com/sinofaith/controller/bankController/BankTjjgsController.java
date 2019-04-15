@@ -48,17 +48,20 @@ public class BankTjjgsController {
         httpSession.setAttribute("code",-1);
         httpSession.setAttribute("hcode",0);
 
-        httpSession.setAttribute("sorderby","jyzcs");
-        httpSession.setAttribute("slastOrder","jyzcs");
+        httpSession.setAttribute("sorderby","czzje");
+        httpSession.setAttribute("slastOrder","czzje");
         httpSession.setAttribute("sdesc"," desc ");
         return mav;
     }
 
     @RequestMapping(value = "/seachByUrl")
-    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
+    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,@RequestParam("zhlx") long zhlx,HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/banktjjgs/seach?pageNo=1");
         ses.setAttribute("tjsseachCondition","jyzh");
         ses.setAttribute("tjsseachCode",yhkkh.replace("#",""));
+        if(zhlx==1){
+            ses.setAttribute("tjsseachCondition","dfzh");
+        }
         ses.setAttribute("code",-1);
         ses.setAttribute("hcode",0);
         ses.setAttribute("sorderby","jyzcs");

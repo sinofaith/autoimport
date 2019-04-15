@@ -60,7 +60,7 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.name}</td>
-                                                <td align="center">${item.jyzh}</td>
+                                                <td align="center" title="${item.jyzh}">${item.jyzh}</td>
                                                 <td align="center">${item.dfzh}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>

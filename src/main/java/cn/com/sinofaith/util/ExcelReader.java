@@ -1,6 +1,9 @@
 package cn.com.sinofaith.util;
 
+import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
+import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
@@ -17,6 +20,9 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 public abstract class ExcelReader extends DefaultHandler {
 
@@ -54,19 +60,23 @@ public abstract class ExcelReader extends DefaultHandler {
     //两个不为空的单元格之间隔了多少个空的单元格
     private int flag = 0;
 
-    /**只遍历一个电子表格，其中sheetId为要遍历的sheet索引，从1开始，1-3
+    private String lastName= "";
+
+    /**
+     * 只遍历一个电子表格，其中sheetId为要遍历的sheet索引，从1开始，1-3
+     *
      * @param filename
      * @param sheetId
      * @throws Exception
      */
-    public void processOneSheet(String filename,int sheetId) throws Exception {
+    public void processOneSheet(String filename, int sheetId) throws Exception {
         OPCPackage pkg = OPCPackage.open(filename);
         XSSFReader r = new XSSFReader(pkg);
         SharedStringsTable sst = r.getSharedStringsTable();
         XMLReader parser = fetchSheetParser(sst);
 
         // 根据 rId# 或 rSheet# 查找sheet
-        InputStream sheet2 = r.getSheet("rId"+sheetId);
+        InputStream sheet2 = r.getSheet("rId" + sheetId);
         sheetIndex++;
         InputSource sheetSource = new InputSource(sheet2);
         parser.parse(sheetSource);
@@ -75,6 +85,7 @@ public abstract class ExcelReader extends DefaultHandler {
 
     /**
      * 遍历工作簿中所有的电子表格
+     *
      * @param filename
      * @throws Exception
      */
@@ -92,6 +103,8 @@ public abstract class ExcelReader extends DefaultHandler {
             parser.parse(sheetSource);
             sheet.close();
         }
+        pkg.flush();
+        pkg.close();
     }
 
     public XMLReader fetchSheetParser(SharedStringsTable sst)
@@ -102,6 +115,7 @@ public abstract class ExcelReader extends DefaultHandler {
         parser.setContentHandler(this);
         return parser;
     }
+
     public int twentyToDecimai(String s) {
 
         int result = 0;
@@ -111,7 +125,7 @@ public abstract class ExcelReader extends DefaultHandler {
 
         char[] charArray = s.toCharArray();
         //遍历字符数组，从数组的尾部开始计算
-        for (int i = charArray.length - 1 ; i >= 0; i--) {
+        for (int i = charArray.length - 1; i >= 0; i--) {
             //拿到对应字符对应的数字
             int val = charArray[i] - 64;
             //拿到指数
@@ -136,37 +150,37 @@ public abstract class ExcelReader extends DefaultHandler {
             }
             //日期格式
             String cellDateType = attributes.getValue("s");
-            if ("1".equals(cellDateType)){
+            if ("1".equals(cellDateType)) {
                 dateFlag = true;
             } else {
                 dateFlag = false;
             }
             String cellNumberType = attributes.getValue("s");
-            if("2".equals(cellNumberType)){
+            if ("2".equals(cellNumberType)) {
                 numberFlag = true;
             } else {
                 numberFlag = false;
             }
             //与判断空单元格有关
             isSkipCeil = false;
-            String cellXy =  attributes.getValue("r");
-            if("".equals(preXy)) {
+            String cellXy = attributes.getValue("r");
+            if ("".equals(preXy)) {
                 preXy = cellXy;
             }
-            if(minRef==null){
+            if (minRef == null) {
                 minRef = cellXy;
             }
             currXy = cellXy;
             preX = preXy.replaceAll("\\d", "").trim();
             currX = currXy.replaceAll("\\d", "").trim();
 
-            int cur = Integer.parseInt(currXy.replaceAll("\\D",""));
-            int pre = Integer.parseInt(preXy.replaceAll("\\D",""));
-            String min = minRef.replaceAll("\\d","");
-            if(cur-pre>0){
-                int len = twentyToDecimai(currX)-twentyToDecimai(min);
-                if(len>0){
-                    for(int i=0;i<len;i++){
+            int cur = Integer.parseInt(currXy.replaceAll("\\D", ""));
+            int pre = Integer.parseInt(preXy.replaceAll("\\D", ""));
+            String min = minRef.replaceAll("\\d", "");
+            if (cur - pre > 0) {
+                int len = twentyToDecimai(currX) - twentyToDecimai(min);
+                if (len > 0) {
+                    for (int i = 0; i < len; i++) {
                         rowlist.add(curCol, "");
                         curCol++;
                     }
@@ -175,13 +189,13 @@ public abstract class ExcelReader extends DefaultHandler {
 
             flag = twentyToDecimai(currX) - twentyToDecimai(preX);
 
-            if(flag != 0 && flag != 1 && flag > 0) {
+            if (flag != 0 && flag != 1 && flag > 0) {
                 isSkipCeil = true;
             }
             preXy = cellXy;
         }
         //当元素为t时
-        if("t".equals(name)){
+        if ("t".equals(name)) {
             isTElement = true;
         } else {
             isTElement = false;
@@ -189,6 +203,11 @@ public abstract class ExcelReader extends DefaultHandler {
 
         // 置空
         lastContents = "";
+        if(lastName.equals("c")&&name.equals("c")){
+            rowlist.add(curCol, "");
+            curCol++;
+        }
+        lastName = name;
     }
 
     //读取单元格的内容
@@ -207,7 +226,7 @@ public abstract class ExcelReader extends DefaultHandler {
             }
         }
         //t元素也包含字符串
-        if(isTElement){
+        if (isTElement) {
             String value = lastContents.trim();
             rowlist.add(curCol, value);
             curCol++;
@@ -216,7 +235,7 @@ public abstract class ExcelReader extends DefaultHandler {
             // 将单元格内容加入rowlist中，在这之前先去掉字符串前后的空白符
         } else if ("v".equals(name)) {
             String value = lastContents.trim();
-            value = value.equals("")?" ":value;
+            value = value.equals("") ? "" : value;
             //日期格式处理
            /*if(dateFlag){
                  Date date = HSSFDateUtil.getJavaDate(Double.valueOf(value));
@@ -230,29 +249,29 @@ public abstract class ExcelReader extends DefaultHandler {
 //                value = bd.setScale(3,BigDecimal.ROUND_UP).toString();
 //            }
             //当某个单元格的数据为空时，其后边连续的单元格也可能为空
-            if(isSkipCeil == true) {
-                for(int i = 0; i < (flag-1); i++) {
+            if (isSkipCeil == true) {
+                for (int i = 0; i < (flag - 1); i++) {
                     rowlist.add(curCol + i, "");
                 }
-                curCol += (flag-1);
+                curCol += (flag - 1);
             }
             rowlist.add(curCol, value);
             curCol++;
-        }else {
+        } else {
             //如果标签名称为 row ，这说明已到行尾，调用 optRows() 方法
             if (name.equals("row")) {
-                if(curRow==0){
+                if (curRow == 0) {
                     maxRef = currXy;
                 }
-                if(maxRef != null){
-                    int len = twentyToDecimai(maxRef.replaceAll("\\d", ""))-twentyToDecimai(currXy.replaceAll("\\d", ""));
-                    for(int i=0;i<len;i++){
+                if (maxRef != null) {
+                    int len = twentyToDecimai(maxRef.replaceAll("\\d", "")) - twentyToDecimai(currXy.replaceAll("\\d", ""));
+                    for (int i = 0; i < len; i++) {
                         rowlist.add(curCol, "");
                         curCol++;
                     }
                 }
                 try {
-                    getRows(sheetIndex,curRow,rowlist);
+                    getRows(sheetIndex, curRow, rowlist);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -273,6 +292,7 @@ public abstract class ExcelReader extends DefaultHandler {
 
     /**
      * 获取行数据回调
+     *
      * @param sheetIndex
      * @param curRow
      * @param rowList
@@ -284,75 +304,53 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-<<<<<<< Updated upstream
-        String file = "D:\\work\\数据模型\\资金\\假HP第一批\\陶国龙、梁明霞、张仁蛟、钟高艺\\交易明细信息 (26).xlsx";
-=======
-        String file = "C:\\Users\\zheng\\Desktop\\工作文件\\传销\\传销数据3\\第一部分.xlsx";
->>>>>>> Stashed changes
-        final Map<String,Integer> title=new HashMap();
+        String file = "C:\\Users\\47435\\Desktop\\新建文件夹 (2)\\新建文件夹\\公经反洗钱协查[2019]345号详细信息02.xlsx";
+        final Map<String, Integer> title = new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
-
+//
+//        Set<String> temp = new HashSet<>();
+        final StringBuffer temp = new StringBuffer();
         ExcelReader reader = new ExcelReader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
-                System.out.println(rowList);
-                if(curRow==0){
-                    for(int i = 0;i<rowList.size(); i++){
-                        String temp = rowList.get(i);
-                        if(temp.contains("交易账卡号")||temp.contains("交易卡号")){
-                            title.put("yhkkh",i);
-                        }else if(temp.contains("交易账号")){
-                            title.put("yhkzh",i);
-                        }else if(rowList.get(i).contains("交易户名")){
-                            title.put("jyxm",i);
-                        }else if(temp.contains("交易证件号")){
-                            title.put("jyzjh",i);
-                        }else if(temp.contains("交易日期")||temp.contains("交易时间")){
-                            title.put("jysj",i);
-                        }else if(temp.contains("交易金额")){
-                            title.put("jyje",i);
-                        }else if(temp.contains("交易余额")&&!temp.contains("对手")){
-                            title.put("jyye",i);
-                        }else if(temp.contains("收付标志")){
-                            title.put("sfbz",i);
-                        }else if(temp.contains("对手账号")||temp.contains("对手账卡号")){
-                            title.put("dskh",i);
-                        }else if(temp.contains("对手卡号")){
-                            title.put("dszh",i);
-                        }else if(temp.contains("对手户名")){
-                            title.put("dsxm",i);
-                        }else if(temp.contains("对手身份证号")){
-                            title.put("dssfzh",i);
-                        }else if(temp.contains("对手开户银行")){
-                            title.put("dskhh",i);
-                        }else if(temp.contains("摘要说明")){
-                            title.put("zysm",i);
-                        }else if(temp.contains("交易网点名称")){
-                            title.put("jywdmc",i);
-                        }else if(temp.contains("交易发生地")){
-                            title.put("jyfsd",i);
-                        }else if(temp.contains("交易是否成功")){
-                            title.put("jysfcg",i);
-                        }else if(temp.contains("对手交易余额")){
-                            title.put("dsjyye",i);
-                        }else if(temp.contains("对手余额")){
-                            title.put("dsye",i);
-                        }else if(temp.contains("备注")){
-                            title.put("bz",i);
-                        }
-                    }
+
+                if(rowList.get(0).contains(":")){
+                    temp.delete(0,temp.length());
+                    temp.append(rowList.get(0).split(":")[1]);
                 }
-                if(!rowList.get(0).equals("交易卡号")) {
-                    System.out.println(rowList);
-                    listB.add(BankZzxxEntity.listToObj(rowList, title));
+                if(rowList.size()==20&&!rowList.get(0).contains("序号")){
+                    BankZzxxEntity zz = new BankZzxxEntity();
+                    zz.setJysj(TimeFormatUtil.getDateSwitchTimestamp(rowList.get(1)));
+                    if(temp.equals(rowList.get(3))){
+                        zz.setYhkkh(rowList.get(3));
+                        zz.setJyxm(rowList.get(4));
+                        zz.setJyzjh(rowList.get(5));
+                        zz.setDskh(rowList.get(7));
+                        zz.setDsxm(rowList.get(8));
+                        zz.setDssfzh(rowList.get(9));
+                        zz.setSfbz("出");
+                    }else{
+                        zz.setYhkkh(rowList.get(7));
+                        zz.setJyxm(rowList.get(8));
+                        zz.setJyzjh(rowList.get(9));
+                        zz.setDskh(rowList.get(3));
+                        zz.setDsxm(rowList.get(4));
+                        zz.setDssfzh(rowList.get(5));
+                        zz.setSfbz("进");
+                    }
+                    zz.setJyje(new BigDecimal(rowList.get(12)));
+                    zz.setJyfsd(rowList.get(15));
+                    zz.setBz(rowList.get(16));
+                    System.out.println(zz);
+                    listB.add(zz);
                 }
             }
         };
-
-        reader.process(file);
-        Set<BankZzxxEntity> setB = new HashSet<>(listB);
+//
+//        reader.processOneSheet(file,1);
+        reader.processOneSheet(file,2);
         System.out.println(listB.size());
-        System.out.println(setB.size());
         long end = System.currentTimeMillis();
-        System.out.println(end-start);
+        System.out.println(end - start);
+
     }
 }

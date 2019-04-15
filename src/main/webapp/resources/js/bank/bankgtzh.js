@@ -18,7 +18,7 @@ function getZzGtlxr(obj) {
         url:url,
         data:{
             dfzh:dfkh,
-            order:'jyzcs',
+            order:'czzje',
             page:page
         },
         success:function (msg) {

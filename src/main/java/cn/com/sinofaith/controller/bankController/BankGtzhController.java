@@ -36,9 +36,9 @@ public class BankGtzhController {
         httpSession.setAttribute("hcode",0);
 
 
-//        httpSession.setAttribute("gorderby","num");
-//        httpSession.setAttribute("glastOrder","num");
-//        httpSession.setAttribute("gdesc"," desc ");
+        httpSession.setAttribute("gorderby","num");
+        httpSession.setAttribute("glastOrder","num");
+        httpSession.setAttribute("gdesc"," desc ");
         return mav;
     }
 
@@ -50,10 +50,13 @@ public class BankGtzhController {
     }
 
     @RequestMapping(value = "/seachByUrl")
-    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
+    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,@RequestParam("zhlx") long zhlx, HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/bankgtzh/seach?pageNo=1");
         ses.setAttribute("gtseachCondition","jyzh");
         ses.setAttribute("gtseachCode",yhkkh.replace("#",""));
+        if(zhlx==1){
+            ses.setAttribute("gtseachCondition","dfzh");
+        }
         ses.setAttribute("hcode",0);
         return mav;
     }

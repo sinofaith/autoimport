@@ -37,14 +37,41 @@
             .crimeterrace {
                 background-color: #636B75 !important;
             }
+            .dropCss {
+                position: relative;
+                display: inline-block;
+            }
 
+            .dropCss-content {
+                display: none;
+                position: absolute;
+                top:-10%;
+                left:75%;
+                background-color: #f9f9f9;
+                min-width: 100px;
+                box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.4);
+                border-radius: 6px;
+            }
+
+            .dropCss-content a {
+                color: black;
+                padding: 3px 3px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropCss-content a:hover {
+                background-color: #bbb;
+            }
+
+            .dropCss:hover .dropCss-content {
+                display: block;
+            }
 
         </style>
 
         <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx">资金交易明细</a>
-        <a href="/SINOFAITH/banktjjg" class="addactive">账户统计信息</a><a href="/SINOFAITH/banktjjgs">账户点对点统计信息</a>
-        <a href="/SINOFAITH/bankgtzh">公共账户统计信息</a></span>
+            <%@include file="../bank/bankTitler.jsp" %>
             <ul>
                 <div class="main-container-inner " style="margin-bottom: 10px">
                     <div class="width_100 pos_re_block">
@@ -65,11 +92,11 @@
                                             </tr>
                                             <tr align="center">
                                                 <td width="7%">序号</td>
-                                                <td width="22%">交易账卡号<br>
+                                                <td width="22%">交易卡号<br>
                                                     <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                                    <label for="checkbox1">去除支付宝、财付通账户</label>
+                                                    <label for="checkbox1">去除第三方账户</label>
                                                     <br>
-                                                    <label style="color:#0a36e9;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
+                                                    <label style="color:blue;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
                                                     <label style="color:red;"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
                                                 </td>
                                                 <td width="7%"><a href="/SINOFAITH/banktjjg/order?orderby=khxm">交易户名</a></td>
@@ -91,15 +118,19 @@
                                                 <tr class="${st.index%2==1 ? '':'odd' }">
                                                     <td align="center">${item.id}</td>
                                                     <td align="center"  title="${item.jyzh}">
-                                                        <div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
-                                                            <c:if test="${item.zhlx eq 1}">
-                                                                <button data-toggle="modal" data-target="#myModal2" style="color: red">${item.jyzh}</button>
-                                                            </c:if>
-
-                                                            <c:if test="${item.zhlx eq 0}">
-                                                                <button data-toggle="modal" data-target="#myModal2" style="color: #0a36e9">${item.jyzh}</button>
-                                                            </c:if>
+                                                        <div class="dropCss" >
+                                                            <div style="color: ${item.zhlx eq 0 ? "blue":"red"};width:230px;white-space: nowrap;text-overflow:ellipsis;overflow:hidden;">${item.jyzh}</div>
+                                                            <div class="dropCss-content">
+                                                                <a href='/SINOFAITH/banktjjgs/seachByUrl?yhkkh=${item.jyzh}&zhlx=${item.zhlx}'>账户点对点统计</a>
+                                                                <a href='/SINOFAITH/bankgtzh/seachByUrl?yhkkh=${item.jyzh}&zhlx=${item.zhlx}'>公共账户统计</a>
+                                                            </div>
                                                         </div>
+
+                                                        <%--<div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;" class="dropCss">--%>
+                                                            <%--<div class="dropCss-content" id="skip${st.index+2}">--%>
+
+                                                            <%--</div>--%>
+                                                        <%--</div>--%>
                                                     </td>
                                                     <td align="center" title="${item.name}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center">${item.jyzcs}</td>
@@ -183,7 +214,7 @@
                                                         STYLE="margin-bottom: 20px;">
                                                     <option value="jyzh"
                                                             <c:if test="${btjseachCondition=='jyzh'}">selected="selected"</c:if>>
-                                                        交易账卡号
+                                                        交易卡号
                                                     </option>
                                                     <option value="khxm"
                                                             <c:if test="${btjseachCondition=='khxm'}">selected="selected"</c:if>>
@@ -279,7 +310,7 @@
                             <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
                             <tr align="center">
                                 <td width="4%">序号</td>
-                                <td width="13%">交易账卡号</td>
+                                <td width="13%">交易卡号</td>
                                 <td width="5%">交易户名</td>
                                 <td width="10%">
                                     <button onclick="orderByFilter('tjjg','jysj')">交易时间</button>
@@ -293,7 +324,7 @@
 
                                 </td>
                                 <td width="13%">
-                                    <button onclick="orderByFilter('tjjg','dskh')">对手账卡号</button>
+                                    <button onclick="orderByFilter('tjjg','dskh')">对手卡号</button>
                                 </td>
                                 <td width="13%">
                                     <button onclick="orderByFilter('tjjg','dsxm')">对手户名</button>
@@ -345,7 +376,7 @@
                     <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
                     <tr align="center">
                         <td width="4%">序号</td>
-                        <td width="13%">交易账卡号</td>
+                        <td width="13%">交易卡号</td>
                         <td width="12%">交易户名</td>
                         <td width="10%">
                             交易总次数

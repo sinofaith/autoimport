@@ -681,22 +681,22 @@ function getZzGtlxrByorder(filter) {
 }
 
 function getZzGtlxr(obj) {
-    var dfzh = $(obj).closest("tr").find("td:eq(3)").text()
-    window.page = 1
-    var tbody = window.document.getElementById("result1")
-    var url = "/SINOFAITH/cftgtzh/getDetails"
+    var dfzh = $(obj).closest("tr").find("td:eq(3)").text();
+    window.page = 1;
+    var tbody = window.document.getElementById("result1");
+    var url = "/SINOFAITH/cftgtzh/getDetails";
     $.ajax({
         type:"post",
         dataType:"json",
         url:url,
         data:{
             dfzh:dfzh,
-            order:"jyzcs",
+            order:"czzje",
             page:page
         },
         success:function (msg) {
-            var data = msg.list
-            var str = ""
+            var data = msg.list;
+            var str = "";
             for (i in data) {
                 if (i % 2 == 0) {
                     str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
@@ -715,7 +715,7 @@ function getZzGtlxr(obj) {
                     "<td width=\"5%\"><button  data-toggle=\"modal\" data-target=\"#myModal\" onclick=\"getZzDetails(this)\">详情</button></td>"+
                     "</tr>";
             }
-            tbody.innerHTML = str
+            tbody.innerHTML = str;
             $("#dfzh").attr("value", dfzh);
             $("#allRow1").attr("value", msg.totalRecords)
         }
@@ -728,21 +728,21 @@ function downGtlxr(){
 }
 
 function orderByFilter(filter) {
-    var tbody = window.document.getElementById("result")
+    var tbody = window.document.getElementById("result");
     if(tbody!=null) {
-        tbody.innerHTML = ""
+        tbody.innerHTML = "";
     }
     var jyzh = $("#zh").val();
     var jylx = $("#jylx").val();
-    var allRow = $("#allRow").val()
-    window.page = 1
-    var type = ""
+    var allRow = $("#allRow").val();
+    window.page = 1;
+    var type = "";
     if(!zzbds.test(jylx)){
-        type="dfzh"
+        type="dfzh";
     }else{
-        type="jylx"
+        type="jylx";
     }
-    var url = "/SINOFAITH/cftzzxx/getDetails"
+    var url = "/SINOFAITH/cftzzxx/getDetails";
     $.ajax({
         type:"post",
         dataType:"json",
@@ -756,8 +756,8 @@ function orderByFilter(filter) {
             page:parseInt(page)
         },
         success:function (msg) {
-            var data = msg.list
-            var str = ""
+            var data = msg.list;
+            var str = "";
             for (i in data){
                 if(i%2==0){
                     str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
@@ -782,7 +782,7 @@ function orderByFilter(filter) {
                     "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
-            tbody.innerHTML = str
+            tbody.innerHTML = str;
             $("#zh").attr("value",jyzh);
             $("#jylx").attr("value",jylx);
             $("#allRow").attr("value",msg.totalRecords)
@@ -792,16 +792,16 @@ function orderByFilter(filter) {
 }
 
 function getZzDetails(obj) {
-    var jyzh = $(obj).closest("tr").find("td:eq(2)").text()
-    var jylx = $(obj).closest("tr").find("td:eq(3)").text()
-    var sum = $(obj).closest("tr").find("td:eq(4)").text()
+    var jyzh = $(obj).closest("tr").find("td:eq(2)").attr("title");
+    var jylx = $(obj).closest("tr").find("td:eq(3)").text();
+    var sum = $(obj).closest("tr").find("td:eq(4)").text();
     window.page = 1
 
-    var type = ""
+    var type = "";
     if(!zzbds.test(jylx)){
-        type="dfzh"
+        type="dfzh";
     }else{
-        type="jylx"
+        type="jylx";
     }
     var tbody = window.document.getElementById("result")
     var url = "/SINOFAITH/cftzzxx/getDetails"
@@ -818,8 +818,8 @@ function getZzDetails(obj) {
             page:parseInt(page)
         },
         success:function (msg) {
-            var data = msg.list
-            var str = ""
+            var data = msg.list;
+            var str = "";
             for (i in data){
                 if(data[i].fsje===0){
                     data[i].fsje="";
@@ -851,27 +851,27 @@ function getZzDetails(obj) {
                     "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
-            tbody.innerHTML = str
+            tbody.innerHTML = str;
             $("#zh").attr("value",jyzh);
             $("#jylx").attr("value",jylx);
-            $("#allRow").attr("value",msg.totalRecords)
+            $("#allRow").attr("value",msg.totalRecords);
             // title.innerText ="<"+jyzh+","+jylx+">"
         }
     })
 }
 $(function () { $('#myModal').on('hide.bs.modal', function () {
-    var tbody = window.document.getElementById("result")
+    var tbody = window.document.getElementById("result");
     if(tbody!=null) {
-        tbody.innerHTML = ""
+        tbody.innerHTML = "";
     }
     $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
     })
 });
 
 $(function () { $('#myModal1').on('hide.bs.modal', function () {
-    var tbody = window.document.getElementById("result1")
+    var tbody = window.document.getElementById("result1");
     if(tbody!=null) {
-        tbody.innerHTML = ""
+        tbody.innerHTML = "";
     }
     $.ajax({url:"/SINOFAITH/bankgtzh/removeDesc"})
 })
@@ -880,23 +880,23 @@ $(function () { $('#myModal1').on('hide.bs.modal', function () {
 function downDetailJylx(){
   var zh = $("#zh").val();
   var jylx =$("#jylx").val();
-  var type = ""
+  var type = "";
 
     if(!zzbds.test(jylx)){
-        type="dfzh"
+        type="dfzh";
     }else{
-        type="jylx"
+        type="jylx";
     }
   location="/SINOFAITH/cftzzxx/downDetailJylx?zh="+zh+"&jylx="+jylx+"&type="+type
 }
 
 function ajCount(aj) {
-    var flg = 0
+    var flg = 0;
 
     if($("#checkbox1").is(":checked")){
-        flg=1
+        flg=1;
     }
-    var url = "/SINOFAITH/aj/ajCount?ajm="+aj+"&flg="+flg
+    var url = "/SINOFAITH/aj/ajCount?ajm="+aj+"&flg="+flg;
     alertify.alert("数据分析中,请等待跳转...");
     $.get(url,function (data) {
         if(data==200){
@@ -904,7 +904,7 @@ function ajCount(aj) {
             setTimeout(function (){document.getElementById("seachDetail").submit()},1500);
         }
         if(data == 303){
-            alertify.alert("数据分析中..请等待跳转")
+            alertify.alert("数据分析中..请等待跳转");
             setTimeout(function () {location="/SINOFAITH/cfttjjg/seach?pageNo=1"},10000);
         }
     })

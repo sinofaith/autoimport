@@ -1,6 +1,8 @@
 package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
+import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
@@ -275,7 +277,8 @@ public class UploadController {
         AjEntity aje = ajs.findByName(aj).get(0);
         if(uploadPathd.listFiles()!=null) {
             List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
-            us.insertBankZcxx(uploadPath,aje.getId());
+            List<BankZcxxEntity> listzcxx = us.insertBankZcxx(uploadPath,aje.getId());
+            us.insertBankCustomer(uploadPath,aje);
             us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
             us.deleteAll(uploadPath);
             uploadPathd.delete();
@@ -283,8 +286,9 @@ public class UploadController {
             Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
             listZzxx = new ArrayList<>(setB);
             setB = null;
-            btjs.count(listZzxx,aje.getId());
+            btjs.count(listZzxx,aje.getId(),listzcxx);
             btjss.count(listZzxx,aje.getId());
+            listzcxx.clear();
         }
 
         if(a+b>0){

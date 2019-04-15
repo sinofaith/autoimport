@@ -17,6 +17,7 @@
             <mapping class="cn.com.sinofaith.bean.bankBean.BankPersonEntity"/>
             <mapping class="cn.com.sinofaith.bean.bankBean.BankTjjgEntity"/>
             <mapping class="cn.com.sinofaith.bean.bankBean.BankTjjgsEntity"/>
+            <mapping class="cn.com.sinofaith.bean.bankBean.BankCustomerEntity"/>
             <mapping class="cn.com.sinofaith.bean.wlBean.WuliuEntity"/>
             <mapping class="cn.com.sinofaith.bean.wlBean.WuliuRelationEntity"/>
             <mapping class="cn.com.sinofaith.bean.wlBean.WuliuShipEntity"/>

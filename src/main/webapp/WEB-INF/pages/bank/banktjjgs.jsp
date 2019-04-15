@@ -29,9 +29,8 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx">资金交易明细</a>
-        <a href="/SINOFAITH/banktjjg" >账户统计信息</a><a href="/SINOFAITH/banktjjgs" class="addactive">账户点对点统计信息</a>
-        <a href="/SINOFAITH/bankgtzh">公共账户统计信息</a></span>    <ul >
+    <%@include file="../bank/bankTitler.jsp" %>
+    <ul>
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
                 <div class="cantent_block ">
@@ -49,11 +48,11 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="5%">序号</td>
-                                        <td width="9%">交易账卡号</td>
+                                        <td width="9%">交易卡号</td>
                                         <td width="7%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">交易户名</a></td>
-                                        <td width="15%">对方账号<br>
+                                        <td width="15%">对方卡号<br>
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                            <label for="checkbox1">去除支付宝、财付通账户</label>
+                                            <label for="checkbox1">去除第三方账户</label>
                                             <br>
                                             <label style="color:#0a36e9;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
                                             <label style="color:red;"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
@@ -69,7 +68,7 @@
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <td align="center"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>
+                                                <td align="center" title="${item.jyzh}"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>
                                                 <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center"  title="${item.dfzh}">
                                                         <div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
@@ -79,9 +78,8 @@
                                                             <c:if test="${item.zhlx eq 1}">
                                                                 <button data-toggle="modal" data-target="#myModal2" style="color: red" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
                                                             </c:if>
-
                                                             <c:if test="${item.zhlx eq 0}">
-                                                                <button data-toggle="modal" data-target="#myModal2" style="color: #0a36e9" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
+                                                                <button data-toggle="modal" data-target="#myModal2" style="color: blue" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
                                                             </c:if>
                                                         </div>
                                                     </td>
@@ -147,9 +145,9 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" id="seachCondition" onchange="seachChange()" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="jyzh"<c:if test="${tjsseachCondition=='jyzh'}">selected="selected"</c:if>>交易账卡号</option>
+                                            <option value="jyzh"<c:if test="${tjsseachCondition=='jyzh'}">selected="selected"</c:if>>交易卡号</option>
                                             <option value="khxm"<c:if test="${tjsseachCondition=='khxm'}">selected="selected"</c:if>>姓名</option>
-                                            <option value="dfzh" <c:if test="${tjsseachCondition=='dfzh'}">selected="selected"</c:if> >对方账号</option>
+                                            <option value="dfzh" <c:if test="${tjsseachCondition=='dfzh'}">selected="selected"</c:if> >对方卡号</option>
                                             <option value="dsxm" <c:if test="${tjsseachCondition=='dsxm'}">selected="selected"</c:if> >对方户名</option>
                                             <option value="jzzje"<c:if test="${tjsseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${tjsseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>

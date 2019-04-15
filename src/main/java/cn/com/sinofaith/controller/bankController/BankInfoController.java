@@ -2,6 +2,7 @@ package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.service.bankServices.BankCustomerServices;
 import cn.com.sinofaith.service.bankServices.BankZcxxServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ public class BankInfoController {
 
     @Autowired
     private BankZcxxServices bankzcs;
+    @Autowired
+    private BankCustomerServices cs;
 
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {

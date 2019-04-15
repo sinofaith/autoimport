@@ -24,37 +24,6 @@
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
-
-    running = true;
-    function getBq(obj){
-        var yhkh =  $(obj).closest("tr").find("span").text();
-        var zhlx =  $(obj).closest("tr").find("input").val();
-        var skip = window.document.getElementById("skip"+obj.parentElement.rowIndex)
-        if(skip.innerText==""&&running) {
-            running = false;
-            $.get("/SINOFAITH/bank/getBq?yhkh="+yhkh,function (result) {
-                var str = "";
-                if (result.zzsum>0||(zhlx==1&&result.zzrsum>0)) {
-                    str += "<a href='/SINOFAITH/bankzzxx/seachByUrl?yhkkh="+yhkh+"&zhlx="+zhlx+"'>资金交易明细</a>"
-                }
-                if(result.tjsum>0){
-                    str += "<a href='/SINOFAITH/banktjjg/seachByUrl?yhkkh="+yhkh+"&zhlx="+zhlx+"'>账户统计信息</a>"
-                }
-                if(result.tssum>0||(zhlx==1&&result.tjsum>0)){
-                    str += "<a href='/SINOFAITH/banktjjgs/seachByUrl?yhkkh="+yhkh+"&zhlx="+zhlx+"'>账户点对点统计</a>"
-                }
-                if(result.gtsum>0){
-                    str += "<a href='/SINOFAITH/bankgtzh/seachByUrl?yhkkh="+yhkh+"&zhlx="+zhlx+"'>公共账户统计</a>"
-                }
-                if(result.zzsum+result.tjsum+result.tssum+result.gtsum==0){
-                    str+="<a href='#'>无更多信息</a>"
-                }
-                skip.innerHTML = str;
-                running=true;
-            },"json")
-
-        }
-    }
 </script>
 <style type="text/css">
     .crimeterrace{ background-color: #636B75 !important;}
@@ -107,42 +76,36 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>资金开户信息(${aj.aj})</strong>
+                                                <strong>资金人员信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="6%">序号</td>
-                                        <td width="12%">交易卡号</td>
-                                        <td width="12%">交易账号</td>
-                                        <td width="6%">开户姓名</td>
-                                        <td width="12%">开户证件号</td>
-                                        <td width="6%">账户余额</td>
-                                        <td width="6%">可用余额</td>
-                                        <td width="12%">开户时间</td>
-                                        <td width="7%">账户状态</td>
-                                        <td width="8%">开户行</td>
+                                        <%--<td width="6%">序号</td>--%>
+                                        <td width="10%">姓名</td>
+                                        <td width="10%">证件类型</td>
+                                        <td width="10%">证件号码</td>
+                                        <td width="10%">现住址</td>
+                                        <td width="10%">联系电话</td>
+                                        <td width="10%">联系手机</td>
+                                        <td width="10%">单位电话</td>
+                                        <td width="10%">住宅电话</td>
+                                        <td width="10%">工作单位</td>
+                                        <td width="10%">邮箱</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
-                                                <td align="center">${item.id}</td>
-                                                <td align="center" onmouseout="getBq(this)">
-                                                    <input type="hidden" value="${item.zhlx}">
-                                                    <div class="dropCss">
-                                                         <span style="color: ${item.zhlx==0? 'blue':'red'}">${item.yhkkh}</span>
-                                                         <div class="dropCss-content" id="skip${st.index+2}">
-                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td align="center">${item.yhkzh}</td>
-                                                <td align="center" title="${item.khxm}" ><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.khxm}</div></td>
-                                                <td align="center">${item.khzjh}</td>
-                                                <td align="center">${item.zhye==-1?"":item.zhye}</td>
-                                                <td align="center">${item.kyye==-1?"":item.kyye}</td>
-                                                <td align="center">${item.khsj}</td>
-                                                <td align="center" title="${item.zhzt}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zhzt}</div></td>
-                                                <td align="center" title="${item.khh}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.khh}</div></td>
-
+                                                <%--<td align="center">${item.id}</td>--%>
+                                                <td align="center">${item.name}</td>
+                                                <td align="center">${item.zjlx}</td>
+                                                <td align="center" title="${item.zjhm}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjhm}</div></td>
+                                                <td align="center" title="${item.xzz_xzqh}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.xzz_xzqh}</div></td>
+                                                <td align="center">${item.lxdh}</td>
+                                                <td align="center">${item.lxsj}</td>
+                                                <td align="center">${item.dwdh}</td>
+                                                <td align="center">${item.zzdh}</td>
+                                                <td align="center" title="${item.gzdw}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.gzdw}</div></td>
+                                                <td align="center" title="${item.email}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.email}</div></td>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
@@ -160,10 +123,10 @@
                                 <c:when test="${detailinfo!=null && detailinfo.size()!=0}">
                                     <div  class="page_nmber">
                                         <div class="mar_t_15">共${page.totalRecords}条记录 共<span id="totalPage">${page.totalPages}</span>页 当前第${page.pageNo}页<br></div>
-                                        <a href="/SINOFAITH/bank/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
+                                        <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
                                         <c:choose>
                                             <c:when test="${page.pageNo!=1}">
-                                                <a href="/SINOFAITH/bank/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
+                                                <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="previousPage" value="上一页" />
@@ -171,15 +134,15 @@
                                         </c:choose>
                                         <c:choose>
                                             <c:when test="${page.pageNo != page.totalPages}">
-                                                <a href="/SINOFAITH/bank/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
+                                                <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="nextPage" value="下一页" />
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="/SINOFAITH/bank/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
+                                        <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
-                                        <input type="button" value="跳转" onclick="bankSkip('')">
+                                        <input type="button" value="跳转" onclick="bankSkip('customer')">
                                     </div>
 
                                 </c:when>
@@ -191,14 +154,14 @@
                         <div class=" ">
 
                             <div>
-                                <form action="/SINOFAITH/bank/SeachCode" method="post">
+                                <form action="/SINOFAITH/bankcustomer/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="yhkkh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易卡号</option>
-                                            <option value="yhkzh"<c:if test="${bzcseachCondition=='yhkzh'}">selected="selected"</c:if>>交易账号</option>
-                                            <option value="khxm" <c:if test="${bzcseachCondition=='khxm'}">selected="selected"</c:if> >开户姓名</option>
-                                            <option value="khzjh" <c:if test="${bzcseachCondition=='khzjh'}">selected="selected"</c:if> >开户证件号</option>
+                                            <option value="name"<c:if test="${cuseachCondition=='name'}">selected="selected"</c:if>>姓名</option>
+                                            <option value="zjhm"<c:if test="${cuseachCondition=='zjhm'}">selected="selected"</c:if>>证件号码</option>
+                                            <option value="lxsj" <c:if test="${cuseachCondition=='lxsj'}">selected="selected"</c:if> >联系手机</option>
+                                            <%--<option value="khzjh" <c:if test="${bzcseachCondition=='khzjh'}">selected="selected"</c:if> >开户证件号</option>--%>
                                             <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>
                                             <%--<option value="gsmc" <c:if test="${seachCondition=='gsmc'}">selected="selected"</c:if> >公司名称</option>--%>
                                             <%--<option value="bdsj" <c:if test="${zcseachCondition=='bdsj'}">selected="selected"</c:if> >手机号</option>--%>
@@ -216,7 +179,7 @@
                                             <%--<option value="sfbsdfhc" <c:if test="${seachCondition=='sfbsdfhc'}">selected="selected"</c:if> >是否部署地方核查</option>--%>
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${bzcseachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${cuseachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -232,7 +195,7 @@
                            <c:if test="${!fn:contains(aj.aj, ',')}">
                                 <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">银行卡数据导入</button>
                            </c:if>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bank/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bankcustomer/download'" >数据导出</button>
                        </span>
                                     </div>
                                 </div>

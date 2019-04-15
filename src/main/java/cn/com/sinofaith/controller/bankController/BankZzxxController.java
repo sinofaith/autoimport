@@ -39,10 +39,13 @@ public class BankZzxxController {
     }
 
     @RequestMapping(value = "/seachByUrl")
-    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
+    public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,@RequestParam("zhlx") long zhlx,HttpSession ses){
         ModelAndView mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
         ses.setAttribute("bzzseachCondition","yhkkh");
         ses.setAttribute("bzzseachCode",yhkkh.replace("#",""));
+        if(zhlx==1){
+            ses.setAttribute("bzzseachCondition","dskh");
+        }
         return mav;
     }
 
@@ -156,7 +159,7 @@ public class BankZzxxController {
         yhkkh = yhkkh.replace("\n","").trim();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String ajid=cftzzs.getAjidByAjm(aj);
-        String seach = " and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"' or c.bcsm like '"+yhkkh+"')";
+        String seach = " and c.sfbz is not null and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"' or c.bcsm like '"+yhkkh+"')";
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String desc = (String) ses.getAttribute("xqdesc");
         if(!"".equals(dskh)){

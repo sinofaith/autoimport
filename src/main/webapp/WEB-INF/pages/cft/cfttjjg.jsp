@@ -19,10 +19,71 @@
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
+    running = true;
+    function getBq(obj){
+        try {
+            var wxzh = obj.innerText
+            var skip = window.document.getElementById("skip" + obj.parentElement.rowIndex)
+            if (skip.innerText == "" && running) {
+                running = false;
+                $.get("/SINOFAITH/cft/getBq?wxzh=" + wxzh, function (result) {
+                    var str = "";
+//                    if (result.zzsum > 0) {
+//                        str += "<a href='/SINOFAITH/cftzzxx/seachByUrl?wxzh=" + wxzh + "'>交易信息</a>"
+//                    }
+//                    if (result.tjsum > 0) {
+//                        str += "<a href='/SINOFAITH/cfttjjg/seachByUrl?wxzh=" + wxzh + "'>账户信息</a>"
+//                    }
+                    if (result.tssum > 0) {
+                        str += "<a href='/SINOFAITH/cfttjjgs/seachByUrl?wxzh=" + wxzh + "'>对手账户信息</a>"
+                    }
+                    if (result.gtsum > 0) {
+                        str += "<a href='/SINOFAITH/cftgtzh/seachByUrl?wxzh=" + wxzh + "'>共同账户信息</a>"
+                    }
+                    if (result.zzsum + result.tjsum + result.tssum + result.gtsum == 0) {
+                        str += "<a href='#'>无更多信息</a>"
+                    }
+                    skip.innerHTML = str;
+                    running = true;
+                }, "json")
+            }
+        }catch(e){
+            running = true;
+        }
+    }
 </script>
 <style>
     .crimeterrace{ background-color: #636B75 !important;}
+    .dropCss {
+        position: relative;
+        display: inline-block;
+    }
 
+    .dropCss-content {
+        display: none;
+        position: absolute;
+        top:-10%;
+        left:80%;
+        background-color: #f9f9f9;
+        min-width: 100px;
+        box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.4);
+        border-radius: 6px;
+    }
+
+    .dropCss-content a {
+        color: black;
+        padding: 3px 3px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropCss-content a:hover {
+        background-color: #bbb;
+    }
+
+    .dropCss:hover .dropCss-content {
+        display: block;
+    }
 
 </style>
 
@@ -60,7 +121,13 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.name}</td>
-                                                <td align="center"  title="${item.jyzh}"><div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyzh}</div></td>
+                                                <td align="center"  title="${item.jyzh}"onmouseout="getBq(this)">
+                                                    <div class="dropCss">
+                                                        <div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden; color:#6698ce;">${item.jyzh}</div>
+                                                        <div class="dropCss-content" id="skip${st.index+2}">
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td align="center">${item.jylx}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>

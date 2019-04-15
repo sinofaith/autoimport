@@ -26,9 +26,8 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx" class="addactive">资金交易明细</a>
-        <a href="/SINOFAITH/banktjjg" >账户统计信息</a><a href="/SINOFAITH/banktjjgs">账户点对点统计信息</a>
-        <a href="/SINOFAITH/bankgtzh">公共账户统计信息</a></span>    <ul >
+    <%@include file="../bank/bankTitler.jsp" %>
+    <ul>
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
                 <div class="cantent_block ">
@@ -46,13 +45,13 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="5%">序号</td>
-                                        <td width="12%">交易账卡号</td>
+                                        <td width="12%">交易卡号</td>
                                         <td width="6%">交易户名</td>
                                         <td width="12%">交易时间</td>
                                         <td width="9%"><a href="/SINOFAITH/bankzzxx/order?orderby=jyje">交易金额</a></td>
                                         <td width="9%">交易余额</td>
                                         <td width="5%">收付标志</td>
-                                        <td width="12%">对手账卡号</td>
+                                        <td width="12%">对手卡号</td>
                                         <td width="6%">对手户名</td>
                                         <td width="4%">摘要说明</td>
                                         <td width="4%">交易发生地</td>
@@ -66,7 +65,7 @@
                                                 <td align="center" title="${item.jyxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jyxm}</div></td>
                                                 <td align="center">${item.jysj}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jyje}" pattern="#,##0"/></td>
-                                                <td align="center"><fmt:formatNumber value="${item.jyye}" pattern="#,##0"/></td>
+                                                <td align="center"><fmt:formatNumber value="${item.jyye==-1?'':item.jyye}" pattern="#,##0"/></td>
                                                 <td align="center">${item.sfbz}</td>
                                                 <td align="center" title="${item.dskh}"><div style="width:140px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dskh}</div></td>
                                                 <td align="center" title="${item.dsxm}"><div style="width:40px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsxm}</div></td>
@@ -126,9 +125,9 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="yhkkh" <c:if test="${bzzseachCondition=='yhkkh'}">selected="selected"</c:if> >交易账卡号</option>
+                                            <option value="yhkkh" <c:if test="${bzzseachCondition=='yhkkh'}">selected="selected"</c:if> >交易卡号</option>
                                             <option value="khxm"<c:if test="${bzzseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>
-                                            <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手账卡号</option>
+                                            <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手卡号</option>
                                             <option value="dsxm" <c:if test="${bzzseachCondition=='dsxm'}">selected="selected"</c:if> >对手户名</option>
                                             <option value="zysm" <c:if test="${bzzseachCondition=='zysm'}">selected="selected"</c:if> >摘要说明</option>
                                             <option value="jywdmc" <c:if test="${bzzseachCondition=='jywdmc'}">selected="selected"</c:if> >交易网点名称</option>

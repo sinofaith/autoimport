@@ -115,7 +115,7 @@ function progressFunction(evt) {
 
 
 function getZzDetails(obj,type) {
-    var yhkkh = $(obj).closest("tr").find("td:eq(1)").text();
+    var yhkkh = $(obj).closest("tr").find("td:eq(1)").attr("title");;
     var dfkh = $(obj).closest("tr").find("td:eq(3)").text();
     window.page = 1
     var tjsum = $(obj).closest("tr").find("td:eq(3)").text();
@@ -144,6 +144,9 @@ function getZzDetails(obj,type) {
             var data = msg.list
             var str = ""
             for (i in data){
+                if(data[i].jyye ==-1){
+                    data[i].jyye = "";
+                }
                 if(i%2==0){
                     str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
                 }else{
@@ -205,6 +208,9 @@ function orderByFilter(type,filter) {
             var data = msg.list
             var str = ""
             for (i in data){
+                if(data[i].jyye ==-1){
+                    data[i].jyye = "";
+                }
                 if(i%2==0){
                     str+="<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
                 }else{
@@ -212,7 +218,7 @@ function orderByFilter(type,filter) {
                 }
                 str+="<td width=\"4%\">"+data[i].id+"</td>"+
                     "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
-                    "<td width=\"5%\">"+data[i].jyxm+"</td>"+
+                    "<td width=\"5%\" title=\""+data[i].jyxm+"\"> <div style=\"width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyxm+"</div></td>"+
                     "<td width=\"10%\">"+data[i].jysj+"</td>"+
                     "<td width=\"7%\">"+data[i].jyje+"</td>"+
                     "<td width=\"7%\">"+data[i].jyye+"</td>"+
@@ -271,6 +277,9 @@ function scrollF(type) {
                     var data = msg.list
                     var str = ""
                     for (i in data) {
+                        if(data[i].jyye ==-1){
+                            data[i].jyye = "";
+                        }
                         if (i % 2 == 0) {
                             str += "<tr align='center' style='display:table;width:100%;table-layout:fixed;'>"
                         } else {
@@ -278,7 +287,7 @@ function scrollF(type) {
                         }
                         str+="<td width=\"4%\">"+data[i].id+"</td>"+
                             "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
-                            "<td width=\"5%\">"+data[i].jyxm+"</td>"+
+                            "<td width=\"5%\" title=\""+data[i].jyxm+"\"> <div style=\"width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyxm+"</div></td>"+
                             "<td width=\"10%\">"+data[i].jysj+"</td>"+
                             "<td width=\"7%\">"+data[i].jyje+"</td>"+
                             "<td width=\"7%\">"+data[i].jyye+"</td>"+

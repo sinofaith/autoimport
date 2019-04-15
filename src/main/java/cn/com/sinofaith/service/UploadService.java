@@ -1,6 +1,7 @@
 package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
 import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
@@ -8,6 +9,7 @@ import cn.com.sinofaith.bean.cftBean.CftPersonEntity;
 import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.zfbBean.*;
+import cn.com.sinofaith.dao.bankDao.BankCustomerDao;
 import cn.com.sinofaith.dao.zfbDao.*;
 import cn.com.sinofaith.dao.bankDao.BankPersonDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
@@ -19,11 +21,13 @@ import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
 import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
+import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.ReadExcelUtils;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,8 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Created by Me. on 2018/5/23
@@ -53,6 +59,8 @@ public class UploadService {
 
     @Autowired
     private BankZzxxDao bzzd;
+    @Autowired
+    private BankCustomerDao bcd;
 
     @Autowired
     private WuliuJjxxDao wljjd;
@@ -317,8 +325,25 @@ public class UploadService {
         return zcxxs;
     }
 
+    public int insertBankCustomer(String filepath,AjEntity aj){
+        List<String> listPath = getFileLists(filepath,"人员信息");
+        listPath.addAll(getFileLists(filepath,"客户基本信息"));
+        String inserttime = TimeFormatUtil.getDate("/");
+        List<BankCustomerEntity> listcust = getBankCustByFile(listPath);
+        List<String> zjhm = new ArrayList<>();
+        for(BankCustomerEntity c:listcust){
+            c.setInserttime(inserttime);
+            bcd.saveOrUpdate(c);
+            zjhm.add(c.getZjhm());
+        }
+        bcd.saveRel(zjhm,aj.getId());
+        return listcust.size();
+    }
+
+
     public int insertBankZzxx(String filePath, long aj_id, List<BankZzxxEntity> all) {
         List<String> listPath = getFileLists(filePath, "交易明细");
+        listPath.addAll(getFileLists(filePath,"详细信息"));
         List<BankZzxxEntity> listZzxx = getByExcel(listPath);
         int i = bzzd.insertZzxx(listZzxx, aj_id, all);
 
@@ -526,6 +551,32 @@ public class UploadService {
         return wls;
     }*/
 
+    public void getBCustomer(String temp,int i,Map<String,Integer> title){
+        if(temp.contains("客户名称")){
+            title.put("name",i);
+        }else if(temp.equals("证照类型")||temp.equals("证件类型")){
+            title.put("zjlx",i);
+        }else if(temp.equals("证照号码")||temp.equals("证件号码")){
+            title.put("zjhm",i);
+        }else if(temp.contains("现住址_行政区划")){
+            title.put("xzz",i);
+        }else if(temp.contains("单位地址")){
+            title.put("dwdz",i);
+        }else if(temp.contains("联系电话")){
+            title.put("lxdh",i);
+        }else if(temp.contains("联系手机")){
+            title.put("lxsj",i);
+        }else if(temp.contains("单位电话")) {
+            title.put("dwdh", i);
+        }else if(temp.contains("住宅电话")) {
+            title.put("zzdh", i);
+        }else if(temp.contains("工作单位")) {
+            title.put("gzdw", i);
+        }else if(temp.contains("邮箱")||temp.contains("Email")) {
+            title.put("email", i);
+        }
+    }
+
     public  void getBzzxxTitle(String temp,int i,Map<String,Integer> title){
             if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
                 title.put("yhkkh", i);
@@ -574,32 +625,134 @@ public class UploadService {
             }
         }
 
-
-    public List<BankZzxxEntity> getByExcel(List<String> filepath) {
+    public List<BankCustomerEntity> getBankCustByFile(List<String> listPath){
         final Map<String, Integer> title = new HashMap();
-        final List<BankZzxxEntity> listB = new ArrayList<>();
-
-        ExcelReader reader = new ExcelReader() {
-            public void getRows(int sheetIndex, int curRow, List<String> rowList) {
-                if (curRow == 0) {
-                    for (int i = 0; i < rowList.size(); i++) {
-                        String temp = rowList.get(i);
-                        getBzzxxTitle(temp,i,title);
+        final List<BankCustomerEntity> result = new ArrayList<>();
+        CsvReader csv = null;
+        for(int i=0;i<listPath.size();i++){
+            try{
+                if(listPath.get(i).endsWith(".xlsx")){
+                    ExcelReader reader = new ExcelReader() {
+                        public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                            if (curRow == 0) {
+                                for (int i = 0; i < rowList.size(); i++) {
+                                    String temp = rowList.get(i);
+                                    getBCustomer(temp,i,title);
+                                }
+                            } else {
+                                result.add(BankCustomerEntity.listToObj(rowList, title));
+                            }
+                        }
+                    };
+                    reader.process(listPath.get(i));
+                }
+                if(listPath.get(i).endsWith(".csv")){
+                    csv = new CsvReader(listPath.get(i),',',Charset.forName("GBK"));
+                    csv.readHeaders();
+                    csv.setSafetySwitch(false);
+                    String[] titles = csv.getHeaders();
+                    for(int j=0;j<titles.length;j++){
+                        getBCustomer(titles[j],j,title);
                     }
-                } else {
-                    listB.add(BankZzxxEntity.listToObj(rowList, title));
+                    csv.setSafetySwitch(false);
+                    while (csv.readRecord()){
+                        result.add(BankCustomerEntity.listToObj(Arrays.asList(csv.getValues()), title));
+                    }
+                    csv.close();
+                }
+                Map<String,List<BankCustomerEntity>> map = result.stream().collect(groupingBy(BankCustomerEntity ::getZjhm));
+                result.clear();
+                map.forEach((key, value)->{
+                    BankCustomerEntity temp = new BankCustomerEntity();
+                    temp.setName(StringUtils.strip(value.stream().filter(p->!"".equals(p.getName())).map(p->p.getName()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setZjlx(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZjlx())).map(p->p.getZjlx()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setZjhm(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZjhm())).map(p->p.getZjhm()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setXzz_xzqh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getXzz_xzqh())).map(p->p.getXzz_xzqh()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setDwdz(StringUtils.strip(value.stream().filter(p->!"".equals(p.getDwdz())).map(p->p.getDwdz()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setLxdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getLxdh())).map(p->p.getLxdh()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setLxsj(StringUtils.strip(value.stream().filter(p->!"".equals(p.getLxsj())).map(p->p.getLxsj()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setDwdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getDwdh())).map(p->p.getDwdh()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setZzdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZzdh())).map(p->p.getZzdh()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setGzdw(StringUtils.strip(value.stream().filter(p->!"".equals(p.getGzdw())).map(p->p.getGzdw()).collect(Collectors.toSet()).toString(),"[]"));
+                    temp.setEmail(StringUtils.strip(value.stream().filter(p->!"".equals(p.getEmail())).map(p->p.getEmail()).collect(Collectors.toSet()).toString(),"[]"));
+                    result.add(temp);
+                });
+                new File(listPath.get(i)).delete();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                if(csv!=null) {
+                    csv.close();
                 }
             }
-        };
+        }
+        return result;
+    }
+
+
+    public List<BankZzxxEntity> getByExcel(List<String> filepath) {
+        Map<String, Integer> title = new HashMap();
+        List<BankZzxxEntity> listB = new ArrayList<>();
+        CsvReader csv = null;
 
         for (int i = 0; i < filepath.size(); i++) {
             try {
                 if(filepath.get(i).endsWith(".xlsx")) {
-                    reader.process(filepath.get(i));
-                    new File(filepath.get(i)).delete();
+                    if(filepath.get(i).contains("公经反洗钱")&&filepath.get(i).contains("详细信息")){
+                        final StringBuffer temp = new StringBuffer();
+                        ExcelReader reader = new ExcelReader() {
+                            public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                                if(rowList.get(0).contains(":")){
+                                    temp.delete(0,temp.length());
+                                    temp.append(rowList.get(0).split(":")[1]);
+                                }
+                                if(rowList.size()==20&&!rowList.get(0).contains("序号")){
+                                    BankZzxxEntity zz = new BankZzxxEntity();
+                                    zz.setJysj(TimeFormatUtil.getDateSwitchTimestamp(rowList.get(1)));
+                                    if(temp.toString().equals(rowList.get(3))){
+                                        zz.setYhkkh(rowList.get(3));
+                                        zz.setJyxm(rowList.get(4));
+                                        zz.setJyzjh(rowList.get(5));
+                                        zz.setDskh(rowList.get(7));
+                                        zz.setDsxm(rowList.get(8));
+                                        zz.setDssfzh(rowList.get(9));
+                                        zz.setSfbz("出");
+                                    }
+                                    if(temp.toString().equals(rowList.get(7))){
+                                        zz.setYhkkh(rowList.get(7));
+                                        zz.setJyxm(rowList.get(8));
+                                        zz.setJyzjh(rowList.get(9));
+                                        zz.setDskh(rowList.get(3));
+                                        zz.setDsxm(rowList.get(4));
+                                        zz.setDssfzh(rowList.get(5));
+                                        zz.setSfbz("进");
+                                    }
+                                    zz.setJyje(new BigDecimal(rowList.get(12)));
+                                    zz.setJyfsd(rowList.get(15));
+                                    zz.setBz(rowList.get(16));
+                                    listB.add(zz);
+                                }
+                            }
+                        };
+                        reader.processOneSheet(filepath.get(i),2);
+                    }else {
+                        ExcelReader reader = new ExcelReader() {
+                            public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                                if (curRow == 0) {
+                                    for (int i = 0; i < rowList.size(); i++) {
+                                        String temp = rowList.get(i);
+                                        getBzzxxTitle(temp, i, title);
+                                    }
+                                } else {
+                                    listB.add(BankZzxxEntity.listToObj(rowList, title));
+                                }
+                            }
+                        };
+                        reader.process(filepath.get(i));
+                    }
                 }
                 if(filepath.get(i).endsWith(".csv")){
-                    CsvReader csv = new CsvReader(filepath.get(i),',',Charset.forName("GBK"));
+                    csv = new CsvReader(filepath.get(i),',',Charset.forName("GBK"));
                     csv.readHeaders();
                     csv.setSafetySwitch(false);
                     String[] titles = csv.getHeaders();
@@ -610,9 +763,15 @@ public class UploadService {
                     while (csv.readRecord()){
                         listB.add(BankZzxxEntity.listToObj(Arrays.asList(csv.getValues()), title));
                     }
+                    csv.close();
                 }
+                new File(filepath.get(i)).delete();
             } catch (Exception e) {
                 e.getStackTrace();
+            }finally {
+                if(csv!=null) {
+                    csv.close();
+                }
             }
         }
 //        Set<BankZzxxEntity> setB = new HashSet<>(listB);
@@ -620,11 +779,12 @@ public class UploadService {
         return listB;
     }
 
-    public int insertBankZcxx(String filePath, long aj_id) {
+    public List<BankZcxxEntity> insertBankZcxx(String filePath, long aj_id) {
         List<String> listPath = getFileLists(filePath, "开户");
         listPath.addAll(getFileLists(filePath,"账户信息"));
+        listPath.addAll(getFileLists(filePath,"详细信息"));
         List<BankZcxxEntity> listZcxx = getBzcxxByFile(listPath);
-        int i = bzcd.saveZcxx(listZcxx, aj_id);
+//        int i = bzcd.saveZcxx(listZcxx, aj_id);
         BankPersonEntity bpe = new BankPersonEntity();
         for (BankZcxxEntity bce : listZcxx) {
             bpe.setXm(bce.getKhxm());
@@ -634,7 +794,7 @@ public class UploadService {
                 bpd.insert(bpe);
             }
         }
-        return i;
+        return listZcxx;
     }
 
     public  Map<String,Integer> getBzcxxTitle(String[] titles){
@@ -671,23 +831,44 @@ public class UploadService {
     }
 
     public List<BankZcxxEntity> getBzcxxByFile(List<String> listPath) {
-        List<BankZcxxEntity> zcxxs = new ArrayList<>();
+        Set<BankZcxxEntity> zcxxs = new HashSet<>();
         Map<String, Integer> title = new HashMap<>();
+        CsvReader csv = null;
         for (String path : listPath) {
             try {
+
+
                 if (path.endsWith(".xls") || path.endsWith(".xlsx")) {
-                    ReadExcelUtils excelReader = new ReadExcelUtils(path);
-                    String[] titles = excelReader.readExcelTitle();
-                    title = getBzcxxTitle(titles);
-                    Map<Integer, Map<Integer, Object>> map = excelReader.readExcelContent();
-                    for (int i = 1; i <= map.size(); i++) {
-                        if (!zcxxs.contains(BankZcxxEntity.mapToObj(map.get(i), title))) {
-                            zcxxs.add(BankZcxxEntity.mapToObj(map.get(i), title));
+                    if(path.contains("公经反洗钱")&&path.contains("详细信息")){
+                        ExcelReader reader = new ExcelReader() {
+                            public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                                if(rowList.size()>10&&!rowList.get(0).contains("序号")){
+                                    BankZcxxEntity bc = new BankZcxxEntity();
+                                    bc.setYhkkh(rowList.get(1));
+                                    bc.setKhxm(rowList.get(2));
+                                    bc.setKhzjh(rowList.get(3));
+                                    bc.setKhh(StringUtils.strip(rowList.get(4),"()"));
+                                    if(!zcxxs.contains(bc)) {
+                                        zcxxs.add(bc);
+                                    }
+                                }
+                            }
+                        };
+                        reader.processOneSheet(path,1);
+                    }else {
+                        ReadExcelUtils excelReader = new ReadExcelUtils(path);
+                        String[] titles = excelReader.readExcelTitle();
+                        title = getBzcxxTitle(titles);
+                        Map<Integer, Map<Integer, Object>> map = excelReader.readExcelContent();
+                        for (int i = 1; i <= map.size(); i++) {
+                            if (!zcxxs.contains(BankZcxxEntity.mapToObj(map.get(i), title))) {
+                                zcxxs.add(BankZcxxEntity.mapToObj(map.get(i), title));
+                            }
                         }
                     }
                 }
                 if(path.endsWith(".csv")){
-                    CsvReader csv = new CsvReader(path,',',Charset.forName("GBK"));
+                    csv = new CsvReader(path,',',Charset.forName("GBK"));
                     csv.readHeaders();
                     csv.setSafetySwitch(false);
                     title = getBzcxxTitle(csv.getHeaders());
@@ -696,8 +877,8 @@ public class UploadService {
                         zcxx = new BankZcxxEntity();
                         zcxx.setZhzt(csv.get(title.get("zhzt")).replace("\t","").trim());
                         zcxx.setKhxm(csv.get(title.get("khxm")).replace("\t","").trim());
-                        zcxx.setYhkkh(csv.get(title.get("yhkkh")).replace("_156_1", "").replace("\t","").trim());
-                        zcxx.setYhkzh(csv.get(title.get("yhkzh")).replace("_156_1", "").replace("\t","").trim());
+                        zcxx.setYhkkh(zcxx.remove_(csv.get(title.get("yhkkh"))).replace("\t","").trim());
+                        zcxx.setYhkzh(zcxx.remove_(csv.get(title.get("yhkzh"))).replace("\t","").trim());
                         if ("".equals(zcxx.getYhkkh())) {
                             zcxx.setYhkkh(zcxx.getYhkzh());
                         }
@@ -711,16 +892,22 @@ public class UploadService {
                             zcxxs.add(zcxx);
                         }
                     }
+                    csv.close();
                 }
+                new File(path).delete();
             } catch (FileNotFoundException e) {
                 System.out.println("未找到指定路径的文件!");
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
+            }finally {
+                if(csv!=null) {
+                    csv.close();
+                }
             }
         }
 
-        return zcxxs;
+        return new ArrayList<>(zcxxs);
     }
 
     public static List<String> getFileLists(String filePath, String filter) {

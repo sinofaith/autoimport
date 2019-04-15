@@ -28,9 +28,8 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/bank" >资金开户信息</a><a href="/SINOFAITH/bankzzxx">资金交易明细</a>
-        <a href="/SINOFAITH/banktjjg" >账户统计信息</a><a href="/SINOFAITH/banktjjgs">账户点对点统计信息</a>
-        <a href="/SINOFAITH/bankgtzh" class="addactive">公共账户统计信息</a></span>    <ul >
+    <%@include file="../bank/bankTitler.jsp" %>
+    <ul>
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
                 <div class="cantent_block ">
@@ -49,10 +48,10 @@
                                     <tr align="center">
                                         <td width="7%">序号</td>
                                         <td width="6%"><a href="/SINOFAITH/bankgtzh/order?orderby=khxm">姓名</a></td>
-                                        <td width="9%">交易账卡号</td>
-                                        <td width="12%">对方账户<br>
+                                        <td width="9%">交易卡号</td>
+                                        <td width="12%">对方卡号<br>
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                            <label for="checkbox1">去除支付宝、财付通</label></td>
+                                            <label for="checkbox1">去除第三方账户</label></td>
                                         <td width="6%">对方姓名</td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jyzcs">交易总次数</a></td>
@@ -130,9 +129,9 @@
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" id="seachCondition" onchange="seachChange()" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="jyzh"<c:if test="${gtseachCondition=='jyzh'}">selected="selected"</c:if>>交易账卡号</option>
+                                            <option value="jyzh"<c:if test="${gtseachCondition=='jyzh'}">selected="selected"</c:if>>交易卡号</option>
                                             <option value="khxm"<c:if test="${gtseachCondition=='khxm'}">selected="selected"</c:if>>姓名</option>
-                                            <option value="dfzh" <c:if test="${gtseachCondition=='dfzh'}">selected="selected"</c:if> >对方账户</option>
+                                            <option value="dfzh" <c:if test="${gtseachCondition=='dfzh'}">selected="selected"</c:if> >对方卡号</option>
                                             <option value="dsxm" <c:if test="${gtseachCondition=='dsxm'}">selected="selected"</c:if> >对方户名</option>
                                             <option value="jzzje"<c:if test="${gtseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
                                             <option value="czzje"<c:if test="${gtseachCondition=='czzje'}">selected="selected"</c:if>>出账总金额阀值</option>
