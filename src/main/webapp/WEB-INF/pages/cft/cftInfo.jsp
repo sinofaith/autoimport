@@ -17,6 +17,8 @@
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
 <script src="<c:url value="/resources/js/cftinfo.js"/> "></script>
+<script src="<c:url value="/resources/js/raydreams.js"/> "></script>
+<script src="<c:url value="/resources/js/cft/cftPreview.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
@@ -223,7 +225,9 @@
                            <c:if test="${!fn:contains(aj.aj, ',')}">
                                 <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">财付通数据导入</button>
                            </c:if>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cft/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_r_button" onclick="location.href='/SINOFAITH/cft/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_l_button" data-toggle="modal" data-target="#myModal2" onclick="yjdcDownload()">一键导出</button>
+                           <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/cft/createPDF'"</c:if>>生成PDF报告文档</button>
                        </span>
                                     </div>
                                 </div>
@@ -286,6 +290,38 @@
                        onclick="UploadCft()" />
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 60%;margin-left: 5%;right: 5%;height: 500px">
+        <div class="modal-content" style="margin-left: -50%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel2">财付通分析数据一键导出(预览)<span id="title"></span></h4>
+                <select	 id="a1" placeholder="分析数据类别" onchange="select_change()">
+                    <option value="cftTjjg" selected="selected">财付通账户信息</option>
+                    <option value="cftTjjgs">财付通对手账户信息</option>
+                    <option value="cftGtzh">财付通共同账户信息</option>
+                </select>&nbsp;&nbsp;&nbsp;
+                出账总金额阀值:<input type="number" style="width:120px" class="txt" id="czje">
+                进账总金额阀值:<input type="number" style="width:120px" class="txt" id="jzje">
+                <input type="button" class="btn btn-primary" value="预览数据" onclick="yjdcDownload(true)">
+            </div>
+            <div class="modal-body">
+                <div id="dataTable" class="table table-striped table-bordered" style="height:400px">
+                </div>
+                <button id="yjdc" type="button" style="margin-left: 1280px;top: 50px;" class="btn btn-primary" onclick="determineThresholdValue()">确定阀值</button>
+                <button id="next" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextYjdc()">下一个</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="batchExport()">批量导出</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
         <!-- /.modal-content -->

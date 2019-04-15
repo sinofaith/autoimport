@@ -462,7 +462,17 @@ public class CftTjjgService {
         return wb;
     }
 
-    public void  deleteByAjid(long id){
+    public void deleteByAjid(long id){
         cfttjd.delAll(id);
+    }
+
+    /**
+     * 全部数据导出
+     * @param search
+     * @return
+     */
+    public List getCftTjjgAll(String search) {
+        List listTjxx = cfttjd.findBySQL("select s.xm,c.* from cft_tjjg c left join cft_person s on c.jyzh = s.zh where 1=1 "+search);
+        return listTjxx;
     }
 }

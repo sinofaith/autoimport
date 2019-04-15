@@ -10,6 +10,7 @@ import cn.com.sinofaith.form.zfbForm.ZfbJyjlSjdzsForm;
 import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxGtzhForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.CreatePdfUtils;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import cn.com.sinofaith.util.WatermarkImageUtils;
 import com.google.gson.Gson;
@@ -303,125 +304,59 @@ public class ZfbZzmxTjjgService {
         String columnNames1[] = {"序号", "支付宝账号", "账号名称", "转账产品名称", "交易总次数",
                 "出账总次数", "出账总金额", "进账总次数", "进账总金额"};
         if (czTjjgList != null && czTjjgList.size() != 0) {
-            createHead(document, "转账明细统计结果-<出账>", blackFont, textFont, aj.getAj());
-            table = createTable(czTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6);
+            CreatePdfUtils.createHead(document, "转账明细统计结果-<出账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(czTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6);
             document.add(table);
         }
         if (jzTjjgList != null && jzTjjgList.size() != 0) {
-            createHead(document, "转账明细统计结果-<进账>", blackFont, textFont, aj.getAj());
-            table = createTable(jzTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8);
+            CreatePdfUtils.createHead(document, "转账明细统计结果-<进账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(jzTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8);
             document.add(table);
         }
         // 转账对手出、进账
         String columnNames2[] = {"序号", "支付宝账号", "账号名称", "对方账号", "对方信息", "交易总次数", "出账总次数",
                 "出账总金额", "进账总次数", "进账总金额"};
         if (czTjjgsList != null && czTjjgsList.size() != 0) {
-            createHead(document, "转账明细对手账户-<出账>", blackFont, textFont, aj.getAj());
-            table = createTable(czTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 7);
+            CreatePdfUtils.createHead(document, "转账明细对手账户-<出账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(czTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 7);
             document.add(table);
         }
         if (jzTjjgsList != null && jzTjjgsList.size() != 0) {
-            createHead(document, "转账明细对手账户-<进账>", blackFont, textFont, aj.getAj());
-            table = createTable(jzTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 9);
+            CreatePdfUtils.createHead(document, "转账明细对手账户-<进账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(jzTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 9);
             document.add(table);
         }
         // 转账共同账户
         String columnNames3[] = {"序号", "支付宝账号", "账号名称", "共同账户", "共同联系人数", "交易总次数", "出账总次数",
                 "出账总金额", "进账总次数", "进账总金额"};
         if (gtzhList != null && gtzhList.size() != 0) {
-            createHead(document, "转账共同账户", blackFont, textFont, aj.getAj());
-            table = createTable(gtzhList, tableFont, tableFont1, boldFont, boldFont1, columnNames3, 4);
+            CreatePdfUtils.createHead(document, "转账共同账户", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(gtzhList, tableFont, tableFont1, boldFont, boldFont1, columnNames3, 4);
             document.add(table);
         }
         // 交易卖家账户信息
         String columnNames4[] = {"序号", "店铺名", "卖家账号", "账户名称", "交易总次数", "进账总次数",
                 "进账总金额", "出账总次数", "出账总金额"};
         if (jyjlTjjgForms != null && jyjlTjjgForms.size() != 0) {
-            createHead(document, "交易卖家账户信息", blackFont, textFont, aj.getAj());
-            table = createTable(jyjlTjjgForms, tableFont, tableFont1, boldFont, boldFont1, columnNames4, -1);
+            CreatePdfUtils.createHead(document, "交易卖家账户信息", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(jyjlTjjgForms, tableFont, tableFont1, boldFont, boldFont1, columnNames4, -1);
             document.add(table);
         }
         // 交易买家账户信息
         String columnNames5[] = {"序号", "买家用户Id", "买家信息", "交易状态", "卖家用户Id", "卖家信息", "购买总次数",
                 "购买总金额"};
         if (jyjlTjjgsList != null && jyjlTjjgsList.size() != 0) {
-            createHead(document, "交易买家账户信息", blackFont, textFont, aj.getAj());
-            table = createTable(jyjlTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames5, 7);
+            CreatePdfUtils.createHead(document, "交易买家账户信息", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(jyjlTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames5, 7);
             document.add(table);
         }
         // 交易记录地址信息
         String columnNames6[] = {"序号", "买家用户Id", "买家信息", "收货人地址", "收件次数", "出账金额"};
         if (sjdzsForm != null && sjdzsForm.size() != 0) {
-            createHead(document, "交易记录地址信息", blackFont, textFont, aj.getAj());
-            table = createTable(sjdzsForm, tableFont, tableFont1, boldFont, boldFont1, columnNames6, 4);
+            CreatePdfUtils.createHead(document, "交易记录地址信息", blackFont, textFont, aj.getAj());
+                table = CreatePdfUtils.createTable(sjdzsForm, tableFont, tableFont1, boldFont, boldFont1, columnNames6, 4);
             document.add(table);
         }
-    }
-
-    public void createHead(Document document, String title, Font blackFont, Font textFont, String ajName) throws DocumentException {
-        //规格名称
-        Paragraph p = new Paragraph(title, blackFont);
-        p.setAlignment(Element.ALIGN_CENTER);
-        document.add(p);
-        PdfPTable head = new PdfPTable(1);
-        head.setTotalWidth(new float[]{520}); //设置列宽
-        head.setLockedWidth(true); //锁定列宽
-        head.setSpacingBefore(3f); // 前间距
-        head.setSpacingAfter(3f); // 后间距
-        PdfPCell cell1 = new PdfPCell(new Phrase("案件名:"+ajName, textFont));
-        cell1.setBorderWidth(0);
-        cell1.setMinimumHeight(20); //设置单元格高度
-        cell1.setHorizontalAlignment(Element.ALIGN_CENTER); //设置水平居中
-        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE); //设置垂直居中
-        head.addCell(cell1);
-        document.add(head);
-    }
-
-    public PdfPTable createTable(List list, Font tableFont, Font tableFont1, Font boldFont, Font boldFont1, String columnNames[], int cell) {
-        PdfPTable table = new PdfPTable(columnNames.length);
-        table.setWidthPercentage(100); // 宽度100%填充
-        table.setSpacingBefore(10f); // 前间距
-        table.setSpacingAfter(10f); // 后间距
-        List<PdfPRow> listRow = table.getRows();
-        //行1
-        PdfPCell cells[] = new PdfPCell[columnNames.length];
-        PdfPRow row = new PdfPRow(cells);
-        //设置列名
-        for (int i = 0; i < columnNames.length; i++) {
-            if (i == cell) {
-                cells[i] = new PdfPCell(new Paragraph(columnNames[i], boldFont1));//单元格内容
-            } else {
-                cells[i] = new PdfPCell(new Paragraph(columnNames[i], boldFont));//单元格内容
-            }
-            cells[i].setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
-            cells[i].setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
-            cells[i].setFixedHeight(26f);
-        }
-        //把第一行添加到集合
-        listRow.add(row);
-        if (null != list && list.size() >= 1) {
-            for (int i = 0; i < list.size(); i++) {
-                // zfb实体类
-                String[] zfb = list.get(i).toString().split("//");
-                PdfPCell cells1[] = new PdfPCell[columnNames.length];
-                PdfPRow row1 = new PdfPRow(cells1);
-                cells1[0] = new PdfPCell(new Paragraph(String.valueOf(i + 1), tableFont));//单元格内容
-                cells1[0].setFixedHeight(20f);
-                cells1[0].setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
-                cells1[0].setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
-                for (int j = 0; j < zfb.length; j++) {
-                    if (j + 1 == cell) {
-                        cells1[j + 1] = new PdfPCell(new Paragraph(!zfb[j].equals("null") ? zfb[j] : "", tableFont1));//单元格内容
-                    } else {
-                        cells1[j + 1] = new PdfPCell(new Paragraph(!zfb[j].equals("null") ? zfb[j] : "", tableFont));//单元格内容
-                    }
-                    cells1[j + 1].setHorizontalAlignment(Element.ALIGN_CENTER);//水平居中
-                    cells1[j + 1].setVerticalAlignment(Element.ALIGN_MIDDLE);//垂直居中
-                }
-                listRow.add(row1);
-            }
-        }
-        return table;
     }
 
     private List selectTjjgList(Class clazz, AjEntity aj, String order) {

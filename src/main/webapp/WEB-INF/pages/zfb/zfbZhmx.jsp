@@ -151,7 +151,7 @@
                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
                            </c:if>
                            <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmx/download'"</c:if>>数据导出</button>
-                           <button data-toggle="modal" type="button"  class="sideBar_l_button" <c:if test="${aj!=null && detailinfo.size()!=0}"> data-target="#myModal2" onclick="yjdcDownload()"</c:if>>一键导出</button>
+                           <button data-toggle="modal" type="button"  class="sideBar_l_button" <c:if test="${aj!=null && detailinfo.size()!=0}">data-target="#myModal2" onclick="yjdcDownload()"</c:if>>一键导出</button>
                            <button class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/createPDF'"</c:if>>生成PDF报告文档</button>
                        </span>
                                     </div>
@@ -337,7 +337,7 @@
                     <option value="jyjlSjdzs">交易记录地址统计</option>
                 </select>&nbsp;&nbsp;&nbsp;
                 出账总金额阀值:<input type="number" style="width:120px" class="txt" id="czje">
-                进账总金额阀值:<input type="number"     style="width:120px"  class="txt" id="jzje">
+                进账总金额阀值:<input type="number" style="width:120px" class="txt" id="jzje">
                 <input type="button" class="btn btn-primary" value="预览数据" onclick="yjdcDownload(true)">
             </div>
             <div class="modal-body">

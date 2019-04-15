@@ -108,6 +108,11 @@ public class CftTjjgForm {
         this.zhlb = zhlb;
     }
 
+    @Override
+    public String toString() {
+        return name + "//" + jyzh + "//" + jylx + "//" + jyzcs + "//" + jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
+    }
+
     public CftTjjgForm mapToForm(Map map){
         CftTjjgForm cftForm = new CftTjjgForm();
         cftForm.setName((String) map.get("XM"));

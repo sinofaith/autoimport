@@ -162,70 +162,72 @@ public class ZfbZzmxTjjgsEntity {
         Map<String,ZfbZzmxTjjgsEntity> map = new HashMap<>();
         ZfbZzmxTjjgsEntity tjjgs = null;
         for (ZfbZzmxTjjgsForm tjjgsForm : tjjgsForms) {
-            // 是付款方
-            if(tjjgsForm.getYhid().equals(tjjgsForm.getFkfzfbzh())){
-                if(map.containsKey(tjjgsForm.getYhid()+tjjgsForm.getSkfzfbzh())){
-                    // 已添加
-                    tjjgs = map.get(tjjgsForm.getYhid() + tjjgsForm.getSkfzfbzh());
-                    tjjgs.setJyzcs(tjjgs.getJyzcs()+1);
-                    tjjgs.setFkzcs(tjjgs.getFkzcs()+1);
-                    tjjgs.setFkzje(tjjgs.getFkzje().add(tjjgsForm.getZzje()));
-                }else{
-                    // 未添加
-                    tjjgs = new ZfbZzmxTjjgsEntity();
-                    tjjgs.setZfbzh(tjjgsForm.getYhid());
-                    tjjgs.setZfbmc(tjjgsForm.getZhmc());
-                    tjjgs.setDfzh(tjjgsForm.getSkfzfbzh()!=null?tjjgsForm.getSkfzfbzh():"转账到银行卡");
-                    if(tjjgsForm.getJydfxx().equals("")){
-                        tjjgs.setDfmc(tjjgsForm.getSkfzfbzh());
+            if(tjjgsForm.getYhid()!=null){
+                // 是付款方
+                if(tjjgsForm.getYhid().equals(tjjgsForm.getFkfzfbzh())){
+                    if(map.containsKey(tjjgsForm.getYhid()+tjjgsForm.getSkfzfbzh())){
+                        // 已添加
+                        tjjgs = map.get(tjjgsForm.getYhid() + tjjgsForm.getSkfzfbzh());
+                        tjjgs.setJyzcs(tjjgs.getJyzcs()+1);
+                        tjjgs.setFkzcs(tjjgs.getFkzcs()+1);
+                        tjjgs.setFkzje(tjjgs.getFkzje().add(tjjgsForm.getZzje()));
                     }else{
-                        String jydfxx = null;
-                        if(tjjgsForm.getJydfxx().length() > 16){
-                            jydfxx = tjjgsForm.getJydfxx().substring(0,16);
-                        }
-                        if(jydfxx!=null && !jydfxx.equals(tjjgsForm.getYhid())){
-                            tjjgs.setDfmc(tjjgsForm.getJydfxx());
-                        }else{
+                        // 未添加
+                        tjjgs = new ZfbZzmxTjjgsEntity();
+                        tjjgs.setZfbzh(tjjgsForm.getYhid());
+                        tjjgs.setZfbmc(tjjgsForm.getZhmc());
+                        tjjgs.setDfzh(tjjgsForm.getSkfzfbzh()!=null?tjjgsForm.getSkfzfbzh():"转账到银行卡");
+                        if(tjjgsForm.getJydfxx().equals("")){
                             tjjgs.setDfmc(tjjgsForm.getSkfzfbzh());
+                        }else{
+                            String jydfxx = null;
+                            if(tjjgsForm.getJydfxx().length() > 16){
+                                jydfxx = tjjgsForm.getJydfxx().substring(0,16);
+                            }
+                            if(jydfxx!=null && !jydfxx.equals(tjjgsForm.getYhid())){
+                                tjjgs.setDfmc(tjjgsForm.getJydfxx());
+                            }else{
+                                tjjgs.setDfmc(tjjgsForm.getSkfzfbzh());
+                            }
                         }
+                        tjjgs.setJyzcs(1);
+                        tjjgs.setFkzcs(1);
+                        tjjgs.setFkzje(tjjgsForm.getZzje());
+                        tjjgs.setAj_id(id);
+                        map.put(tjjgsForm.getYhid()+tjjgsForm.getSkfzfbzh(),tjjgs);
                     }
-                    tjjgs.setJyzcs(1);
-                    tjjgs.setFkzcs(1);
-                    tjjgs.setFkzje(tjjgsForm.getZzje());
-                    tjjgs.setAj_id(id);
-                    map.put(tjjgsForm.getYhid()+tjjgsForm.getSkfzfbzh(),tjjgs);
-                }
-            }else if(tjjgsForm.getYhid().equals(tjjgsForm.getSkfzfbzh())){ //收款方
-                if(map.containsKey(tjjgsForm.getYhid()+tjjgsForm.getFkfzfbzh())){
-                    // 已添加
-                    tjjgs = map.get(tjjgsForm.getYhid() + tjjgsForm.getFkfzfbzh());
-                    tjjgs.setJyzcs(tjjgs.getJyzcs()+1);
-                    tjjgs.setSkzcs(tjjgs.getSkzcs()+1);
-                    tjjgs.setSkzje(tjjgs.getSkzje().add(tjjgsForm.getZzje()));
-                }else{
-                    // 未添加
-                    tjjgs = new ZfbZzmxTjjgsEntity();
-                    tjjgs.setZfbzh(tjjgsForm.getYhid());
-                    tjjgs.setZfbmc(tjjgsForm.getZhmc());
-                    tjjgs.setDfzh(tjjgsForm.getFkfzfbzh()!=null?tjjgsForm.getFkfzfbzh():"转账到银行卡");
-                    if(tjjgsForm.getJydfxx().equals("")){
-                        tjjgs.setDfmc(tjjgsForm.getFkfzfbzh());
-                    }else {
-                        String jydfxx = null;
-                        if(tjjgsForm.getJydfxx().length() > 16){
-                            jydfxx = tjjgsForm.getJydfxx().substring(0,16);
-                        }
-                        if (jydfxx!=null && !jydfxx.equals(tjjgsForm.getYhid())) {
-                            tjjgs.setDfmc(tjjgsForm.getJydfxx());
-                        } else {
+                }else if(tjjgsForm.getYhid().equals(tjjgsForm.getSkfzfbzh())) { //收款方
+                    if (map.containsKey(tjjgsForm.getYhid() + tjjgsForm.getFkfzfbzh())) {
+                        // 已添加
+                        tjjgs = map.get(tjjgsForm.getYhid() + tjjgsForm.getFkfzfbzh());
+                        tjjgs.setJyzcs(tjjgs.getJyzcs() + 1);
+                        tjjgs.setSkzcs(tjjgs.getSkzcs() + 1);
+                        tjjgs.setSkzje(tjjgs.getSkzje().add(tjjgsForm.getZzje()));
+                    } else {
+                        // 未添加
+                        tjjgs = new ZfbZzmxTjjgsEntity();
+                        tjjgs.setZfbzh(tjjgsForm.getYhid());
+                        tjjgs.setZfbmc(tjjgsForm.getZhmc());
+                        tjjgs.setDfzh(tjjgsForm.getFkfzfbzh() != null ? tjjgsForm.getFkfzfbzh() : "转账到银行卡");
+                        if (tjjgsForm.getJydfxx().equals("")) {
                             tjjgs.setDfmc(tjjgsForm.getFkfzfbzh());
+                        } else {
+                            String jydfxx = null;
+                            if (tjjgsForm.getJydfxx().length() > 16) {
+                                jydfxx = tjjgsForm.getJydfxx().substring(0, 16);
+                            }
+                            if (jydfxx != null && !jydfxx.equals(tjjgsForm.getYhid())) {
+                                tjjgs.setDfmc(tjjgsForm.getJydfxx());
+                            } else {
+                                tjjgs.setDfmc(tjjgsForm.getFkfzfbzh());
+                            }
                         }
+                        tjjgs.setJyzcs(1);
+                        tjjgs.setSkzcs(1);
+                        tjjgs.setSkzje(tjjgsForm.getZzje());
+                        tjjgs.setAj_id(id);
+                        map.put(tjjgsForm.getYhid() + tjjgsForm.getFkfzfbzh(), tjjgs);
                     }
-                    tjjgs.setJyzcs(1);
-                    tjjgs.setSkzcs(1);
-                    tjjgs.setSkzje(tjjgsForm.getZzje());
-                    tjjgs.setAj_id(id);
-                    map.put(tjjgsForm.getYhid()+tjjgsForm.getFkfzfbzh(),tjjgs);
                 }
             }
         }

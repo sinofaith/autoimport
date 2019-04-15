@@ -2,11 +2,22 @@ package cn.com.sinofaith.service.bankServices;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
+import cn.com.sinofaith.dao.bankDao.BankTjjgDao;
+import cn.com.sinofaith.dao.bankDao.BankTjjgsDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
+import cn.com.sinofaith.form.cftForm.CftTjjgForm;
+import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
+import cn.com.sinofaith.form.cftForm.CftTjjgssForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
+import cn.com.sinofaith.util.CreatePdfUtils;
+import cn.com.sinofaith.util.WatermarkImageUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,9 +41,12 @@ public class BankZcxxServices {
 
     @Autowired
     private CftZzxxService cfts;
-
+    @Autowired
+    private BankTjjgDao tjjd;
     @Autowired
     private BankZcxxDao bzcd;
+    @Autowired
+    private BankTjjgsDao banktjsd;
 
     public String getBq(String yhkh,long ajid){
         String sql = " select to_char(c.zzsum) zzsum ,to_char(r.zzrsum) zzrsum ,to_char(j.tjsum) tjsum" +
@@ -177,5 +194,135 @@ public class BankZcxxServices {
         cell = row.createCell(9);
         cell.setCellValue("开户行");
         return row;
+    }
+
+    public Document createPDF(OutputStream op, AjEntity aj) {
+        Document document = new Document();
+        // 账户统计信息 进账
+        String seach1 = " and aj_id="+aj.getId()+" order by c.jzzje desc nulls last";
+        List bankList = tjjd.getDoPage(seach1, 1, 10);
+        List<CftTjjgForm> bankTjjgs1 = new ArrayList<>();
+        CftTjjgForm tjjgForm = new CftTjjgForm();
+        for(int i=0;i<bankList.size();i++){
+            Map map = (Map)bankList.get(i);
+            tjjgForm = tjjgForm.mapToForm(map);
+            bankTjjgs1.add(tjjgForm);
+        }
+        // 账户统计信息 出账
+        String seach2 = " and aj_id="+aj.getId()+" order by c.czzje desc nulls last";
+        bankList = tjjd.getDoPage(seach2, 1, 10);
+        List<CftTjjgForm> bankTjjgs2 = new ArrayList<>();
+        for(int i=0;i<bankList.size();i++){
+            Map map = (Map)bankList.get(i);
+            tjjgForm = tjjgForm.mapToForm(map);
+            tjjgForm.setId(i + 1);
+            bankTjjgs2.add(tjjgForm);
+        }
+        // 账户点对点统计信息 进账
+        bankList = banktjsd.getDoPage(seach1, 1, 10);
+        List<CftTjjgsForm> bankTjjgss3 = new ArrayList<>();
+        CftTjjgsForm cftForm = new CftTjjgsForm();
+        for(int i=0;i<bankList.size();i++) {
+            Map map = (Map) bankList.get(i);
+            cftForm = new CftTjjgsForm();
+            cftForm.setName((String) map.get("XM"));
+            cftForm.setJyzh((String) map.get("JYZH"));
+            cftForm.setDfzh((String) map.get("DFZH"));
+            cftForm.setJyzcs( new BigDecimal(map.get("JYZCS").toString()));
+            cftForm.setJzzcs( new BigDecimal(map.get("JZZCS").toString()));
+            cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
+            cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
+            cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
+            bankTjjgss3.add(cftForm);
+        }
+        // 账户点对点统计信息 出账
+        bankList = banktjsd.getDoPage(seach2, 1, 10);
+        List<CftTjjgsForm> bankTjjgss4 = new ArrayList<>();
+        for(int i=0;i<bankList.size();i++) {
+            Map map = (Map) bankList.get(i);
+            cftForm = new CftTjjgsForm();
+            cftForm.setName((String) map.get("XM"));
+            cftForm.setJyzh((String) map.get("JYZH"));
+            cftForm.setDfzh((String) map.get("DFZH"));
+            cftForm.setJyzcs( new BigDecimal(map.get("JYZCS").toString()));
+            cftForm.setJzzcs( new BigDecimal(map.get("JZZCS").toString()));
+            cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
+            cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
+            cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
+            bankTjjgss4.add(cftForm);
+        }
+        // 公共账户统计信息
+        String seach = "and a.num>3 and aj_id ="+aj.getId()+" and ( 1=1 ) order by a.num desc,c.dfzh,c.jyzh";
+        try {
+            // 创建文件
+            Rectangle one = new Rectangle(1050, 1500);
+            document.setPageSize(one);
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, op);
+            // 插入水印
+            WatermarkImageUtils water = new WatermarkImageUtils();
+            pdfWriter.setPageEvent(water);
+            // 打开文件
+            document.open();
+            // 插入表格
+            pdfInsertTable(aj, document, bankTjjgs1, bankTjjgs2, bankTjjgss3, bankTjjgss4,null);
+            // 关闭文档
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return document;
+    }
+
+    private void pdfInsertTable(AjEntity aj, Document document, List<CftTjjgForm> cfttjs1, List<CftTjjgForm> cfttjs2,
+                                List<CftTjjgsForm> cfttjs3, List<CftTjjgsForm> cfttjs4, List<CftTjjgssForm> cfttjs5)
+            throws DocumentException, IOException {
+        // 中文字体,解决中文不能显示问题
+//        BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+        BaseFont bfChinese = BaseFont.createFont("../../resources/font/SIMYOU.TTF", BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+        Font textFont = new Font(bfChinese, 12, Font.NORMAL); //正常
+        Font tableFont = new Font(bfChinese, 10, Font.NORMAL);
+        Font tableFont1 = new Font(bfChinese, 12, 1, BaseColor.RED); //正常
+        Font boldFont = new Font(bfChinese, 13, Font.BOLD);
+        Font blackFont = new Font(bfChinese, 16, Font.BOLD);//标题字体
+        Font boldFont1 = new Font(bfChinese, 13, 1, BaseColor.RED);
+        blackFont.setColor(BaseColor.BLACK);
+        //  财付通账户信息出、进账
+        PdfPTable table = null;
+        String columnNames1[] = {"序号", "姓名", "微信账户", "交易类型", "交易总次数",
+                "进账总次数", "进账总金额", "出账总次数", "出账总金额"};
+        if (cfttjs1 != null && cfttjs1.size() != 0) {
+            CreatePdfUtils.createHead(document, "财付通账户信息-<进账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(cfttjs1, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6);
+            document.add(table);
+        }
+        if (cfttjs2 != null && cfttjs2.size() != 0) {
+            CreatePdfUtils.createHead(document, "财付通账户信息-<出账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(cfttjs2, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8);
+            document.add(table);
+        }
+        //  财付通对手账户信息出、进账
+        columnNames1[3] = "对方账户";
+        if (cfttjs3 != null && cfttjs3.size() != 0) {
+            CreatePdfUtils.createHead(document, "财付通对手账户信息-<进账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(cfttjs3, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6);
+            document.add(table);
+        }
+        if (cfttjs4 != null && cfttjs4.size() != 0) {
+            CreatePdfUtils.createHead(document, "财付通对手账户信息-<出账>", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(cfttjs4, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8);
+            document.add(table);
+        }
+        String columnNames2[] = {"序号", "姓名", "微信账户", "对方账户", "对方姓名", "共同联系人数", "交易总次数",
+                "进账总次数", "进账总金额", "出账总次数", "出账总金额"};
+        if (cfttjs5 != null && cfttjs5.size() != 0) {
+            CreatePdfUtils.createHead(document, "财付通共同账户信息", blackFont, textFont, aj.getAj());
+            table = CreatePdfUtils.createTable(cfttjs5, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 5);
+            document.add(table);
+        }
+
     }
 }

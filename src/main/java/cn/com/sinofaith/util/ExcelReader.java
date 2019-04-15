@@ -304,8 +304,8 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-        String file = "C:\\Users\\47435\\Desktop\\新建文件夹 (2)\\新建文件夹\\公经反洗钱协查[2019]345号详细信息02.xlsx";
-        final Map<String, Integer> title = new HashMap();
+        String file = "D:\\work\\数据模型\\资金\\假HP第一批\\陶国龙、梁明霞、张仁蛟、钟高艺\\交易明细信息 (26).xlsx";
+        final Map<String,Integer> title=new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 //
 //        Set<String> temp = new HashSet<>();

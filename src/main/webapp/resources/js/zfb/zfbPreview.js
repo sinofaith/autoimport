@@ -35,7 +35,7 @@ function yjdcDownload(flag){
         },
         success:function (msg) {
             var data = msg.list;
-            data.push({"size":msg.totalRecords})
+            data.push({"size":msg.totalRecords});
             // 插入表头
             insertTable1(data);
         },
@@ -140,7 +140,28 @@ function determineThresholdValue(){
             yjdcList[i]['jzje'] = jzje;
         }
     }
-    console.log(yjdcList);
+    alertify.set('notifier','position', 'top-center');
+    if(selectValue=='zhmxJczz'){
+        alertify.success("账户明细进出总账统计阈值设置成功!");
+    }else if(selectValue=='zhmxTjjg') {
+        alertify.success("账户明细账户与账户统计阈值设置成功!");
+    }else if(selectValue=='zhmxTjjgs'){
+        alertify.success("账户明细账户与银行卡统计阈值设置成功!");
+    }else if(selectValue=='zhmxJylx'){
+        alertify.success("账户明细账户交易类型统计阈值设置成功!");
+    }else if(selectValue=='zzmxTjjg'){
+        alertify.success("转账明细统计结果阈值设置成功!");
+    }else if(selectValue=='zzmxTjjgs'){
+        alertify.success("转账明细对手账户阈值设置成功!");
+    }else if(selectValue=='zzmxGtzh'){
+        alertify.success("转账明细共同账户阈值设置成功!");
+    }else if(selectValue=='jyjlTjjg'){
+        alertify.success("交易卖家账户信息阈值设置成功!");
+    }else if(selectValue=='jyjlTjjgs'){
+        alertify.success("交易买家账户信息阈值设置成功!");
+    }else{
+        alertify.success("交易记录地址统计阈值设置成功!");
+    }
     if(selectValue=='jyjlSjdzs'){
         $("#yjdc").attr("disabled",true);
     }else{

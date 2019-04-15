@@ -110,12 +110,17 @@ public class CftTjjgsForm {
         }
         this.dfxm = dfxm;
     }
-
     public long getZhlx() {
         return zhlx;
     }
 
     public void setZhlx(long zhlx) {
         this.zhlx = zhlx;
+    }
+
+    @Override
+    public String toString() {
+        return name + "//" + jyzh + "//" + dfzh + "//" + jyzcs + "//" +
+                jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
     }
 }

@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankCustomerServices;
 import cn.com.sinofaith.service.bankServices.BankZcxxServices;
+import com.itextpdf.text.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 import static java.lang.Integer.parseInt;
 
@@ -80,5 +84,17 @@ public class BankInfoController {
         AjEntity aj = (AjEntity) ses.getAttribute("aj");
 
         return bankzcs.getBq(yhkh,aj.getId());
+    }
+    @RequestMapping("/createPDF")
+    public void createPDF(HttpServletResponse resp,HttpSession session) throws IOException {
+        // 取出域中对象
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        String fileName = "财付通分析报告("+aj.getAj()+").pdf";
+        resp.setContentType("application/force-download");
+        resp.setHeader("Content-Disposition","attachment;filename="+new String((fileName).getBytes(), "ISO8859-1"));
+        OutputStream op = resp.getOutputStream();
+        Document doc = bankzcs.createPDF(op, aj);
+        op.flush();
+        op.close();
     }
 }

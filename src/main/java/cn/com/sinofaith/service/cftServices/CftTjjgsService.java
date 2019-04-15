@@ -69,7 +69,7 @@ public class CftTjjgsService {
         int allRow = cfttjsd.getGtCount(seach,ajid);
         List<CftTjjgsForm> cfttjs = new ArrayList<CftTjjgsForm>();
         CftTjjgsForm cftForm = null;
-        List cftList = cfttjsd.getDoPageGt(seach,currentPage,pageSize,ajid);
+        List cftList = cfttjsd.getDoPageGt(seach,currentPage,pageSize,ajid,true);
         if(allRow != 0) {
             int xh = 1;
             for(int i=0;i<cftList.size();i++){
@@ -401,5 +401,32 @@ public class CftTjjgsService {
     }
     public void deleteByAjid(long id){
         cfttjsd.delAll(id);
+    }
+
+    /**
+     * 数据导出
+     * @param search
+     * @return
+     */
+    public List getCftTjjgAll(String search) {
+        List listTjjg = cfttjsd.findBySQL("select s.xm,c.* from cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+search);
+        return listTjjg;
+    }
+
+    /**
+     * 共同账户数据导出
+     * @param search
+     * @return
+     */
+    public List getCftTjjgsAll(String search, AjEntity aj) {
+        List listTjjg = cfttjsd.findBySQL("select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
+                "  select t.dfzh,count(1) as num from cft_tjjgs t " +
+                " where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +aj.getId()+
+                " group by dfzh " +
+                "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
+                " left join cft_person s on c.jyzh = s.zh " +
+                " left join cft_person n on c.dfzh = n.zh "+
+                "  where a.num is not null " + search +" order by c.dfzh");
+        return listTjjg;
     }
 }

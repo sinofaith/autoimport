@@ -18,6 +18,7 @@
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
+<script src="<c:url value="/resources/js/raydreams.js"/> "></script>
 <script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
 
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
@@ -233,6 +234,8 @@
                                 <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">银行卡数据导入</button>
                            </c:if>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bank/download'" >数据导出</button>
+                           <%--<button  type="button"  class="sideBar_l_button" data-toggle="modal" data-target="#myModal2" onclick="yjdcDownload()">一键导出</button>
+                           <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/bank/createPDF'"</c:if>>生成PDF报告文档</button>--%>
                        </span>
                                     </div>
                                 </div>

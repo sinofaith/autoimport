@@ -48,20 +48,23 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity> {
         return Integer.parseInt(String.valueOf(map.get("NUM")));
     }
 
-    public List getDoPageGt(String seachCode,int offset,int length,long ajid){
+    public List getDoPageGt(String seachCode,int offset,int length,long ajid,boolean flag){
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * ");
-        sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
+        if(flag){
+            sql.append("SELECT * ");
+            sql.append("FROM (SELECT a.*, ROWNUM rn FROM (");
+        }
+        sql.append("select s.xm,n.xm dfxm,c.*,a.num from cft_tjjgs c right join (" +
                 "       select t.dfzh,count(1) as num from cft_tjjgs t " +
                 "       where t.dfzh not in( select distinct t1.jyzh from cft_tjjgs t1) and t.aj_id=" +ajid+
                 "       group by dfzh " +
                 "       having(count(1)>=2) ) a on c.dfzh = a.dfzh " +
                 "       left join cft_person s on c.jyzh = s.zh " +
                 "       left join cft_person n on c.dfzh = n.zh " +
-                "       where a.num is not null "+seachCode+") a ");
-        sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
-
+                "       where a.num is not null "+seachCode);
+        if(flag){
+            sql.append(") a WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
+        }
         return findBySQL(sql.toString());
     }
 
