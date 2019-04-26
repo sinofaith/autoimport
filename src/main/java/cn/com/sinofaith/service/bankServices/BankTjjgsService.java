@@ -175,7 +175,7 @@ public class BankTjjgsService {
             zzxx = listZzxx.get(i);
                 if ("出".equals(zzxx.getSfbz())) {
                     String temp = zzxx.getYhkkh()+zzxx.getDskh();
-                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
                         temp = zzxx.getYhkkh()+zzxx.getBcsm();
                     }
                     if (map.containsKey(temp)) {
@@ -187,8 +187,9 @@ public class BankTjjgsService {
                         BankTjjgsEntity tjs1 = new BankTjjgsEntity();
                         tjs1.setJyzh(zzxx.getYhkkh());
                         tjs1.setDfzh(zzxx.getDskh());
-                        if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                        if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
                             tjs1.setDfzh(zzxx.getBcsm());
+                            tjs1.setZhlx(2);
                         }
                         tjs1.setJyzcs(new BigDecimal(1));
                         tjs1.setCzzcs(new BigDecimal(1));
@@ -199,7 +200,7 @@ public class BankTjjgsService {
                 }
                 if ( "进".equals(zzxx.getSfbz())) {
                     String temp = zzxx.getYhkkh()+zzxx.getDskh();
-                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
                         temp = zzxx.getYhkkh()+zzxx.getBcsm();
                     }
                     if (map.containsKey(temp)) {
@@ -211,8 +212,9 @@ public class BankTjjgsService {
                         BankTjjgsEntity tjs2 = new BankTjjgsEntity();
                         tjs2.setJyzh(zzxx.getYhkkh());
                         tjs2.setDfzh(zzxx.getDskh());
-                        if(zzxx.getDskh() == null || "".equals(zzxx.getDskh())){
+                        if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
                             tjs2.setDfzh(zzxx.getBcsm());
+                            tjs2.setZhlx(2);
                         }
                         tjs2.setJyzcs(new BigDecimal(1));
                         tjs2.setJzzcs(new BigDecimal(1));
@@ -227,11 +229,9 @@ public class BankTjjgsService {
         List<BankTjjgsEntity> listTjjgs = new ArrayList<>(map.values());
         for (int i =0;i<listTjjgs.size();i++){
             BankTjjgsEntity bz = listTjjgs.get(i);
-            if(bz.getDfzh().contains("-")){
-                bz.setZhlx(2);
-            }else if(!zczh.contains(bz.getDfzh())){
+            if(!zczh.contains(bz.getDfzh())&&bz.getZhlx()!=2){
                 bz.setZhlx(1);
-            }else if(zczh.contains(bz.getDfzh())){
+            }else if(zczh.contains(bz.getDfzh())&&bz.getZhlx()!=2){
                 bz.setZhlx(0);
             }
         }
