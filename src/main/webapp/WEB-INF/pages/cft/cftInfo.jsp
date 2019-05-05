@@ -12,6 +12,8 @@
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie.css"/>" rel="stylesheet" media="screen">
+<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
@@ -49,7 +51,7 @@
                         str += "<a href='#'>无更多信息</a>"
                     }
                     skip.innerHTML = str;
-                    running = true;
+                    running = true
                 }, "json")
             }
         }catch(e){
@@ -295,6 +297,121 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal -->
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel1">多文件字段映射</h4>
+            </div>
+            <div class="modal-body" >
+                <div class="form-group">
+                    <div class="row" style="width: 600px;">
+                        <span class="col-md-1" id="excelName" style="width: 350px;">
+                            <label for="excelName">Excel名</label>
+                        </span>
+                        <span class="col-md-1" id="excelSheet" style="width: 200px;">
+                            <label for="excelSheet">Sheet名</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div id="roll" style="overflow-x: auto; overflow-y: auto; height: 100px; width:1300px;">
+                        <table id="head" class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc;">
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <label for="c1">账号</label>
+                            <select	 id="c1" placeholder="账号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c2">交易单号</label>
+                            <select	 id="c2" placeholder="交易单号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c3">借贷类型</label>
+                            <select	 id="c3" placeholder="借贷类型" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c4">交易类型</label>
+                            <select	 id="c4" placeholder="交易类型" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c5">交易金额</label>
+                            <select	id="c5" placeholder="交易金额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c6">账户余额</label>
+                            <select	id="c6" placeholder="账户余额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c7">交易时间</label>
+                            <select id="c7" placeholder="交易时间" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c8">银行类型</label>
+                            <select	id="c8" placeholder="银行类型" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c9">交易说明</label>
+                            <select id="c9" placeholder="交易说明" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c10">商户名称</label>
+                            <select	id="c10" placeholder="商户名称" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c11">发送方</label>
+                            <select	id="c11" placeholder="发送方" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c12">发送金额</label>
+                            <select	id="c12" placeholder="发送金额" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c13">接收方</label>
+                            <select	id="c13" placeholder="接收方" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c14">接收时间</label>
+                            <select	id="c14" placeholder="接收时间" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="c15">接收金额</label>
+                            <select	id="c15" placeholder="接收金额" onchange="selectC()">
+                            </select>
+                        </div>
+                    </div>
+                    <button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextSelect()">下一个</button>
+                    <button id="mapping" type="button" style="margin-left: 1280px" class="btn btn-primary" onclick="uploadMapping()">提交映射</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="uploadCftExcel()">导入数据</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">

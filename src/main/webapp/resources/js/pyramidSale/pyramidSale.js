@@ -316,7 +316,7 @@ $(function () {
         if(tbody!=null) {
             tbody.innerHTML = ""
         }
-        //$.ajax({url:"/SINOFAITH/pyramidSaleTier/removeDesc"})
+        $.ajax({url:"/SINOFAITH/pyramidSale/removeDesc"})
     })
 });
 

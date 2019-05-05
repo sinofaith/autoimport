@@ -113,6 +113,15 @@ public class CftInfoController {
         op.close();
     }
 
+    /**
+     * 一键导出预览
+     * @param currentPage
+     * @param name
+     * @param czje
+     * @param jzje
+     * @param session
+     * @return
+     */
     @RequestMapping("/previewTable")
     public @ResponseBody String previewTable(int currentPage, String name, String czje,String jzje,HttpSession session){
         Gson gson = new Gson();

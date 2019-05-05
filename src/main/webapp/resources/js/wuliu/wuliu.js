@@ -276,6 +276,7 @@ $(function () {
             tbody.innerHTML = ""
         }
         excelData = [];
+        $.ajax({url:"/SINOFAITH/wuliuRelation/removeDesc"});
     });
 });
 

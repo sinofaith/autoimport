@@ -6,6 +6,7 @@ import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.zfbService.ZfbZzmxTjjgService;
+import cn.com.sinofaith.util.MappingUtils;
 import com.itextpdf.text.Document;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -210,6 +212,12 @@ public class ZfbZzmxTjjgController {
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String removeDesc(HttpSession ses){
+        String path = (String) ses.getAttribute("wuliuPath");
+        if(path!=null){
+            File uploadPathd = new File(path);
+            MappingUtils.deleteFile(uploadPathd);
+            ses.removeAttribute("wuliuPath");
+        }
         ses.removeAttribute("zzmxXQDesc");
         ses.removeAttribute("zzmxXQLastOrder");
         return "200";

@@ -305,12 +305,12 @@ public class ZfbZzmxTjjgService {
                 "出账总次数", "出账总金额", "进账总次数", "进账总金额"};
         if (czTjjgList != null && czTjjgList.size() != 0) {
             CreatePdfUtils.createHead(document, "转账明细统计结果-<出账>", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(czTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6);
+            table = CreatePdfUtils.createTable(czTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 6, 0);
             document.add(table);
         }
         if (jzTjjgList != null && jzTjjgList.size() != 0) {
             CreatePdfUtils.createHead(document, "转账明细统计结果-<进账>", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(jzTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8);
+            table = CreatePdfUtils.createTable(jzTjjgList, tableFont, tableFont1, boldFont, boldFont1, columnNames1, 8, 0);
             document.add(table);
         }
         // 转账对手出、进账
@@ -318,12 +318,12 @@ public class ZfbZzmxTjjgService {
                 "出账总金额", "进账总次数", "进账总金额"};
         if (czTjjgsList != null && czTjjgsList.size() != 0) {
             CreatePdfUtils.createHead(document, "转账明细对手账户-<出账>", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(czTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 7);
+            table = CreatePdfUtils.createTable(czTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 7, 0);
             document.add(table);
         }
         if (jzTjjgsList != null && jzTjjgsList.size() != 0) {
             CreatePdfUtils.createHead(document, "转账明细对手账户-<进账>", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(jzTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 9);
+            table = CreatePdfUtils.createTable(jzTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames2, 9, 0);
             document.add(table);
         }
         // 转账共同账户
@@ -331,7 +331,7 @@ public class ZfbZzmxTjjgService {
                 "出账总金额", "进账总次数", "进账总金额"};
         if (gtzhList != null && gtzhList.size() != 0) {
             CreatePdfUtils.createHead(document, "转账共同账户", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(gtzhList, tableFont, tableFont1, boldFont, boldFont1, columnNames3, 4);
+            table = CreatePdfUtils.createTable(gtzhList, tableFont, tableFont1, boldFont, boldFont1, columnNames3, 4, 0);
             document.add(table);
         }
         // 交易卖家账户信息
@@ -339,7 +339,7 @@ public class ZfbZzmxTjjgService {
                 "进账总金额", "出账总次数", "出账总金额"};
         if (jyjlTjjgForms != null && jyjlTjjgForms.size() != 0) {
             CreatePdfUtils.createHead(document, "交易卖家账户信息", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(jyjlTjjgForms, tableFont, tableFont1, boldFont, boldFont1, columnNames4, -1);
+            table = CreatePdfUtils.createTable(jyjlTjjgForms, tableFont, tableFont1, boldFont, boldFont1, columnNames4, -1, 0);
             document.add(table);
         }
         // 交易买家账户信息
@@ -347,14 +347,14 @@ public class ZfbZzmxTjjgService {
                 "购买总金额"};
         if (jyjlTjjgsList != null && jyjlTjjgsList.size() != 0) {
             CreatePdfUtils.createHead(document, "交易买家账户信息", blackFont, textFont, aj.getAj());
-            table = CreatePdfUtils.createTable(jyjlTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames5, 7);
+            table = CreatePdfUtils.createTable(jyjlTjjgsList, tableFont, tableFont1, boldFont, boldFont1, columnNames5, 7, 0);
             document.add(table);
         }
         // 交易记录地址信息
         String columnNames6[] = {"序号", "买家用户Id", "买家信息", "收货人地址", "收件次数", "出账金额"};
         if (sjdzsForm != null && sjdzsForm.size() != 0) {
             CreatePdfUtils.createHead(document, "交易记录地址信息", blackFont, textFont, aj.getAj());
-                table = CreatePdfUtils.createTable(sjdzsForm, tableFont, tableFont1, boldFont, boldFont1, columnNames6, 4);
+                table = CreatePdfUtils.createTable(sjdzsForm, tableFont, tableFont1, boldFont, boldFont1, columnNames6, 4, 0);
             document.add(table);
         }
     }

@@ -5,6 +5,7 @@ import cn.com.sinofaith.bean.pyramidSaleBean.PyramidSaleEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.PyramidSaleService.PyramidSaleService;
+import cn.com.sinofaith.util.MappingUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.NullPrecedence;
 import org.hibernate.criterion.DetachedCriteria;
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -173,4 +176,20 @@ public class PyramidSaleController {
         op.close();
     }
 
+    /**
+     * 删除desc
+     * @param ses
+     * @return
+     */
+    @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String removeDesc(HttpSession ses){
+        String path = (String) ses.getAttribute("path");
+        if(path!=null){
+            File uploadPathd = new File(path);
+            MappingUtils.deleteFile(uploadPathd);
+            ses.removeAttribute("path");
+        }
+        return "200";
+    }
 }

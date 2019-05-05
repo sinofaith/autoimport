@@ -1,5 +1,5 @@
 var yjdcList = [];
-var f = ['zhmxJczz','zhmxTjjg','zhmxTjjgs','zhmxJylx','zzmxTjjg','zzmxTjjgs','zzmxGtzh','jyjlTjjg','jyjlTjjgs','jyjlSjdzs']
+var f = ['zhmxJczz','zhmxTjjg','zhmxTjjgs','zhmxJylx','zzmxTjjg','zzmxTjjgs','zzmxGtzh','jyjlTjjg','jyjlTjjgs','jyjlSjdzs'];
 for(var value in f){
     yjdcList.push({field:f[value],czje:'',jzje:''});
 }

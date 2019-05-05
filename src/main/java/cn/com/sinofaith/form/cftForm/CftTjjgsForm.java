@@ -120,7 +120,16 @@ public class CftTjjgsForm {
 
     @Override
     public String toString() {
-        return name + "//" + jyzh + "//" + dfzh + "//" + jyzcs + "//" +
+        return name + "//" + jyzh + "//" + dfzh + "//" + jyzcs + "//" + jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
+    }
+
+    public String toStrings() {
+        return name + "//" + jyzh + "//" + dfzh + "//" + dfxm + "//" + count + "//" + jyzcs + "//" +
+                jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
+    }
+
+    public String toStringss() {
+        return jyzh + "//" + name + "//" + dfzh + "//" + dfxm + "//" + jyzcs + "//" +
                 jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
     }
 }

@@ -24,18 +24,18 @@ function UploadZfb() {
     var file = $("#file").val();
     if(file==''){
         alertify.set('notifier','position', 'top-center');
-        alertify.error('请选择要上传的文件夹')
+        alertify.error('请选择要上传的文件夹');
         return;
     }
     var aj = $("#aj").val();
-    var checkBox = 0
+    var checkBox = 0;
     if($("#checkbox1").is(':checked')){
         checkBox=1
     }
     if(aj==''){
         alertify.set('notifier','position', 'top-center');
         alertify.set('notifier','delay', 0);
-        alertify.error('请填写案件名称')
+        alertify.error('请填写案件名称');
         return
     }
     var FileController = "/SINOFAITH/uploadZfb"+checkVal; // 接收上传文件的后台地址
@@ -412,6 +412,9 @@ $(function () {
             $("#jzje").attr("value",'');
             dataTable.innerHTML = "";
         }
+    });
+    $('#myModal1').on('hide.bs.modal', function () {
+        $.ajax({url:"/SINOFAITH/zfbZzmxTjjg/removeDesc"});
     });
 });
 

@@ -8,9 +8,7 @@ import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.PyramidSaleService.PyramidSaleService;
-import cn.com.sinofaith.service.bankServices.BankTjjgServices;
-import cn.com.sinofaith.service.bankServices.BankTjjgsService;
-import cn.com.sinofaith.service.bankServices.BankZzxxServices;
+import cn.com.sinofaith.service.bankServices.*;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
@@ -50,7 +48,11 @@ public class UploadController {
     @Autowired
     private CftZzxxService zzs;
     @Autowired
+    private BankZcxxServices bankZcxxServices;
+    @Autowired
     private BankZzxxServices bzs;
+    @Autowired
+    private BankCustomerServices bcs;
     @Autowired
     private BankTjjgServices btjs;
     @Autowired
@@ -208,43 +210,78 @@ public class UploadController {
         }
     }
 
-//    @RequestMapping(value = "/uploadBank",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Map<String,Map<String,List<String>>> uploadBank(@RequestParam("file") List<MultipartFile> file, HttpServletRequest req) {
-//        String uploadPath = req.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
-//        String filePath ="";
-//        String fileName="";
-//        String result = "";
-//        File uploadFile = null;
-//        File uploadPathd = new File(uploadPath);
-//        if(!uploadPathd.exists()){
-//            uploadPathd.mkdirs();
-//        }
-//        for(int i=0;i<file.size();i++){
-//            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
-//            filePath = uploadPath + fileName;
-//            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
-//
-//                uploadFile = new File(filePath);
-//                try {
-//                    if(fileName.contains("开户")||fileName.contains("交易明细")) {
-//                        file.get(i).transferTo(uploadFile);
-//                    }
-//                }catch (IOException e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//
-//        if(uploadPathd.listFiles()!=null) {
-//            req.getSession().setAttribute("bankPath",uploadPath);
-//            Map<String,Map<String,List<String>>> excelMap = bzs.readExcel(uploadPath);
-//            if(excelMap!=null){
-//                return excelMap;
-//            }
-//        }
-//        return null;
-//    }
+    /**
+     * 资金数据字段映射
+     * @param file
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/uploadBankExcel",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Map<String,List<String>>> uploadBank(@RequestParam("file") List<MultipartFile> file, HttpServletRequest req) {
+        String uploadPath = req.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
+        String filePath ="";
+        String fileName="";
+        String result = "";
+        File uploadFile = null;
+        File uploadPathd = new File(uploadPath);
+        if(!uploadPathd.exists()){
+            uploadPathd.mkdirs();
+        }
+        for(int i=0;i<file.size();i++){
+            fileName =System.currentTimeMillis()+file.get(i).getOriginalFilename();
+            filePath = uploadPath + fileName;
+            if(fileName.endsWith(".xlsx")||fileName.endsWith(".xls")){
+                uploadFile = new File(filePath);
+                try {
+                    file.get(i).transferTo(uploadFile);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(uploadPathd.listFiles()!=null) {
+            req.getSession().setAttribute("bankPath",uploadPath);
+            Map<String,Map<String,List<String>>> excelMap = bzs.readExcel(uploadPath);
+            if(excelMap!=null){
+                return excelMap;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 资金数据存入数据库
+     * @param field
+     * @return
+     */
+    @RequestMapping(value = "/insertBankExcel",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public @ResponseBody String insertBankExcel(@RequestBody List<List<String>> field, HttpSession session) {
+        // 读取域中数据
+        String path = (String) session.getAttribute("bankPath");
+        List<String> listPath = bankZcxxServices.getBankFileList(path);
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        // 取出excel表数据
+        List<BankZcxxEntity> bankZcxxList = bankZcxxServices.getBankZcxxAll(listPath, field);
+        List<BankZzxxEntity> listZzxx = bzs.getAll(aj.getId());
+        int num = bzs.getBankZzxxAll(listPath, field, aj, listZzxx);
+        List<BankCustomerEntity> bankCustList = bcs.getBankCustAll(listPath, field, aj);
+        listZzxx = bzs.getAll(aj.getId());
+        Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+        listZzxx = new ArrayList<>(setB);
+        int count1 = btjs.count(listZzxx, aj.getId(), bankZcxxList);
+        int count2 = btjss.count(listZzxx,aj.getId());
+        bankZcxxList.clear();
+        // 删除文件
+        File uploadPathd = new File(path);
+        zfbZzmxService.deleteFile(uploadPathd);
+        if(num>0){
+            return "200";
+        } else {
+            return "400";
+        }
+    }
+
 
     @RequestMapping(value = "/uploadBank",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody

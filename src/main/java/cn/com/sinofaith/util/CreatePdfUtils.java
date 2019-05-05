@@ -1,5 +1,7 @@
 package cn.com.sinofaith.util;
 
+import cn.com.sinofaith.form.cftForm.CftTjjgForm;
+import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
@@ -27,7 +29,7 @@ public class CreatePdfUtils {
         document.add(head);
     }
 
-    public static PdfPTable createTable(List list, Font tableFont, Font tableFont1, Font boldFont, Font boldFont1, String columnNames[], int rowNum) {
+    public static PdfPTable createTable(List list, Font tableFont, Font tableFont1, Font boldFont, Font boldFont1, String columnNames[], int rowNum, int flag) {
         PdfPTable table = new PdfPTable(columnNames.length);
         table.setWidthPercentage(100); // 宽度100%填充
         table.setSpacingBefore(10f); // 前间距
@@ -50,9 +52,27 @@ public class CreatePdfUtils {
         //把第一行添加到集合
         listRow.add(row);
         if (null != list && list.size() >= 1) {
+            // 实体类
+            String[] obj = null;
             for (int i = 0; i < list.size(); i++) {
-                // 实体类
-                String[] obj = list.get(i).toString().split("//");
+                if(flag == 0){
+                    obj = list.get(i).toString().split("//");
+                }else{
+                    if (list.get(i) instanceof CftTjjgsForm) {
+                        CftTjjgsForm cft = (CftTjjgsForm) list.get(i);
+                        if(flag == 1) {
+                            obj = cft.toStrings().split("//");
+                        }else if(flag == 2) {
+                            obj = cft.toStringss().split("//");
+                        }
+                    }
+                    if (list.get(i) instanceof CftTjjgForm) {
+                        if(flag == 1) {
+                            CftTjjgForm cft = (CftTjjgForm) list.get(i);
+                            obj = cft.toStrings().split("//");
+                        }
+                    }
+                }
                 PdfPCell cells1[] = new PdfPCell[columnNames.length];
                 PdfPRow row1 = new PdfPRow(cells1);
                 cells1[0] = new PdfPCell(new Paragraph(String.valueOf(i + 1), tableFont));//单元格内容

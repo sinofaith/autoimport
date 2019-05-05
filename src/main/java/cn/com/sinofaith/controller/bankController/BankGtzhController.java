@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.io.File;
+
 import static java.lang.Integer.parseInt;
 
 @Controller
@@ -45,6 +47,12 @@ public class BankGtzhController {
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String removeDesc(HttpSession ses){
+        String path = (String) ses.getAttribute("cftPath");
+        if(path!=null){
+            File uploadPathd = new File(path);
+            banktjss.deleteFile(uploadPathd);
+            ses.removeAttribute("cftPath");
+        }
         ses.removeAttribute("dddesc");
         return "200";
     }

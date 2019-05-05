@@ -567,4 +567,14 @@ public class BankTjjgServices {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 全部数据导出
+     * @param search
+     * @return
+     */
+    public List getbankTjjgAll(String search) {
+        return tjjd.findBySQL("select s.khxm,c.* from bank_tjjg c left join bank_person s " +
+                "on c.jyzh = s.yhkkh where 1=1 "+search);
+    }
 }

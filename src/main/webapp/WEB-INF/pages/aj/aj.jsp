@@ -230,7 +230,7 @@
                     <label><input name="deleteAj" type="checkbox" value="1"/>财付通</label>
                     <label><input name="deleteAj" type="checkbox" value="5"/>支付宝</label>
                     <label><input name="deleteAj" type="checkbox" value="3"/>物流</label>
-                    <%--<label><input name="deleteAj" type="checkbox" value="4"/>传销</label>--%>
+                    <label><input name="deleteAj" type="checkbox" value="4"/>传销</label>
                 </div>
             </div>
             <div class="modal-footer">

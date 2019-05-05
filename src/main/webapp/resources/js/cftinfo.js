@@ -304,7 +304,7 @@ function cftSkip(code){
 //     }
 //     window.open("http://10.38.14.209.83:9000/matrix2.html#" + check_val);
 // }
-
+var excelData = [];
 var optionSize;
 function UploadCft() {
     optionSize = 0;
@@ -370,7 +370,6 @@ function UploadCft() {
                 var temp = true;
                 $("#excelName").append("<select class=\"form-control\" id=\"c18\" name=\"custSource\" onchange='insertSheet("+data+")'>");
                 for(var key in keyList){
-
                     if(temp){
                         $("#c18").append("<option value='"+key+"' selected='selected'>"+key+"</option></select>");
                         $("#c18").load(insertSheet(keyList));
@@ -379,6 +378,7 @@ function UploadCft() {
                         $("#c18").append("<option value='"+key+"'>"+key+"</option></select>");
                     }
                 }
+                excelData = [];
                 $('#myModal').modal('hide');
                 $('#myModal1').modal('show');
             }
@@ -466,7 +466,6 @@ function insertTable(sheetName){
 }
 
 // 封装参数
-var excelData = [];
 function uploadMapping(){
     var fieldList = [];
     var excelName = $("#c18").val();
@@ -554,7 +553,6 @@ function progressFunction(evt) {
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
         if((evt.loaded/evt.total) ==1 ){
             alertify.set('notifier','position', 'top-center');
-            alertify.set('notifier','delay', 0);
             alertify.success("文件夹上传成功\n请等待数据导入...");
         }
     }

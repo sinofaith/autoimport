@@ -6,18 +6,18 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
+<%--<link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/bootstrap-theme.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/css.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/map.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
 <link href="<c:url value="/resources/css/select/selectordie.css"/>" rel="stylesheet" media="screen">
-<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">
-<script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
-<script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
-<script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
+<link href="<c:url value="/resources/css/select/selectordie_theme_02.css"/>" rel="stylesheet" media="screen">--%>
+<%--<script src="<c:url value="/resources/jquery/jquery.js"/> "></script>--%>
+<%--<script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>--%>
+<%--<script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
-<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>
+<script src="<c:url value="/resources/js/select/selectordie.min.js"/> "></script>--%>
 <script type="text/javascript">
         $(function () {
             var url = window.location.pathname.split("/");

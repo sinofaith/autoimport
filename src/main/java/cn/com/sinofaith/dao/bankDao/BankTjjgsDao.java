@@ -51,20 +51,23 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
         return Integer.parseInt(String.valueOf(map.get("NUM")));
     }
 
-    public List getDoPageGt(String seachCode,int offset,int length,long ajid){
+    public List getDoPageGt(String seachCode,int offset,int length,long ajid,boolean flag){
         StringBuffer sql = new StringBuffer();
-        sql.append("SELECT * ");
-        sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (select s.khxm as xm,d.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+        if(flag) {
+            sql.append("SELECT * ");
+            sql.append("FROM (SELECT a.*, ROWNUM rn FROM (");
+        }
+        sql.append("select s.khxm as xm,d.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
                 "       select t.dfzh,count(1) as num from bank_tjjgs t " +
                 "       where t.zhlx = 1 and length(t.dfzh) >5 and t.aj_id=" +ajid+
                 "       group by dfzh " +
                 "       having(count(1)>=2) ) a on c.dfzh = a.dfzh " +
                 "       left join bank_person s on c.jyzh = s.yhkkh " +
                 "       left join bank_person d on c.dfzh = d.yhkkh " +
-                "       where a.num is not null "+seachCode+") a ");
-        sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
-
+                "       where a.num is not null "+seachCode);
+        if(flag) {
+            sql.append(") a WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
+        }
         return findBySQL(sql.toString());
     }
 

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
@@ -81,7 +82,7 @@ public class BankTjjgsService {
         int allRow = banktjsd.getGtCount(seach,ajid);
         List<CftTjjgsForm> cfttjs = new ArrayList<CftTjjgsForm>();
         CftTjjgsForm cftForm = null;
-        List cftList = banktjsd.getDoPageGt(seach,currentPage,pageSize,ajid);
+        List cftList = banktjsd.getDoPageGt(seach,currentPage,pageSize,ajid,true);
         if(allRow != 0) {
             int xh = 1;
             for(int i=0;i<cftList.size();i++){
@@ -459,5 +460,47 @@ public class BankTjjgsService {
     }
     public void deleteByAjid(long id){
         banktjsd.delAll(id);
+    }
+
+    /**
+     * 导出账户点对点统计信息数据
+     * @param search
+     */
+    public List getbankTjjgsAll(String search) {
+        return banktjsd.findBySQL("select s.khxm,c.*,d.khxm dfxm from bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh" +
+                " left join bank_person d on c.dfzh = d.yhkkh  where 1=1 "+search);
+    }
+
+    /**
+     * 导出账户点对点统计信息数据
+     * @param search
+     * @param aje
+     * @return
+     */
+    public List getbankGtzhAll(String search, AjEntity aje) {
+        return banktjsd.findBySQL("select s.khxm,d.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+                "  select t.dfzh,count(1) as num from bank_tjjgs t " +
+                " where t.dfzh not in( select distinct t1.jyzh from bank_tjjgs t1) and t.aj_id=" +aje.getId()+
+                " group by dfzh " +
+                "  having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
+                " left join bank_person s on c.jyzh = s.yhkkh " +
+                " left join bank_person d on c.dfzh = d.yhkkh "+
+                "  where a.num is not null " + search +",c.dfzh");
+    }
+    /**
+     * 删除文件
+     * @param uploadPathd
+     */
+    public void deleteFile(File uploadPathd){
+        if(uploadPathd.exists()){
+            for(File file : uploadPathd.listFiles()){
+                if(file.isFile()){
+                    file.delete();
+                }else{
+                    deleteFile(file);
+                }
+            }
+        }
+        uploadPathd.delete();
     }
 }

@@ -113,6 +113,10 @@ public class CftTjjgForm {
         return name + "//" + jyzh + "//" + jylx + "//" + jyzcs + "//" + jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
     }
 
+    public String toStrings() {
+        return jyzh + "//" + name + "//" + jyzcs + "//" + jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje + "//" + zhlb;
+    }
+
     public CftTjjgForm mapToForm(Map map){
         CftTjjgForm cftForm = new CftTjjgForm();
         cftForm.setName((String) map.get("XM"));

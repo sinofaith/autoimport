@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
+import cn.com.sinofaith.util.MappingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.io.File;
 
 import static java.lang.Integer.parseInt;
 
@@ -117,6 +120,13 @@ public class BankZzxxController {
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String removeDesc(HttpSession ses){
+        // 读取域中数据
+        String path = (String) ses.getAttribute("bankPath");
+        if(path!=null){
+            File uploadPathd = new File(path);
+            MappingUtils.deleteFile(uploadPathd);
+            ses.removeAttribute("bankPath");
+        }
         ses.removeAttribute("xqdesc");
         return "200";
     }

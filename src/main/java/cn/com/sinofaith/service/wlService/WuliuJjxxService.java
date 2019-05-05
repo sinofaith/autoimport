@@ -295,7 +295,7 @@ public class WuliuJjxxService {
                                 if (row != null) {
                                     for (int i = 0; i < row.getLastCellNum(); i++) {
                                         String cellName = row.getCell(i).getStringCellValue();
-                                        for (int j = 1; j < excel.size(); j++) {
+                                        for (int j = 2; j < excel.size(); j++) {
                                             if (cellName.equals(excel.get(j))) {
                                                 title.put(excel.get(j), i);
                                             }

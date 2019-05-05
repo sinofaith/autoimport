@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -245,5 +246,58 @@ public class MappingUtils {
             e.printStackTrace();
         }
         return dataList;
+    }
+
+    /**
+     * String数据转换
+     * @param xssfRow
+     * @param fieldValue
+     * @param title
+     * @return
+     */
+    public static String mappingFieldString(Row xssfRow, String fieldValue, Map<String, Integer> title){
+        String value = null;
+        if(fieldValue.equals("无") || xssfRow.getCell(title.get(fieldValue))==null){
+            value = "";
+        }else{
+            value = rowValue(xssfRow.getCell(title.get(fieldValue))).replace(",","");
+        }
+        return value;
+    }
+
+    /**
+     * BigDecimal数据转换
+     * @param xssfRow
+     * @param fieldValue
+     * @param title
+     * @return
+     */
+    public static BigDecimal mappingFieldBigDecimal(Row xssfRow, String fieldValue, Map<String, Integer> title){
+        BigDecimal value;
+        String fieV = MappingUtils.rowValue(xssfRow.getCell(title.get(fieldValue)));
+        if(fieldValue.equals("无") || xssfRow.getCell(title.get(fieldValue))==null ||
+                "".equals(fieV)){
+            value = new BigDecimal(0);
+        }else{
+            value = new BigDecimal(fieV.replace(",",""));
+        }
+        return value;
+    }
+
+    /**
+     * 删除文件
+     * @param uploadPathd
+     */
+    public static void deleteFile(File uploadPathd){
+        if(uploadPathd.exists()){
+            for(File file : uploadPathd.listFiles()){
+                if(file.isFile()){
+                    file.delete();
+                }else{
+                    deleteFile(file);
+                }
+            }
+        }
+        uploadPathd.delete();
     }
 }

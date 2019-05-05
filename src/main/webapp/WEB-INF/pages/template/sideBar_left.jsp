@@ -43,10 +43,10 @@
         <svg class="icon">
             <use xlink:href="#icon-wuliu"></use>
         </svg><br>物流</a>
-    <%--<a href="/SINOFAITH/pyramidSale">--%>
-        <%--<svg class="icon">--%>
-            <%--<use xlink:href="#icon-cengji"></use>--%>
-        <%--</svg><br>传销</a>--%>
+    <a href="/SINOFAITH/pyramidSale">
+        <svg class="icon">
+            <use xlink:href="#icon-cengji"></use>
+        </svg><br>传销</a>
  </span>
 </aside>
 </body>

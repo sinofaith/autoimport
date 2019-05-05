@@ -2,8 +2,11 @@ package cn.com.sinofaith.service.bankServices;
 
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
+import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.dao.AJDao;
+import cn.com.sinofaith.dao.bankDao.BankPersonDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.form.bankForm.BankZzxxForm;
 import cn.com.sinofaith.page.Page;
@@ -11,22 +14,28 @@ import cn.com.sinofaith.util.ExcelReader;
 import cn.com.sinofaith.util.MappingUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.monitorjbl.xlsx.StreamingReader;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
 public class BankZzxxServices {
     @Autowired
     private BankZzxxDao bankzzd;
+    @Autowired
+    private BankPersonDao bpd;
     @Autowired
     private AJDao ad;
 
@@ -266,5 +275,254 @@ public class BankZzxxServices {
             listPath.add(file.getAbsolutePath());
         }
         return listPath;
+    }
+
+    /**
+     * bank_zzxx表数据读取
+     * @param listPath
+     * @param fields
+     * @return
+     */
+    public int getBankZzxxAll(List<String> listPath, List<List<String>> fields,
+                                               AjEntity aj, List<BankZzxxEntity> listZzxx) {
+        // 读取
+        List<BankZzxxEntity> bankZzxxList = null;
+        List<BankZzxxEntity> bankZzxxLists = new ArrayList<>();
+        for(String path : listPath){
+            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            for(List<String> field : fields){
+                if(field.get(0).equals(excelName) && field.get(2).equals("bank_zzxx")){
+                    if(path.endsWith(".xlsx")){
+                        bankZzxxList = getBy2007ExcelAll(path,excelName,fields);
+                    }else if(path.endsWith(".xls")){
+                        bankZzxxList = getBy2003ExcelAll(path,excelName,fields);
+                    }
+                    bankZzxxLists.addAll(bankZzxxList);
+                    break;
+                }
+            }
+        }
+        int num = bankzzd.insertZzxx(bankZzxxLists, aj.getId(), listZzxx);
+        List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
+        Map<String, String> allBp = new HashMap<>();
+        for (int j = 0; j < allbp.size(); j++) {
+            allBp.put((allbp.get(j).getYhkkh()).replace("null", ""), null);
+        }
+        Map<String,BankPersonEntity> mapZ= new HashMap<>();
+        for (int g = 0; g < listZzxx.size(); g++) {
+            BankPersonEntity bp = new BankPersonEntity();
+            bp.setYhkkh(listZzxx.get(g).getDskh());
+            bp.setYhkzh(String.valueOf(aj.getId()));
+            bp.setXm(listZzxx.get(g).getDsxm());
+            if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
+                if (bp.getXm().contains("支付宝")) {
+                    bp.setXm("支付宝（中国）网络技术有限公司");
+                } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
+                    bp.setXm("财付通支付科技有限公司");
+                }
+                mapZ.put((bp.getYhkkh()).replace("null", ""), bp);
+            } else {
+                continue;
+            }
+        }
+        List<String> str = new ArrayList<>();
+        for (String o : mapZ.keySet()) {
+            if (allBp.containsKey(o)) {
+                str.add(o);
+            }
+        }
+        for (int s = 0; s < str.size(); s++) {
+            mapZ.remove(str.get(s));
+        }
+        allbp = new ArrayList<>(mapZ.values());
+        bpd.add(allbp, String.valueOf(aj.getId()));
+        return num;
+    }
+
+    /**
+     * 03版数据读取
+     * @param path
+     * @param excelName
+     * @param fields
+     * @return
+     */
+    private List<BankZzxxEntity> getBy2003ExcelAll(String path, String excelName, List<List<String>> fields) {
+        List<BankZzxxEntity> zzxxList = new ArrayList<>();
+        InputStream is = null;
+        Map<String,Integer> title = new HashMap<>();
+        try {
+            is = new FileInputStream(path);
+            HSSFWorkbook wb = new HSSFWorkbook(is);
+            for (int numSheet = 0; numSheet < wb.getNumberOfSheets(); numSheet++) {
+                HSSFSheet sheet = wb.getSheetAt(numSheet);
+                for (List<String> excel : fields) {
+                    if (sheet == null) {
+                        continue;
+                    } else if (excelName.equals(excel.get(0)) && sheet.getSheetName().equals(excel.get(1))) {
+                        boolean temp = true;
+                        for (int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++) {
+                            HSSFRow row = sheet.getRow(rowNum);
+                            if(row!=null){
+                                int cellNum = row.getLastCellNum();
+                                // 字段长度小于3跳出本次循环
+                                if(cellNum<3){
+                                    continue;
+                                }
+                                if (temp) {
+                                    for (int i = 0; i < cellNum; i++) {
+                                        String cellName = row.getCell(i).getStringCellValue();
+                                        for (int j = 3; j < excel.size(); j++) {
+                                            if (cellName.equals(excel.get(j))) {
+                                                title.put(excel.get(j), i);
+                                            }
+                                        }
+                                    }
+                                    temp = false;
+                                } else {
+                                    BankZzxxEntity zzxx = RowToEntity(row, excel, title);
+                                    if (zzxx != null) {
+                                        zzxxList.add(zzxx);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(is!=null)
+                    is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // 删除文件
+        new File(path).delete();
+        return zzxxList;
+    }
+
+    /**
+     * 07版数据读取
+     * @param path
+     * @param excelName
+     * @param fields
+     * @return
+     */
+    private List<BankZzxxEntity> getBy2007ExcelAll(String path, String excelName, List<List<String>> fields) {
+        // 用于存放表格中列号
+        List<BankZzxxEntity> zzxxList = new ArrayList<>();
+        File file = new File(path);
+        Map<String,Integer> title = new HashMap<>();
+        FileInputStream fi = null;
+        try {
+            fi = new FileInputStream(file);
+            Workbook wk = StreamingReader.builder()
+                    .rowCacheSize(100)  //缓存到内存中的行数，默认是10
+                    .bufferSize(512)  //读取资源时，缓存到内存的字节大小，默认是1024
+                    .open(fi);  //打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件
+            for (int numSheet = 0; numSheet < wk.getNumberOfSheets(); numSheet++) {
+                Sheet sheet = wk.getSheetAt(numSheet);
+                for (List<String> field : fields) {
+                    if (sheet == null) {
+                        continue;
+                    }else if(excelName.equals(field.get(0)) && sheet.getSheetName().equals(field.get(1))) {
+                        boolean temp = true;
+                        for (Row row : sheet) {
+                            int cellNum = row.getLastCellNum();
+                            // 字段长度小于3跳出本次循环
+                            if (cellNum < 3) {
+                                continue;
+                            }
+                            if (temp) {
+                                if (row != null) {
+                                    for (int i = 0; i < cellNum; i++) {
+                                        Cell cell = row.getCell(i);
+                                        String rowValue = MappingUtils.rowValue(cell);
+                                        for (int j = 3; j < field.size(); j++) {
+                                            if (rowValue.equals(field.get(j))) {
+                                                title.put(field.get(j), i);
+                                            }
+                                        }
+                                    }
+                                }
+                                temp = false;
+                            } else {
+                                if (row != null) {
+                                    BankZzxxEntity zzxx = RowToEntity(row, field, title);
+                                    if (zzxx != null) {
+                                        zzxxList.add(zzxx);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally{
+            try {
+                if(fi!=null){
+                    fi.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // 删除文件
+        new File(path).delete();
+        return zzxxList;
+    }
+
+    /**
+     * excel行映射实体类
+     * @param xssfRow
+     * @param field
+     * @param title
+     * @return
+     */
+    private BankZzxxEntity RowToEntity(Row xssfRow, List<String> field, Map<String, Integer> title) {
+        BankZzxxEntity bankZzxx = new BankZzxxEntity();
+        String YHKKH = MappingUtils.mappingFieldString(xssfRow,field.get(3),title);
+        if(YHKKH.indexOf("_")>5){
+            bankZzxx.setYhkkh(YHKKH.split("_")[0]);
+        }else {bankZzxx.setYhkkh(YHKKH);}
+        bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(4),title));
+        bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(5),title));
+        bankZzxx.setJyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(6),title));
+        bankZzxx.setSfbz(MappingUtils.mappingFieldString(xssfRow,field.get(7),title));
+        bankZzxx.setDskh(MappingUtils.mappingFieldString(xssfRow,field.get(14),title));
+        bankZzxx.setDsxm(MappingUtils.mappingFieldString(xssfRow,field.get(9),title));
+        bankZzxx.setDssfzh(MappingUtils.mappingFieldString(xssfRow,field.get(10),title));
+        bankZzxx.setZysm(MappingUtils.mappingFieldString(xssfRow,field.get(11),title));
+        bankZzxx.setJysfcg(MappingUtils.mappingFieldString(xssfRow,field.get(12),title));
+        bankZzxx.setYhkzh(MappingUtils.mappingFieldString(xssfRow,field.get(13),title));
+        bankZzxx.setDszh(MappingUtils.mappingFieldString(xssfRow,field.get(8),title));
+        bankZzxx.setDskhh(MappingUtils.mappingFieldString(xssfRow,field.get(15),title));
+        bankZzxx.setJywdmc(MappingUtils.mappingFieldString(xssfRow,field.get(16),title));
+        bankZzxx.setDsjyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(17),title));
+        bankZzxx.setDsye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(18),title));
+        bankZzxx.setBz(MappingUtils.mappingFieldString(xssfRow,field.get(19),title));
+        bankZzxx.setJyzjh(MappingUtils.mappingFieldString(xssfRow,field.get(20),title));
+        bankZzxx.setJyfsd(MappingUtils.mappingFieldString(xssfRow,field.get(21),title));
+        bankZzxx.setJyxm(MappingUtils.mappingFieldString(xssfRow,field.get(22),title));
+        bankZzxx.setBcsm(MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
+        if(bankZzxx.getDskh()==null || "".equals(bankZzxx.getDskh())){
+            String bcsm = bankZzxx.getYhkkh()+"-";
+            if(bankZzxx.getDsxm()!=null && !"".equals(bankZzxx.getDsxm())){
+                bcsm+=bankZzxx.getDsxm();
+            }else if(bankZzxx.getZysm()!=null && !"".equals(bankZzxx.getZysm())){
+                bcsm+=bankZzxx.getZysm();
+            }else if(bankZzxx.getBz()!=null && !"".equals(bankZzxx.getBz())){
+                bcsm+=bankZzxx.getBz();
+            }else {
+                bcsm += "空账户";
+            }
+            bankZzxx.setBcsm(bcsm);
+        }
+        return bankZzxx;
     }
 }

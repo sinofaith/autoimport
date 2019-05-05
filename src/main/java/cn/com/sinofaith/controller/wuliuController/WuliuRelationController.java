@@ -5,6 +5,7 @@ import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.wlService.WuliuRelationService;
+import cn.com.sinofaith.util.MappingUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -195,6 +197,12 @@ public class WuliuRelationController {
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String removeDesc(HttpSession ses){
+        String path = (String) ses.getAttribute("zfbPath");
+        if(path!=null){
+            File uploadPathd = new File(path);
+            MappingUtils.deleteFile(uploadPathd);
+            ses.removeAttribute("zfbPath");
+        }
         ses.removeAttribute("xqdesc");
         return "200";
     }
