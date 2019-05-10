@@ -2,8 +2,10 @@ package cn.com.sinofaith.service.cftServices;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.cftBean.CftTjjgEntity;
+import cn.com.sinofaith.bean.cftBean.CftTjjgsEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.dao.cftDao.CftTjjgDao;
+import cn.com.sinofaith.dao.cftDao.CftTjjgsDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgForm;
 import cn.com.sinofaith.page.Page;
 
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 public class CftTjjgService {
     @Autowired
     private CftTjjgDao cfttjd;
+    @Autowired
+    private CftTjjgsDao cfttjsd;
 
     public Page queryForPage(int currentPage, int pageSize, String seach){
         Page page = new Page();
@@ -61,9 +65,9 @@ public class CftTjjgService {
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                 seach.append( " and c."+ seachCondition + " >= "+seachCode);
             }else if("xm".equals(seachCondition)){
-                seach.append(" and s."+ seachCondition+" like "+"'"+ seachCode+"'");
+                seach.append(" and s."+ seachCondition+" like "+"'%"+ seachCode+"%'");
             }else{
-                seach.append(" and c."+ seachCondition+" like "+"'"+ seachCode +"'");
+                seach.append(" and c."+ seachCondition+" like "+"'%"+ seachCode +"%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
@@ -80,8 +84,11 @@ public class CftTjjgService {
 
     public int countHb(List<CftZzxxEntity> listZzxx,long aj,int flg){
         List<CftTjjgEntity> listTjjg = cfttjd.find(" from CftTjjgEntity where aj_id = "+aj);
+        List<CftTjjgsEntity> listTjjgs = cfttjd.find(" from CftTjjgsEntity where aj_id ="+aj);
         Map<String,CftTjjgEntity> map = listTjjg.stream().collect(Collectors.toMap(k->k.getJyzh()+k.getJylx(), cftTjjgEntity -> cftTjjgEntity));
+        Map<String,CftTjjgsEntity> maps = listTjjgs.stream().collect(Collectors.toMap(k-> k.getJyzh()+k.getDfzh(),cftTjjgsEntity->cftTjjgsEntity));
         CftTjjgEntity tj = null;
+        CftTjjgsEntity tjjgs = null;
         CftZzxxEntity zz = null;
         int temp = -1;
         if(flg<1){
@@ -116,7 +123,7 @@ public class CftTjjgService {
                         tj = map.get(zz.getZh() + "转帐(有对手账户)");
                         tj.setJyzcs(tj.getJyzcs().add(new BigDecimal(1*temp)));
                         tj.setCzzcs(tj.getCzzcs().add(new BigDecimal(1*temp)));
-                        tj.setCzzje(tj.getCzzje().add(zz.getJyje()));
+                        tj.setCzzje(tj.getCzzje().add(zz.getJyje().multiply(BigDecimal.valueOf(temp))));
                     } else {
                         CftTjjgEntity tj1 = new CftTjjgEntity();
                         tj1.setJyzh(zz.getZh());
@@ -199,12 +206,53 @@ public class CftTjjgService {
                     }
                 }
             }
+
+            if (zz.getFsf()!=null && zz.getJsf()!=null) {
+                if (zz.getZh().equals(zz.getFsf()) && "出".equals(zz.getJdlx())) {
+                    if (maps.containsKey(zz.getZh() + zz.getJsf())) {
+                        tjjgs = maps.get(zz.getZh() + zz.getJsf());
+                        tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1*temp)));
+                        tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1*temp)));
+                        tjjgs.setCzzje(tjjgs.getCzzje().add(zz.getJyje().multiply(BigDecimal.valueOf(temp))));
+                    } else {
+                        CftTjjgsEntity tjs1 = new CftTjjgsEntity();
+                        tjs1.setJyzh(zz.getZh());
+                        tjs1.setDfzh(zz.getJsf());
+                        tjs1.setJyzcs(new BigDecimal(1));
+                        tjs1.setCzzcs(new BigDecimal(1));
+                        tjs1.setCzzje(zz.getJyje());
+                        tjs1.setAj_id(aj);
+                        maps.put(zz.getZh() + zz.getJsf(), tjs1);
+                    }
+                }
+                if (zz.getZh().equals(zz.getJsf()) && "入".equals(zz.getJdlx())) {
+                    if (maps.containsKey(zz.getZh() + zz.getFsf())) {
+                        tjjgs = maps.get(zz.getZh() + zz.getFsf());
+                        tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1*temp)));
+                        tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1*temp)));
+                        tjjgs.setJzzje(tjjgs.getJzzje().add(zz.getJyje().multiply(BigDecimal.valueOf(temp))));
+                    } else {
+                        CftTjjgsEntity tjs2 = new CftTjjgsEntity();
+                        tjs2.setJyzh(zz.getZh());
+                        tjs2.setDfzh(zz.getFsf());
+                        tjs2.setJyzcs(new BigDecimal(1));
+                        tjs2.setJzzcs(new BigDecimal(1));
+                        tjs2.setJzzje(zz.getJyje());
+                        tjs2.setAj_id(aj);
+                        maps.put(zz.getZh() + zz.getFsf(), tjs2);
+                    }
+                }
+            }
         }
         listTjjg = new ArrayList<>(map.values());
         listTjjg = listTjjg.stream().filter(a ->a.getJyzcs().compareTo(BigDecimal.ZERO)==1).collect(Collectors.toList());
+        listTjjgs = new ArrayList<>(maps.values());
+        listTjjgs = listTjjgs.stream().filter(a->a.getJyzcs().compareTo(BigDecimal.ZERO)==1).collect(Collectors.toList());
         int i = 0;
         cfttjd.delAll(aj);
         cfttjd.save(listTjjg);
+        cfttjsd.delAll(aj);
+        cfttjsd.save(listTjjgs);
         return i;
     }
 

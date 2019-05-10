@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <html>
@@ -47,6 +48,12 @@
         <svg class="icon">
             <use xlink:href="#icon-cengji"></use>
         </svg><br>传销</a>
+     <c:if test="${user.role==0}">
+     <a href="/SINOFAITH/user">
+        <svg class="icon">
+            <use xlink:href="#icon-yonghuguanli"></use>
+        </svg><br>用户管理</a>
+     </c:if>
  </span>
 </aside>
 </body>

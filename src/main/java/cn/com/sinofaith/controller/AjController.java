@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
@@ -10,7 +11,9 @@ import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.util.TimeFormatUtil;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,9 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.HTML;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -48,7 +53,7 @@ public class AjController {
     @RequestMapping(value = "/seach")
     public ModelAndView getAj(@RequestParam("pageNo") String pageNo, HttpServletRequest req){
         ModelAndView mav = new ModelAndView("aj/aj");
-
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String seachCondition = (String) req.getSession().getAttribute("ajseachCondition");
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("ajseachCode");
@@ -59,10 +64,12 @@ public class AjController {
                     .replace("\t","");
             temp = Arrays.asList(temp.split("\r\n")).toString().replace("[","").
                     replace(", ","%' or "+seachCondition+ " like '%").replace("]","");
-            seach = " and "+ seachCondition+" like "+"'%"+ temp +"%'";
+
+            seach += " and "+ seachCondition+" like '%"+ temp +"%'";
         }else{
-            seach = " and ( 1=1 ) ";
+            seach += " and ( 1=1 ) ";
         }
+        seach+= " and (zc.userid = "+user.getId()+" or zc.id in (select a.ajid from rel_grand_aj a where a.userid="+user.getId()+")) ";
         Page page = ajs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("ajseachCode",seachCode);
@@ -86,8 +93,17 @@ public class AjController {
         return mav;
     }
 
+    @RequestMapping(value = "/grandAj",method = RequestMethod.POST)
+    @ResponseBody
+    public String grandAj(@RequestParam("ajid") String ajid,@RequestParam(value = "listUserId",required = false) List<String> listUserId,HttpServletRequest request){
+        UserEntity user =(UserEntity) request.getSession().getAttribute("user");
+        ajs.grandAj(ajid,listUserId,user);
+        return "";
+    }
+
     @RequestMapping(value = "/ajm")
     public ModelAndView jump(@RequestParam("aj") String aj,@RequestParam("type") long type, HttpSession httpSession){
+
         ModelAndView mav = null;
         if(type==1){
              mav = new ModelAndView("redirect:/cft/seach?pageNo=1");
@@ -115,13 +131,14 @@ public class AjController {
 
     @RequestMapping(value = "/add",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String add(@RequestParam("aj") String aj){
+    public String add(@RequestParam("aj") String aj,HttpServletRequest request){
+        UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         String result = "404";
         aj= aj.replace(",","");
         if(ajs.findByName(aj).size()>0){
             result = "303";
         }else {
-            ajs.save(new AjEntity(0,aj, 0,"",TimeFormatUtil.getDate("/")));
+            ajs.save(new AjEntity(0,aj, 1,"",TimeFormatUtil.getDate("/"),user.getId()));
             result = "200";
         }
         return result;
@@ -145,10 +162,11 @@ public class AjController {
 
     @RequestMapping(value = "/ajsCount",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String ajsCount(@RequestParam("ajm") String ajm){
+    public String ajsCount(@RequestParam("ajm") String ajm, HttpServletRequest request){
+        UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         List<AjEntity> ajlist = ajs.findByName(ajm);
         if(ajlist.size()<1) {
-            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/")));
+            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/"),user.getId()));
             AjEntity aje = ajs.findByName(ajm).get(0);
             List<CftZzxxEntity> listZz = ajs.getCftList(aje);
             tjs.count(listZz, aje.getId());

@@ -187,7 +187,7 @@ public class BankZzxxForm {
         this.jyfsd = jyfsd;
     }
 
-    public BankZzxxForm mapToForm(Map map){
+    public BankZzxxForm  mapToForm(Map map){
         BankZzxxForm zzf = new BankZzxxForm();
         zzf.setJyxm(map.get("JYXM") != null? (String)map.get("JYXM"):(String) map.get("JYXMS"));
         zzf.setYhkkh((String) map.get("YHKKH"));
@@ -196,7 +196,7 @@ public class BankZzxxForm {
         zzf.setJyye(new BigDecimal(map.get("JYYE").toString()));
         zzf.setSfbz((String) map.get("SFBZ"));
         zzf.setDskh((String) map.get("DSKH"));
-        zzf.setDsxm((String)map.get("DSXM"));
+        zzf.setDsxm(map.get("DSXM")==null ? (String) map.get("DFXMS") : (String) map.get("DSXM"));
         zzf.setZysm((String) map.get("ZYSM"));
         zzf.setBz((String)map.get("BZ"));
         zzf.setJyfsd((String)map.get("JYFSD"));

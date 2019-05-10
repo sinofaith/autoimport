@@ -69,7 +69,7 @@
                                             <td align="center">${item.jzzcs}</td>
                                             <td align="center">${item.jzzje}</td>
                                             <td align="center">
-                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbZhmxTjjgDetails(this, 'zfbZhmxTjjgs')">详情</button>
+                                                <button  data-toggle="modal" data-target="#myModal" class="btna" onclick="getZfbZhmxTjjgDetails(this, 'zfbZhmxTjjgs')">详情</button>
                                             </td>
                                         </tr>
                                     </c:forEach>

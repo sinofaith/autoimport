@@ -169,7 +169,7 @@ public class BankZzxxController {
         yhkkh = yhkkh.replace("\n","").trim();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String ajid=cftzzs.getAjidByAjm(aj);
-        String seach = " and c.sfbz is not null and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"' or c.bcsm like '"+yhkkh+"')";
+        String seach = " and c.sfbz is not null and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"')";
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String desc = (String) ses.getAttribute("xqdesc");
         if(!"".equals(dskh)){

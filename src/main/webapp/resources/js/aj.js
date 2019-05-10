@@ -13,8 +13,101 @@ function ajSkip(){
     }
 }
 
-function addAj() {
+function editGrand() {
+    var ajid = $("#ajid").val();
+    var ul = $("#grand");
+    var listUserId = [];
+    ul.each(function () {
+        $(this).find('li').each(function() {
+            listUserId.push($(this).attr("value"));
+        });
+    });
+    $.ajax({
+        url: "/SINOFAITH/aj/grandAj",
+        type: 'post',
+        data:{
+            ajid:ajid,
+            listUserId:listUserId
+        },
+        traditional: true,
 
+        success: function(result) {
+            alertify.success("授权成功!");
+            $('#myModal2').modal('hide');
+        }
+    })
+
+}
+
+function getUser(id,ajm,username) {
+    $("#ajm").text(ajm);
+    $("#ajid").val(id);
+    var ul_noGrand = $("#noGrand");
+    var ul_grand = $("#grand");
+    var temp = new Array();
+    if(ul_grand!=null){
+        ul_grand.html("");
+    }
+    if(ul_noGrand!=null){
+        ul_noGrand.html("");
+    }
+
+    $.ajax({
+        url: "/SINOFAITH/user/getGrandUser",
+        type: 'post',
+        dataType: 'json',
+        data:{
+          ajid:id
+        },
+        success: function(result) {
+            for(var j = 0;j<result.grand.length;j++){
+                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.grand[j].id+">"+result.grand[j].username+"</li>");
+                temp.push(result.grand[j].username);
+                li.click(function(){
+                    if($(this).attr('class').indexOf("selected")>1){
+                        $(this).removeClass("selected");
+                    }else{
+                        $(this).addClass("selected").siblings().removeClass("selected");
+                    }
+                });
+
+                li.dblclick(function () {
+                    if($(this).parent().attr("id")=="grand"){
+                        $(this).prependTo($("#noGrand"));
+                    }else{
+                        $(this).prependTo($("#grand"));
+                    }
+                    $(this).addClass("selected").siblings().removeClass("selected");
+                })
+                li.appendTo(ul_grand);
+            }
+            for(var i=0;i<result.all.length;i++){
+                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.all[i].id+">"+result.all[i].username+"</li>");
+                li.click(function(){
+                    if($(this).attr('class').indexOf("selected")>1){
+                        $(this).removeClass("selected");
+                    }else{
+                        $(this).addClass("selected").siblings().removeClass("selected");
+                    }
+                });
+
+                li.dblclick(function () {
+                    if($(this).parent().attr("id")=="grand"){
+                        $(this).prependTo($("#noGrand"));
+                    }else{
+                        $(this).prependTo($("#grand"));
+                    }
+                    $(this).addClass("selected").siblings().removeClass("selected");
+                })
+                if($.inArray( result.all[i].username, temp)==-1&&result.all[i].username!=username){
+                    li.appendTo(ul_noGrand);
+                }
+            }
+        }
+    });
+}
+
+function addAj() {
     var aj = $("#aj").val();
     if(aj==''){
         $(".txt").attr('title',"案件名不能为空").tooltip('show');
@@ -69,7 +162,7 @@ $(function () {
             })
         }
         return false;
-    })
+    });
 })
 
 function destroyTooltip() {
@@ -113,8 +206,7 @@ function selectAll(){
     });
 }
 
-function deleteAj(obj) {
-    var ajm = $(obj).closest("tr").find("td:eq(1)").text()
+function deleteAj(ajm) {
     $("#aj1").attr("value", ajm);
 }
 

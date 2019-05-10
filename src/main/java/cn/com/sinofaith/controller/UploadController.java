@@ -121,9 +121,15 @@ public class UploadController {
             us.deleteAll(uploadPath);
             uploadPathd.delete();
             if(b!=0) {
-                List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(), checkBox);
-                tjs.count(listZzxx, aje.getId());
-                tjss.count(listZzxx, aje.getId());
+//                List<CftZzxxEntity> listZzxx = zzs.getAll(aje.getId(), checkBox);
+//                tjs.count(listZzxx, aje.getId());
+//                tjss.count(listZzxx, aje.getId());
+                String seach = "";
+                if(checkBox==1){
+                    seach=" and shmc not like '%红包%'";
+                }
+                zzs.countTjjgAndTjjgs(aje.getId(),seach);
+                zzs.countTjjgAndTjjgs(aje.getId(),seach);
             }
         }
 
@@ -133,6 +139,7 @@ public class UploadController {
             result = "";
         }
         request.getSession().setAttribute("aj",aje);
+        System.out.println(System.currentTimeMillis() - start+" -----------------------------------");
         return result;
     }
 

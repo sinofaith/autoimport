@@ -354,6 +354,7 @@ public class BankZzxxEntity {
         return result;
     }
     public  String remove_(String yhkkh){
+        yhkkh = yhkkh.replace("\\N","");
         if(yhkkh.indexOf("_")>5){
             return yhkkh.split("_")[0];
         }else {
@@ -396,13 +397,13 @@ public class BankZzxxEntity {
         b.setJyzjh("".equals(list.get(title.get("jyzjh")).trim())? null:list.get(title.get("jyzjh")).trim());
         b.setJyxm("".equals(list.get(title.get("jyxm")).trim())? null:list.get(title.get("jyxm")).trim());
         b.setJyfsd("".equals(list.get(title.get("jyfsd")).trim())? null:list.get(title.get("jyfsd")).trim());
-        if(b.getDskh()==null){
+        if(b.getDskh()==null||"".equals(b.getDskh())){
             String bcsm = b.getYhkkh()+"-";
-            if(b.getDsxm()!=null){
+            if(b.getDsxm()!=null&&!"".equals(b.getDsxm())){
                 bcsm+=b.getDsxm();
-            }else if(b.getZysm()!=null){
+            }else if(b.getZysm()!=null&&!"".equals(b.getZysm())){
                 bcsm+=b.getZysm();
-            }else if(b.getBz()!=null){
+            }else if(b.getBz()!=null&&!"".equals(b.getBz())){
                 bcsm+=b.getBz();
             }else {
                 bcsm += "空账户";

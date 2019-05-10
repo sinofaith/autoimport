@@ -3,9 +3,11 @@ package cn.com.sinofaith.util;
 
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -16,6 +18,25 @@ public class TimeFormatUtil {
     private static SimpleDateFormat formatB = new SimpleDateFormat("yyyyMMddHHmmss");
     private static SimpleDateFormat formatC = new SimpleDateFormat("yyyyMMddHHmm");
     private static SimpleDateFormat formatD = new SimpleDateFormat("yyyyMMddHH");
+
+    public static boolean getSy(String creatTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");//格式化输出日期
+        Date dt = null;
+        try {
+            dt = sdf.parse(creatTime);
+        } catch (ParseException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(dt);
+        rightNow.add(Calendar.DAY_OF_YEAR,10);//日期加10天
+        Date dt1=rightNow.getTime();
+        if(dt1.compareTo(new Date())==-1){
+            return true;
+        }
+        return false;
+    }
 
     public static String getDate(String style){
         String time = "";

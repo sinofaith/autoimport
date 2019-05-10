@@ -308,7 +308,6 @@ $(function () {
         if(tbody!=null) {
             tbody.innerHTML = ""
         }
-        $.ajax({url:"/SINOFAITH/pyramidSaleTier/removeDesc"})
     });
     $('#myModal1').on('hide.bs.modal', function () {
         pageNo = 1;

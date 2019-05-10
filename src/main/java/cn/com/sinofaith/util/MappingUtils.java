@@ -145,6 +145,7 @@ public class MappingUtils {
             HSSFWorkbook wb = new HSSFWorkbook(is);
             for(int numSheet = 0; numSheet < wb.getNumberOfSheets(); numSheet++){
                 List<String> readList = new ArrayList<>();
+                List<String> tempList;
                 HSSFSheet sheet = wb.getSheetAt(numSheet);
                 if (sheet == null) {
                     continue;
@@ -159,6 +160,8 @@ public class MappingUtils {
                         if(cell<3){
                             continue;
                         }
+                        int a = 0;
+                        tempList = new ArrayList<>();
                         for (int i = 0; i < cell; i++) {
                             String rawValue = null;
                             if(row.getCell(i)==null){
@@ -167,7 +170,15 @@ public class MappingUtils {
                                 row.getCell(i).setCellType(Cell.CELL_TYPE_STRING);
                                 rawValue = row.getCell(i).getStringCellValue();
                             }
-                            readList.add(rawValue);
+                            tempList.add(rawValue);
+                            if(rawValue.trim().length()>0){
+                                a+=1;
+                            }
+                        }
+                        if(a<3){
+                            continue;
+                        }else{
+                            readList.addAll(tempList);
                         }
                         temp++;
                     }

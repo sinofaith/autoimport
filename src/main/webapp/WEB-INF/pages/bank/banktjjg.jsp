@@ -34,6 +34,7 @@
             }
         </script>
         <style>
+
             .crimeterrace {
                 background-color: #636B75 !important;
             }
@@ -80,7 +81,7 @@
                                 <div class="ddr">
                                     <div>
                                         <input name="label" id="label" hidden="hidden">
-                                        <table class="table  table-hover table_style table_list1 "
+                                        <table class="table  table-hover table_style table_list1 " id="aaa"
                                                style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                             <tr>
                                                 <td colspan="10" align="center" class="dropdown_index"
@@ -142,7 +143,7 @@
                                                                                          pattern="#,##0"/></td>
                                                     <td align="center">${item.zhlb}</td>
                                                     <td align="center">
-                                                        <button data-toggle="modal" data-target="#myModal"
+                                                        <button data-toggle="modal" class="btna" data-target="#myModal"
                                                                 onclick="getZzDetails(this,'tjjg')">详情
                                                         </button>
                                                     </td>
@@ -218,7 +219,7 @@
                                                     </option>
                                                     <option value="khxm"
                                                             <c:if test="${btjseachCondition=='khxm'}">selected="selected"</c:if>>
-                                                        姓名
+                                                        交易户名
                                                     </option>
                                                     <option value="jzzje"
                                                             <c:if test="${btjseachCondition=='jzzje'}">selected="selected"</c:if>>
@@ -252,7 +253,7 @@
                                                 </select>
                                                 <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
                                                 <textarea class="form-control02 seachCode fl_l width100" id="seachCode"
-                                                          placeholder="请输入要查询内容,如果使用模糊查询请加%"
+                                                          placeholder="请输入要查询内容"
                                                           name="seachCode">${btjseachCode}</textarea>
                                             </div>
 
@@ -268,9 +269,9 @@
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <button type="button" class="sideBar_r_button"
                                    onclick="location.href='/SINOFAITH/banktjjg/download'">数据导出</button>
-                           <button type="button" class="sideBar_r_button"
-                                   data-toggle="modal" data-target="#myModal1"
-                           onclick="getZhxx()">协助调查文书导出</button>
+                           <%--<button type="button" class="sideBar_r_button"--%>
+                                   <%--data-toggle="modal" data-target="#myModal1"--%>
+                           <%--onclick="getZhxx()">协助调查文书导出</button>--%>
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件导入</button>--%>
                        </span>
                                             </div>

@@ -199,4 +199,11 @@
         <%--if(session_value)$('#red').css('display', 'block');--%>
         <%--else $('#red').css('display', 'none');--%>
     <%--})--%>
+
+    $(function(){
+        $('.btna').on('click',function(){
+            $(".btna").removeClass('on');
+            $(this).addClass('on');
+        })
+    })
 </script>

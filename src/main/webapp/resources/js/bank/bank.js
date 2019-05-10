@@ -12,7 +12,6 @@ $(function () {
     });
 });
 
-
 function bankSkip(code) {
     var totalPage = $("#totalPage").text();
     var onPage = $("#num").val();
@@ -76,7 +75,7 @@ function UploadBank() {
         var index1=fileName.lastIndexOf(".");
         var index2=fileName.length;
         var suffix=fileName.substring(index1,index2);
-        if(fileName.indexOf("~$") != 0 && (suffix==".xlx"||suffix==".xlsx"||suffix==".csv")) {
+        if(fileName.indexOf("~$") != 0 && (suffix==".xls"||suffix==".xlsx"||suffix==".csv")) {
             form.append("file", fileObj.files[i]); // 文件对象
         }
     }
@@ -572,4 +571,57 @@ function downDetailZh(){
 function downGtlxr(){
     var dfkh = $("#dfkh").val();
     location="/SINOFAITH/bankgtzh/downgtlxr?dfzh="+dfkh
+}
+
+function compare(str,target) {
+    var d =  new Array();
+    var n = str.length;
+    var m = target.length;
+    var i;                  // 遍历str的
+    var j;                  // 遍历target的
+    var ch1;               // str的
+    var ch2;               // target的
+    var temp;               // 记录相同字符,在某个矩阵位置值的增量,不是0就是1
+    if (n == 0) { return m; }
+    if (m == 0) { return n; }
+    for(var i =0 ;i<=n;i++){
+        d[i] = new Array();
+    }
+
+    for (var i = 0; i <= n; i++)
+    {                       // 初始化第一列
+        d[i][0] = i;
+    }
+    for (var j = 0; j <= m; j++)
+    {                       // 初始化第一行
+        d[0][j] = j;
+    }
+    for (var i = 1; i <= n; i++)
+    {                       // 遍历str
+        ch1 = str.charAt(i - 1);
+        // 去匹配target
+        for (var j = 1; j <= m; j++)
+        {
+            ch2 = target.charAt(j - 1);
+            if (ch1 == ch2 || ch1 == ch2+32 || ch1+32 == ch2)
+            {
+                temp = 0;
+            } else
+            {
+                temp = 1;
+            }
+            // 左边+1,上边+1, 左上角+temp取最小
+            d[i][j] = min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + temp);
+        }
+    }
+    return d[n][m];
+}
+
+function  min(one,two,three) {
+    return (one = one < two ? one : two) < three ? one : three;
+}
+
+function getSimilarityRatio(str,target)
+{
+    return 1 - compare(str, target) / Math.max(str.length, target.length);
 }

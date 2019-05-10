@@ -10,6 +10,7 @@ public class AjEntity {
     private long flg=0;
     private String filter="";
     private String inserttime;
+    private long userId;
 
     @Id
     @Column(name="id",nullable = false,precision = 0)
@@ -53,21 +54,35 @@ public class AjEntity {
         this.inserttime = inserttime;
     }
 
+    @Basic
+    @Column(name="userId",nullable = false,precision = 0)
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return "AjEntity{" +
                 "id=" + id +
                 ", aj='" + aj + '\'' +
+                ", flg=" + flg +
+                ", filter='" + filter + '\'' +
                 ", inserttime='" + inserttime + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 
-    public AjEntity(long id, String aj, long flg, String filter, String inserttime) {
+    public AjEntity(long id, String aj, long flg, String filter, String inserttime, long userId) {
         this.id = id;
         this.aj = aj;
         this.flg = flg;
         this.filter = filter;
         this.inserttime = inserttime;
+        this.userId = userId;
     }
 
     public AjEntity(){

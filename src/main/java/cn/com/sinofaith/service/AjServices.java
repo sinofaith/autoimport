@@ -1,6 +1,7 @@
 package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity;
 import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
@@ -14,10 +15,13 @@ import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.DBUtil;
+import cn.com.sinofaith.util.ExcelReader;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -83,6 +87,34 @@ public class AjServices {
         page.setTotalRecords(allRow);
         return page;
     }
+
+    public String grandAj(String aj_id, List<String>list, UserEntity user){
+        Connection con = DBUtil.getConnection();
+        String sql  = "insert into REL_GRAND_AJ(ajid,userid,granduserid,inserttime)" +
+                       "values(?,?,?,?)";
+        try {
+            PreparedStatement pstm ;
+            pstm =con.prepareStatement(sql);
+            Statement st= con.createStatement();
+            st.execute("delete REL_GRAND_AJ where ajid="+aj_id);
+            String time = TimeFormatUtil.getDate("/");
+            for(int i=0;i<list.size();i++){
+                pstm.setLong(1, Long.parseLong(aj_id));
+                pstm.setLong(2, Long.parseLong(list.get(i)));
+                pstm.setLong(3, user.getId());
+                pstm.setString(4, time);
+                pstm.addBatch();
+            }
+            if(list.size()>0) {
+                pstm.executeBatch();
+            }
+            con.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "200";
+    }
+
     public void deleteByAj(long ajid,String[] type){
         Connection con = DBUtil.getConnection();
         Statement st;
@@ -104,6 +136,7 @@ public class AjServices {
                     st.addBatch("delete bank_zzxx where aj_id="+ajid);
                     st.addBatch("delete bank_tjjg where aj_id="+ajid);
                     st.addBatch("delete bank_tjjgs where aj_id="+ajid);
+                    st.addBatch("delete rel_customer_aj where aj_id="+ajid);
                 }
                 if(a.equals("3")){
                     st.addBatch("DELETE wuliu where aj_id="+ajid);
@@ -130,7 +163,7 @@ public class AjServices {
                     st.addBatch("DELETE zfbzzmx_tjjgs where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl_tjjgs where aj_id="+ajid);
                     st.addBatch("DELETE zfbjyjl_Sjdzs where aj_id="+ajid);
-                    if(type.length<5){
+                    if(type.length< 5){
                         st.addBatch("UPDATE AJ a SET a.filter='' WHERE ID="+ajid);
                     }
                 }

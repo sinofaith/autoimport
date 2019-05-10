@@ -211,7 +211,7 @@
                                             <%--<option value="sfbsdfhc" <c:if test="${seachCondition=='sfbsdfhc'}">selected="selected"</c:if> >是否部署地方核查</option>--%>
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${zcseachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${zcseachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -283,7 +283,7 @@
                         <label for="inlineRadio2"> xls/xlsx </label>
                     </div>
                     <br>
-                    <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">
+                    <input type="checkbox" id="checkbox1" checked value="1">
                     <label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>
                 </div>
             </div>
@@ -431,7 +431,7 @@
                 <input type="button" class="btn btn-primary" value="预览数据" onclick="yjdcDownload(true)">
             </div>
             <div class="modal-body">
-                <div id="dataTable" class="table table-striped table-bordered" style="height:400px">
+                <div id="dataTable" class="table table-striped table-bordered" style="height:402px">
                 </div>
                 <button id="yjdc" type="button" style="margin-left: 1280px;top: 50px;" class="btn btn-primary" onclick="determineThresholdValue()">确定阀值</button>
                 <button id="next" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextYjdc()">下一个</button>

@@ -97,13 +97,13 @@
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <%--<td align="center">${item.id}</td>--%>
                                                 <td align="center">${item.name}</td>
-                                                <td align="center">${item.zjlx}</td>
+                                                <td align="center" title="${item.zjlx}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjlx}</div></td>
                                                 <td align="center" title="${item.zjhm}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjhm}</div></td>
                                                 <td align="center" title="${item.xzz_xzqh}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.xzz_xzqh}</div></td>
-                                                <td align="center">${item.lxdh}</td>
-                                                <td align="center">${item.lxsj}</td>
-                                                <td align="center">${item.dwdh}</td>
-                                                <td align="center">${item.zzdh}</td>
+                                                <td align="center" title="${item.lxdh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.lxdh}</div></td>
+                                                <td align="center" title="${item.lxsj}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.lxsj}</div></td>
+                                                <td align="center" title="${item.dwdh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dwdh}</div></td>
+                                                <td align="center" title="${item.zzdh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zzdh}</div></td>
                                                 <td align="center" title="${item.gzdw}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.gzdw}</div></td>
                                                 <td align="center" title="${item.email}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.email}</div></td>
                                             </tr>
@@ -179,7 +179,7 @@
                                             <%--<option value="sfbsdfhc" <c:if test="${seachCondition=='sfbsdfhc'}">selected="selected"</c:if> >是否部署地方核查</option>--%>
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${cuseachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${cuseachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>

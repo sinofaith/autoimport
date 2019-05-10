@@ -148,7 +148,7 @@ public class BankZzxxServices {
             cell = row.createCell(4);
             cell.setCellValue(zzf.getJyje().toString());
             cell = row.createCell(5);
-            cell.setCellValue(zzf.getJyye().toString());
+            cell.setCellValue("-1".equals(zzf.getJyye().toString()) ? "" : zzf.getJyye().toString());
             cell = row.createCell(6);
             cell.setCellValue(zzf.getSfbz());
             cell = row.createCell(7);
@@ -211,7 +211,7 @@ public class BankZzxxServices {
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach="and c.sfbz is not null and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' or c.bcsm like '"+zh+"') ";
+            seach="and c.sfbz is not null and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' ) ";
         }else{
             seach=" and (c.yhkkh='"+zh+"') ";
             seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";
@@ -335,7 +335,7 @@ public class BankZzxxServices {
             mapZ.remove(str.get(s));
         }
         allbp = new ArrayList<>(mapZ.values());
-        bpd.add(allbp, String.valueOf(aj.getId()));
+        num += bpd.add(allbp, String.valueOf(aj.getId()));
         return num;
     }
 

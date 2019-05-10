@@ -218,7 +218,7 @@
                                             <%--<option value="sfbsdfhc" <c:if test="${seachCondition=='sfbsdfhc'}">selected="selected"</c:if> >是否部署地方核查</option>--%>
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${bzcseachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${bzcseachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>
@@ -416,7 +416,7 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c15">收付标志</label>
+                            <label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>
                             <select	id="c15" placeholder="收付标志" onchange="selectC()">
                             </select>
                         </div>
@@ -588,7 +588,7 @@
                 <input type="button" class="btn btn-primary" value="预览数据" onclick="yjdcDownload(true)">
             </div>
             <div class="modal-body">
-                <div id="dataTable" class="table table-striped table-bordered" style="height:400px">
+                <div id="dataTable" class="table table-striped table-bordered" style="height:402px">
                 </div>
                 <button id="yjdc" type="button" style="margin-left: 1280px;top: 50px;" class="btn btn-primary" onclick="determineThresholdValue()">确定阀值</button>
                 <button id="next" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextYjdc()">下一个</button>
@@ -596,6 +596,39 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="batchExport()">批量导出</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel3">收付标志文字替换</h4>
+            </div>
+            <div class="modal-body">
+                <div class="file-box"  style="height:40px; padding-top: 10px">
+                    <div>
+                        <input type="text" id="jin" style="float: left">
+                        <span style="float: left">替换为</span>
+                        <input type="text" style="float: left" readonly value="进">
+                    </div>
+                    <div>
+                        <input type="text" id="chu" style="float: left">
+                        <span style="float: left">替换为</span>
+                        <input type="text" style="float: left" readonly value="出"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="submit" class="btn" value="确定" onclick="" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
             </div>
         </div>
         <!-- /.modal-content -->

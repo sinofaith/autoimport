@@ -31,8 +31,8 @@ function getZzGtlxr(obj) {
                     str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                 }
                 str += "<td width=\"5%\">" + data[i].id + "</td>" +
-                    "<td width=\"12%\">" + data[i].jyzh + "</td>" +
-                    "<td width=\"5%\">" + data[i].name + "</td>" +
+                    "<td width=\"12%\" title=\""+data[i].jyzh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyzh+"</div></td>"+
+                    "<td width=\"5%\" title=\""+data[i].name+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].name+"</div></td>"+
                     "<td width=\"12%\">" + data[i].dfzh + "</td>" +
                     "<td width=\"5%\" title=\""+data[i].dfxm+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfxm+"</div></td>"+
                     "<td width=\"7%\">" + data[i].jyzcs + "</td>" +
@@ -77,8 +77,8 @@ function getZzGtlxrByorder(filter) {
                     str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                 }
                 str += "<td width=\"5%\">" + data[i].id + "</td>" +
-                    "<td width=\"12%\">" + data[i].jyzh + "</td>" +
-                    "<td width=\"5%\">" + data[i].name + "</td>" +
+                    "<td width=\"12%\" title=\""+data[i].jyzh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyzh+"</div></td>"+
+                    "<td width=\"5%\" title=\""+data[i].name+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].name+"</div></td>"+
                     "<td width=\"12%\">" + data[i].dfzh + "</td>" +
                     "<td width=\"5%\" title=\""+data[i].dfxm+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfxm+"</div></td>"+
                     "<td width=\"7%\">" + data[i].jyzcs + "</td>" +

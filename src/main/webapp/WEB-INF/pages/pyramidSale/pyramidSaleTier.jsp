@@ -77,13 +77,13 @@
                                             <td align="center">${item.containsTier}</td>
                                             <td align="center">
                                                 <c:if test="${item.directDrive!=null}">
-                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getPyramSaleDetails(this,true)">${item.directDrive}</button>
+                                                    <button class="btna" data-toggle="modal" data-target="#myModal" onclick="getPyramSaleDetails(this,true)">${item.directDrive}</button>
                                                 </c:if>
                                                 <c:if test="${item.directDrive==null}">0</c:if>
                                             </td>
                                             <td align="center">
                                                 <c:if test="${item.directReferNum!=null}">
-                                                    <button  data-toggle="modal" data-target="#myModal1" onclick="getPyramSaleDetails(this,false)">${item.directReferNum}</button>
+                                                    <button class="btna" data-toggle="modal" data-target="#myModal1" onclick="getPyramSaleDetails(this,false)">${item.directReferNum}</button>
                                                 </c:if>
                                                 <c:if test="${item.directReferNum==null}">0</c:if>
                                             </td>
@@ -147,7 +147,7 @@
                                             <option value="directDrive" <c:if test="${psTierSeachCondition=='directDrive'}">selected="selected"</c:if> >直推下线数阀值</option>
                                             <option value="directReferNum" <c:if test="${psTierSeachCondition=='directReferNum'}">selected="selected"</c:if> >下线会员数阀值</option>
                                         </select>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" onkeyup="isNum(this)">${psTierSeachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" onkeyup="isNum(this)">${psTierSeachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>

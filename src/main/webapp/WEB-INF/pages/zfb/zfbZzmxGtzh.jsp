@@ -62,7 +62,7 @@
                                             <td align="center" title="${item.zfbmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbmc}</div></td>
                                             <td align="center">${item.dfzh}</td>
                                             <td align="center">
-                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbZzmxGtzhDetails(this)">${item.gthys}</button>
+                                                <button class="btna" data-toggle="modal" data-target="#myModal" onclick="getZfbZzmxGtzhDetails(this)">${item.gthys}</button>
                                             </td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.fkzcs}</td>

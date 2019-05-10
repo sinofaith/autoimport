@@ -14,15 +14,20 @@
     <title>电子数据综合分析系统</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <script src="<c:url value="/resources/thirdparty/alertify/js/alertify.min.js"/> "></script>
+    <link href="<c:url value="/resources/thirdparty/alertify/css/alertify.min.css"/> " rel="stylesheet">
+    <link href="<c:url value="/resources/thirdparty/alertify/css/default.min.css"/> " rel="stylesheet">
+    <link href="<c:url value="/resources/css/widgets.css"/>" rel="stylesheet">
 
     <link href="<c:url value="/resources/thirdparty/assets/css/bootstrap.min.css"/>" rel="stylesheet" />
     <link rel="stylesheet" href="<c:url value="/resources/thirdparty/assets/css/font-awesome.min.css"/>" />
 
-
     <link rel="stylesheet" href="<c:url value="/resources/thirdparty/assets/css/ace.min.css"/>" />
     <link rel="stylesheet" href="<c:url value="/resources/thirdparty/assets/css/ace-rtl.min.css"/>" />
+    <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
 
+    <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
+    <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 
 
 </head>
@@ -51,16 +56,16 @@
 
                                     <form id="loginform" action="login" method="post">
                                         <fieldset>
-                                            <label class="block clearfix">
+                                            <label class="block clearfix" >
 														<span class="block input-icon input-icon-right">
-															<input type="text" name="username" class="form-control" placeholder="用户名" value="${username}"/>
+															<input style="height: 35px; font-size: 16px" type="text" name="username"  id="username" class="form-control" placeholder="用户名" value="${username}"/>
 															<i class="icon-user"></i>
 														</span>
                                             </label>
 
                                             <label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input id="passwordInput" type="password" name="password" class="form-control" placeholder="密码" />
+															<input style="height: 35px; font-size: 16px" id="passwordInput" type="password" name="password" class="form-control" placeholder="密码" />
 															<i class="icon-lock"></i>
 														</span>
                                             </label>
@@ -69,7 +74,10 @@
 
                                             <div class="clearfix">
                                                 <span style="color:red;font-weight: bold;">${result}</span>
-
+                                                <br>
+                                                <button type="button" class="width-10 pull-left btn btn-sm btn-info yuanjiao5"  data-toggle="modal" data-target="#myModal">
+                                                    注册
+                                                </button>
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-primary yuanjiao5" onclick="login()">
                                                     <i class="icon-key"></i>
                                                     登录
@@ -104,16 +112,40 @@
         </div><!-- /.row -->
     </div>
 </div><!-- /.main-container -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 25%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="myModalLabel">注册<span id="title"></span></h4>
+            </div>
+            <div class="modal-body" style="padding-left: 23%;">
+                姓名:<input type="text" autocomplete="new-username" name = 'name' id ='name'
+                          class='txt'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" ><br><br>
+                账号:<input type="text" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-username" name = 'newuser' id ='newuser'
+                          class='txt newuser'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" onblur="checkUsername()"><br><br>
+                密码:<input type="password" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-password" name = 'newpass' id ='newpass'
+                          class='txt newpass'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" >
+                <input type="hidden" id="role" value="2">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm btn-primary yuanjiao5" onclick="addUser()">注册</button>
+                <button type="button" class="btn btn-default btn-sm btn-primary yuanjiao5" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
 <%--<embed width="100%" height="100%" name="plugin" id="plugin" src="http://localhost:8080/file/安徽5.18特大销售假药案简要案件及分省线索（1）.pdf" type="application/pdf" internalinstanceid="14">--%>
 
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
-
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>")
-</script>
 
 <!-- <![endif]-->
 
@@ -162,7 +194,91 @@
     function login(){
         $("#loginform").submit();
     }
+    function destroyTooltip() {
+        $(".txt").tooltip('destroy');
+    }
 
+    function checkUsername() {
+        var flag = true;
+        var username = $("#newuser").val();
+        $.ajax({
+            url:"/SINOFAITH/user/checkUsername",
+            type:"POST",
+            data:{
+                username:username
+            },
+            success:function (msg) {
+                if(msg===0){
+                }else {
+                    $(".newuser").attr('title', "账号已存在").tooltip('show');
+                    flag = false;
+                }
+            }
+        })
+        return flag;
+    }
+
+    function addUser() {
+        var username = $("#newuser").val();
+        var password = $("#newpass").val();
+        var name = $("#name").val();
+        var role = $("#role").val();
+        var flag = true;
+        if (username == '') {
+            $(".newuser").attr('title', "账号不能为空").tooltip('show');
+            flag = false;
+        }
+        if(!checkUsername()){
+            $(".newuser").attr('title', "账号已存在").tooltip('show');
+            flag = false;
+            alert(checkUsername())
+        }
+        if (password == '') {
+            $(".newpass").attr('title', "密码不能为空").tooltip('show');
+            flag = false;
+        }else if(password.length<6){
+            $(".newpass").attr('title', "密码不能小于6位").tooltip('show');
+            flag = false;
+        }
+        if(flag == false){
+            return
+        }
+        $(".btn").attr("disabled", "true")
+        var Controller = "/SINOFAITH/user/add"; // 接收后台地址
+        // FormData 对象
+        var form = new FormData();
+        form.append("name", name); // 可以增加表单数据
+        form.append("username", username); // 可以增加表单数据
+        form.append("password", password); // 可以增加表单数据
+        form.append("role", role); // 可以增加表单数据
+        form.append("a", ["1","2"]); // 可以增加表单数据
+        var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
+        xhr.open("post", Controller, true);
+        xhr.onload = function () {
+            if (xhr.responseText == 200) {
+                alertify.set('notifier','position', 'top-center');
+                alertify.success("添加完成!");
+                $("#username").val(username);
+                $("#passwordInput").val("");
+                $('#myModal').modal('hide');
+            }
+            if (xhr.responseText == 303) {
+                $(".newuser").attr('title', "用户已存在").tooltip('show');
+            }
+            if (xhr.responseText == 404) {
+                alertify.error("添加失败")
+            }
+            $(".btn").removeAttr("disabled", "disabled");
+        };
+        xhr.send(form);
+    };
+
+    $('#myModal').on('hide.bs.modal', function () {
+        // 执行一些动作...
+        $("#newuser").val("");
+        $("#newpass").val("");
+        $("#name").val("");
+    });
 </script>
 </body>
 </html>

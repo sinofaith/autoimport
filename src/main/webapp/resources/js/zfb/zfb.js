@@ -402,7 +402,6 @@ $(function () {
         if(tbody!=null) {
             tbody.innerHTML = "";
         }
-        $.ajax({url:"/SINOFAITH/zfbZzmxTjjg/removeDesc"});
     });
     $('#myModal2').on('hide.bs.modal', function () {
         var dataTable = window.document.getElementById("dataTable");

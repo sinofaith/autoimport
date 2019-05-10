@@ -65,7 +65,7 @@
                                             <td align="center">${item.fkzcs}</td>
                                             <td align="center">${item.fkzje}</td>
                                             <td align="center">
-                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbJyjlTjjgsDetails(this)">详情</button>
+                                                <button class="btna" data-toggle="modal" data-target="#myModal" onclick="getZfbJyjlTjjgsDetails(this)">详情</button>
                                             </td>
                                         </tr>
                                     </c:forEach>

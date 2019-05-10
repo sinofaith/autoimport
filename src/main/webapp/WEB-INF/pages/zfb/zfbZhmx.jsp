@@ -341,7 +341,7 @@
                 <input type="button" class="btn btn-primary" value="预览数据" onclick="yjdcDownload(true)">
             </div>
             <div class="modal-body">
-                <div id="dataTable" class="table table-striped table-bordered" style="height:400px">
+                <div id="dataTable" class="table table-striped table-bordered" style="height:402px">
                 </div>
                 <button id="yjdc" type="button" style="margin-left: 1280px;top: 50px;" class="btn btn-primary" onclick="determineThresholdValue()">确定阀值</button>
                 <button id="next" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextYjdc()">下一个</button>

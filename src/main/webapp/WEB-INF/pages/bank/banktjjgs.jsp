@@ -90,7 +90,7 @@
                                                 <td align="center">${item.czzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
                                                 <td align="center">
-                                                    <button  data-toggle="modal" data-target="#myModal" onclick="getZzDetails(this,'tjjgs')">详情</button>
+                                                    <button  data-toggle="modal" class="btna" data-target="#myModal" onclick="getZzDetails(this,'tjjgs')">详情</button>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -146,7 +146,7 @@
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" id="seachCondition" onchange="seachChange()" class="width100" STYLE="margin-bottom: 20px;">
                                             <option value="jyzh"<c:if test="${tjsseachCondition=='jyzh'}">selected="selected"</c:if>>交易卡号</option>
-                                            <option value="khxm"<c:if test="${tjsseachCondition=='khxm'}">selected="selected"</c:if>>姓名</option>
+                                            <option value="khxm"<c:if test="${tjsseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>
                                             <option value="dfzh" <c:if test="${tjsseachCondition=='dfzh'}">selected="selected"</c:if> >对方卡号</option>
                                             <option value="dsxm" <c:if test="${tjsseachCondition=='dsxm'}">selected="selected"</c:if> >对方户名</option>
                                             <option value="jzzje"<c:if test="${tjsseachCondition=='jzzje'}">selected="selected"</c:if>>进账总金额阀值</option>
@@ -154,7 +154,7 @@
                                             <%--<option value="sfzhm" <c:if test="${seachCondition=='sfzhm'}">selected="selected"</c:if> >身份证号码</option>--%>
                                         </select>
                                         <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容,如果使用模糊查询请加%" name="seachCode" >${tjsseachCode}</textarea>
+                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${tjsseachCode}</textarea>
                                     </div>
 
                                     <button type="submit" class="right_a_nav margin_none" >查询</button>

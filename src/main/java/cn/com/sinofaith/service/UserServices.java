@@ -2,10 +2,14 @@ package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.dao.UserDao;
+import cn.com.sinofaith.page.Page;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServices {
@@ -20,6 +24,7 @@ public class UserServices {
         }
         return userinfo;
     }
+
 
     public String getSeach(String seachCode, String seachCondition){
         StringBuffer seach = new StringBuffer();
@@ -37,10 +42,60 @@ public class UserServices {
         return seach.toString();
     }
 
+    public Page queryForPage(int currentPage, int pageSize, String seach){
+        Page page = new Page();
+        int allRow = ud.getAllRowCount(seach);
+        List<UserEntity> users = new ArrayList<>();
+        if(allRow>0){
+            users = ud.getDoPage(seach,currentPage,pageSize);
+
+        }
+        page.setList(users);
+        page.setPageNo(currentPage);
+        page.setPageSize(pageSize);
+        page.setTotalRecords(allRow);
+        return page;
+    }
+
 
     public int findUser(String username){
         String seach = " and c.username = '"+username+"'";
         return ud.getAllRowCount(seach);
+    }
+
+    public List<UserEntity> getAllUser(){
+        return ud.find("from UserEntity order by username ");
+    }
+
+    public List<UserEntity> getGrand(long aj_id){
+        List list = ud.findBySQL(" select u.id,u.username from rel_grand_aj a " +
+                " left join T_User u on a.userid = u.id " +
+                " where  a.ajid ="+aj_id+" order by u.username ");
+        List<UserEntity> result = new ArrayList<>();
+        for (int i=0;i<list.size();i++){
+            Map map = (Map)list.get(i);
+            UserEntity u = new UserEntity();
+            u.setId(Long.parseLong(map.get("ID").toString()));
+            u.setUsername((String) map.get("USERNAME"));
+            result.add(u);
+        }
+        return result;
+    }
+
+    public String getUserGrand(long aj_id){
+        List<UserEntity> all = getAllUser();
+        all.forEach( x ->{
+            x.setRole(-1);
+            x.setPassword(null);
+            x.setInserttime(null);
+            x.setName(null);
+        });
+        List<UserEntity> grand = getGrand(aj_id);
+        Map<String,List<UserEntity>> map = new HashMap<>();
+        map.put("all",all);
+        map.put("grand",grand);
+        Gson gson = new Gson();
+        return gson.toJson(map);
     }
 
     public long saveUser(UserEntity user){

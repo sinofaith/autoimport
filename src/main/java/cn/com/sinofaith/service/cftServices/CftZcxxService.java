@@ -195,7 +195,7 @@ public class CftZcxxService {
         if(seachCode!=null){
             seachCode =seachCode.replace("\r\n","").replace("，","").
                     replace(" ","").replace(" ","").replace("\t","");
-            seach = seach.append(" and aj_id in ("+ajid.toString()+") and "+ seachCondition+" like "+"'"+ seachCode +"'");
+            seach = seach.append(" and aj_id in ("+ajid.toString()+") and "+ seachCondition+" like "+"'%"+ seachCode +"%'");
         }else{
             seach = seach.append(" and aj_id in ("+ajid.toString()+") and ( 1=1 ) ");
         }
@@ -293,8 +293,8 @@ public class CftZcxxService {
             document.setPageSize(one);
             PdfWriter pdfWriter = PdfWriter.getInstance(document, op);
             // 插入水印
-            WatermarkImageUtils water = new WatermarkImageUtils();
-            pdfWriter.setPageEvent(water);
+//            WatermarkImageUtils water = new WatermarkImageUtils();
+//            pdfWriter.setPageEvent(water);
             // 打开文件
             document.open();
             // 插入表格

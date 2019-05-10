@@ -209,7 +209,7 @@
 		base.parentElem.append(skel);
 
 		// add a place holder for the footer
-		base.parentElem.append('<div id="raytable-footer" style="padding:5px;"><span id="raytable-footer-summary" style="float:right;">0 - 0 共 0 条记录</span></div>');
+		base.parentElem.append('<div id="raytable-footer" ><span id="raytable-footer-summary" style="float:right;">0 - 0 共 0 条记录</span></div>');
 	}
 
 	// creates and appends the footer to the bottom of the table

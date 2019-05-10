@@ -266,8 +266,8 @@ public class ZfbZzmxTjjgService {
             document.setPageSize(one);
             PdfWriter pdfWriter = PdfWriter.getInstance(document, op);
             // 插入水印
-            WatermarkImageUtils water = new WatermarkImageUtils();
-            pdfWriter.setPageEvent(water);
+//            WatermarkImageUtils water = new WatermarkImageUtils();
+//            pdfWriter.setPageEvent(water);
             // 打开文件
             document.open();
             // 插入表格

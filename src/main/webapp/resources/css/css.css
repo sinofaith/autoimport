@@ -342,3 +342,6 @@ a:hover{ transition: color 0.2s;}
     right:30%;
     left:30%;
 }
+.on{
+    color: #eb724c;
+}

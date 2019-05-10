@@ -141,7 +141,7 @@
                                             <td align="center">${item.skzcs}</td>
                                             <td align="center">${item.skzje}</td>
                                             <td align="center">
-                                                <button  data-toggle="modal" data-target="#myModal" onclick="getZfbZzxxDetails(this)">详情</button>
+                                                <button  data-toggle="modal" class="btna" data-target="#myModal" onclick="getZfbZzxxDetails(this)">详情</button>
                                             </td>
                                         </tr>
                                     </c:forEach>

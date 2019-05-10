@@ -703,7 +703,7 @@ function getZzGtlxr(obj) {
                 }
                 str += "<td width=\"7%\">" + data[i].id + "</td>" +
                     "<td width=\"7%\">" + data[i].name + "</td>" +
-                    "<td width=\"9%\">" + data[i].jyzh + "</td>" +
+                    "<td width=\"9%\" title="+data[i].jyzh+">" + data[i].jyzh + "</td>" +
                     "<td width=\"9%\">" + data[i].dfzh + "</td>" +
                     "<td width=\"8%\">" + data[i].jyzcs + "</td>" +
                     "<td width=\"8%\">" + data[i].jzzcs + "</td>" +
@@ -862,7 +862,6 @@ $(function () { $('#myModal').on('hide.bs.modal', function () {
     if(tbody!=null) {
         tbody.innerHTML = "";
     }
-    $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
     })
 });
 

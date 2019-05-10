@@ -161,9 +161,9 @@ public class BankZcxxServices {
             cell = row.createCell(5);
             cell.setCellValue(zcxx.getKhzjh());
             cell = row.createCell(6);
-            cell.setCellValue(zcxx.getZhye()==null? "":zcxx.getZhye().toString());
+            cell.setCellValue((zcxx.getZhye()==null||"-1".equals(zcxx.getZhye().toString()))? "":zcxx.getZhye().toString());
             cell = row.createCell(7);
-            cell.setCellValue(zcxx.getKyye()==null?"":zcxx.getKyye().toString());
+            cell.setCellValue((zcxx.getKyye()==null||"-1".equals(zcxx.getKyye().toString()))? "":zcxx.getKyye().toString());
             cell = row.createCell(8);
             cell.setCellValue(zcxx.getKhsj());
             cell = row.createCell(9);
@@ -206,7 +206,7 @@ public class BankZcxxServices {
     public Document createPDF(OutputStream op, AjEntity aj) {
         Document document = new Document();
         // 账户统计信息 进账
-        String seach1 = " and aj_id="+aj.getId()+" order by c.jzzje desc nulls last";
+        String seach1 = " and aj_id="+aj.getId()+"and c.zhlb != '第三方账户' order by c.jzzje desc nulls last";
         List bankList = tjjd.getDoPage(seach1, 1, 10);
         List<CftTjjgForm> bankTjjgs1 = new ArrayList<>();
         CftTjjgForm tjjgForm = new CftTjjgForm();
@@ -216,7 +216,7 @@ public class BankZcxxServices {
             bankTjjgs1.add(tjjgForm);
         }
         // 账户统计信息 出账
-        String seach2 = " and aj_id="+aj.getId()+" order by c.czzje desc nulls last";
+        String seach2 = " and aj_id="+aj.getId()+" and c.zhlb != '第三方账户' order by c.czzje desc nulls last";
         bankList = tjjd.getDoPage(seach2, 1, 10);
         List<CftTjjgForm> bankTjjgs2 = new ArrayList<>();
         for(int i=0;i<bankList.size();i++){
@@ -225,7 +225,12 @@ public class BankZcxxServices {
             bankTjjgs2.add(tjjgForm);
         }
         // 账户点对点统计信息 进账
-        bankList = banktjsd.getDoPage(seach1, 1, 10);
+        String seach3 = " and aj_id="+aj.getId()+" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
+                " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
+                " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
+                " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
+                " and s.khxm not like '%过渡%' or s.khxm is null)  order by c.czzje desc nulls last";
+        bankList = banktjsd.getDoPage(seach3, 1, 10);
         List<CftTjjgsForm> bankTjjgss3 = new ArrayList<>();
         CftTjjgsForm cftForm = null;
         for(int i=0;i<bankList.size();i++) {
@@ -243,7 +248,12 @@ public class BankZcxxServices {
             bankTjjgss3.add(cftForm);
         }
         // 账户点对点统计信息 出账
-        bankList = banktjsd.getDoPage(seach2, 1, 10);
+        String seach4 = " and aj_id="+aj.getId()+" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
+                " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
+                " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
+                " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
+                " and s.khxm not like '%过渡%' or s.khxm is null)  order by c.jzzje desc nulls last";
+        bankList = banktjsd.getDoPage(seach4, 1, 10);
         List<CftTjjgsForm> bankTjjgss4 = new ArrayList<>();
         for(int i=0;i<bankList.size();i++) {
             Map map = (Map) bankList.get(i);
@@ -260,7 +270,12 @@ public class BankZcxxServices {
             bankTjjgss4.add(cftForm);
         }
         // 公共账户统计信息
-        String seach = "and a.num>4 and aj_id ="+aj.getId()+" and ( 1=1 ) order by a.num desc,c.dfzh,c.jyzh";
+        String seach = "and a.num>4 and aj_id ="+aj.getId()+
+                "and (d.khxm not like '%财付通%' and d.khxm not like '%支付%' " +
+        " and d.khxm not like '%清算%' and d.khxm not like '%特约%' " +
+                " and d.khxm not like '%备付金%' and d.khxm not like '%银行%' " +
+                " and d.khxm not like '%银联%' and d.khxm not like '%保险%' " +
+                " and d.khxm not like '%过渡%' or d.khxm is null) and ( 1=1 ) order by a.num desc,c.dfzh,c.jyzh";
         bankList  = banktjsd.getDoPageGt(seach, 0, 0, aj.getId(), false);
         List<CftTjjgsForm> bankTjjgss5 = new ArrayList<>();
         for(int i=0;i<bankList.size();i++){
@@ -284,8 +299,8 @@ public class BankZcxxServices {
             document.setPageSize(one);
             PdfWriter pdfWriter = PdfWriter.getInstance(document, op);
             // 插入水印
-            WatermarkImageUtils water = new WatermarkImageUtils();
-            pdfWriter.setPageEvent(water);
+//            WatermarkImageUtils water = new WatermarkImageUtils();
+//            pdfWriter.setPageEvent(water);
             // 打开文件
             document.open();
             // 插入表格

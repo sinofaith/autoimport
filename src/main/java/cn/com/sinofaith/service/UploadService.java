@@ -652,7 +652,7 @@ public class UploadService {
                     csv.setSafetySwitch(false);
                     String[] titles = csv.getHeaders();
                     for(int j=0;j<titles.length;j++){
-                        getBCustomer(titles[j],j,title);
+                        getBCustomer(titles[j].replace("\t",""),j,title);
                     }
                     csv.setSafetySwitch(false);
                     while (csv.readRecord()){
@@ -698,18 +698,22 @@ public class UploadService {
         for (int i = 0; i < filepath.size(); i++) {
             try {
                 if(filepath.get(i).endsWith(".xlsx")) {
-                    if(filepath.get(i).contains("公经反洗钱")&&filepath.get(i).contains("详细信息")){
+                    if(filepath.get(i).contains("详细信息")){
                         final StringBuffer temp = new StringBuffer();
                         ExcelReader reader = new ExcelReader() {
                             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
-                                if(rowList.get(0).contains(":")){
+                                if(rowList.get(0).startsWith("(")){
                                     temp.delete(0,temp.length());
-                                    temp.append(rowList.get(0).split(":")[1]);
+                                    if(rowList.get(0).contains(":")){
+                                        temp.append(rowList.get(0).split(":")[1]);
+                                    }else {
+                                        temp.append(rowList.get(0).substring(rowList.get(0).indexOf(")")+1,rowList.get(0).length()));
+                                    }
                                 }
                                 if(rowList.size()==20&&!rowList.get(0).contains("序号")){
                                     BankZzxxEntity zz = new BankZzxxEntity();
                                     zz.setJysj(TimeFormatUtil.getDateSwitchTimestamp(rowList.get(1)));
-                                    if(temp.toString().equals(rowList.get(3))){
+                                    if(rowList.get(3).equals(temp.toString())||rowList.get(4).equals(temp.toString())){
                                         zz.setYhkkh(rowList.get(3));
                                         zz.setJyxm(rowList.get(4));
                                         zz.setJyzjh(rowList.get(5));
@@ -718,7 +722,7 @@ public class UploadService {
                                         zz.setDssfzh(rowList.get(9));
                                         zz.setSfbz("出");
                                     }
-                                    if(temp.toString().equals(rowList.get(7))){
+                                    if(rowList.get(7).equals(temp.toString())||rowList.get(8).equals(temp.toString())){
                                         zz.setYhkkh(rowList.get(7));
                                         zz.setJyxm(rowList.get(8));
                                         zz.setJyzjh(rowList.get(9));
@@ -730,6 +734,19 @@ public class UploadService {
                                     zz.setJyje(new BigDecimal(rowList.get(12)));
                                     zz.setJyfsd(rowList.get(15));
                                     zz.setBz(rowList.get(16));
+                                    if(zz.getDskh()==null || "".contains(zz.getDskh().trim())){
+                                        String bcsm = zz.getYhkkh()+"-";
+                                        if(zz.getDsxm()!=null && zz.getDsxm().trim().length()>0){
+                                            bcsm+=zz.getDsxm();
+                                        }else if(zz.getZysm()!=null && zz.getZysm().trim().length()>0){
+                                            bcsm+=zz.getZysm();
+                                        }else if(zz.getBz()!=null && zz.getBz().trim().length()>0){
+                                            bcsm+=zz.getBz();
+                                        }else {
+                                            bcsm += "空账户";
+                                        }
+                                        zz.setBcsm(bcsm);
+                                    }
                                     listB.add(zz);
                                 }
                             }
@@ -839,7 +856,7 @@ public class UploadService {
 
 
                 if (path.endsWith(".xls") || path.endsWith(".xlsx")) {
-                    if(path.contains("公经反洗钱")&&path.contains("详细信息")){
+                    if(path.contains("详细信息")){
                         ExcelReader reader = new ExcelReader() {
                             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
                                 if(rowList.size()>10&&!rowList.get(0).contains("序号")){

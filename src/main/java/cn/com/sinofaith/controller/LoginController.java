@@ -2,6 +2,7 @@ package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.service.UserServices;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,7 +36,13 @@ public class LoginController {
         if(user!=null){
             mav = new ModelAndView("redirect:/aj");
             session.setAttribute("user",user);
-        }else {
+            if(user.getRole()==2&&TimeFormatUtil.getSy(user.getInserttime())){
+                mav = new ModelAndView("newlogin");
+                mav.addObject("username",userEntity.getUsername());
+                mav.addObject("result", "试用时间结束");
+                session.setAttribute("user",null);
+            }
+        }else{
             mav = new ModelAndView("newlogin");
             mav.addObject("username",userEntity.getUsername());
             mav.addObject("result", "用户名或密码错误");

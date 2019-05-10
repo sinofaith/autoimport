@@ -33,7 +33,7 @@ public class AJDao extends BaseDao<AjEntity>{
                 "left join (select aj_id,to_char(count(id)) as cftNum from cft_zzxx group by aj_id) c on zc.id = c.aj_id " +
                 "left join (select aj_id,to_char(count(id)) as wuliuNum from wuliu group by aj_id) d on zc.id = d.aj_id " +
                 "left join (select aj_id,to_char(count(id)) as psNum from pyramidSale group by aj_id) e on zc.id = e.aj_id " +
-                "left join (select aj_id,to_char(count(id)) as zfbNum from ZFBZHMX group by aj_id) f on zc.id = f.aj_id) where 1=1 " + seachCode;
+                "left join (select aj_id,to_char(count(id)) as zfbNum from ZFBZHMX group by aj_id) f on zc.id = f.aj_id) zc where 1=1 " + seachCode;
         List list = findBySQL(sql);
         Map map =(Map)list.get(0);
         return Integer.parseInt((String)map.get("NUM"));

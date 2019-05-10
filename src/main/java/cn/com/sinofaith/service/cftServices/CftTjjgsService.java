@@ -105,10 +105,10 @@ public class CftTjjgsService {
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
                  seach.append(" and c."+ seachCondition + " >= "+seachCode);
             }else if("xm".equals(seachCondition)){
-                seach.append(" and s."+ seachCondition+" like "+"'"+ seachCode+"'");
+                seach.append(" and s."+ seachCondition+" like "+"'%"+ seachCode+"%'");
             }
             else{
-                seach.append(" and c."+ seachCondition+" like "+"'"+ seachCode +"'");
+                seach.append(" and c."+ seachCondition+" like "+"'%"+ seachCode +"%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
