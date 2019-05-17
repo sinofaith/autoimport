@@ -19,20 +19,16 @@ public class TimeFormatUtil {
     private static SimpleDateFormat formatC = new SimpleDateFormat("yyyyMMddHHmm");
     private static SimpleDateFormat formatD = new SimpleDateFormat("yyyyMMddHH");
 
-    public static boolean getSy(String creatTime){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");//格式化输出日期
+    public static boolean getSy(String loginTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");//格式化输出日期
         Date dt = null;
         try {
-            dt = sdf.parse(creatTime);
+            dt = sdf.parse(loginTime);
         } catch (ParseException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
         }
-        Calendar rightNow = Calendar.getInstance();
-        rightNow.setTime(dt);
-        rightNow.add(Calendar.DAY_OF_YEAR,10);//日期加10天
-        Date dt1=rightNow.getTime();
-        if(dt1.compareTo(new Date())==-1){
+        if(dt.compareTo(new Date())==-1){
             return true;
         }
         return false;

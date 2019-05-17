@@ -53,8 +53,8 @@ public class AjServices {
          ad.deleteById(id);
     }
 
-    public List<AjEntity> findByName(String aj){
-        return ad.findFilter(aj);
+    public List<AjEntity> findByName(String aj,long userId){
+        return ad.findFilter(aj,userId);
     }
 
     public List<AjEntity> findByLike(String aj){
@@ -179,13 +179,13 @@ public class AjServices {
         }
     }
 
-    public List<CftZzxxEntity> getCftList(AjEntity aj){
+    public List<CftZzxxEntity> getCftList(AjEntity aj,long userId){
         List<CftZzxxEntity> listZz = new ArrayList<>();
         String [] ajm = aj.getAj().split(",");
         long [] ajid = new long[ajm.length];
         String seach = "and shmc  like '%红包%'";
         for(int i=0;i<ajm.length;i++){
-            ajid[i] = findByName(ajm[i]).get(0).getId();
+            ajid[i] = findByName(ajm[i],userId).get(0).getId();
             listZz.addAll(zzd.getAlla(ajid[i],seach));
         }
         return listZz;

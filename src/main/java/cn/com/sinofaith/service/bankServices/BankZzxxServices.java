@@ -39,8 +39,8 @@ public class BankZzxxServices {
     @Autowired
     private AJDao ad;
 
-    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj){
-        String ajid = getAjidByAjm(aj);
+    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj,long userId){
+        String ajid = getAjidByAjm(aj,userId);
         StringBuffer seach = new StringBuffer(" and c.aj_id in ("+ajid+") ");
 
         if(seachCode!=null){
@@ -59,13 +59,13 @@ public class BankZzxxServices {
         return seach.toString();
     }
 
-    public String getAjidByAjm(AjEntity aj){
+    public String getAjidByAjm(AjEntity aj,long userId){
         String[] ajm = new String[]{};
         StringBuffer ajid = new StringBuffer();
         if(aj.getAj().contains(",")) {
             ajm = aj.getAj().split(",");
             for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                ajid.append(ad.findFilter(ajm[i],userId).get(0).getId());
                 if (i != ajm.length - 1) {
                     ajid.append(",");
                 }
@@ -204,10 +204,10 @@ public class BankZzxxServices {
         return row;
     }
 
-    public String getByYhkkh(String zh,String jylx,String type,String sum,AjEntity aj,int page,String order){
+    public String getByYhkkh(String zh,String jylx,String type,String sum,AjEntity aj,int page,String order,long userId){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String ajid = getAjidByAjm(aj);
+        String ajid = getAjidByAjm(aj,userId);
 
         String seach ="";
         if("tjjg".equals(type)){

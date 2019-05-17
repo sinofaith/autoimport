@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankCustomerServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,9 @@ public class BankCustomerController {
         String seachCondition = (String) req.getSession().getAttribute("cuseachCondition");
         String seachCode = (String) req.getSession().getAttribute("cuseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
 //        String seach = custs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
-        String seach = custs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity());
+        String seach = custs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity(),user.getId());
         Page page = custs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("cuseachCode",seachCode);
@@ -74,7 +76,8 @@ public class BankCustomerController {
         String seachCondition = (String) req.getSession().getAttribute("cuseachCondition");
         String seachCode = (String) req.getSession().getAttribute("cuseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = custs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity());
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
+        String seach = custs.getSeach(seachCode,seachCondition,aj!=null ? aj:new AjEntity(),user.getId());
         custs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 }

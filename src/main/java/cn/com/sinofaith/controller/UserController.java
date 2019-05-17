@@ -63,7 +63,7 @@ public class UserController {
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
     public String addUser(@RequestParam String name,@RequestParam String username,
-                          @RequestParam String password,@RequestParam int role){
+                          @RequestParam String password,@RequestParam int role,@RequestParam long zcpz){
         if(us.findUser(username)>0){
             return "303";
         }
@@ -73,9 +73,25 @@ public class UserController {
         user.setPassword(password);
         user.setInserttime(TimeFormatUtil.getDate("/"));
         user.setRole(role);
+        user.setZcpz(zcpz);
+        if(zcpz == 1){
+            user.setLoginTime("2099/12/31");
+        }else{
+            user.setLoginTime(TimeFormatUtil.getDate("/").split(" ")[0]);
+        }
         us.saveUser(user);
         return "200";
     }
+
+    @RequestMapping(value = "/zcpz",method = RequestMethod.POST)
+    @ResponseBody
+    public String addUser(@RequestParam long userId,@RequestParam String loginTime){
+        if(us.zcpz(userId,loginTime,1)>0){
+            return "200";
+        }
+        return "404";
+    }
+
     @RequestMapping(value = "/seach")
     public ModelAndView getAj(@RequestParam("pageNo") String pageNo, HttpServletRequest req){
         ModelAndView mav = new ModelAndView("/user");
@@ -94,6 +110,7 @@ public class UserController {
         }else{
             seach += " and ( 1=1 ) ";
         }
+        seach += " and zcpz = 1 ";
         Page page = us.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("useachCode",seachCode);

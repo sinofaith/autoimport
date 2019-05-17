@@ -58,7 +58,7 @@
                                         <fieldset>
                                             <label class="block clearfix" >
 														<span class="block input-icon input-icon-right">
-															<input style="height: 35px; font-size: 16px" type="text" name="username"  id="username" class="form-control" placeholder="用户名" value="${username}"/>
+															<input style="height: 35px; font-size: 16px" type="text" name="username" oninput="removeResult()"  id="username" class="form-control" placeholder="用户名" value="${username}"/>
 															<i class="icon-user"></i>
 														</span>
                                             </label>
@@ -73,10 +73,10 @@
                                             <div class="space"></div>
 
                                             <div class="clearfix">
-                                                <span style="color:red;font-weight: bold;">${result}</span>
+                                                <span style="color:red;font-weight: bold;" id="result">${result}</span>
                                                 <br>
                                                 <button type="button" class="width-10 pull-left btn btn-sm btn-info yuanjiao5"  data-toggle="modal" data-target="#myModal">
-                                                    注册
+                                                    试用申请
                                                 </button>
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-primary yuanjiao5" onclick="login()">
                                                     <i class="icon-key"></i>
@@ -133,7 +133,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm btn-primary yuanjiao5" onclick="addUser()">注册</button>
+                <button type="button" class="btn btn-default btn-sm btn-primary yuanjiao5" onclick="addUser()">提交</button>
                 <button type="button" class="btn btn-default btn-sm btn-primary yuanjiao5" data-dismiss="modal">关闭</button>
             </div>
         </div>
@@ -191,6 +191,10 @@
         });
     });
 
+    function removeResult() {
+        $("#result").text("");
+    }
+
     function login(){
         $("#loginform").submit();
     }
@@ -223,6 +227,7 @@
         var password = $("#newpass").val();
         var name = $("#name").val();
         var role = $("#role").val();
+        var zcpz = 0;
         var flag = true;
         if (username == '') {
             $(".newuser").attr('title', "账号不能为空").tooltip('show');
@@ -231,7 +236,6 @@
         if(!checkUsername()){
             $(".newuser").attr('title', "账号已存在").tooltip('show');
             flag = false;
-            alert(checkUsername())
         }
         if (password == '') {
             $(".newpass").attr('title', "密码不能为空").tooltip('show');
@@ -251,13 +255,13 @@
         form.append("username", username); // 可以增加表单数据
         form.append("password", password); // 可以增加表单数据
         form.append("role", role); // 可以增加表单数据
-        form.append("a", ["1","2"]); // 可以增加表单数据
+        form.append("zcpz", zcpz); // 可以增加表单数据
         var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
         xhr.open("post", Controller, true);
         xhr.onload = function () {
             if (xhr.responseText == 200) {
                 alertify.set('notifier','position', 'top-center');
-                alertify.success("添加完成!");
+                alertify.success("申请成功!请联系管理员批注登陆");
                 $("#username").val(username);
                 $("#passwordInput").val("");
                 $('#myModal').modal('hide');
@@ -266,7 +270,7 @@
                 $(".newuser").attr('title', "用户已存在").tooltip('show');
             }
             if (xhr.responseText == 404) {
-                alertify.error("添加失败")
+                alertify.error("申请失败")
             }
             $(".btn").removeAttr("disabled", "disabled");
         };

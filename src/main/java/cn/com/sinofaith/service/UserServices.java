@@ -25,6 +25,9 @@ public class UserServices {
         return userinfo;
     }
 
+    public int zcpz(long userId,String loginTime,long zcpz){
+        return ud.updateBySql("update t_user set zcpz ="+zcpz+" , loginTime = '"+loginTime+"' where id ="+userId);
+    }
 
     public String getSeach(String seachCode, String seachCondition){
         StringBuffer seach = new StringBuffer();

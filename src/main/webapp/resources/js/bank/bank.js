@@ -32,7 +32,7 @@ function seachChange() {
     var seachCondition = $("#seachCondition").val()
     var seachCode = $("#seachCode")
     if(seachCondition === "jzzje" || seachCondition === "czzje"){
-        seachCode.val("50000")
+        seachCode.val("大于等于50000")
     }else{
         seachCode.val("")
     }
@@ -361,11 +361,28 @@ function progressFunction(evt) {
 }
 
 
-
+function editBp(yhkkh,dsfzh) {
+    if(dsfzh==1){
+        dsfzh=0;
+    }else if (dsfzh==0){
+        dsfzh =1;
+    }
+    var url = "/SINOFAITH/banktjjg/editBp?yhkkh="+yhkkh+"&dsfzh="+dsfzh;
+    $.get(url,function (data) {
+        if(data=="200"){
+            alertify.set('notifier','position', 'top-center');
+            alertify.success("修改成功");
+            setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
+        }else{
+            alertify.set('notifier','position', 'top-center');
+            alertify.error("修改失败");
+        }
+    })
+}
 
 function getZzDetails(obj,type) {
-    var yhkkh = $(obj).closest("tr").find("td:eq(1)").attr("title");;
-    var dfkh = $(obj).closest("tr").find("td:eq(3)").text();
+    var yhkkh = $(obj).closest("tr").find("td:eq(1)").attr("title");
+    var dfkh = $(obj).closest("tr").find("td:eq(3)").attr("title");
     window.page = 1
     var tjsum = $(obj).closest("tr").find("td:eq(3)").text();
     var tssum = $(obj).closest("tr").find("td:eq(5)").text();

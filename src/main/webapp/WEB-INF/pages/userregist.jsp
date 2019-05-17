@@ -29,7 +29,7 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/user" class="addactive">用户信息</a><a  href="/SINOFAITH/userregist">账号试用审批</a></span>
+    <span class="tab_nav">  <a  href="/SINOFAITH/user" >用户信息</a><a  href="/SINOFAITH/userregist" class="addactive">账号试用审批</a></span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -49,8 +49,7 @@
                                     <tr align="center">
                                         <td width="6%">姓名</td>
                                         <td width="7%">账号</td>
-                                        <td width="7%">可登陆时间</td>
-                                        <td width="7%">创建时间</td>
+                                        <td width="7%">申请时间</td>
                                         <td width="7%">操作</td>
                                     </tr>
                                     <form action="" method="post" id="_form">
@@ -61,10 +60,9 @@
                                             <input type="hidden" value="${item.id}">
                                             <td align="center">${item.name}</td>
                                             <td align="center">${item.username}</td>
-                                            <td align="center">${item.loginTime}</td>
                                             <td align="center">${item.inserttime}</td>
                                             <td align="center"><button data-toggle="modal"
-                                                                       data-target="#myModal1" onclick="zcpz(this)">编辑</button></td>
+                                                data-target="#myModal1" onclick="zcpz(this)">允许登陆</button></td>
                                         </tr>
                                     </c:forEach>
                                     <c:choose>
@@ -82,10 +80,10 @@
                                 <c:when test="${detailinfo!=null && detailinfo.size()!=0}">
                                     <div  class="page_nmber">
                                         <div class="mar_t_15">共${page.totalRecords}条记录 共<span id="totalPage">${page.totalPages}</span>页 当前第${page.pageNo}页<br></div>
-                                        <a href="/SINOFAITH/user/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
+                                        <a href="/SINOFAITH/userregist/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
                                         <c:choose>
                                             <c:when test="${page.pageNo!=1}">
-                                                <a href="/SINOFAITH/user/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
+                                                <a href="/SINOFAITH/userregist/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="previousPage" value="上一页" />
@@ -93,15 +91,15 @@
                                         </c:choose>
                                         <c:choose>
                                             <c:when test="${page.pageNo != page.totalPages}">
-                                                <a href="/SINOFAITH/user/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
+                                                <a href="/SINOFAITH/userregist/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="nextPage" value="下一页" />
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="/SINOFAITH/user/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
+                                        <a href="/SINOFAITH/userregist/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
-                                        <input type="button" value="跳转" onclick="userSkip('user')">
+                                        <input type="button" value="跳转" onclick="userSkip('userregist')">
                                     </div>
 
                                 </c:when>
@@ -113,12 +111,12 @@
                         <div class=" ">
 
                             <div>
-                                <form action="/SINOFAITH/user/SeachCode" method="post">
+                                <form action="/SINOFAITH/userregist/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="name"<c:if test="${useachCondition=='name'}">selected="selected"</c:if>>姓名</option>
-                                            <option value="username"<c:if test="${useachCondition=='username'}">selected="selected"</c:if>>账号</option>
+                                            <option value="name"<c:if test="${urseachCondition=='name'}">selected="selected"</c:if>>姓名</option>
+                                            <option value="username"<c:if test="${urseachCondition=='username'}">selected="selected"</c:if>>账号</option>
                                         </select>
                                         <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询的内容" name="seachCode" >${useachCode}</textarea>
                                     </div>
@@ -127,25 +125,11 @@
                                 </form>
                             </div>
                             <div class="width100" style="margin-top: 10px;float: left;">
-                                <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">用户操作</span>
 
-                                <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
-                                    <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-
-                <button class="sideBar_r_button" data-toggle="modal"
-                        data-target="#myModal">新增用户</button>
-                       </span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <%--<form id="uploadFileForm" action="/SINOFAITH/uploadFolder" method="post"  style="display: none;">--%>
-                <%--<input type="file" webkitdirectory name="file" id="file" style="display: none;">--%>
-                <%--<input type="text" id="updatestate" name="updatestate" style="display: none;" value="1">--%>
-                <%--</form>--%>
 
                 <form id="seachDetail" action="<c:url value=""/>"  method="post" style="display: none;">
                 </form>
@@ -153,39 +137,6 @@
             </div>
         </div>
     </ul>
-</div>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"
-                        aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                <span id="percentage" style="color:blue;"></span> <br>
-                <div class="file-box">
-
-                    姓名:<input type="text" autocomplete="new-username" name = 'name' id ='name'
-                               class='txt'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" ><br>
-                    账号:<input type="text" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-username" name = 'newuser' id ='newuser'
-                              class='txt newuser'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" onblur="checkUsername()"><br>
-                    密码:<input type="password" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-password" name = 'newpass' id ='newpass'
-                              class='txt newpass'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" >
-                    <input type="hidden" id="role" value="1">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" name="submit" class="btn" value="添加"
-                       onclick="addUser()"/>
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                </button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal -->
 </div>
 
 <div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
@@ -224,4 +175,5 @@
     </div>
     <!-- /.modal -->
 </div>
+
 <%@include file="template/newfooter.jsp" %>

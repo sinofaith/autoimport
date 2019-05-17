@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.cftController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
@@ -80,6 +81,7 @@ public class CftTjjgController {
     @RequestMapping(value = "/seach")
     public ModelAndView getcfttj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("cft/cfttjjg");
+        UserEntity user =(UserEntity) req.getSession().getAttribute("user");
         String seachCondition = (String) req.getSession().getAttribute("tjseachCondition");
         String seach = "";
         String seachCode = (String) req.getSession().getAttribute("tjseachCode");
@@ -92,8 +94,8 @@ public class CftTjjgController {
         mav.addObject("tjseachCode",seachCode);
         mav.addObject("tjseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
-        if(ajs.findByName(aj!=null ? aj.getAj():"").size()>0) {
-            mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
+        if(ajs.findByName(aj!=null ? aj.getAj():"",user.getId()).size()>0) {
+            mav.addObject("aj", ajs.findByName(aj.getAj(),user.getId()).get(0));
         }
         return mav;
     }

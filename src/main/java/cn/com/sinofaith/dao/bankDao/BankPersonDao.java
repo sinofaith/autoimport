@@ -20,7 +20,7 @@ public class BankPersonDao extends BaseDao<BankPersonEntity>{
 
     public int add(List<BankPersonEntity> listbp,String aj_id){
         Connection con = DBUtil.getConnection();
-        String sql = "insert into Bank_Person(yhkkh,yhkzh,khxm) values(?,?,?)";
+        String sql = "insert into Bank_Person(yhkkh,yhkzh,khxm,dsfzh) values(?,?,?,?)";
         int a = 0;
         PreparedStatement pstm = null;
         BankPersonEntity bpe = new BankPersonEntity();

@@ -804,9 +804,7 @@ public class UploadService {
 //        int i = bzcd.saveZcxx(listZcxx, aj_id);
         BankPersonEntity bpe = new BankPersonEntity();
         for (BankZcxxEntity bce : listZcxx) {
-            bpe.setXm(bce.getKhxm());
-            bpe.setYhkkh(bce.getYhkkh());
-            bpe.setYhkzh(bce.getYhkzh());
+            bpe = bpe.getByZcxx(bce);
             if (bpe.getYhkkh().trim().length() > 0) {
                 bpd.insert(bpe);
             }

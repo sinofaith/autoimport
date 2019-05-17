@@ -51,7 +51,7 @@
                                         <td width="9%">交易卡号</td>
                                         <td width="12%">对方卡号<br>
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                            <label for="checkbox1">去除第三方账户</label></td>
+                                            <label for="checkbox1" style="font-size: 12px;font-weight:bold"">去除第三方账户</label></td>
                                         <td width="6%">对方姓名</td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jyzcs">交易总次数</a></td>
@@ -65,7 +65,27 @@
                                                 <td align="center">${item.id}</td>
                                                 <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                 <td align="center">${item.jyzh}</td>
-                                                <td align="center">${item.dfzh}</td>
+                                                <td align="center"  title="${item.dfzh}">
+                                                    <div class="dropCss" >
+                                                        <div style="width:150px;white-space: nowrap;text-overflow:ellipsis;overflow:hidden;">${item.dfzh}</div>
+                                                        <div class="dropCss-content">
+                                                            <c:choose>
+                                                                <c:when test="${item.dsfzh==1}">
+                                                                    <a href='#' onclick="editBp('${item.dfzh}',${item.dsfzh})">取消第三方账户</a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href='#' onclick="editBp('${item.dfzh}',${item.dsfzh})">添加第三方账户</a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
+                                                    </div>
+
+                                                        <%--<div style="width:230px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;" class="dropCss">--%>
+                                                        <%--<div class="dropCss-content" id="skip${st.index+2}">--%>
+
+                                                        <%--</div>--%>
+                                                        <%--</div>--%>
+                                                </td>
                                                 <td align="center" title="${item.dfxm}">
                                                     <div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div>
                                                 </td>

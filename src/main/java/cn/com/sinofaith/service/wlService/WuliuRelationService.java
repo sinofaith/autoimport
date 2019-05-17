@@ -35,9 +35,9 @@ public class WuliuRelationService {
      * @param desc
      * @return
      */
-    public String getSeach(String seachCondition, String seachCode, AjEntity aj, String orderby, String desc) {
+    public String getSeach(String seachCondition, String seachCode, AjEntity aj, String orderby, String desc,long userId) {
         // 查询点击的案件id
-        String aj_id = getAjidByAjm(aj);
+        String aj_id = getAjidByAjm(aj,userId);
         StringBuffer seach = new StringBuffer(" and aj_id in (" + aj_id + ")");
         // 当查询内容不为空时
         if(seachCode!=null) {
@@ -55,13 +55,13 @@ public class WuliuRelationService {
      * @param aj
      * @return
      */
-    public String getAjidByAjm(AjEntity aj){
+    public String getAjidByAjm(AjEntity aj,long userId){
         String[] ajm = new String[]{};
         StringBuffer ajid = new StringBuffer();
         if(aj.getAj().contains(",")) {
             ajm = aj.getAj().split(",");
             for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ajDao.findFilter(ajm[i]).get(0).getId());
+                ajid.append(ajDao.findFilter(ajm[i],userId).get(0).getId());
                 if (i != ajm.length - 1) {
                     ajid.append(",");
                 }

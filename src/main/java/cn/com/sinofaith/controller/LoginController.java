@@ -36,12 +36,20 @@ public class LoginController {
         if(user!=null){
             mav = new ModelAndView("redirect:/aj");
             session.setAttribute("user",user);
-            if(user.getRole()==2&&TimeFormatUtil.getSy(user.getInserttime())){
-                mav = new ModelAndView("newlogin");
-                mav.addObject("username",userEntity.getUsername());
-                mav.addObject("result", "试用时间结束");
-                session.setAttribute("user",null);
-            }
+                if (user.getZcpz()==0){
+                    mav = new ModelAndView("newlogin");
+                    session.setAttribute("user",null);
+                    mav.addObject("username",userEntity.getUsername());
+                    mav.addObject("result", "请联系管理员批准登陆");
+                } else if(TimeFormatUtil.getSy(user.getLoginTime())){
+                    mav = new ModelAndView("newlogin");
+                    session.setAttribute("user",null);
+                    mav.addObject("username", userEntity.getUsername());
+                    mav.addObject("result", "试用时间结束");
+                }else {
+                    return mav;
+                }
+
         }else{
             mav = new ModelAndView("newlogin");
             mav.addObject("username",userEntity.getUsername());

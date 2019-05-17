@@ -45,6 +45,20 @@ public class BankTjjgServices {
     @Autowired
     private BankPersonServices bps;
 
+    public int editBp(String yhkkh,long dsfzh){
+        int result = 0;
+        if(dsfzh==-1){
+            BankPersonEntity bpe = new BankPersonEntity();
+            bpe.setYhkkh(yhkkh);
+            bpe.setDsfzh(1);
+            bpe.setXm("第三方账户");
+            result=bps.save(bpe);
+        }else {
+            result=bps.update(yhkkh,dsfzh);
+        }
+        return result;
+    }
+
     public CftTjjgForm getByJyzh(String zh,AjEntity aj){
        List temp = tjjd.findBySQL(" select b.*,p.khxm xm from bank_tjjg b left join bank_person p on b.jyzh = p.yhkkh " +
                " where b.jyzh='"+zh+"' and b.aj_id ="+aj.getId() );
@@ -83,9 +97,13 @@ public class BankTjjgServices {
     public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj,int code,int hcode){
         StringBuffer seach = new StringBuffer(" and aj_id ="+aj.getId());
         if(seachCode!=null){
-            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            seachCode = seachCode.replace("\r\n","")
+                    .replace("，","").replace(" ","")
+                    .replace(" ","").replace("\t","");
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach.append( " and c."+ seachCondition + " >= "+seachCode);
+                seach.append( " and c."+ seachCondition + seachCode.replace("大于等于",">=")
+                        .replace("等于","=").replace("小于等于","<=")
+                        .replace("大于",">").replace("小于","<"));
             }else if("khxm".equals(seachCondition)){
                 seach.append(" and s."+ seachCondition+" like '%"+ seachCode+"%'");
             }else{
@@ -98,11 +116,12 @@ public class BankTjjgServices {
             seach.append(" and c.zhlx=" + code);
         }
         if(hcode!=0){
-            seach.append(" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
-                    " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
-                    " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
-                    " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
-                    " and s.khxm not like '%过渡%' or s.khxm is null) ");
+//            seach.append(" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
+//                    " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
+//                    " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
+//                    " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
+//                    " and s.khxm not like '%过渡%' or s.khxm is null) ");
+             seach.append(" and (s.dsfzh = 0 or s.dsfzh is null)");
         }
         if(orderby!=null){
             if("khxm".equals(orderby)){
@@ -380,7 +399,8 @@ public class BankTjjgServices {
         List listTjxx = tjjd.findBySQL("select s.khxm,c.* from bank_tjjg c left join bank_person s on c.jyzh = s.yhkkh where 1=1 "+seach);
         HSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+
+                new String(("银行卡账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();

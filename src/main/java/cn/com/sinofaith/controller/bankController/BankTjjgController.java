@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
 import cn.com.sinofaith.service.UploadService;
@@ -45,6 +46,15 @@ public class BankTjjgController {
             return mav;
         }
 
+        @RequestMapping(value = "/editBp")
+        @ResponseBody
+        public String editBp(@RequestParam("yhkkh") String yhkkh,@RequestParam("dsfzh") long dsfzh){
+            if(tjs.editBp(yhkkh,dsfzh)==1){
+                return "200";
+            }
+            return "404";
+        }
+
         @RequestMapping(value = "/seachByUrl")
         public ModelAndView getByUrl(@RequestParam("yhkkh") String yhkkh,HttpSession ses){
             ModelAndView mav = new ModelAndView("redirect:/banktjjg/seach?pageNo=1");
@@ -82,6 +92,7 @@ public class BankTjjgController {
         @RequestMapping(value = "/seach")
         public ModelAndView getcfttj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
             ModelAndView mav = new ModelAndView("bank/banktjjg");
+            UserEntity user = (UserEntity) req.getSession().getAttribute("user");
             String seachCondition = (String) req.getSession().getAttribute("btjseachCondition");
             String seach = "";
             String seachCode = (String) req.getSession().getAttribute("btjseachCode");
@@ -96,8 +107,8 @@ public class BankTjjgController {
             mav.addObject("btjseachCode", seachCode);
             mav.addObject("btjseachCondition", seachCondition);
             mav.addObject("detailinfo", page.getList());
-            if (ajs.findByName(aj != null ? aj.getAj() : "").size() > 0) {
-                mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
+            if (ajs.findByName(aj != null ? aj.getAj() : "",user.getId()).size() > 0) {
+                mav.addObject("aj", ajs.findByName(aj.getAj(),user.getId()).get(0));
             }
             mav.addObject("code",code);
             mav.addObject("hcode",hcode);

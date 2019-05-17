@@ -15,6 +15,7 @@ public class CftTjjgForm {
     private BigDecimal czzje = new BigDecimal(0);
     private long zhlx;
     private String zhlb;
+    private long dsfzh;
 
     public long getId() {
         return id;
@@ -108,6 +109,14 @@ public class CftTjjgForm {
         this.zhlb = zhlb;
     }
 
+    public long getDsfzh() {
+        return dsfzh;
+    }
+
+    public void setDsfzh(long dsfzh) {
+        this.dsfzh = dsfzh;
+    }
+
     @Override
     public String toString() {
         return name + "//" + jyzh + "//" + jylx + "//" + jyzcs + "//" + jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
@@ -129,6 +138,7 @@ public class CftTjjgForm {
         cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
         cftForm.setZhlx(new BigDecimal(map.get("ZHLX")!=null ? map.get("ZHLX").toString():"-1").longValue());
         cftForm.setZhlb((String) map.get("ZHLB"));
+        cftForm.setDsfzh(new BigDecimal(map.get("DSFZH")!=null ? map.get("DSFZH").toString():"-1").longValue());
         return cftForm;
     }
 

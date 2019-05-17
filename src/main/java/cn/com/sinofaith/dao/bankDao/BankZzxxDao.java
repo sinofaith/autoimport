@@ -175,7 +175,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                 DBUtil.closeStatement(pstm);
                 DBUtil.closeConnection(con);
             } catch (Exception e) {
-                e.getMessage();
+                e.printStackTrace();
                 DBUtil.closeStatement(pstm);
                 DBUtil.closeConnection(con);
             }

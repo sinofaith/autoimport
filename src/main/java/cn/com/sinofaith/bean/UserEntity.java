@@ -11,6 +11,8 @@ public class UserEntity {
     private String password;
     private String inserttime;
     private long role=-1;
+    private long zcpz = 0;
+    private String loginTime;
 
     @Id
     @Column(name = "id",precision = 0,nullable = false)
@@ -57,6 +59,10 @@ public class UserEntity {
         return role;
     }
 
+    public void setRole(long role) {
+        this.role = role;
+    }
+
     @Basic
     @Column(name = "inserttime",nullable = true,length = 20)
     public String getInserttime() {
@@ -67,19 +73,34 @@ public class UserEntity {
         this.inserttime = inserttime;
     }
 
-
-
-    public void setRole(long role) {
-        this.role = role;
+    @Basic
+    @Column(name = "zcpz",nullable = false)
+    public long getZcpz() {
+        return zcpz;
     }
 
-    public UserEntity(long id, String name, String username, String password, String inserttime, long role) {
+    public void setZcpz(long zcpz) {
+        this.zcpz = zcpz;
+    }
+    @Basic
+    @Column(name = "loginTime",nullable = false)
+    public String getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(String loginTime) {
+        this.loginTime = loginTime;
+    }
+
+    public UserEntity(long id, String name, String username, String password, String inserttime, long role, long zcpz, String loginTime) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
         this.inserttime = inserttime;
         this.role = role;
+        this.zcpz = zcpz;
+        this.loginTime = loginTime;
     }
 
     public UserEntity() {

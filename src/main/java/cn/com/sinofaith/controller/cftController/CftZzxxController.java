@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.cftController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class CftZzxxController {
         ModelAndView mav = new ModelAndView("redirect:/cftzzxx/seach?pageNo=1");
         httpSession.removeAttribute("zzseachCondition"); //查询条件
         httpSession.removeAttribute("zzseachCode");//查询内容
+        httpSession.removeAttribute("zorderby");
+        httpSession.removeAttribute("zdesc");
         return mav;
     }
 
@@ -49,9 +52,10 @@ public class CftZzxxController {
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("zorderby");
         String desc = (String) req.getSession().getAttribute("zdesc");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
+        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
         Page page = cftzzs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("seachCode",seachCode);
@@ -82,9 +86,10 @@ public class CftZzxxController {
         String seachCondition = (String) req.getSession().getAttribute("zzseachCondition");
         String seachCode = (String) req.getSession().getAttribute("zzseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("zorderby");
         String desc = (String) req.getSession().getAttribute("zdesc");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
+        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
         cftzzs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 
@@ -115,7 +120,7 @@ public class CftZzxxController {
                              @RequestParam("sum") String sum,@RequestParam("type") String type,@RequestParam("page")int page,
                              @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String desc = (String) ses.getAttribute("xqdesc");
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String orders ="";
@@ -139,7 +144,7 @@ public class CftZzxxController {
         ses.setAttribute("xqdesc",desc);
 
 
-        return cftzzs.getByJyzhlx(jyzh,jylx,sum,type,aj!=null ? aj:new AjEntity(),page,orders);
+        return cftzzs.getByJyzhlx(jyzh,jylx,sum,type,aj!=null ? aj:new AjEntity(),page,orders,user.getId());
     }
 
     @RequestMapping(value = "/downDetailJylx")
@@ -147,10 +152,11 @@ public class CftZzxxController {
                                @RequestParam("type") String type, HttpServletRequest req,HttpServletResponse rep,
                                HttpSession ses)throws Exception{
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String desc = (String) ses.getAttribute("xqdesc");
         String seach ="";
-        String ajid=cftzzs.getAjidByAjm(aj);
+        String ajid=cftzzs.getAjidByAjm(aj,user.getId());
         if("jylx".equals(type)) {
             seach = " and c.zh ='" + zh + "' and c.jylx='" + jylx + "' ";
             if(jylx.equals("提现")){

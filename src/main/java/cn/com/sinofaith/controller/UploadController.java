@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
@@ -82,7 +83,7 @@ public class UploadController {
     @ResponseBody
     public String uploadFileFolder(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                                    @RequestParam("checkBox") long checkBox, HttpServletRequest request){
-        long start = System.currentTimeMillis();
+        UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         String uploadPath = request.getSession().getServletContext().getRealPath("/")+"upload/temp/"+System.currentTimeMillis()+"/";
         String filePath ="";
         String fileName="";
@@ -107,12 +108,12 @@ public class UploadController {
         int a = 0;
         int b = 0;
 
-        AjEntity aje = ajs.findByName(aj).get(0);
+        AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         if(uploadPathd.listFiles()!=null) {
             if (aje.getFlg() != checkBox) {
                 aje.setFlg(checkBox);
                 ajs.updateAj(aje);
-                aje = ajs.findByName(aj).get(0);
+                aje = ajs.findByName(aj,user.getId()).get(0);
             }
 
             a= us.insertZcxx(uploadPath, "info.txt", aje.getId());
@@ -139,7 +140,6 @@ public class UploadController {
             result = "";
         }
         request.getSession().setAttribute("aj",aje);
-        System.out.println(System.currentTimeMillis() - start+" -----------------------------------");
         return result;
     }
 
@@ -153,6 +153,7 @@ public class UploadController {
     public @ResponseBody Map<String,Map<String,List<String>>> fieldMappingCft(@RequestParam("file") List<MultipartFile> file,
                      @RequestParam("aj") String aj,@RequestParam("checkBox") long checkBox,HttpServletRequest req){
         // 创建一个路径
+        UserEntity user =(UserEntity) req.getSession().getAttribute("user");
         String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
         String filePath = "";
         String fileName = "";
@@ -174,7 +175,7 @@ public class UploadController {
                 }
             }
         }
-        AjEntity aje = ajs.findByName(aj).get(0);
+        AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         if(uploadPathd.listFiles()!=null) {
             if (aje.getFlg() != checkBox) {
                 aje.setFlg(checkBox);
@@ -300,6 +301,7 @@ public class UploadController {
         String result = "";
         File uploadFile = null;
         File uploadPathd = new File(uploadPath);
+        UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         if(!uploadPathd.exists()){
             uploadPathd.mkdirs();
         }
@@ -318,7 +320,7 @@ public class UploadController {
         int a = 0;
         int b = 0;
 
-        AjEntity aje = ajs.findByName(aj).get(0);
+        AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         if(uploadPathd.listFiles()!=null) {
             List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
             List<BankZcxxEntity> listzcxx = us.insertBankZcxx(uploadPath,aje.getId());
@@ -494,6 +496,7 @@ public class UploadController {
     public String uploadZfb(@RequestParam("file") List<MultipartFile> file, @RequestParam("aj") String aj,
                               HttpServletRequest req) {
         // 创建一个路径
+        UserEntity user =(UserEntity) req.getSession().getAttribute("user");
         String uploadPath = req.getSession().getServletContext().getRealPath("/") + "upload/temp/" + System.currentTimeMillis() + "/";
         String filePath = "";
         String fileName = "";
@@ -516,7 +519,7 @@ public class UploadController {
             }
         }
         int a=0;
-        AjEntity aje = ajs.findByName(aj).get(0);
+        AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         if(uploadPathd.listFiles()!=null) {
             // Zfb表添加数据
             a = us.insertZfb(uploadPath, aje.getId());

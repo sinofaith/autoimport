@@ -304,7 +304,7 @@ public abstract class ExcelReader extends DefaultHandler {
      */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
-        String file = "D:\\work\\数据模型\\资金\\假HP第一批\\陶国龙、梁明霞、张仁蛟、钟高艺\\交易明细信息 (26).xlsx";
+        String file = "D:\\work\\数据模型\\资金\\公经反洗钱2\\1-湖北供销银丰产业投资基金合伙企业 （有限合伙）等28个主体批量查询详细信息.xlsx";
         final Map<String,Integer> title=new HashMap();
         final List<BankZzxxEntity> listB = new ArrayList<>();
 //
@@ -313,14 +313,18 @@ public abstract class ExcelReader extends DefaultHandler {
         ExcelReader reader = new ExcelReader() {
             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
 
-                if(rowList.get(0).contains(":")){
+                if(rowList.get(0).startsWith("(")){
                     temp.delete(0,temp.length());
-                    temp.append(rowList.get(0).split(":")[1]);
+                    if(rowList.get(0).contains(":")){
+                        temp.append(rowList.get(0).split(":")[1]);
+                    }else {
+                        temp.append(rowList.get(0).substring(rowList.get(0).indexOf(")")+1,rowList.get(0).length()));
+                    }
                 }
                 if(rowList.size()==20&&!rowList.get(0).contains("序号")){
                     BankZzxxEntity zz = new BankZzxxEntity();
                     zz.setJysj(TimeFormatUtil.getDateSwitchTimestamp(rowList.get(1)));
-                    if(temp.equals(rowList.get(3))){
+                    if(rowList.get(3).equals(temp.toString())||rowList.get(4).equals(temp.toString())){
                         zz.setYhkkh(rowList.get(3));
                         zz.setJyxm(rowList.get(4));
                         zz.setJyzjh(rowList.get(5));
@@ -328,7 +332,8 @@ public abstract class ExcelReader extends DefaultHandler {
                         zz.setDsxm(rowList.get(8));
                         zz.setDssfzh(rowList.get(9));
                         zz.setSfbz("出");
-                    }else{
+                    }
+                    if(rowList.get(7).equals(temp.toString())||rowList.get(8).equals(temp.toString())){
                         zz.setYhkkh(rowList.get(7));
                         zz.setJyxm(rowList.get(8));
                         zz.setJyzjh(rowList.get(9));

@@ -20,10 +20,14 @@ public class BankPersonServices {
 
     public List<String> getByFilter(){
         List<String> result = new ArrayList<>();
-        List<BankPersonEntity> listbp = bpd.find("from BankPersonEntity where xm like '%财付通%' or xm like '%支付宝%' or xm like '%清算%'");
+        List<BankPersonEntity> listbp = bpd.find("from BankPersonEntity where dsfzh=1");
         for (BankPersonEntity bp : listbp){
             result.add(bp.getYhkkh());
         }
         return  result;
+    }
+
+    public int  update(String yhkkh,long dsfzh){
+        return bpd.updateBySql("update bank_person set dsfzh = "+dsfzh+" where yhkkh = '"+yhkkh+"'");
     }
 }

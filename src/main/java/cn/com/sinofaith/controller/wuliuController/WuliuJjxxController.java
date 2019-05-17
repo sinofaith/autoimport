@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.wuliuController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
@@ -160,12 +161,13 @@ public class WuliuJjxxController {
      */
     @RequestMapping(value = "/distinctCount",method = RequestMethod.GET)
     public String distinctCount(String ajm, int flg, HttpServletRequest req){
-        AjEntity aje = ajs.findByName(ajm).get(0);
+        UserEntity user =(UserEntity) req.getSession().getAttribute("user");
+        AjEntity aje = ajs.findByName(ajm,user.getId()).get(0);
         // 当flg不相等时
         if(flg!=aje.getFlg()){
             aje.setFlg(flg);
             ajs.updateAj(aje);
-            aje = ajs.findByName(ajm).get(0);
+            aje = ajs.findByName(ajm,user.getId()).get(0);
             req.getSession().setAttribute("aj",aje);
         }
         return "redirect:/wuliujjxx/seach?pageNo=1";

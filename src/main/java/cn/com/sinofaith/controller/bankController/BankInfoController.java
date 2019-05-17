@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankCustomerServices;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
@@ -47,16 +48,43 @@ public class BankInfoController {
         ModelAndView mav = new ModelAndView("redirect:/bank/seach?pageNo=1");
         httpSession.removeAttribute("bzcseachCondition"); //查询条件
         httpSession.removeAttribute("bzcseachCode");//查询内容
+        httpSession.setAttribute("bzcorderby", "kyye");
+        httpSession.setAttribute("bzclastOrder", "kyye");
+        httpSession.setAttribute("bzcdesc", " desc ");
+        return mav;
+    }
+
+    @RequestMapping(value = "/order")
+    public ModelAndView order(@RequestParam("orderby") String orderby, HttpSession ses) {
+        ModelAndView mav = new ModelAndView("redirect:/bank/seach?pageNo=1");
+        String desc = (String) ses.getAttribute("bzcdesc");
+        String lastOrder = (String) ses.getAttribute("bzclastOrder");
+        if (orderby.equals(lastOrder)) {
+            if (desc == null || "".equals(desc)) {
+                desc = " desc";
+            } else {
+                desc = "";
+            }
+        } else {
+            desc = " desc ";
+        }
+
+        ses.setAttribute("bzcorderby", orderby);
+        ses.setAttribute("bzclastOrder", orderby);
+        ses.setAttribute("bzcdesc", desc);
         return mav;
     }
 
     @RequestMapping(value = "/seach")
     public ModelAndView getCftzcxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("bank/bankInfo");
+        String orderby = (String) req.getSession().getAttribute("bzcorderby");
+        String desc = (String) req.getSession().getAttribute("bzcdesc");
         String seachCondition = (String) req.getSession().getAttribute("bzcseachCondition");
         String seachCode = (String) req.getSession().getAttribute("bzcseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = bankzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
+        String seach = bankzcs.getSeach(seachCode,seachCondition,orderby, desc,aj!=null? aj : new AjEntity(),user.getId());
         Page page = bankzcs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("bzcseachCode",seachCode);
@@ -82,10 +110,14 @@ public class BankInfoController {
 
     @RequestMapping(value = "/download")
     public void getZcxxDownload(HttpServletResponse rep, HttpServletRequest req, HttpSession session) throws Exception{
+
+        String orderby = (String) req.getSession().getAttribute("bzcorderby");
+        String desc = (String) req.getSession().getAttribute("bzcdesc");
         String seachCondition = (String)session.getAttribute("bzcseachCondition");
         String seachCode = (String) req.getSession().getAttribute("bzcseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = bankzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
+        String seach = bankzcs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null? aj : new AjEntity(),user.getId());
         bankzcs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 
@@ -135,6 +167,7 @@ public class BankInfoController {
             return "304";
         }
         String search = " and aj_id="+aj.getId();
+
         if(jzje!=null && !jzje.equals("")){
             search += " and c.jzzje > " + jzje;
         }
@@ -142,13 +175,13 @@ public class BankInfoController {
             search += " and c.czzje > " + czje;
         }
         if(name.equals("bankTjjg")){
-            search += " order by c.jzzje desc,c.czzje desc";
+            search += " and (s.dsfzh =0 or s.dsfzh is null) order by c.jzzje desc,c.czzje desc";
             page = tjs.queryForPage(currentPage, 1000, search);
         }else if(name.equals("bankTjjgs")){
-            search += " order by c.jzzje desc,c.czzje desc";
+            search += " and (d.dsfzh =0 or d.dsfzh is null) order by c.jzzje desc,c.czzje desc";
             page = banktjss.queryForPage(currentPage, 1000, search);
         }else if(name.equals("bankGtzh")){
-            search += " order by a.num desc";
+            search += " and (d.dsfzh =0 or d.dsfzh is null) order by a.num desc";
             page = banktjss.queryForPageGt(currentPage, 1000, search,aj.getId());
         }
         return gson.toJson(page);
@@ -171,7 +204,7 @@ public class BankInfoController {
         // 2.1 bankTjjg
         Map<String, String> bankMap = yjdcLists.get(0);
         String search = getSearch(bankMap, aj.getId());
-        search += " order by c.jzzje desc,c.czzje desc";
+        search += " and (s.dsfzh =0 or s.dsfzh is null) order by c.jzzje desc,c.czzje desc";
         List bankTjjg = tjs.getbankTjjgAll(search);
         if(bankTjjg.size()>0){
             HSSFWorkbook bankTjjgExcel = tjs.createExcel(bankTjjg);
@@ -180,7 +213,7 @@ public class BankInfoController {
         // 2.2 bankTjjgs
         bankMap = yjdcLists.get(1);
         search = getSearch(bankMap, aj.getId());
-        search += " order by c.jzzje desc,c.czzje desc";
+        search += " and (d.dsfzh = 0 or d.dsfzh is null) order by c.jzzje desc,c.czzje desc";
         List bankTjjgs = banktjss.getbankTjjgsAll(search);
         if(bankTjjgs.size()>0){
             HSSFWorkbook bankTjjgsExcel = banktjss.createExcel(bankTjjgs,"点对点");
@@ -189,7 +222,7 @@ public class BankInfoController {
         // 2.3 bankGtzh
         bankMap = yjdcLists.get(2);
         search = getSearch(bankMap, aj.getId());
-        search += " order by a.num desc";
+        search += " and (d.dsfzh = 0 or d.dsfzh is null) order by a.num desc";
         List bankGtzh = banktjss.getbankGtzhAll(search, aj);
         if(bankTjjgs.size()>0){
             HSSFWorkbook bankGtzhExcel = banktjss.createExcel(bankGtzh,"共同");
@@ -205,7 +238,8 @@ public class BankInfoController {
         try {
             resp.setContentType("application/zip");
             resp.setHeader("Location",zip.getName());
-            resp.setHeader("Content-Disposition", "attachment; filename=" +new String(("资金数据分析结果.zip").getBytes(), "ISO8859-1"));
+            resp.setHeader("Content-Disposition", "attachment; filename=" +
+                    new String(("资金数据分析结果.zip").getBytes(), "ISO8859-1"));
             OutputStream outputStream = resp.getOutputStream();
             InputStream inputStream = new FileInputStream(downPath+"upload/temp/bank/资金数据分析结果.zip");
             byte[] buffer = new byte[1024];

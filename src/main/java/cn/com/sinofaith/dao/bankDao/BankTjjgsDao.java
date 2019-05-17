@@ -29,7 +29,7 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (SELECT  s.khxm as xm,d.khxm dfxms,c.* ");
+        sql.append("FROM (SELECT  s.khxm as xm,d.khxm dfxms,to_char(d.dsfzh) dsfzh,c.* ");
         sql.append("FROM  bank_tjjgs c left join bank_person s on c.jyzh = s.yhkkh ");
         sql.append(" left join bank_person d on c.dfzh = d.yhkkh where 1=1 "+seachCode+") a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
@@ -57,7 +57,7 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
             sql.append("SELECT * ");
             sql.append("FROM (SELECT a.*, ROWNUM rn FROM (");
         }
-        sql.append("select s.khxm as xm,d.khxm dfxm,c.*,a.num from bank_tjjgs c right join (" +
+        sql.append("select s.khxm as xm,d.khxm dfxm,to_char(d.dsfzh) dsfzh,c.*,a.num from bank_tjjgs c right join (" +
                 "       select t.dfzh,count(1) as num from bank_tjjgs t " +
                 "       where t.zhlx = 1 and length(t.dfzh) >5 and t.aj_id=" +ajid+
                 "       group by dfzh " +

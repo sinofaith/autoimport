@@ -188,9 +188,9 @@ public class CftZcxxService {
         return wb;
     }
 
-    public String getSeach(String seachCode, String seachCondition, AjEntity aj){
+    public String getSeach(String seachCode, String seachCondition, AjEntity aj,long userId){
         StringBuffer seach = new StringBuffer();
-        String ajid = cfts.getAjidByAjm(aj);
+        String ajid = cfts.getAjidByAjm(aj,userId);
 
         if(seachCode!=null){
             seachCode =seachCode.replace("\r\n","").replace("，","").

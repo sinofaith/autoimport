@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.cftController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
@@ -59,7 +60,8 @@ public class CftInfoController {
         String seachCondition = (String) req.getSession().getAttribute("zcseachCondition");
         String seachCode = (String) req.getSession().getAttribute("zcseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cftzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
+        String seach = cftzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity(),user.getId());
 
         Page page = cftzcs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
@@ -89,7 +91,8 @@ public class CftInfoController {
         String seachCondition = (String)session.getAttribute("zcseachCondition");
         String seachCode = (String) req.getSession().getAttribute("zcseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cftzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity());
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
+        String seach = cftzcs.getSeach(seachCode,seachCondition,aj!=null? aj : new AjEntity(),user.getId());
         cftzcs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
     @RequestMapping(value =  "/getBq",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")

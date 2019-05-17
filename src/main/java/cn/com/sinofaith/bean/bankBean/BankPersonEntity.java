@@ -9,7 +9,7 @@ public class BankPersonEntity {
     private String yhkkh;
     private String yhkzh;
     private String xm;
-//    private String khh;
+    private long dsfzh = 0;
 
     @Id
     @Column(name="id",nullable = false,precision = 0)
@@ -48,15 +48,16 @@ public class BankPersonEntity {
     public void setXm(String xm) {
         this.xm = xm;
     }
-//    @Basic
-//    @Column(name="khh",nullable = true,length = 200)
-//    public String getKhh() {
-//        return khh;
-//    }
-//
-//    public void setKhh(String khh) {
-//        this.khh = khh;
-//    }
+
+    @Basic
+    @Column(name = "dsfzh",nullable = false,precision = 0)
+    public long getDsfzh() {
+        return dsfzh;
+    }
+
+    public void setDsfzh(long dsfzh) {
+        this.dsfzh = dsfzh;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -65,14 +66,26 @@ public class BankPersonEntity {
 
         BankPersonEntity that = (BankPersonEntity) o;
 
-        if (yhkkh != null ? !yhkkh.equals(that.yhkkh) : that.yhkkh != null) return false;
-        return xm != null ? xm.equals(that.xm) : that.xm == null;
+        return yhkkh != null ? yhkkh.equals(that.yhkkh) : that.yhkkh == null;
     }
 
     @Override
     public int hashCode() {
-        int result = yhkkh != null ? yhkkh.hashCode() : 0;
-        result = 31 * result + (xm != null ? xm.hashCode() : 0);
-        return result;
+        return yhkkh != null ? yhkkh.hashCode() : 0;
+    }
+
+    public BankPersonEntity getByZcxx(BankZcxxEntity bce){
+        BankPersonEntity bpe = new BankPersonEntity();
+        bpe.setXm(bce.getKhxm());
+        bpe.setYhkkh(bce.getYhkkh());
+        bpe.setYhkzh(bce.getYhkzh());
+        boolean temp = bce.getKhxm().contains("财付通")||bce.getKhxm().contains("支付")||bce.getKhxm().contains("清算")
+                || bce.getKhxm().contains("特约") || bce.getKhxm().contains("备付金")|| bce.getKhxm().contains("银行")
+                || bce.getKhxm().contains("银联") || bce.getKhxm().contains("保险") || bce.getKhxm().contains("过渡")
+                || bce.getKhxm().contains("美团");
+        if(temp){
+            bpe.setDsfzh(1);
+        }
+        return bpe;
     }
 }

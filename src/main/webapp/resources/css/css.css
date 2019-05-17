@@ -345,3 +345,34 @@ a:hover{ transition: color 0.2s;}
 .on{
     color: #eb724c;
 }
+
+.dropCss {
+    position: relative;
+    display: inline-block;
+}
+
+.dropCss-content {
+    display: none;
+    position: absolute;
+    top:-10%;
+    left:100%;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.4);
+    border-radius: 6px;
+}
+
+.dropCss-content a {
+    color: black;
+    padding: 3px 3px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropCss-content a:hover {
+    background-color: #bbb;
+}
+
+.dropCss:hover .dropCss-content {
+    display: block;
+}

@@ -43,7 +43,7 @@ public class BankTjjgsEntity implements Serializable {
     }
 
     @Id
-    @Column(name="dfzh",nullable = false,length = 200)
+    @Column(name="dfzh",nullable = false,length = 500)
     public String getDfzh() { return dfzh; }
 
     public void setDfzh(String dfzh) { this.dfzh = dfzh; }

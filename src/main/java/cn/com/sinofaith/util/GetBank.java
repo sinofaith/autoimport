@@ -437,7 +437,7 @@ public class GetBank {
 
     public static void main(String[] args) {
 
-        String cardNum= "6228450828040464372";
+        String cardNum= "6212260509001367804";
         System.out.println(getBankname(cardNum));
         System.out.println(checkBankCard(cardNum));
 

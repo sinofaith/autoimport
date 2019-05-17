@@ -60,39 +60,6 @@
 </script>
 <style type="text/css">
     .crimeterrace{ background-color: #636B75 !important;}
-
-    .dropCss {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropCss-content {
-        display: none;
-        position: absolute;
-        top:-10%;
-        left:100%;
-        background-color: #f9f9f9;
-        min-width: 100px;
-        box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.4);
-        border-radius: 6px;
-    }
-
-    .dropCss-content a {
-        color: black;
-        padding: 3px 3px;
-        text-decoration: none;
-        display: block;
-    }
-
-    .dropCss-content a:hover {
-        background-color: #bbb;
-    }
-
-    .dropCss:hover .dropCss-content {
-        display: block;
-    }
-
-
 </style>
 
 <div class="tab_div">
@@ -119,8 +86,8 @@
                                         <td width="12%">交易账号</td>
                                         <td width="6%">开户姓名</td>
                                         <td width="12%">开户证件号</td>
-                                        <td width="6%">账户余额</td>
-                                        <td width="6%">可用余额</td>
+                                        <td width="6%"><a href="/SINOFAITH/bank/order?orderby=zhye">账户余额</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/bank/order?orderby=kyye">可用余额</a></td>
                                         <td width="12%">开户时间</td>
                                         <td width="7%">账户状态</td>
                                         <td width="8%">开户行</td>
@@ -416,7 +383,8 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>
+                            <!--<label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>-->
+                            <label for="c15">收付标志</label>
                             <select	id="c15" placeholder="收付标志" onchange="selectC()">
                             </select>
                         </div>

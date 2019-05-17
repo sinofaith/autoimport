@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
@@ -58,9 +59,10 @@ public class BankZzxxController {
         String seachCondition = (String) req.getSession().getAttribute("bzzseachCondition");
         String seachCode = (String) req.getSession().getAttribute("bzzseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
-        String seach = bankzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
+        String seach = bankzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
         Page page = bankzzs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("seachCode",seachCode);
@@ -111,9 +113,10 @@ public class BankZzxxController {
         String seachCondition = (String) req.getSession().getAttribute("bzzseachCondition");
         String seachCode = (String) req.getSession().getAttribute("bzzseachCode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity());
+        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
         bankzzs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
     }
 
@@ -138,6 +141,7 @@ public class BankZzxxController {
                              @RequestParam("type") String type,@RequestParam("sum") String sum, @RequestParam("page")int page,
                              @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String desc = (String) ses.getAttribute("xqdesc");
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String orders ="";
@@ -159,16 +163,18 @@ public class BankZzxxController {
         ses.setAttribute("xqOrder",order);
         ses.setAttribute("xqlastOrder",order);
         ses.setAttribute("xqdesc",desc);
-        return bankzzs.getByYhkkh(yhkkh.replace("\n","").trim(),dfkh.replace("\n","").trim(),type,sum,aj!=null ? aj:new AjEntity(),page,orders);
+        return bankzzs.getByYhkkh(yhkkh.replace("\n","").trim(),
+                dfkh.replace("\n","").trim(),type,sum,aj!=null ? aj:new AjEntity(),page,orders,user.getId());
     }
 
     @RequestMapping(value = "/downDetailZh")
     public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,
                              HttpServletRequest req,HttpServletResponse rep,HttpSession ses)throws Exception{
+        UserEntity user = (UserEntity) ses.getAttribute("user");
         dskh = dskh.replace("\n","").trim();
         yhkkh = yhkkh.replace("\n","").trim();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String ajid=cftzzs.getAjidByAjm(aj);
+        String ajid=cftzzs.getAjidByAjm(aj,user.getId());
         String seach = " and c.sfbz is not null and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"')";
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String desc = (String) ses.getAttribute("xqdesc");

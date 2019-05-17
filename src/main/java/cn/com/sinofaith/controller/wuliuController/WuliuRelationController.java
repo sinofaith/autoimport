@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.wuliuController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuRelationEntity;
 import cn.com.sinofaith.page.Page;
@@ -66,12 +67,13 @@ public class WuliuRelationController {
         String seachCode = (String) req.getSession().getAttribute("wuliuSeachCode");
         // 所属案件
         AjEntity aj = (AjEntity) session.getAttribute("aj");
+        UserEntity user = (UserEntity) session.getAttribute("user");
         // 排序字段
         String orderby = (String) session.getAttribute("wuliuRelationOrder");
         // 排序方式(desc降，asc升)
         String desc = (String) session.getAttribute("wuliuRelationDesc");
         // 封装sql语句
-        String seach = wlRService.getSeach(seachCondition, seachCode, aj!=null?aj:new AjEntity(), orderby, desc);
+        String seach = wlRService.getSeach(seachCondition, seachCode, aj!=null?aj:new AjEntity(), orderby, desc,user.getId());
         if(aj == null){
             return "wl/wlShipInfo";
         }
@@ -215,6 +217,7 @@ public class WuliuRelationController {
     @RequestMapping("/download")
     public void download(HttpServletResponse resp, HttpSession session) throws IOException {
         // 获得session中对象
+        UserEntity user = (UserEntity) session.getAttribute("user");
         // 查询字段
         String seachCondition = (String) session.getAttribute("wuliuSeachCondition");
         // 查询内容
@@ -225,7 +228,7 @@ public class WuliuRelationController {
         // 排序方式(desc降，asc升)
         String desc = (String) session.getAttribute("wuliuRelationDesc");
         // 封装sql语句
-        String seach = wlRService.getSeach(seachCondition, seachCode, aj!=null?aj:new AjEntity(), orderby, desc);
+        String seach = wlRService.getSeach(seachCondition, seachCode, aj!=null?aj:new AjEntity(), orderby, desc,user.getId());
         List<WuliuRelationEntity> wlrs = wlRService.getWuliuRelationAll(seach);
         // 创建工作簿
         HSSFWorkbook wb = null;

@@ -89,9 +89,9 @@ public class BankZcxxServices {
         return gson.toJson(mapResult);
     }
 
-    public String getSeach(String seachCode, String seachCondition, AjEntity aj){
+    public String getSeach(String seachCode, String seachCondition,String orderby, String desc, AjEntity aj,long userId){
         StringBuffer seach = new StringBuffer();
-        String ajid = cfts.getAjidByAjm(aj);
+        String ajid = cfts.getAjidByAjm(aj,userId);
 
         if(seachCode!=null){
             seachCode =seachCode.trim().replace("\r\n","").replace("，","").replace("\t","");
@@ -99,7 +99,9 @@ public class BankZcxxServices {
         }else{
             seach = seach.append(" and aj_id in ("+ajid.toString()+") ");
         }
-
+        if(orderby!=null){
+            seach.append(" order by " +orderby + desc);
+        }
         return seach.toString();
     }
 
@@ -225,11 +227,7 @@ public class BankZcxxServices {
             bankTjjgs2.add(tjjgForm);
         }
         // 账户点对点统计信息 进账
-        String seach3 = " and aj_id="+aj.getId()+" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
-                " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
-                " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
-                " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
-                " and s.khxm not like '%过渡%' or s.khxm is null)  order by c.czzje desc nulls last";
+        String seach3 = " and aj_id="+aj.getId()+" and (d.dsfzh != 1 or d.dsfzh is null)  order by c.czzje desc nulls last";
         bankList = banktjsd.getDoPage(seach3, 1, 10);
         List<CftTjjgsForm> bankTjjgss3 = new ArrayList<>();
         CftTjjgsForm cftForm = null;
@@ -248,11 +246,7 @@ public class BankZcxxServices {
             bankTjjgss3.add(cftForm);
         }
         // 账户点对点统计信息 出账
-        String seach4 = " and aj_id="+aj.getId()+" and (s.khxm not like '%财付通%' and s.khxm not like '%支付%' " +
-                " and s.khxm not like '%清算%' and s.khxm not like '%特约%' " +
-                " and s.khxm not like '%备付金%' and s.khxm not like '%银行%' " +
-                " and s.khxm not like '%银联%' and s.khxm not like '%保险%' " +
-                " and s.khxm not like '%过渡%' or s.khxm is null)  order by c.jzzje desc nulls last";
+        String seach4 = " and aj_id="+aj.getId()+" and (d.dsfzh != 1 or d.dsfzh is null)  order by c.jzzje desc nulls last";
         bankList = banktjsd.getDoPage(seach4, 1, 10);
         List<CftTjjgsForm> bankTjjgss4 = new ArrayList<>();
         for(int i=0;i<bankList.size();i++) {
@@ -271,11 +265,7 @@ public class BankZcxxServices {
         }
         // 公共账户统计信息
         String seach = "and a.num>4 and aj_id ="+aj.getId()+
-                "and (d.khxm not like '%财付通%' and d.khxm not like '%支付%' " +
-        " and d.khxm not like '%清算%' and d.khxm not like '%特约%' " +
-                " and d.khxm not like '%备付金%' and d.khxm not like '%银行%' " +
-                " and d.khxm not like '%银联%' and d.khxm not like '%保险%' " +
-                " and d.khxm not like '%过渡%' or d.khxm is null) and ( 1=1 ) order by a.num desc,c.dfzh,c.jyzh";
+                "and (d.dsfzh = 0 or d.dsfzh is null) and ( 1=1 ) order by a.num desc,c.dfzh,c.jyzh";
         bankList  = banktjsd.getDoPageGt(seach, 0, 0, aj.getId(), false);
         List<CftTjjgsForm> bankTjjgss5 = new ArrayList<>();
         for(int i=0;i<bankList.size();i++){
@@ -392,9 +382,7 @@ public class BankZcxxServices {
         }
         BankPersonEntity bpe = new BankPersonEntity();
         for (BankZcxxEntity bce : bankZcxxLists) {
-            bpe.setXm(bce.getKhxm());
-            bpe.setYhkkh(bce.getYhkkh());
-            bpe.setYhkzh(bce.getYhkzh());
+            bpe = bpe.getByZcxx(bce);
             if (bpe.getYhkkh().trim().length() > 0) {
                 bpd.insert(bpe);
             }

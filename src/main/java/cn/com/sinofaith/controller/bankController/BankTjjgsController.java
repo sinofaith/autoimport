@@ -1,6 +1,7 @@
 package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.bankBean.BankTjjgEntity;
 import cn.com.sinofaith.form.cftForm.CftTjjgForm;
 import cn.com.sinofaith.page.Page;
@@ -93,6 +94,7 @@ public class BankTjjgsController {
     @RequestMapping(value = "/seach")
     public ModelAndView getbanktj(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("bank/banktjjgs");
+        UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String seachCondition = (String) req.getSession().getAttribute("tjsseachCondition");
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
@@ -106,8 +108,8 @@ public class BankTjjgsController {
         mav.addObject("tjsseachCode",seachCode);
         mav.addObject("tjsseachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
-        if(ajs.findByName(aj!=null ? aj.getAj():"").size()>0) {
-            mav.addObject("aj", ajs.findByName(aj.getAj()).get(0));
+        if(ajs.findByName(aj!=null ? aj.getAj():"",user.getId()).size()>0) {
+            mav.addObject("aj", ajs.findByName(aj.getAj(),user.getId()).get(0));
         }
         mav.addObject("code",code);
         mav.addObject("hcode",hcode);

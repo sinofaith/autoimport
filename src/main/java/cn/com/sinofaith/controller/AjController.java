@@ -103,7 +103,7 @@ public class AjController {
 
     @RequestMapping(value = "/ajm")
     public ModelAndView jump(@RequestParam("aj") String aj,@RequestParam("type") long type, HttpSession httpSession){
-
+        UserEntity user = (UserEntity) httpSession.getAttribute("user");
         ModelAndView mav = null;
         if(type==1){
              mav = new ModelAndView("redirect:/cft/seach?pageNo=1");
@@ -125,7 +125,7 @@ public class AjController {
 
         httpSession.removeAttribute("zcseachCode");
         httpSession.removeAttribute("zcseachCondition");
-        httpSession.setAttribute("aj",ajs.findByName(aj).get(0));
+        httpSession.setAttribute("aj",ajs.findByName(aj,user.getId()).get(0));
         return mav;
     }
 
@@ -135,7 +135,7 @@ public class AjController {
         UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         String result = "404";
         aj= aj.replace(",","");
-        if(ajs.findByName(aj).size()>0){
+        if(ajs.findByName(aj,user.getId()).size()>0){
             result = "303";
         }else {
             ajs.save(new AjEntity(0,aj, 1,"",TimeFormatUtil.getDate("/"),user.getId()));
@@ -147,7 +147,8 @@ public class AjController {
     @RequestMapping(value = "/delete",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String delete( String ajm,String list,HttpSession httpSession){
-        AjEntity aje = ajs.findByName(ajm).get(0);
+        UserEntity user = (UserEntity) httpSession.getAttribute("user");
+        AjEntity aje = ajs.findByName(ajm,user.getId()).get(0);
         if(ajs.findByLike(ajm).size()>0){
             return "303";
         }else{
@@ -164,11 +165,11 @@ public class AjController {
     @ResponseBody
     public String ajsCount(@RequestParam("ajm") String ajm, HttpServletRequest request){
         UserEntity user =(UserEntity) request.getSession().getAttribute("user");
-        List<AjEntity> ajlist = ajs.findByName(ajm);
+        List<AjEntity> ajlist = ajs.findByName(ajm,user.getId());
         if(ajlist.size()<1) {
             ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/"),user.getId()));
-            AjEntity aje = ajs.findByName(ajm).get(0);
-            List<CftZzxxEntity> listZz = ajs.getCftList(aje);
+            AjEntity aje = ajs.findByName(ajm,user.getId()).get(0);
+            List<CftZzxxEntity> listZz = ajs.getCftList(aje,user.getId());
             tjs.count(listZz, aje.getId());
             tjss.count(listZz, aje.getId());
             return "200";
@@ -179,13 +180,15 @@ public class AjController {
     @RequestMapping(value = "/ajCount",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String ajCount(@RequestParam("ajm") String ajm,@RequestParam("flg") int flg,HttpServletRequest req){
-        AjEntity aje = ajs.findByName(ajm).get(0);
+        UserEntity user =(UserEntity) req.getSession().getAttribute("user");
+
+        AjEntity aje = ajs.findByName(ajm,user.getId()).get(0);
         if(aje.getFlg()!=flg) {
             aje.setFlg(flg);
             ajs.updateAj(aje);
-            aje = ajs.findByName(ajm).get(0);
+            aje = ajs.findByName(ajm,user.getId()).get(0);
             req.getSession().setAttribute("aj",aje);
-            List<CftZzxxEntity> listZz = ajs.getCftList(aje);
+            List<CftZzxxEntity> listZz = ajs.getCftList(aje,user.getId());
             tjs.countHb(listZz,aje.getId(),flg);
 //            tjs.count(listZz, aje.getId());
 //            tjss.count(listZz, aje.getId());
@@ -198,14 +201,15 @@ public class AjController {
     @RequestMapping(value = "/filterJyjlBySpmc",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String filterJyjlBySpmc(String aj,String filterInput,HttpSession session){
-        AjEntity aje = ajs.findByName(aj).get(0);
+        UserEntity user = (UserEntity) session.getAttribute("user");
+        AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         // 是否与上次筛选一致
         if(filterInput.equals(aje.getFilter()) || (filterInput.equals("") && aje.getFilter()==null)){
             return "200";
         }else{
             int sum = ajs.getZfbZzmxList(aje,filterInput);
             if(sum>0){
-                aje = ajs.findByName(aj).get(0);
+                aje = ajs.findByName(aj,user.getId()).get(0);
                 session.setAttribute("aj",aje);
                 return "200";
             }else{

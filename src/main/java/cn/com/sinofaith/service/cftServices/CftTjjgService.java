@@ -63,7 +63,9 @@ public class CftTjjgService {
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if("jzzje".equals(seachCondition)||"czzje".equals(seachCondition)){
-                seach.append( " and c."+ seachCondition + " >= "+seachCode);
+                seach.append( " and c."+ seachCondition + seachCode.replace("大于等于",">=")
+                        .replace("等于","=").replace("小于等于","<=")
+                        .replace("大于",">").replace("小于","<"));
             }else if("xm".equals(seachCondition)){
                 seach.append(" and s."+ seachCondition+" like "+"'%"+ seachCode+"%'");
             }else{

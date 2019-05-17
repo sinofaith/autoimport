@@ -12,8 +12,8 @@ public class AJDao extends BaseDao<AjEntity>{
          save(aj);
     }
 
-    public List<AjEntity> findFilter(String aj){
-        List<AjEntity> listAj= find("from AjEntity where aj = '"+aj+"'");
+    public List<AjEntity> findFilter(String aj,long userId){
+        List<AjEntity> listAj= find("from AjEntity where aj = '"+aj+"' and userId = "+userId);
         return listAj;
     }
 

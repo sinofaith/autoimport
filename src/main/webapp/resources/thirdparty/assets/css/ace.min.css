@@ -5096,10 +5096,10 @@ label {
 	font-size: 14px
 }
 
-.form-group>label[class*="col-"] {
-	padding-top: 4px;
-	margin-bottom: 4px
-}
+/*.form-group>label[class*="col-"] {*/
+	/*padding-top: 4px;*/
+	/*margin-bottom: 4px*/
+/*}*/
 
 label,.lbl {
 	vertical-align: middle

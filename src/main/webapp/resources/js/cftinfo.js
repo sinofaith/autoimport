@@ -221,7 +221,7 @@ function seachChange() {
         var seachCondition = $("#seachCondition").val()
         var seachCode = $("#seachCode")
         if(seachCondition === "jzzje" || seachCondition === "czzje"){
-            seachCode.val("50000")
+            seachCode.val("大于等于50000")
         }else{
             seachCode.val("")
         }

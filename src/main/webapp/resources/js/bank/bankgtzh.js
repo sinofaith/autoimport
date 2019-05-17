@@ -8,7 +8,7 @@ function hiddenZfbCft() {
 }
 
 function getZzGtlxr(obj) {
-    var dfkh = $(obj).closest("tr").find("td:eq(3)").text()
+    var dfkh = $(obj).closest("tr").find("td:eq(3)").attr("title");
     window.page = 1
     var tbody = window.document.getElementById("result1")
     var url = "/SINOFAITH/bankgtzh/getDetails"

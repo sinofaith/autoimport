@@ -38,36 +38,6 @@
             .crimeterrace {
                 background-color: #636B75 !important;
             }
-            .dropCss {
-                position: relative;
-                display: inline-block;
-            }
-
-            .dropCss-content {
-                display: none;
-                position: absolute;
-                top:-10%;
-                left:75%;
-                background-color: #f9f9f9;
-                min-width: 100px;
-                box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.4);
-                border-radius: 6px;
-            }
-
-            .dropCss-content a {
-                color: black;
-                padding: 3px 3px;
-                text-decoration: none;
-                display: block;
-            }
-
-            .dropCss-content a:hover {
-                background-color: #bbb;
-            }
-
-            .dropCss:hover .dropCss-content {
-                display: block;
-            }
 
         </style>
 
@@ -93,12 +63,12 @@
                                             </tr>
                                             <tr align="center">
                                                 <td width="7%">序号</td>
-                                                <td width="22%">交易卡号<br>
+                                                <td width="20%">交易卡号<br>
                                                     <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                                    <label for="checkbox1">去除第三方账户</label>
+                                                    <label for="checkbox1" style="font-size: 12px;font-weight:bold">去除第三方账户</label>
                                                     <br>
-                                                    <label style="color:blue;"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
-                                                    <label style="color:red;"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
+                                                    <label style="color:blue; font-size: 12px;font-weight:bold"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
+                                                    <label style="color:red; font-size: 12px;font-weight:bold"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
                                                 </td>
                                                 <td width="7%"><a href="/SINOFAITH/banktjjg/order?orderby=khxm">交易户名</a></td>
                                                 <td width="9%"><a
@@ -120,10 +90,18 @@
                                                     <td align="center">${item.id}</td>
                                                     <td align="center"  title="${item.jyzh}">
                                                         <div class="dropCss" >
-                                                            <div style="color: ${item.zhlx eq 0 ? "blue":"red"};width:230px;white-space: nowrap;text-overflow:ellipsis;overflow:hidden;">${item.jyzh}</div>
+                                                            <div style="color: ${item.zhlx eq 0 ? "blue":"red"};width:150px;white-space: nowrap;text-overflow:ellipsis;overflow:hidden;">${item.jyzh}</div>
                                                             <div class="dropCss-content">
                                                                 <a href='/SINOFAITH/banktjjgs/seachByUrl?yhkkh=${item.jyzh}&zhlx=${item.zhlx}'>账户点对点统计</a>
                                                                 <a href='/SINOFAITH/bankgtzh/seachByUrl?yhkkh=${item.jyzh}&zhlx=${item.zhlx}'>公共账户统计</a>
+                                                                <c:choose>
+                                                                    <c:when test="${item.dsfzh==1}">
+                                                                        <a href='#' onclick="editBp('${item.jyzh}',${item.dsfzh})">取消第三方账户</a>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <a href='#' onclick="editBp('${item.jyzh}',${item.dsfzh})">添加第三方账户</a>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </div>
                                                         </div>
 

@@ -25,7 +25,7 @@ public class BankTjjgDao extends BaseDao<BankTjjgEntity>{
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (SELECT  s.khxm as xm,c.* ");
+        sql.append("FROM (SELECT  s.khxm as xm,to_char(s.dsfzh) dsfzh,c.* ");
         sql.append("FROM  bank_tjjg c left join bank_person s on c.jyzh = s.yhkkh where 1=1 "+seachCode+") a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
 

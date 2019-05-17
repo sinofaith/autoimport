@@ -37,13 +37,13 @@ public class BankCustomerServices {
     private AJDao ad;
 
 
-    public String getAjidByAjm(AjEntity aj){
+    public String getAjidByAjm(AjEntity aj,long userId){
         String[] ajm = new String[]{};
         StringBuffer ajid = new StringBuffer();
         if(aj.getAj().contains(",")) {
             ajm = aj.getAj().split(",");
             for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                ajid.append(ad.findFilter(ajm[i],userId).get(0).getId());
                 if (i != ajm.length - 1) {
                     ajid.append(",");
                 }
@@ -54,8 +54,8 @@ public class BankCustomerServices {
         return ajid.toString();
     }
 
-    public String getSeach(String seachCode, String seachCondition ,AjEntity aj){
-        String ajid = getAjidByAjm(aj);
+    public String getSeach(String seachCode, String seachCondition ,AjEntity aj,long userId){
+        String ajid = getAjidByAjm(aj,userId);
         StringBuffer seach = new StringBuffer(" and s.aj_id in ("+ajid+") ");
 
         if(seachCode!=null){

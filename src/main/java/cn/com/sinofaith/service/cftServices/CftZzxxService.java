@@ -199,8 +199,8 @@ public class CftZzxxService {
         return wb;
     }
 
-    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj){
-       String ajid = getAjidByAjm(aj);
+    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj,long userId){
+       String ajid = getAjidByAjm(aj,userId);
         StringBuffer seach = new StringBuffer(" and c.aj_id in ("+ajid+") ");
 
         if(seachCode!=null){
@@ -223,10 +223,10 @@ public class CftZzxxService {
         cftzzd.deleteByAjid(id);
     }
 
-    public String getByJyzhlx(String zh,String jylx,String sum,String type,AjEntity aj,int page,String orders){
+    public String getByJyzhlx(String zh,String jylx,String sum,String type,AjEntity aj,int page,String orders,long userId){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
-        String ajid = getAjidByAjm(aj);
+        String ajid = getAjidByAjm(aj,userId);
 
         String seach ="";
         if("jylx".equals(type)){
@@ -270,13 +270,13 @@ public class CftZzxxService {
         return gson.toJson(pages);
     }
 
-    public String getAjidByAjm(AjEntity aj){
+    public String getAjidByAjm(AjEntity aj,long userId){
         String[] ajm = new String[]{};
         StringBuffer ajid = new StringBuffer();
         if(aj.getAj().contains(",")) {
             ajm = aj.getAj().split(",");
             for (int i = 0; i < ajm.length; i++) {
-                ajid.append(ad.findFilter(ajm[i]).get(0).getId());
+                ajid.append(ad.findFilter(ajm[i],userId).get(0).getId());
                 if (i != ajm.length - 1) {
                     ajid.append(",");
                 }
