@@ -28,6 +28,10 @@
         <svg class="icon">
             <use xlink:href="#icon-xiangqing"></use>
         </svg><br>案件</a>
+     <a href="/SINOFAITH/customerPro" >
+        <svg class="icon">
+            <use xlink:href="#icon-renyuanxinxi"></use>
+        </svg><br>人员信息</a>
     <a href="/SINOFAITH/bank">
         <svg class="icon">
             <use xlink:href="#icon-icon"></use>

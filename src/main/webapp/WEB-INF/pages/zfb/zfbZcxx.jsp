@@ -192,11 +192,11 @@
                     文件类型:
                     <div class="radio radio-info radio-inline">
                         <input type="radio" id="inlineRadio1" value="csv" name="radioInline" checked>
-                        <label for="inlineRadio1"> csv </label>
+                        <label class="label_c" for="inlineRadio1"> csv </label>
                     </div>
                     <div class="radio radio-inline">
                         <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
-                        <label for="inlineRadio2"> xls/xlsx </label>
+                        <label class="label_c" for="inlineRadio2"> xls/xlsx </label>
                     </div>
                     <br>
                     <%--<input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">
@@ -227,11 +227,11 @@
                     <div class="row" style="width: 600px;">
 
                         <span class="col-md-1" id="excelName" style="width: 350px;">
-                            <label for="excelName">Excel名</label>
+                            <label class="label_c" for="excelName">Excel名</label>
 
                         </span>
                         <span class="col-md-1" id="excelSheet" style="width: 200px;">
-                            <label for="excelSheet">Sheet名</label>
+                            <label class="label_c" for="excelSheet">Sheet名</label>
 
                         </span>
                     </div>
@@ -247,52 +247,52 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-1">
-                            <label for="c1">交易号</label>
+                            <label class="label_c" for="c1">交易号</label>
                             <select	 id="c1" placeholder="交易号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c2">付款方支付宝号</label>
+                            <label class="label_c" for="c2">付款方支付宝号</label>
                             <select	 id="c2" placeholder="付款方支付宝账号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c3">收款方支付宝号</label>
+                            <label class="label_c" for="c3">收款方支付宝号</label>
                             <select	 id="c3" placeholder="收款方支付宝账号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c4">收款机构信息</label>
+                            <label class="label_c" for="c4">收款机构信息</label>
                             <select	 id="c4" placeholder="收款机构信息" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c5">到账时间</label>
+                            <label class="label_c" for="c5">到账时间</label>
                             <select	id="c5" placeholder="到账时间" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c6">转账金额</label>
+                            <label class="label_c" for="c6">转账金额</label>
                             <select	id="c6" placeholder="转账金额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c7">转账产品名称</label>
+                            <label class="label_c" for="c7">转账产品名称</label>
                             <select id="c7" placeholder="转账产品名称" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c8">交易发生地</label>
+                            <label class="label_c" for="c8">交易发生地</label>
                             <select	id="c8" placeholder="交易发生地" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c9">提现流水号</label>
+                            <label class="label_c" for="c9">提现流水号</label>
                             <select id="c9" placeholder="提现流水号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c10">对应的协查数据</label>
+                            <label class="label_c" for="c10">对应的协查数据</label>
                             <select	id="c10" placeholder="对应的协查数据" onchange="selectC()">
                             </select>
                         </div>

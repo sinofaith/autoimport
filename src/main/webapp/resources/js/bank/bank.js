@@ -380,16 +380,18 @@ function editBp(yhkkh,dsfzh) {
     })
 }
 
-function getZzDetails(obj,type) {
+function getZzDetails(obj,type,czhlx) {
     var yhkkh = $(obj).closest("tr").find("td:eq(1)").attr("title");
     var dfkh = $(obj).closest("tr").find("td:eq(3)").attr("title");
     window.page = 1
     var tjsum = $(obj).closest("tr").find("td:eq(3)").text();
     var tssum = $(obj).closest("tr").find("td:eq(5)").text();
     var sum = tssum;
+    var zhlx = -1;
     if(type=="tjjg"){
         dfkh=""
         sum = tjsum;
+        zhlx = czhlx;
     }
 
     var tbody = window.document.getElementById("result")
@@ -404,6 +406,7 @@ function getZzDetails(obj,type) {
             order:"jysj",
             type:type,
             sum:sum,
+            zhlx:zhlx,
             page:parseInt(page)
         },
         success:function (msg) {
@@ -419,13 +422,13 @@ function getZzDetails(obj,type) {
                     str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                 }
                 str+="<td width=\"4%\">"+data[i].id+"</td>"+
-                    "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
+                    "<td width=\"13%\" title=\""+data[i].yhkkh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].yhkkh+"</div></td>"+
                     "<td width=\"5%\" title=\""+data[i].jyxm+"\"> <div style=\"width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyxm+"</div></td>"+
                     "<td width=\"10%\">"+data[i].jysj+"</td>"+
                     "<td width=\"7%\">"+data[i].jyje+"</td>"+
                     "<td width=\"7%\">"+data[i].jyye+"</td>"+
                     "<td width=\"7%\">"+data[i].sfbz+"</td>"+
-                    "<td width=\"13%\">"+data[i].dskh+"</td>"+
+                    "<td width=\"13%\" title=\""+data[i].dskh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dskh+"</div></td>"+
                     "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
@@ -438,6 +441,7 @@ function getZzDetails(obj,type) {
             $("#yhkkh").attr("value",yhkkh);
             $("#dfkh").attr("value",dfkh);
             $("#allRow").attr("value",msg.totalRecords)
+            $("#zhlx").attr("value",zhlx);
             // title.innerText ="<"+jyzh+","+jylx+">"
         }
     })
@@ -452,6 +456,7 @@ function orderByFilter(type,filter) {
     var yhkkh = $("#yhkkh").val();
     var dfkh = $("#dfkh").val();
     var sum = $("#allRow").val();
+    var zhlx = $("#zhlx").val();
     window.page = 1
 
     if(type=="tjjg"){
@@ -468,6 +473,7 @@ function orderByFilter(type,filter) {
             order:filter,
             type:type,
             sum:sum,
+            zhlx:zhlx,
             page:parseInt(page)
         },
         success:function (msg) {
@@ -483,13 +489,13 @@ function orderByFilter(type,filter) {
                     str+="<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                 }
                 str+="<td width=\"4%\">"+data[i].id+"</td>"+
-                    "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
+                    "<td width=\"13%\" title=\""+data[i].yhkkh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].yhkkh+"</div></td>"+
                     "<td width=\"5%\" title=\""+data[i].jyxm+"\"> <div style=\"width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyxm+"</div></td>"+
                     "<td width=\"10%\">"+data[i].jysj+"</td>"+
                     "<td width=\"7%\">"+data[i].jyje+"</td>"+
                     "<td width=\"7%\">"+data[i].jyye+"</td>"+
                     "<td width=\"7%\">"+data[i].sfbz+"</td>"+
-                    "<td width=\"13%\">"+data[i].dskh+"</td>"+
+                    "<td width=\"13%\" title=\""+data[i].dskh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dskh+"</div></td>"+
                     "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
@@ -502,6 +508,7 @@ function orderByFilter(type,filter) {
             $("#yhkkh").attr("value",yhkkh);
             $("#dfkh").attr("value",dfkh);
             $("#allRow").attr("value",msg.totalRecords)
+            $("#zhlx").attr("value",zhlx)
             // title.innerText ="<"+jyzh+","+jylx+">"
         }
     })
@@ -512,8 +519,9 @@ function orderByFilter(type,filter) {
 var page = 1
 var is_running = false
 function scrollF(type) {
-    var tbody = window.document.getElementById("result")
-    var allRow = $("#allRow").val()
+    var tbody = window.document.getElementById("result");
+    var allRow = $("#allRow").val();
+    var zhlx = $("#zhlx").val();
     var scrollT = parseFloat(tbody.scrollTop) + parseFloat(tbody.clientHeight)
     var scrollH = parseFloat(tbody.scrollHeight)
     if (1 >= scrollH - scrollT && tbody.scrollTop != 0 && tbody.childNodes.length < allRow) {
@@ -537,6 +545,7 @@ function scrollF(type) {
                     order:"xx",
                     type:type,
                     sum:allRow,
+                    zhlx:zhlx,
                     page: parseInt(window.page)
                 },
                 success: function (msg) {
@@ -552,13 +561,13 @@ function scrollF(type) {
                             str += "<tr align='center' class='odd' style='display:table;width:100%;table-layout:fixed;'>"
                         }
                         str+="<td width=\"4%\">"+data[i].id+"</td>"+
-                            "<td width=\"13%\">"+data[i].yhkkh+"</td>"+
+                            "<td width=\"13%\" title=\""+data[i].yhkkh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].yhkkh+"</div></td>"+
                             "<td width=\"5%\" title=\""+data[i].jyxm+"\"> <div style=\"width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyxm+"</div></td>"+
                             "<td width=\"10%\">"+data[i].jysj+"</td>"+
                             "<td width=\"7%\">"+data[i].jyje+"</td>"+
                             "<td width=\"7%\">"+data[i].jyye+"</td>"+
                             "<td width=\"7%\">"+data[i].sfbz+"</td>"+
-                            "<td width=\"13%\">"+data[i].dskh+"</td>"+
+                            "<td width=\"13%\" title=\""+data[i].dskh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dskh+"</div></td>"+
                             "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
@@ -582,8 +591,9 @@ function scrollF(type) {
 function downDetailZh(){
     var yhkkh = $("#yhkkh").val();
     var dskh =$("#dfkh").val();
+    var zhlx = $("#zhlx").val();
 
-    location="/SINOFAITH/bankzzxx/downDetailZh?yhkkh="+yhkkh+"&dskh="+dskh
+    location="/SINOFAITH/bankzzxx/downDetailZh?yhkkh="+yhkkh+"&dskh="+dskh+"&zhlx="+zhlx
 }
 function downGtlxr(){
     var dfkh = $("#dfkh").val();

@@ -204,11 +204,11 @@
                     导入方式:
                     <div class="radio radio-info radio-inline">
                         <input type="radio" id="inlineRadio1" value="" name="radioInline" checked>
-                        <label for="inlineRadio1"> 自动导入 </label>
+                        <label class="label_c" for="inlineRadio1"> 自动导入 </label>
                     </div>
                     <div class="radio radio-inline">
                         <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
-                        <label for="inlineRadio2"> 映射导入 </label>
+                        <label class="label_c" for="inlineRadio2"> 映射导入 </label>
                     </div>
                     <%--<input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">--%>
                     <%--<label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>--%>
@@ -239,13 +239,13 @@
                 <div class="form-group">
                     <div class="row" style="width: 900px;">
                         <span class="col-md-1" id="excelName" style="width: 350px;">
-                            <label for="excelName">Excel名</label>
+                            <label class="label_c" for="excelName">Excel名</label>
                         </span>
                         <span class="col-md-1" id="excelSheet" style="width: 200px;">
-                            <label for="excelSheet">Sheet名</label>
+                            <label class="label_c" for="excelSheet">Sheet名</label>
                         </span>
                         <span class="col-md-1" id="tableName" style="width: 200px;">
-                            <label for="excelSheet">数据库表名</label>
+                            <label class="label_c" for="excelSheet">数据库表名</label>
                             <select class="form-control" id="c45" onchange='insertMappingFields()'>
                                 <option value='bank_zcxx' selected>资金开户信息表</option>
                                 <option value='bank_zzxx'>资金交易明细表</option>
@@ -265,216 +265,216 @@
                 <div class="form-group">
                     <div class="row" id="bank_zcxx">
                         <div class="col-md-1">
-                            <label for="c1">账号状态</label>
+                            <label class="label_c" for="c1">账号状态</label>
                             <select	 id="c1" placeholder="账号状态" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c2">交易卡号</label>
+                            <label class="label_c" for="c2">交易卡号</label>
                             <select	 id="c2" placeholder="交易卡号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c3">姓名</label>
+                            <label class="label_c" for="c3">姓名</label>
                             <select	 id="c3" placeholder="姓名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c4">证件号</label>
+                            <label class="label_c" for="c4">证件号</label>
                             <select	 id="c4" placeholder="证件号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c5">开户时间</label>
+                            <label class="label_c" for="c5">开户时间</label>
                             <select	id="c5" placeholder="开户时间" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c6">开户行</label>
+                            <label class="label_c" for="c6">开户行</label>
                             <select	id="c6" placeholder="开户行" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c7">账户余额</label>
+                            <label class="label_c" for="c7">账户余额</label>
                             <select id="c7" placeholder="账户余额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c8">可用余额</label>
+                            <label class="label_c" for="c8">可用余额</label>
                             <select	id="c8" placeholder="可用余额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c9">交易账号</label>
+                            <label class="label_c" for="c9">交易账号</label>
                             <select id="c9" placeholder="交易账号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c10">账号类型</label>
+                            <label class="label_c" for="c10">账号类型</label>
                             <select id="c10" placeholder="账号类型" onchange="selectC()">
                             </select>
                         </div>
                     </div>
                     <div class="row" id="bank_zzxx" style="display: none">
                         <div class="col-md-1">
-                            <label for="c11">交易账卡号</label>
+                            <label class="label_c" for="c11">交易账卡号</label>
                             <select	 id="c11" placeholder="交易账卡号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c12">交易时间</label>
+                            <label class="label_c" for="c12">交易时间</label>
                             <select	 id="c12" placeholder="交易时间" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c13">交易金额</label>
+                            <label class="label_c" for="c13">交易金额</label>
                             <select	 id="c13" placeholder="交易金额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c14">交易余额</label>
+                            <label class="label_c" for="c14">交易余额</label>
                             <select	 id="c14" placeholder="交易余额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>
+                            <label class="label_c" for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>
                             <select	id="c15" placeholder="收付标志" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c16">对手卡号</label>
+                            <label class="label_c" for="c16">对手卡号</label>
                             <select	id="c16" placeholder="对手卡号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c17">对手户名</label>
+                            <label class="label_c" for="c17">对手户名</label>
                             <select id="c17" placeholder="对手户名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c18">对手身份证号</label>
+                            <label class="label_c" for="c18">对手身份证号</label>
                             <select	id="c18" placeholder="对手身份证号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c19">摘要说明</label>
+                            <label class="label_c" for="c19">摘要说明</label>
                             <select id="c19" placeholder="摘要说明" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c20">交易是否成功</label>
+                            <label class="label_c" for="c20">交易是否成功</label>
                             <select id="c20" placeholder="交易是否成功" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c21">交易账号</label>
+                            <label class="label_c" for="c21">交易账号</label>
                             <select id="c21" placeholder="交易账号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c22">对手账号</label>
+                            <label class="label_c" for="c22">对手账号</label>
                             <select id="c22" placeholder="对手账号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c23">对手开户行</label>
+                            <label class="label_c" for="c23">对手开户行</label>
                             <select id="c23" placeholder="对手开户行" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c24">交易网点名称</label>
+                            <label class="label_c" for="c24">交易网点名称</label>
                             <select id="c24" placeholder="交易网点名称" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c25">对手交易余额</label>
+                            <label class="label_c" for="c25">对手交易余额</label>
                             <select id="c25" placeholder="对手交易余额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c26">对手余额</label>
+                            <label class="label_c" for="c26">对手余额</label>
                             <select id="c26" placeholder="对手余额" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c27">备注</label>
+                            <label class="label_c" for="c27">备注</label>
                             <select id="c27" placeholder="备注" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c28">交易证件号</label>
+                            <label class="label_c" for="c28">交易证件号</label>
                             <select id="c28" placeholder="交易证件号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c29">交易发生地</label>
+                            <label class="label_c" for="c29">交易发生地</label>
                             <select id="c29" placeholder="交易发生地" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c30">交易姓名</label>
+                            <label class="label_c" for="c30">交易姓名</label>
                             <select id="c30" placeholder="交易姓名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c31">补充说明</label>
+                            <label class="label_c" for="c31">补充说明</label>
                             <select id="c31" placeholder="交易姓名" onchange="selectC()">
                             </select>
                         </div>
                     </div>
                     <div class="row" id="bank_customer" style="display: none">
                         <div class="col-md-1">
-                            <label for="c32">证件号码</label>
+                            <label class="label_c" for="c32">证件号码</label>
                             <select	 id="c32" placeholder="证件号码" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c33">单位电话</label>
+                            <label class="label_c" class="label_c" for="c33">单位电话</label>
                             <select	 id="c33" placeholder="单位电话" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c34">单位地址</label>
+                            <label class="label_c" class="label_c" for="c34">单位地址</label>
                             <select	 id="c34" placeholder="单位地址" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c35">邮箱</label>
+                            <label class="label_c" for="c35">邮箱</label>
                             <select	 id="c35" placeholder="邮箱" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c36">工作单位</label>
+                            <label class="label_c" for="c36">工作单位</label>
                             <select	 id="c36" placeholder="工作单位" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c37">联系电话</label>
+                            <label class="label_c" for="c37">联系电话</label>
                             <select	 id="c37" placeholder="联系电话" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c38">联系手机</label>
+                            <label class="label_c" for="c38">联系手机</label>
                             <select	 id="c38" placeholder="联系手机" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c39">姓名</label>
+                            <label class="label_c" for="c39">姓名</label>
                             <select	 id="c39" placeholder="姓名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c40">现住址</label>
+                            <label class="label_c" for="c40">现住址</label>
                             <select	 id="c40" placeholder="现住址" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c41">证件类型</label>
+                            <label class="label_c" for="c41">证件类型</label>
                             <select	 id="c41" placeholder="证件类型" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c42">住宅电话</label>
+                            <label class="label_c" for="c42">住宅电话</label>
                             <select	 id="c42" placeholder="住宅电话" onchange="selectC()">
                             </select>
                         </div>

@@ -63,7 +63,7 @@
 </style>
 
 <div class="tab_div">
-    <%@include file="../bank/bankTitler.jsp" %>
+    <%@include file="../customer/customerTitler.jsp" %>
     <ul>
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">
@@ -76,36 +76,31 @@
                                     <tr>
                                         <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
-                                                <strong>资金人员信息(${aj.aj})</strong>
+                                                <strong>人员信息</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <%--<td width="6%">序号</td>--%>
+                                        <td width="6%">序号</td>
                                         <td width="10%">姓名</td>
-                                        <td width="10%">证件类型</td>
                                         <td width="10%">证件号码</td>
-                                        <td width="10%">现住址</td>
-                                        <td width="10%">联系电话</td>
-                                        <td width="10%">联系手机</td>
-                                        <td width="10%">单位电话</td>
-                                        <td width="10%">住宅电话</td>
-                                        <td width="10%">工作单位</td>
-                                        <td width="10%">邮箱</td>
+                                        <td width="10%">案件</td>
+                                        <td width="10%">手机号</td>
+                                        <td width="10%">银行卡</td>
+                                        <td width="10%">微信账户</td>
+                                        <td width="10%">支付宝账户</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
-                                                <%--<td align="center">${item.id}</td>--%>
-                                                <td align="center">${item.name}</td>
-                                                <td align="center" title="${item.zjlx}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjlx}</div></td>
-                                                <td align="center" title="${item.zjhm}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjhm}</div></td>
-                                                <td align="center" title="${item.xzz_xzqh}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.xzz_xzqh}</div></td>
-                                                <td align="center" title="${item.lxdh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.lxdh}</div></td>
-                                                <td align="center" title="${item.lxsj}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.lxsj}</div></td>
-                                                <td align="center" title="${item.dwdh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dwdh}</div></td>
-                                                <td align="center" title="${item.zzdh}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zzdh}</div></td>
-                                                <td align="center" title="${item.gzdw}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.gzdw}</div></td>
-                                                <td align="center" title="${item.email}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.email}</div></td>
+                                                <td align="center">${item.xh}</td>
+                                                <td align="center" title="${item.name}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
+                                                <td align="center">${item.zjhm}</td>
+                                                <td align="center">${item.aj}</td>
+                                                <td align="center">${item.sjh}</td>
+                                                <td align="center">${item.yhkkh}</td>
+                                                <td align="center">${item.cftzh}</td>
+                                                <td align="center">${item.zfbzh}</td>
+                                                <%--<td align="center" title="${item.zjlx}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjlx}</div></td>--%>
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
@@ -123,10 +118,10 @@
                                 <c:when test="${detailinfo!=null && detailinfo.size()!=0}">
                                     <div  class="page_nmber">
                                         <div class="mar_t_15">共${page.totalRecords}条记录 共<span id="totalPage">${page.totalPages}</span>页 当前第${page.pageNo}页<br></div>
-                                        <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
+                                        <a href="/SINOFAITH/customerPro/seach?pageNo=${page.topPageNo }"><input type="button" name="fristPage" value="首页" /></a>
                                         <c:choose>
                                             <c:when test="${page.pageNo!=1}">
-                                                <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
+                                                <a href="/SINOFAITH/customerPro/seach?pageNo=${page.previousPageNo }"><input type="button" name="previousPage" value="上一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="previousPage" value="上一页" />
@@ -134,13 +129,13 @@
                                         </c:choose>
                                         <c:choose>
                                             <c:when test="${page.pageNo != page.totalPages}">
-                                                <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
+                                                <a href="/SINOFAITH/customerPro/seach?pageNo=${page.nextPageNo }"><input type="button" name="nextPage" value="下一页" /></a>
                                             </c:when>
                                             <c:otherwise>
                                                 <input type="button" disabled="disabled" name="nextPage" value="下一页" />
                                             </c:otherwise>
                                         </c:choose>
-                                        <a href="/SINOFAITH/bankcustomer/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
+                                        <a href="/SINOFAITH/customerPro/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
                                         <input type="button" value="跳转" onclick="bankSkip('customer')">
                                     </div>
@@ -154,13 +149,13 @@
                         <div class=" ">
 
                             <div>
-                                <form action="/SINOFAITH/bankcustomer/SeachCode" method="post">
+                                <form action="/SINOFAITH/customerPro/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
                                         <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="name"<c:if test="${cuseachCondition=='name'}">selected="selected"</c:if>>姓名</option>
-                                            <option value="zjhm"<c:if test="${cuseachCondition=='zjhm'}">selected="selected"</c:if>>证件号码</option>
-                                            <option value="lxsj" <c:if test="${cuseachCondition=='lxsj'}">selected="selected"</c:if> >联系手机</option>
+                                            <option value="name"<c:if test="${cpseachCondition=='name'}">selected="selected"</c:if>>姓名</option>
+                                            <option value="zjhm"<c:if test="${cpseachCondition=='zjhm'}">selected="selected"</c:if>>证件号码</option>
+                                            <option value="lxsj" <c:if test="${cpseachCondition=='lxsj'}">selected="selected"</c:if> >联系手机</option>
                                             <%--<option value="khzjh" <c:if test="${bzcseachCondition=='khzjh'}">selected="selected"</c:if> >开户证件号</option>--%>
                                             <%--<option value="gszcm" <c:if test="${seachCondition=='gszcm'}">selected="selected"</c:if> >公司注册账号</option>--%>
                                             <%--<option value="gsmc" <c:if test="${seachCondition=='gsmc'}">selected="selected"</c:if> >公司名称</option>--%>
@@ -187,15 +182,12 @@
                                 </form>
                             </div>
                             <div class="width100" style="margin-top: 10px;float: left;">
-                                <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">银行卡数据导入/导出</span>
+                                <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">--%>
-                                <%--<button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">银行卡数据导入</button>--%>
-                           <%--</c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bankcustomer/download'" >数据导出</button>
+                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/customerPro/download'" >数据导出</button>
                        </span>
                                     </div>
                                 </div>

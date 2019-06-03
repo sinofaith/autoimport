@@ -65,10 +65,10 @@
                                                 <td width="7%">序号</td>
                                                 <td width="20%">交易卡号<br>
                                                     <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                                    <label for="checkbox1" style="font-size: 12px;font-weight:bold">去除第三方账户</label>
+                                                    <label for="checkbox1" class="label_c">去除第三方账户</label>
                                                     <br>
-                                                    <label style="color:blue; font-size: 12px;font-weight:bold"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
-                                                    <label style="color:red; font-size: 12px;font-weight:bold"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
+                                                    <label style="color:blue;" class="label_c"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
+                                                    <label style="color:red;" class="label_c"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
                                                 </td>
                                                 <td width="7%"><a href="/SINOFAITH/banktjjg/order?orderby=khxm">交易户名</a></td>
                                                 <td width="9%"><a
@@ -122,7 +122,7 @@
                                                     <td align="center">${item.zhlb}</td>
                                                     <td align="center">
                                                         <button data-toggle="modal" class="btna" data-target="#myModal"
-                                                                onclick="getZzDetails(this,'tjjg')">详情
+                                                                onclick="getZzDetails(this,'tjjg','${item.zhlx}')">详情
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -317,6 +317,7 @@
                             <input name="label" id="yhkkh" hidden="hidden" value="">
                             <input name="label" id="dfkh" hidden="hidden" value="">
                             <input name="label" id="allRow" hidden="hidden" value="">
+                            <input name="label" id="zhlx" hidden="hidden" value="">
                             </thead>
                             <tbody id="result" style="display:block;height:340px;overflow-y:scroll;"
                                    onscroll="scrollF('tjjg')">

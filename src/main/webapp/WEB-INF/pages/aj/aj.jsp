@@ -119,7 +119,7 @@
                                         <a href="/SINOFAITH/aj/seach?pageNo=${page.bottomPageNo }"><input type="button" name="lastPage" value="尾页" /></a>
                                         <input type="number" id="num" max="${page.totalPages}" style="width: 9%" min="1">
                                         <input type="button" value="跳转" onclick="ajSkip()">
-                                        <input type="button" value="多案件分析" onclick="ajsCount()">
+                                        <%--<input type="button" value="多案件分析" onclick="ajsCount()">--%>
                                     </div>
 
                                 </c:when>
@@ -216,12 +216,12 @@
                                class='txt'  data-toggle="tooltip" data-placement="top"  >
                     <br>
                     <br>
-                    <label><input id="sel_1" onchange="selectAll()" type="checkbox" value="0"/>全选/全不选</label>
-                    <label><input name="deleteAj" type="checkbox" value="2"/>银行卡</label>
-                    <label><input name="deleteAj" type="checkbox" value="1"/>财付通</label>
-                    <label><input name="deleteAj" type="checkbox" value="5"/>支付宝</label>
-                    <label><input name="deleteAj" type="checkbox" value="3"/>物流</label>
-                    <label><input name="deleteAj" type="checkbox" value="4"/>传销</label>
+                    <label class="label_c"><input id="sel_1" onchange="selectAll()" type="checkbox" value="0"/>全选/全不选</label>
+                    <label class="label_c"><input name="deleteAj" type="checkbox" value="2"/>银行卡</label>
+                    <label class="label_c"><input name="deleteAj" type="checkbox" value="1"/>财付通</label>
+                    <label class="label_c"><input name="deleteAj" type="checkbox" value="5"/>支付宝</label>
+                    <label class="label_c"><input name="deleteAj" type="checkbox" value="3"/>物流</label>
+                    <%--<label class="label_c"><input name="deleteAj" type="checkbox" value="4"/>传销</label>--%>
                 </div>
             </div>
             <div class="modal-footer">

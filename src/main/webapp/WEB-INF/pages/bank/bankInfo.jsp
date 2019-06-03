@@ -199,7 +199,7 @@
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
                            <c:if test="${!fn:contains(aj.aj, ',')}">
-                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">银行卡数据导入</button>
+                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal5">银行卡数据导入</button>
                            </c:if>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bank/download'" >数据导出</button>
                            <button  type="button"  class="sideBar_l_button" data-toggle="modal" data-target="#myModal2" onclick="yjdcDownload()">一键导出</button>
@@ -224,7 +224,7 @@
     </ul>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -250,11 +250,11 @@
                     导入方式:
                     <div class="radio radio-info radio-inline">
                         <input type="radio" id="inlineRadio1" value="" name="radioInline" checked>
-                        <label for="inlineRadio1"> 自动导入 </label>
+                        <label class="label_c" for="inlineRadio1"> 自动导入 </label>
                     </div>
                     <div class="radio radio-inline">
                         <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
-                        <label for="inlineRadio2"> 映射导入 </label>
+                        <label class="label_c" for="inlineRadio2"> 映射导入 </label>
                     </div>
                     <%--<input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">--%>
                     <%--<label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>--%>

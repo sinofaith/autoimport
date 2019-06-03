@@ -106,7 +106,7 @@ public class CftZzxxDao extends BaseDao<CftZzxxEntity> {
 
 //            map = null;
         }catch (Exception e){
-            e.getMessage();
+            e.printStackTrace();
         }
 
         return a;

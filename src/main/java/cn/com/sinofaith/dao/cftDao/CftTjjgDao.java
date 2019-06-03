@@ -81,7 +81,7 @@ public class CftTjjgDao extends BaseDao<CftTjjgEntity> {
             DBUtil.closeStatement(st);
             DBUtil.closeConnection(con);
         }catch (Exception e){
-            e.getMessage();
+            e.printStackTrace();
         }
     }
 }

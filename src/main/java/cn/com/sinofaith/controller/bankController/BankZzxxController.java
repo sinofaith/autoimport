@@ -138,7 +138,8 @@ public class BankZzxxController {
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
     public String getDetails(@RequestParam("yhkkh") String yhkkh,@RequestParam("dfkh")String dfkh,
-                             @RequestParam("type") String type,@RequestParam("sum") String sum, @RequestParam("page")int page,
+                             @RequestParam("type") String type,@RequestParam("sum") String sum,
+                             @RequestParam("zhlx") String zhlx,@RequestParam("page")int page,
                              @RequestParam("order") String order, HttpServletRequest req,HttpSession ses){
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         UserEntity user = (UserEntity) req.getSession().getAttribute("user");
@@ -164,22 +165,28 @@ public class BankZzxxController {
         ses.setAttribute("xqlastOrder",order);
         ses.setAttribute("xqdesc",desc);
         return bankzzs.getByYhkkh(yhkkh.replace("\n","").trim(),
-                dfkh.replace("\n","").trim(),type,sum,aj!=null ? aj:new AjEntity(),page,orders,user.getId());
+                dfkh.replace("\n","").trim(),type,sum,zhlx,aj!=null ? aj:new AjEntity(),page,orders,user.getId());
     }
 
     @RequestMapping(value = "/downDetailZh")
-    public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,
+    public void downDetailZh(@RequestParam("yhkkh") String yhkkh,@RequestParam("dskh") String dskh,@RequestParam("zhlx") String zhlx,
                              HttpServletRequest req,HttpServletResponse rep,HttpSession ses)throws Exception{
         UserEntity user = (UserEntity) ses.getAttribute("user");
         dskh = dskh.replace("\n","").trim();
         yhkkh = yhkkh.replace("\n","").trim();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String ajid=cftzzs.getAjidByAjm(aj,user.getId());
-        String seach = " and c.sfbz is not null and (c.yhkkh = '"+yhkkh+"'  or c.dskh = '"+yhkkh+"')";
+        String seach = "";
         String lastOrder = (String) ses.getAttribute("xqlastOrder");
         String desc = (String) ses.getAttribute("xqdesc");
         if(!"".equals(dskh)){
-            seach += " and ( c.dskh='"+dskh+"' or c.bcsm = '"+dskh+"')";
+            seach += " and (c.yhkkh='"+yhkkh+"') and ( c.dskh='"+dskh+"' or c.bcsm = '"+dskh+"')";
+        }else{
+            if("0".equals(zhlx)){
+                seach="and c.sfbz is not null and (c.yhkkh='"+yhkkh+"') ";
+            }else{
+                seach="and c.sfbz is not null and (c.dskh='"+yhkkh+"') ";
+            }
         }
         seach+=" and c.aj_id in("+ajid+") ";
         seach+=" order by c."+lastOrder+desc +" nulls last ";

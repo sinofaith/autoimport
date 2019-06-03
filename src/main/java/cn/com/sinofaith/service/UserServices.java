@@ -67,7 +67,7 @@ public class UserServices {
     }
 
     public List<UserEntity> getAllUser(){
-        return ud.find("from UserEntity order by username ");
+        return ud.find("from UserEntity where zcpz = 1 order by username ");
     }
 
     public List<UserEntity> getGrand(long aj_id){
@@ -80,6 +80,7 @@ public class UserServices {
             UserEntity u = new UserEntity();
             u.setId(Long.parseLong(map.get("ID").toString()));
             u.setUsername((String) map.get("USERNAME"));
+            u.setName((String) map.get("NAME"));
             result.add(u);
         }
         return result;
@@ -91,7 +92,6 @@ public class UserServices {
             x.setRole(-1);
             x.setPassword(null);
             x.setInserttime(null);
-            x.setName(null);
         });
         List<UserEntity> grand = getGrand(aj_id);
         Map<String,List<UserEntity>> map = new HashMap<>();

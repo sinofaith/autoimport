@@ -78,7 +78,7 @@
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center">${item.psId}</td>
                                             <td align="center">${item.sponsorId}</td>
-                                            <td align="center">${item.nick_name}</td>
+                                            <td align="center" title="${item.nick_name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.nick_name}</div></td>
                                             <td align="center">${item.mobile}</td>
                                             <td align="center">${item.sex}</td>
                                             <td align="center" title="${item.address}"><xmp style="font-family: 'Microsoft YaHei UI';width:200px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;font-size: 12px !important;color: #666;">${item.address}</xmp></td>
@@ -230,11 +230,11 @@
                 <div class="form-group">
                     <div class="row">
                         <span class="col-md-1" id="excelName" style="width: 350px;">
-                            <label for="excelName">Excel名</label>
+                            <label class="label_c" for="excelName">Excel名</label>
 
                         </span>
                         <span class="col-md-1" id="excelSheet" style="width: 200px;">
-                            <label for="excelSheet">Sheet名</label>
+                            <label class="label_c" for="excelSheet">Sheet名</label>
 
                         </span>
                     </div>
@@ -250,57 +250,57 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-1">
-                            <label for="c1">会员编号</label>
+                            <label class="label_c" for="c1">会员编号</label>
                             <select id="c1" placeholder="会员编号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c2">推荐人编号</label>
+                            <label class="label_c" for="c2">推荐人编号</label>
                             <select id="c2" placeholder="推荐人编号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c3">手机号</label>
+                            <label class="label_c" for="c3">手机号</label>
                             <select id="c3" placeholder="手机号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c4">电话</label>
+                            <label class="label_c" for="c4">电话</label>
                             <select id="c4" placeholder="手机号2" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c5">姓名</label>
+                            <label class="label_c" for="c5">姓名</label>
                             <select id="c5" placeholder="姓名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c6">性别</label>
+                            <label class="label_c" for="c6">性别</label>
                             <select id="c6" placeholder="性别" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c7">详细地址</label>
+                            <label class="label_c" for="c7">详细地址</label>
                             <select id="c7" placeholder="详细地址" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c8">身份证号</label>
+                            <label class="label_c" for="c8">身份证号</label>
                             <select id="c8" placeholder="身份证号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c9">开户行</label>
+                            <label class="label_c" for="c9">开户行</label>
                             <select id="c9" placeholder="开户行" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c10">持卡人姓名</label>
+                            <label class="label_c" for="c10">持卡人姓名</label>
                             <select id="c10" placeholder="持卡人姓名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label for="c11">银行卡号</label>
+                            <label class="label_c" for="c11">银行卡号</label>
                             <select id="c11" placeholder="银行卡号" onchange="selectC()">
                             </select>
                         </div>

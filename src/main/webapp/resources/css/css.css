@@ -376,3 +376,9 @@ a:hover{ transition: color 0.2s;}
 .dropCss:hover .dropCss-content {
     display: block;
 }
+
+.label_c{
+    color: black;
+    font-size: 12px;
+    font-weight:bold;
+}

@@ -52,11 +52,11 @@
                                         <td width="7%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">交易户名</a></td>
                                         <td width="15%">对方卡号<br>
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                            <label for="checkbox1" style="font-size: 12px;font-weight:bold"">去除第三方账户</label>
+                                            <label for="checkbox1" class="label_c">去除第三方账户</label>
                                             <br>
-                                            <label style="color:#0a36e9;font-size: 12px;font-weight:bold""><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
-                                            <label style="color:red;font-size: 12px;font-weight:bold""><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
-                                            <label style="color: #FF00FE;font-size: 12px;font-weight:bold""><input name="zhzt" type="radio"  value="2" <c:if test="${code == 2 }">checked='checked'</c:if>/>人为设计 </label> </td>
+                                            <label style="color:#0a36e9;" class="label_c"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
+                                            <label style="color:red;" class="label_c"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
+                                            <label style="color: #FF00FE;" class="label_c"><input name="zhzt" type="radio"  value="2" <c:if test="${code == 2 }">checked='checked'</c:if>/>人为设计 </label> </td>
                                         <td width="7%">对方户名</td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进账总次数</a></td>
@@ -68,19 +68,23 @@
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
+                                                <%--<td align="center" title="${item.jyzh}"><button style="color: #666">${item.jyzh}</button></td>--%>
                                                 <td align="center" title="${item.jyzh}"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>
                                                 <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center"  title="${item.dfzh}">
                                                         <div class="dropCss" >
                                                             <div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
                                                                 <c:if test="${item.zhlx eq 2}">
-                                                                    <button data-toggle="modal" data-target="#myModal2" style="color: #FF00FE" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
+                                                                    <%--<button style="color: #FF00FE">${item.dfzh}</button>--%>
+                                                                    <button data-toggle="modal" data-target="#myModal2"  onclick="getBanktjjgs(this,'dfzh')" style="color: #FF00FE">${item.dfzh}</button>
                                                                 </c:if>
                                                                 <c:if test="${item.zhlx eq 1}">
-                                                                    <button data-toggle="modal" data-target="#myModal2" style="color: red" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
+                                                                    <%--<button style="color: red">${item.dfzh}</button>--%>
+                                                                    <button data-toggle="modal" data-target="#myModal2" onclick="getBanktjjgs(this,'dfzh')"  style="color: red">${item.dfzh}</button>
                                                                 </c:if>
                                                                 <c:if test="${item.zhlx eq 0}">
-                                                                    <button data-toggle="modal" data-target="#myModal2" style="color: blue" onclick="getBanktjjgs(this,'dfzh')">${item.dfzh}</button>
+                                                                    <%--<button onclick="getBanktjjgs(this,'dfzh')" style="color: blue">${item.dfzh}</button>--%>
+                                                                    <button data-toggle="modal" data-target="#myModal2" onclick="getBanktjjgs(this,'dfzh')" style="color: blue">${item.dfzh}</button>
                                                                 </c:if>
                                                             </div>
                                                             <div class="dropCss-content">
@@ -104,7 +108,7 @@
                                                 <td align="center">${item.czzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
                                                 <td align="center">
-                                                    <button  data-toggle="modal" class="btna" data-target="#myModal" onclick="getZzDetails(this,'tjjgs')">详情</button>
+                                                    <button  data-toggle="modal" class="btna" data-target="#myModal" onclick="getZzDetails(this,'tjjgs','-1')">详情</button>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -240,6 +244,7 @@
                     <input name="label" id="yhkkh" hidden="hidden" value="">
                     <input name="label" id="dfkh" hidden="hidden" value="">
                     <input name="label" id="allRow" hidden="hidden" value="">
+                    <input name="label" id="zhlx" hidden="hidden" value="-1">
                     </thead>
                     <tbody id="result" style="display:block;height:340px;overflow-y:scroll;"
                            onscroll="scrollF('tjjgs')">

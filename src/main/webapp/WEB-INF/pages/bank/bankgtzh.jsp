@@ -51,7 +51,7 @@
                                         <td width="9%">交易卡号</td>
                                         <td width="12%">对方卡号<br>
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
-                                            <label for="checkbox1" style="font-size: 12px;font-weight:bold"">去除第三方账户</label></td>
+                                            <label for="checkbox1" class="label_c">去除第三方账户</label></td>
                                         <td width="6%">对方姓名</td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=num">共同联系人数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/bankgtzh/order?orderby=jyzcs">交易总次数</a></td>
@@ -298,6 +298,7 @@
                     <input name="label" id="yhkkh" hidden="hidden" value="">
                     <input name="label" id="dfkh" hidden="hidden" value="">
                     <input name="label" id="allRow" hidden="hidden" value="">
+                    <input name="label" id="zhlx" hidden="hidden" value="-1">
                     </thead>
                     <tbody id="result" style="display:block;height:340px;overflow-y:scroll;"
                            onscroll="scrollF('tjjgs')">

@@ -83,9 +83,9 @@ public class ZfbZhmxQxsjDao extends BaseDao<ZfbZhmxQxsjEntity> {
                     .addScalar("dszfbzh").addScalar("dsmc")
                     .addScalar("jyzcs", StandardBasicTypes.LONG)
                     .addScalar("czzcs", StandardBasicTypes.LONG)
-                    .addScalar("czzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("czzje", StandardBasicTypes.BIG_DECIMAL)
                     .addScalar("jzzcs", StandardBasicTypes.LONG)
-                    .addScalar("jzzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("jzzje", StandardBasicTypes.BIG_DECIMAL)
                     .setResultTransformer(Transformers.aliasToBean(ZfbZhmxTjjgEntity.class)).list();
             tx.commit();
         } catch (Exception e) {
@@ -119,9 +119,9 @@ public class ZfbZhmxQxsjDao extends BaseDao<ZfbZhmxQxsjEntity> {
                     .addScalar("dszfbzh").addScalar("xfmc")
                     .addScalar("jyzcs", StandardBasicTypes.LONG)
                     .addScalar("czzcs", StandardBasicTypes.LONG)
-                    .addScalar("czzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("czzje", StandardBasicTypes.BIG_DECIMAL)
                     .addScalar("jzzcs", StandardBasicTypes.LONG)
-                    .addScalar("jzzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("jzzje", StandardBasicTypes.BIG_DECIMAL)
                     .setResultTransformer(Transformers.aliasToBean(ZfbZhmxTjjgsEntity.class)).list();
             tx.commit();
         } catch (Exception e) {
@@ -157,9 +157,9 @@ public class ZfbZhmxQxsjDao extends BaseDao<ZfbZhmxQxsjEntity> {
                     .addScalar("jyzfbzh")
                     .addScalar("jyzcs", StandardBasicTypes.LONG)
                     .addScalar("czzcs", StandardBasicTypes.LONG)
-                    .addScalar("czzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("czzje", StandardBasicTypes.BIG_DECIMAL)
                     .addScalar("jzzcs", StandardBasicTypes.LONG)
-                    .addScalar("jzzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("jzzje", StandardBasicTypes.BIG_DECIMAL)
                     .addScalar("jymc")
                     .setResultTransformer(Transformers.aliasToBean(ZfbZhmxJczzEntity.class)).list();
             // 提交事务
@@ -198,9 +198,9 @@ public class ZfbZhmxQxsjDao extends BaseDao<ZfbZhmxQxsjEntity> {
                     .addScalar("xfmc")
                     .addScalar("jyzcs", StandardBasicTypes.LONG)
                     .addScalar("czzcs", StandardBasicTypes.LONG)
-                    .addScalar("czzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("czzje", StandardBasicTypes.BIG_DECIMAL)
                     .addScalar("jzzcs", StandardBasicTypes.LONG)
-                    .addScalar("jzzje", StandardBasicTypes.DOUBLE)
+                    .addScalar("jzzje", StandardBasicTypes.BIG_DECIMAL)
                     .addScalar("jymc")
                     .setResultTransformer(Transformers.aliasToBean(ZfbZhmxJylxEntity.class)).list();
             // 提交事务

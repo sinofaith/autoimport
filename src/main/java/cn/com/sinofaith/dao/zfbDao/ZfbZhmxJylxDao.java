@@ -50,9 +50,9 @@ public class ZfbZhmxJylxDao extends BaseDao<ZfbZhmxJylxEntity> {
                 pstm.setString(3,jczz.getXfmc());
                 pstm.setLong(4,jczz.getJyzcs());
                 pstm.setLong(5,jczz.getCzzcs());
-                pstm.setDouble(6,jczz.getCzzje());
+                pstm.setBigDecimal(6,jczz.getCzzje());
                 pstm.setLong(7,jczz.getJzzcs());
-                pstm.setDouble(8,jczz.getJzzje());
+                pstm.setBigDecimal(8,jczz.getJzzje());
                 pstm.setString(9, TimeFormatUtil.getDate("/"));
                 pstm.setLong(10,id);
                 pstm.addBatch();

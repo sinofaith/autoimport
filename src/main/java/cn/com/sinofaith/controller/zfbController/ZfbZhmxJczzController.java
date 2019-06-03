@@ -67,7 +67,7 @@ public class ZfbZhmxJczzController {
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if(seachCondition.equals("czzje") || seachCondition.equals("jzzje")){
                 if(StringUtils.isNumeric(seachCode)) {
-                    Double fz = Double.parseDouble(seachCode);
+                    BigDecimal fz = new BigDecimal(seachCode);
                     dc.add(Restrictions.gt(seachCondition,fz));
                 }else{
                     return "/zfb/zfbZzmxTjjg";

@@ -21,10 +21,7 @@ import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
 import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
-import cn.com.sinofaith.util.DBUtil;
-import cn.com.sinofaith.util.ExcelReader;
-import cn.com.sinofaith.util.ReadExcelUtils;
-import cn.com.sinofaith.util.TimeFormatUtil;
+import cn.com.sinofaith.util.*;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import org.apache.commons.lang.StringUtils;
@@ -109,7 +106,7 @@ public class UploadService {
                 }
             }
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
         }
         return 0;
     }
@@ -358,6 +355,7 @@ public class UploadService {
             bp.setYhkkh(listZzxx.get(g).getDskh());
             bp.setYhkzh(String.valueOf(aj_id));
             bp.setXm(listZzxx.get(g).getDsxm());
+
 //                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
 
             if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
@@ -647,7 +645,10 @@ public class UploadService {
                     reader.process(listPath.get(i));
                 }
                 if(listPath.get(i).endsWith(".csv")){
-                    csv = new CsvReader(listPath.get(i),',',Charset.forName("GBK"));
+                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(listPath.get(i)));
+                    String code = EncodeUtils.getEncode(bis, false).replace("_BOM","");
+                    bis.close();
+                    csv = new CsvReader(listPath.get(i),',',Charset.forName(code));
                     csv.readHeaders();
                     csv.setSafetySwitch(false);
                     String[] titles = csv.getHeaders();
@@ -660,23 +661,6 @@ public class UploadService {
                     }
                     csv.close();
                 }
-                Map<String,List<BankCustomerEntity>> map = result.stream().collect(groupingBy(BankCustomerEntity ::getZjhm));
-                result.clear();
-                map.forEach((key, value)->{
-                    BankCustomerEntity temp = new BankCustomerEntity();
-                    temp.setName(StringUtils.strip(value.stream().filter(p->!"".equals(p.getName())).map(p->p.getName()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setZjlx(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZjlx())).map(p->p.getZjlx()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setZjhm(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZjhm())).map(p->p.getZjhm()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setXzz_xzqh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getXzz_xzqh())).map(p->p.getXzz_xzqh()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setDwdz(StringUtils.strip(value.stream().filter(p->!"".equals(p.getDwdz())).map(p->p.getDwdz()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setLxdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getLxdh())).map(p->p.getLxdh()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setLxsj(StringUtils.strip(value.stream().filter(p->!"".equals(p.getLxsj())).map(p->p.getLxsj()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setDwdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getDwdh())).map(p->p.getDwdh()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setZzdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZzdh())).map(p->p.getZzdh()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setGzdw(StringUtils.strip(value.stream().filter(p->!"".equals(p.getGzdw())).map(p->p.getGzdw()).collect(Collectors.toSet()).toString(),"[]"));
-                    temp.setEmail(StringUtils.strip(value.stream().filter(p->!"".equals(p.getEmail())).map(p->p.getEmail()).collect(Collectors.toSet()).toString(),"[]"));
-                    result.add(temp);
-                });
                 new File(listPath.get(i)).delete();
             }catch (Exception e){
                 e.printStackTrace();
@@ -686,6 +670,23 @@ public class UploadService {
                 }
             }
         }
+        Map<String,List<BankCustomerEntity>> map = result.stream().collect(groupingBy(BankCustomerEntity ::getZjhm));
+        result.clear();
+        map.forEach((key, value)->{
+            BankCustomerEntity temp = new BankCustomerEntity();
+            temp.setName(StringUtils.strip(value.stream().filter(p->!"".equals(p.getName())).map(p->p.getName()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setZjlx(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZjlx())).map(p->p.getZjlx()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setZjhm(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZjhm())).map(p->p.getZjhm()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setXzz_xzqh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getXzz_xzqh())).map(p->p.getXzz_xzqh()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setDwdz(StringUtils.strip(value.stream().filter(p->!"".equals(p.getDwdz())).map(p->p.getDwdz()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setLxdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getLxdh().trim())).map(p->p.getLxdh()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setLxsj(StringUtils.strip(value.stream().filter(p->!"".equals(p.getLxsj().trim())).map(p->p.getLxsj()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setDwdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getDwdh())).map(p->p.getDwdh()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setZzdh(StringUtils.strip(value.stream().filter(p->!"".equals(p.getZzdh())).map(p->p.getZzdh()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setGzdw(StringUtils.strip(value.stream().filter(p->!"".equals(p.getGzdw())).map(p->p.getGzdw()).collect(Collectors.toSet()).toString(),"[]"));
+            temp.setEmail(StringUtils.strip(value.stream().filter(p->!"".equals(p.getEmail())).map(p->p.getEmail()).collect(Collectors.toSet()).toString(),"[]"));
+            result.add(temp);
+        });
         return result;
     }
 
@@ -769,7 +770,10 @@ public class UploadService {
                     }
                 }
                 if(filepath.get(i).endsWith(".csv")){
-                    csv = new CsvReader(filepath.get(i),',',Charset.forName("GBK"));
+                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(filepath.get(i)));
+                    String code = EncodeUtils.getEncode(bis, false).replace("_BOM","");
+                    bis.close();
+                    csv = new CsvReader(filepath.get(i),',',Charset.forName(code));
                     csv.readHeaders();
                     csv.setSafetySwitch(false);
                     String[] titles = csv.getHeaders();
@@ -851,8 +855,6 @@ public class UploadService {
         CsvReader csv = null;
         for (String path : listPath) {
             try {
-
-
                 if (path.endsWith(".xls") || path.endsWith(".xlsx")) {
                     if(path.contains("详细信息")){
                         ExcelReader reader = new ExcelReader() {
@@ -883,7 +885,10 @@ public class UploadService {
                     }
                 }
                 if(path.endsWith(".csv")){
-                    csv = new CsvReader(path,',',Charset.forName("GBK"));
+                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(path));
+                    String code = EncodeUtils.getEncode(bis, false).replace("_BOM","");
+                    bis.close();
+                    csv = new CsvReader(path,',',Charset.forName(code));
                     csv.readHeaders();
                     csv.setSafetySwitch(false);
                     title = getBzcxxTitle(csv.getHeaders());
@@ -1064,7 +1069,10 @@ public class UploadService {
         CsvReader csvReader = null;
         try {
             // 创建CSV读对象
-            csvReader = new CsvReader(path, ',', Charset.forName("GBK"));
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(path));
+            String code = EncodeUtils.getEncode(bis, false).replace("_BOM","");
+            bis.close();
+            csvReader = new CsvReader(path, ',', Charset.forName(code));
             // 读表头 不需要则跳过
             csvReader.readHeaders();
             // 读取内容
@@ -1150,6 +1158,8 @@ public class UploadService {
                 }
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch(Exception e){
             e.printStackTrace();
         } finally {
             if (csvReader != null) {

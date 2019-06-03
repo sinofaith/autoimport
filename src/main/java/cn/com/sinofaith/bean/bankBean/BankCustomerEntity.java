@@ -1,13 +1,8 @@
 package cn.com.sinofaith.bean.bankBean;
 
-import cn.com.sinofaith.bean.AjEntity;
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Entity
 @Table(name="bank_customer",schema = "",catalog = "")
@@ -204,16 +199,16 @@ public class BankCustomerEntity {
 
     public static BankCustomerEntity listToObj(List<String> list, Map<String,Integer> title){
         BankCustomerEntity c = new BankCustomerEntity();
-        c.setName(list.get(title.get("name")).trim());
-        c.setZjlx(list.get(title.get("zjlx")).trim());
+        c.setName(list.get(title.get("name")).trim().replace(" ",""));
+        c.setZjlx(list.get(title.get("zjlx")).trim().replace("居民",""));
         c.setZjhm(list.get(title.get("zjhm")).trim());
         c.setXzz_xzqh(list.get(title.get("xzz")).trim());
         c.setDwdz(list.get(title.get("dwdz")).trim());
-        c.setLxdh(list.get(title.get("lxdh")).trim());
-        c.setLxsj(list.get(title.get("lxsj")).trim());
-        c.setDwdh(list.get(title.get("dwdh")).trim());
-        c.setZzdh(list.get(title.get("zzdh")).trim());
-        c.setGzdw(list.get(title.get("gzdw")).trim());
+        c.setLxdh(list.get(title.get("lxdh")).trim().replace("+86","").replace("-",""));
+        c.setLxsj(list.get(title.get("lxsj")).trim().replace("+86","").replace("-",""));
+        c.setDwdh(list.get(title.get("dwdh")).trim().replace("+86","").replace("-",""));
+        c.setZzdh(list.get(title.get("zzdh")).trim().replace("+86","").replace("-",""));
+        c.setGzdw(list.get(title.get("gzdw")).trim().replace("+86","").replace("-",""));
         c.setEmail(list.get(title.get("email")).trim());
         return c;
     }

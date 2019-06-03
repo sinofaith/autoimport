@@ -115,7 +115,7 @@
                     </div>
                     <div class="sidebar_right pos_re">
                         <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1" onclick="ajCount('${aj.aj}')">
-                        <label for="checkbox1" style="padding-top: 8px;font-size: 12px;font-weight:bold"">统计结果去除红包相关记录</label>
+                        <label for="checkbox1" class="label_c" style="padding-top: 8px;">统计结果去除红包相关记录</label>
                         <div class=" ">
 
                             <div>

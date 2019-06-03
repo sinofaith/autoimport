@@ -79,13 +79,6 @@ public class BankPersonEntity {
         bpe.setXm(bce.getKhxm());
         bpe.setYhkkh(bce.getYhkkh());
         bpe.setYhkzh(bce.getYhkzh());
-        boolean temp = bce.getKhxm().contains("财付通")||bce.getKhxm().contains("支付")||bce.getKhxm().contains("清算")
-                || bce.getKhxm().contains("特约") || bce.getKhxm().contains("备付金")|| bce.getKhxm().contains("银行")
-                || bce.getKhxm().contains("银联") || bce.getKhxm().contains("保险") || bce.getKhxm().contains("过渡")
-                || bce.getKhxm().contains("美团");
-        if(temp){
-            bpe.setDsfzh(1);
-        }
         return bpe;
     }
 }

@@ -204,14 +204,18 @@ public class BankZzxxServices {
         return row;
     }
 
-    public String getByYhkkh(String zh,String jylx,String type,String sum,AjEntity aj,int page,String order,long userId){
+    public String getByYhkkh(String zh,String jylx,String type,String sum,String zhlx,AjEntity aj,int page,String order,long userId){
         Page pages = new Page();
         Gson gson = new GsonBuilder().serializeNulls().create();
         String ajid = getAjidByAjm(aj,userId);
 
         String seach ="";
         if("tjjg".equals(type)){
-            seach="and c.sfbz is not null and (c.yhkkh='"+zh+"' or c.dskh = '"+zh+"' ) ";
+            if("0".equals(zhlx)){
+                seach="and c.sfbz is not null and (c.yhkkh='"+zh+"') ";
+            }else{
+                seach="and c.sfbz is not null and (c.dskh='"+zh+"') ";
+            }
         }else{
             seach=" and (c.yhkkh='"+zh+"') ";
             seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";

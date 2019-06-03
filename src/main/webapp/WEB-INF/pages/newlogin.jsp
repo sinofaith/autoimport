@@ -123,12 +123,14 @@
                 <h4 class="modal-title" id="myModalLabel">注册<span id="title"></span></h4>
             </div>
             <div class="modal-body" style="padding-left: 23%;">
-                姓名:<input type="text" autocomplete="new-username" name = 'name' id ='name'
-                          class='txt'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" ><br><br>
-                账号:<input type="text" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-username" name = 'newuser' id ='newuser'
-                          class='txt newuser'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" onblur="checkUsername()"><br><br>
-                密码:<input type="password" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-password" name = 'newpass' id ='newpass'
-                          class='txt newpass'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" >
+                姓名:<br><input type="text" autocomplete="new-username" name = 'name' id ='name'
+                          class='txt'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" ><br>
+                账号:<br><input type="text" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-username" name = 'newuser' id ='newuser'
+                          class='txt newuser'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" onblur="checkUsername()"><br>
+                密码:<br><input type="password" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-password" name = 'newpass' id ='newpass'
+                          class='txt newpass'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" ><br>
+                重复密码:<br><input type="password" onKeyUp="value=value.replace(/[^\w\.\/]/ig,'')" autocomplete="new-password" name = 'newpass' id ='renewpass'
+                            class='txt renewpass'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" >
                 <input type="hidden" id="role" value="2">
 
             </div>
@@ -141,7 +143,6 @@
     </div>
     <!-- /.modal -->
 </div>
-<%--<embed width="100%" height="100%" name="plugin" id="plugin" src="http://localhost:8080/file/安徽5.18特大销售假药案简要案件及分省线索（1）.pdf" type="application/pdf" internalinstanceid="14">--%>
 
 <!-- basic scripts -->
 
@@ -225,6 +226,7 @@
     function addUser() {
         var username = $("#newuser").val();
         var password = $("#newpass").val();
+        var repassword = $("#renewpass").val();
         var name = $("#name").val();
         var role = $("#role").val();
         var zcpz = 0;
@@ -242,6 +244,9 @@
             flag = false;
         }else if(password.length<6){
             $(".newpass").attr('title', "密码不能小于6位").tooltip('show');
+            flag = false;
+        }else if(password!=repassword){
+            $(".renewpass").attr('title',"两次密码不一致").tooltip('show');
             flag = false;
         }
         if(flag == false){

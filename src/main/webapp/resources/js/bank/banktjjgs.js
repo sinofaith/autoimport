@@ -3,10 +3,10 @@ function getBanktjjgs(obj,type) {
     var list = "";
     var result ="";
     if(type==="dfzh") {
-        zh = $(obj).closest("tr").find("td:eq(3)").text();
+        zh = $(obj).closest("tr").find("td:eq(3)").attr("title");
     }
     if(type==="jyzh"){
-        zh = $(obj).closest("tr").find("td:eq(1)").text()
+        zh = $(obj).closest("tr").find("td:eq(1)").attr("title");
     }
     var url = "/SINOFAITH/banktjjgs/getSeach";
     $.ajax({

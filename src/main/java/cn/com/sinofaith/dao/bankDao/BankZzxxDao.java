@@ -133,7 +133,7 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                 for (int j = 0; j < b.size(); j++) {
 
                     zzxx = b.get(j);
-                    if(zzxx.getYhkkh()==null || zzxx.getSfbz()==null){
+                    if(zzxx.getYhkkh()==null || zzxx.getSfbz()==null ||zzxx.getYhkkh().length()<1){
                         continue;
                     }
 //                    zzxx.setAj_id(aj_id);

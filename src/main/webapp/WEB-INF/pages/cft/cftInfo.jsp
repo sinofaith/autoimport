@@ -276,15 +276,15 @@
                     文件类型:
                     <div class="radio radio-info radio-inline">
                         <input type="radio" id="inlineRadio1" value="txt" name="radioInline" checked>
-                        <label for="inlineRadio1"> txt </label>
+                        <label class="label_c" for="inlineRadio1"> txt </label>
                     </div>
                     <div class="radio radio-inline">
                         <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
-                        <label for="inlineRadio2"> xls/xlsx </label>
+                        <label class="label_c" for="inlineRadio2"> xls/xlsx </label>
                     </div>
                     <br>
                     <input type="checkbox" id="checkbox1" checked value="1">
-                    <label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>
+                    <label for="checkbox1" class="label_c" style="padding-top: 8px">统计结果去除红包相关记录</label>
                 </div>
             </div>
             <div class="modal-footer">

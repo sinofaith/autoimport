@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -71,7 +72,7 @@ public class ZfbZhmxJylxController {
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
             if (seachCondition.equals("jzzje") || seachCondition.equals("czzje")) {
-                Double fz = Double.parseDouble(seachCode);
+                BigDecimal fz = new BigDecimal(seachCode);
                 dc.add(Restrictions.gt(seachCondition, fz));
             }else{
                 dc.add(Restrictions.like(seachCondition,"%"+seachCode+"%"));

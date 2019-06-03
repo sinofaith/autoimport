@@ -133,7 +133,7 @@
                     <div class="sidebar_right pos_re">
 
                         <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1" onclick="wuliuCount('${aj.aj}')" />
-                        <label for="checkbox1" style="padding-top: 8px">数据去重</label>
+                        <label class="label_c" for="checkbox1" style="padding-top: 8px">数据去重</label>
                         <div class=" ">
                             <div>
                                 <form action="/SINOFAITH/wuliujjxx/SeachCode" method="post">

@@ -162,11 +162,11 @@ public class ZfbZhmxTjjgsService {
             cell = row.createCell(6);
             cell.setCellValue(wl.getCzzcs());
             cell = row.createCell(7);
-            cell.setCellValue(wl.getCzzje());
+            cell.setCellValue(wl.getCzzje().toString());
             cell = row.createCell(8);
             cell.setCellValue(wl.getJzzcs());
             cell = row.createCell(9);
-            cell.setCellValue(wl.getJzzje());
+            cell.setCellValue(wl.getJzzje().toString());
             if ((i + b) % 65536 == 0) {
                 for (int a = 0; a < 10; a++) {
                     sheet.autoSizeColumn(a);

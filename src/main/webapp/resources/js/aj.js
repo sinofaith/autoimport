@@ -61,7 +61,7 @@ function getUser(id,ajm,username) {
         },
         success: function(result) {
             for(var j = 0;j<result.grand.length;j++){
-                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.grand[j].id+">"+result.grand[j].username+"</li>");
+                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.grand[j].id+">"+result.grand[j].username+"("+result.grand[j].name+"</li>");
                 temp.push(result.grand[j].username);
                 li.click(function(){
                     if($(this).attr('class').indexOf("selected")>1){
@@ -82,7 +82,7 @@ function getUser(id,ajm,username) {
                 li.appendTo(ul_grand);
             }
             for(var i=0;i<result.all.length;i++){
-                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.all[i].id+">"+result.all[i].username+"</li>");
+                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.all[i].id+">"+result.all[i].username+"("+result.all[i].name+")</li>");
                 li.click(function(){
                     if($(this).attr('class').indexOf("selected")>1){
                         $(this).removeClass("selected");

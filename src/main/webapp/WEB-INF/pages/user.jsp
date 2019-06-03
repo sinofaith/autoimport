@@ -29,7 +29,10 @@
 </style>
 
 <div class="tab_div">
-    <span class="tab_nav">  <a  href="/SINOFAITH/user" class="addactive">用户信息</a><a  href="/SINOFAITH/userregist">账号试用审批</a></span>
+    <span class="tab_nav">
+        <a  href="/SINOFAITH/user" class="addactive">用户信息</a>
+        <a  href="/SINOFAITH/userregist">账号试用审批</a>
+    </span>
     <ul >
         <div class="main-container-inner " style="margin-bottom: 10px">
             <div class="width_100 pos_re_block">

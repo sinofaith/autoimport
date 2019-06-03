@@ -33,7 +33,7 @@ function getZzGtlxr(obj) {
                 str += "<td width=\"5%\">" + data[i].id + "</td>" +
                     "<td width=\"12%\" title=\""+data[i].jyzh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyzh+"</div></td>"+
                     "<td width=\"5%\" title=\""+data[i].name+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].name+"</div></td>"+
-                    "<td width=\"12%\">" + data[i].dfzh + "</td>" +
+                    "<td width=\"12%\" title=\""+data[i].dfzh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfzh+"</div></td>"+
                     "<td width=\"5%\" title=\""+data[i].dfxm+"\"> <div style=\"width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfxm+"</div></td>"+
                     "<td width=\"7%\">" + data[i].jyzcs + "</td>" +
                     "<td width=\"7%\">" + data[i].jzzcs + "</td>" +

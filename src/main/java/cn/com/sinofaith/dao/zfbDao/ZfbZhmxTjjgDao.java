@@ -55,9 +55,9 @@ public class ZfbZhmxTjjgDao extends BaseDao<ZfbZhmxTjjgEntity> {
                 pstm.setString(4,tjjg.getDsmc());
                 pstm.setLong(5,tjjg.getJyzcs());
                 pstm.setLong(6,tjjg.getCzzcs());
-                pstm.setDouble(7,tjjg.getCzzje());
+                pstm.setBigDecimal(7,tjjg.getCzzje());
                 pstm.setLong(8,tjjg.getJzzcs());
-                pstm.setDouble(9,tjjg.getJzzje());
+                pstm.setBigDecimal(9,tjjg.getJzzje());
                 pstm.setString(10, TimeFormatUtil.getDate("/"));
                 pstm.setLong(11,id);
                 pstm.addBatch();

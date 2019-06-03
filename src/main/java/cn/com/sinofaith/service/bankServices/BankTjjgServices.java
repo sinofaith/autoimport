@@ -157,7 +157,7 @@ public class BankTjjgServices {
         BankZzxxEntity zzxx = null;
 
         List<String> bp = bps.getByFilter();
-
+        Set<String> zczh = bzzd.getYhkkhDis(aj);
         for(int i=0;i<listZzxx.size();i++){
             zzxx = listZzxx.get(i);
                 if ("出".equals(zzxx.getSfbz())) {
@@ -181,7 +181,7 @@ public class BankTjjgServices {
                         }
                         map.put(zzxx.getYhkkh(), tj1);
                     }
-                    if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh())) {
+                    if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh()) && !zczh.contains(zzxx.getDskh())) {
                         if (map.containsKey(zzxx.getDskh())) {
                             tjjg = map.get(zzxx.getDskh());
                             tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
@@ -202,17 +202,17 @@ public class BankTjjgServices {
                             }
                             map.put(zzxx.getDskh(), tj1);
                         }
-
-                        if(bp.contains(zzxx.getDskh())){
-                            if(mapElse.containsKey(zzxx.getYhkkh())){
-                                BankTjjgEntity bt = mapElse.get(zzxx.getYhkkh());
-                                bt.setCzzje(bt.getCzzje().add(zzxx.getJyje()));
-                            }else {
-                                BankTjjgEntity bt = new BankTjjgEntity();
-                                bt.setCzzje(zzxx.getJyje());
-                                mapElse.put(zzxx.getYhkkh(),bt);
-                            }
-                        }
+//
+//                        if(bp.contains(zzxx.getDskh())){
+//                            if(mapElse.containsKey(zzxx.getYhkkh())){
+//                                BankTjjgEntity bt = mapElse.get(zzxx.getYhkkh());
+//                                bt.setCzzje(bt.getCzzje().add(zzxx.getJyje()));
+//                            }else {
+//                                BankTjjgEntity bt = new BankTjjgEntity();
+//                                bt.setCzzje(zzxx.getJyje());
+//                                mapElse.put(zzxx.getYhkkh(),bt);
+//                            }
+//                        }
                     }
                 }
                 if ("进".equals(zzxx.getSfbz())) {
@@ -236,7 +236,7 @@ public class BankTjjgServices {
                         }
                         map.put(zzxx.getYhkkh(), tj2);
                     }
-                    if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh())) {
+                    if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh())&& !zczh.contains(zzxx.getDskh())) {
                         if (map.containsKey(zzxx.getDskh())) {
                             tjjg = map.get(zzxx.getDskh());
                             tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
@@ -257,17 +257,17 @@ public class BankTjjgServices {
                             }
                             map.put(zzxx.getDskh(), tj2);
                         }
-
-                        if(bp.contains(zzxx.getDskh())){
-                            if(mapElse.containsKey(zzxx.getYhkkh())){
-                                BankTjjgEntity bt = mapElse.get(zzxx.getYhkkh());
-                                bt.setJzzje(bt.getJzzje().add(zzxx.getJyje()));
-                            }else {
-                                BankTjjgEntity bt = new BankTjjgEntity();
-                                bt.setJzzje(zzxx.getJyje());
-                                mapElse.put(zzxx.getYhkkh(),bt);
-                            }
-                        }
+//
+//                        if(bp.contains(zzxx.getDskh())){
+//                            if(mapElse.containsKey(zzxx.getYhkkh())){
+//                                BankTjjgEntity bt = mapElse.get(zzxx.getYhkkh());
+//                                bt.setJzzje(bt.getJzzje().add(zzxx.getJyje()));
+//                            }else {
+//                                BankTjjgEntity bt = new BankTjjgEntity();
+//                                bt.setJzzje(zzxx.getJyje());
+//                                mapElse.put(zzxx.getYhkkh(),bt);
+//                            }
+//                        }
                     }
                 }
             }
@@ -341,7 +341,6 @@ public class BankTjjgServices {
 //                }
 //            }
 //        List<BankZcxxEntity> listZcxx =bzcd.getByAjId(" and aj_id = "+aj);
-        Set<String> zczh = bzzd.getYhkkhDis(aj);
         listTjjg = new ArrayList<>(map.values());
         listzcxx.forEach(zcxx ->{
             if(zczh.contains(zcxx.getYhkkh())){

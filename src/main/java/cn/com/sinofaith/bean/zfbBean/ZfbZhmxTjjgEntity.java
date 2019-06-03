@@ -1,6 +1,7 @@
 package cn.com.sinofaith.bean.zfbBean;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "zfbzhmx_tjjg")
@@ -12,9 +13,9 @@ public class ZfbZhmxTjjgEntity {
     private String dsmc;
     private long jyzcs;
     private long czzcs;
-    private double czzje;
+    private BigDecimal czzje;
     private long jzzcs;
-    private double jzzje;
+    private BigDecimal jzzje;
     private String insert_time;
     private long aj_id;
 
@@ -90,11 +91,11 @@ public class ZfbZhmxTjjgEntity {
 
     @Basic
     @Column(name = "czzje",nullable = false,precision = 0)
-    public double getCzzje() {
+    public BigDecimal getCzzje() {
         return czzje;
     }
 
-    public void setCzzje(double czzje) {
+    public void setCzzje(BigDecimal czzje) {
         this.czzje = czzje;
     }
 
@@ -110,11 +111,11 @@ public class ZfbZhmxTjjgEntity {
 
     @Basic
     @Column(name = "jzzje",nullable = false,precision = 0)
-    public double getJzzje() {
+    public BigDecimal getJzzje() {
         return jzzje;
     }
 
-    public void setJzzje(double jzzje) {
+    public void setJzzje(BigDecimal jzzje) {
         this.jzzje = jzzje;
     }
 
