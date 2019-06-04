@@ -154,7 +154,7 @@ public class AjController {
         }else{
             String [] type = list.split(",");
             ajs.deleteByAj(aje.getId(),type);
-            if(type.length==5) {
+            if(type.length==4) {
                 httpSession.removeAttribute("aj");
             }
             return "200";

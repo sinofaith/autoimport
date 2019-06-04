@@ -131,7 +131,6 @@ public class BankZzxxDao extends BaseDao<BankZzxxEntity> {
                 pstm = con.prepareStatement(sql);
                 String time = TimeFormatUtil.getDate("/");
                 for (int j = 0; j < b.size(); j++) {
-
                     zzxx = b.get(j);
                     if(zzxx.getYhkkh()==null || zzxx.getSfbz()==null ||zzxx.getYhkkh().length()<1){
                         continue;

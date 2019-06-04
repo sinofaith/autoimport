@@ -341,6 +341,8 @@ public class UploadService {
     public int insertBankZzxx(String filePath, long aj_id, List<BankZzxxEntity> all) {
         List<String> listPath = getFileLists(filePath, "交易明细");
         listPath.addAll(getFileLists(filePath,"详细信息"));
+        listPath.addAll(getFileLists(filePath,"、"));
+        listPath.addAll(getFileLists(filePath,"："));
         List<BankZzxxEntity> listZzxx = getByExcel(listPath);
         int i = bzzd.insertZzxx(listZzxx, aj_id, all);
 
@@ -351,27 +353,39 @@ public class UploadService {
         }
         Map<String,BankPersonEntity> mapZ= new HashMap<>();
         for (int g = 0; g < listZzxx.size(); g++) {
-            BankPersonEntity bp = new BankPersonEntity();
-            bp.setYhkkh(listZzxx.get(g).getDskh());
-            bp.setYhkzh(String.valueOf(aj_id));
-            bp.setXm(listZzxx.get(g).getDsxm());
+            BankPersonEntity dsbp = new BankPersonEntity();
+            dsbp.setYhkkh(listZzxx.get(g).getDskh());
+            dsbp.setYhkzh(String.valueOf(aj_id));
+            dsbp.setXm(listZzxx.get(g).getDsxm());
 
+            BankPersonEntity jybp = new BankPersonEntity();
+            jybp.setYhkkh(listZzxx.get(g).getYhkkh());
+            jybp.setYhkzh(String.valueOf(aj_id));
+            jybp.setXm(listZzxx.get(g).getJyxm());
 //                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
 
-            if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
-                if (bp.getXm().contains("支付宝")) {
-                    bp.setXm("支付宝（中国）网络技术有限公司");
-                } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
-                    bp.setXm("财付通支付科技有限公司");
+            if (dsbp.getYhkkh()!=null && dsbp.getXm()!=null&&dsbp.getYhkkh().length() > 0 && dsbp.getXm().length() > 0) {
+                if (dsbp.getXm().contains("支付宝")) {
+                    dsbp.setXm("支付宝（中国）网络技术有限公司");
+                } else if (dsbp.getXm().contains("微信") || dsbp.getXm().contains("财付通")) {
+                    dsbp.setXm("财付通支付科技有限公司");
                 }
-                mapZ.put((bp.getYhkkh()).replace("null", ""), bp);
-            } else {
+                mapZ.put((dsbp.getYhkkh()).replace("null", ""), dsbp);
+            }else if(jybp.getYhkkh()!=null && jybp.getXm()!=null&&jybp.getYhkkh().length() > 0 && jybp.getXm().length() > 0){
+                if (jybp.getXm().contains("支付宝")) {
+                    jybp.setXm("支付宝（中国）网络技术有限公司");
+                } else if (jybp.getXm().contains("微信") || jybp.getXm().contains("财付通")) {
+                    jybp.setXm("财付通支付科技有限公司");
+                }
+                mapZ.put((jybp.getYhkkh()).replace("null", ""), jybp);
+            }
+            else {
                 continue;
             }
         }
         List<String> str = new ArrayList<>();
         for (String o : mapZ.keySet()) {
-            if (allBp.containsKey(o)) {
+            if (allBp.containsKey(new BankPersonEntity().remove_(o))) {
                 str.add(o);
             }
         }
@@ -574,6 +588,32 @@ public class UploadService {
             title.put("email", i);
         }
     }
+    //电信诈骗资金数字列名
+    public void getBzzxxDzTitle(String temp,int i,Map<String,Integer> title){
+        if(temp.contains("查询账号")){
+            title.put("yhkkh",i);
+        }else if(temp.contains("对方账号姓名")){
+            title.put("dsxm",i);
+        }else if(temp.contains("对方账号卡号")){
+            title.put("dskh",i);
+        }else if(temp.contains("金额")){
+            title.put("jyje",i);
+        }else if(temp.contains("余额")){
+            title.put("jyye",i);
+        }else if(temp.contains("借贷标志")){
+            title.put("sfbz",i);
+        }else if(temp.contains("交易结果")){
+            title.put("jysfcg",i);
+        }else if(temp.contains("交易时间")){
+            title.put("jysj", i);
+        }else if(temp.contains("交易开户行")){
+            title.put("dskhh", i);
+        }else if(temp.contains("交易网点名称")){
+            title.put("jywdmc", i);
+        }else if (temp.contains("交易摘要")) {
+            title.put("zysm", i);
+        }
+    }
 
     public  void getBzzxxTitle(String temp,int i,Map<String,Integer> title){
             if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
@@ -697,6 +737,7 @@ public class UploadService {
         CsvReader csv = null;
 
         for (int i = 0; i < filepath.size(); i++) {
+            File file = new File(filepath.get(i));
             try {
                 if(filepath.get(i).endsWith(".xlsx")) {
                     if(filepath.get(i).contains("详细信息")){
@@ -753,6 +794,28 @@ public class UploadService {
                             }
                         };
                         reader.processOneSheet(filepath.get(i),2);
+                    }else if(filepath.get(i).contains("、")||filepath.get(i).contains("：")){
+                        //电信诈骗资金数据处理
+                        String[] bpx = file.getName().replace("：","、").split("、");
+                        BankPersonEntity bp = new BankPersonEntity();
+                        bp.setXm(bpx[0].substring(13,bpx[0].length()).replace(" ",""));
+                        bp.setYhkkh(bpx[1].substring(0,bpx[1].indexOf(".")));
+                        if(bp.getXm()!=null&&bp.getYhkkh()!=null) {
+                            bpd.insert(bp);
+                        }
+                        ExcelReader reader = new ExcelReader() {
+                            public void getRows(int sheetIndex, int curRow, List<String> rowList) {
+                                if (curRow == 0) {
+                                    for (int i = 0; i < rowList.size(); i++) {
+                                        String temp = rowList.get(i);
+                                        getBzzxxDzTitle(temp, i, title);
+                                    }
+                                } else {
+                                    listB.add(BankZzxxEntity.listDzToObj(rowList, title));
+                                }
+                            }
+                        };
+                        reader.process(filepath.get(i));
                     }else {
                         ExcelReader reader = new ExcelReader() {
                             public void getRows(int sheetIndex, int curRow, List<String> rowList) {
@@ -774,21 +837,20 @@ public class UploadService {
                     String code = EncodeUtils.getEncode(bis, false).replace("_BOM","");
                     bis.close();
                     csv = new CsvReader(filepath.get(i),',',Charset.forName(code));
-                    csv.readHeaders();
                     csv.setSafetySwitch(false);
+                    csv.readHeaders();
                     String[] titles = csv.getHeaders();
                     for(int j=0;j<titles.length;j++){
                         getBzzxxTitle(titles[j],j,title);
                     }
-                    csv.setSafetySwitch(false);
                     while (csv.readRecord()){
                         listB.add(BankZzxxEntity.listToObj(Arrays.asList(csv.getValues()), title));
                     }
                     csv.close();
                 }
-                new File(filepath.get(i)).delete();
+                file.delete();
             } catch (Exception e) {
-                e.getStackTrace();
+                e.printStackTrace();
             }finally {
                 if(csv!=null) {
                     csv.close();

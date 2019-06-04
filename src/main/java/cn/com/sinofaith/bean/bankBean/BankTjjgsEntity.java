@@ -21,7 +21,7 @@ public class BankTjjgsEntity implements Serializable {
     private BigDecimal czzje = new BigDecimal(0);
     private long aj_id;
     private String inserttime;
-    private long zhlx;
+    private long zhlx = 0;
 
     @Basic
     @Column(name = "id",nullable = true,precision = 0)

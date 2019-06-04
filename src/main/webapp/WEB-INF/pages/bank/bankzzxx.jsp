@@ -178,7 +178,7 @@
     </ul>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -317,17 +317,32 @@
                     </div>
                     <div class="row" id="bank_zzxx" style="display: none">
                         <div class="col-md-1">
-                            <label class="label_c" for="c11">交易账卡号</label>
+                            <label class="label_c" for="c11">交易卡号*</label>
                             <select	 id="c11" placeholder="交易账卡号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c12">交易时间</label>
-                            <select	 id="c12" placeholder="交易时间" onchange="selectC()">
+                            <label class="label_c" for="c30">交易姓名</label>
+                            <select id="c30" placeholder="交易姓名" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c13">交易金额</label>
+                            <label class="label_c" for="c28">交易证件号</label>
+                            <select id="c28" placeholder="交易证件号" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="label_c" for="c12">交易日期*</label>
+                            <select	 id="c12" placeholder="交易日期" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="label_c" for="c31">交易时间</label>
+                            <select id="c31" placeholder="交易时间" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="label_c" for="c13">交易金额*</label>
                             <select	 id="c13" placeholder="交易金额" onchange="selectC()">
                             </select>
                         </div>
@@ -337,13 +352,33 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>
+                            <!--<label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>-->
+                            <label class="label_c" style="text-decoration:underline" data-toggle="tooltip"
+                                   data-placement="top" data-html="true"  title="收付标志仅支持<br>进/出、收/付、贷/借" for="c15">收付标志*</label>
                             <select	id="c15" placeholder="收付标志" onchange="selectC()">
                             </select>
                         </div>
+                        <%--<div class="col-md-1">--%>
+                        <%--<label for="c16">对手账号</label>--%>
+                        <%--<select	id="c16" placeholder="对手卡号" onchange="selectC()">--%>
+                        <%--</select>--%>
+                        <%--</div>--%>
+
+
+
+                        <%--<div class="col-md-1">--%>
+                        <%--<label for="c20">交易是否成功</label>--%>
+                        <%--<select id="c20" placeholder="交易是否成功" onchange="selectC()">--%>
+                        <%--</select>--%>
+                        <%--</div>--%>
+                        <%--<div class="col-md-1">--%>
+                        <%--<label for="c21">交易账号</label>--%>
+                        <%--<select id="c21" placeholder="交易账号" onchange="selectC()">--%>
+                        <%--</select>--%>
+                        <%--</div>--%>
                         <div class="col-md-1">
-                            <label class="label_c" for="c16">对手卡号</label>
-                            <select	id="c16" placeholder="对手卡号" onchange="selectC()">
+                            <label class="label_c" for="c22">对手卡号*</label>
+                            <select id="c22" placeholder="对手卡号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
@@ -357,28 +392,13 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c19">摘要说明</label>
-                            <select id="c19" placeholder="摘要说明" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c20">交易是否成功</label>
-                            <select id="c20" placeholder="交易是否成功" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c21">交易账号</label>
-                            <select id="c21" placeholder="交易账号" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c22">对手账号</label>
-                            <select id="c22" placeholder="对手账号" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
                             <label class="label_c" for="c23">对手开户行</label>
                             <select id="c23" placeholder="对手开户行" onchange="selectC()">
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="label_c" for="c19">摘要说明</label>
+                            <select id="c19" placeholder="摘要说明" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
@@ -387,13 +407,8 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c25">对手交易余额</label>
-                            <select id="c25" placeholder="对手交易余额" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c26">对手余额</label>
-                            <select id="c26" placeholder="对手余额" onchange="selectC()">
+                            <label class="label_c" for="c29">交易发生地</label>
+                            <select id="c29" placeholder="交易发生地" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">
@@ -401,26 +416,24 @@
                             <select id="c27" placeholder="备注" onchange="selectC()">
                             </select>
                         </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c28">交易证件号</label>
-                            <select id="c28" placeholder="交易证件号" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c29">交易发生地</label>
-                            <select id="c29" placeholder="交易发生地" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c30">交易姓名</label>
-                            <select id="c30" placeholder="交易姓名" onchange="selectC()">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label class="label_c" for="c31">补充说明</label>
-                            <select id="c31" placeholder="交易姓名" onchange="selectC()">
-                            </select>
-                        </div>
+                        <%--<div class="col-md-1">--%>
+                        <%--<label for="c25">对手交易余额</label>--%>
+                        <%--<select id="c25" placeholder="对手交易余额" onchange="selectC()">--%>
+                        <%--</select>--%>
+                        <%--</div>--%>
+                        <%--<div class="col-md-1">--%>
+                        <%--<label for="c26">对手余额</label>--%>
+                        <%--<select id="c26" placeholder="对手余额" onchange="selectC()">--%>
+                        <%--</select>--%>
+                        <%--</div>--%>
+
+
+
+                        <%--<div class="col-md-1">--%>
+                        <%--<label for="c31">补充说明</label>--%>
+                        <%--<select id="c31" placeholder="交易姓名" onchange="selectC()">--%>
+                        <%--</select>--%>
+                        <%--</div>--%>
                     </div>
                     <div class="row" id="bank_customer" style="display: none">
                         <div class="col-md-1">
@@ -481,6 +494,10 @@
                     </div>
                     <button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextSelect()">下一个</button>
                     <button id="mapping" type="button" style="margin-left: 1280px" class="btn btn-primary" onclick="uploadMapping()">提交映射</button>
+                    <span style="float: right;">
+                        <input type="checkbox" id="cb1" checked value="1" onclick="cbxNextSelect()">
+                        <label style="color: black; font-size: 14px;font-weight:bold;padding-top: 6px;" for="cb1">映射应用到所有文件</label>
+                    </span>
                 </div>
             </div>
             <div class="modal-footer">

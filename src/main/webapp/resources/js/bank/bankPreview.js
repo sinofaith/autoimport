@@ -111,8 +111,8 @@ function determineThresholdValue(){
 
 // 下一个
 function nextYjdc(){
-    $("#jzje").val("");
-    $("#czje").val("");
+    $("#jzje").val("50000");
+    $("#czje").val("50000");
     var sel = document.getElementById("a1");
     var index = sel.selectedIndex;
     var selectLength = sel.length-1;

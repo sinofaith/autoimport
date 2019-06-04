@@ -5,8 +5,8 @@ for(var value in f){
 }
 
 function select_change(){
-    $("#jzje").val("");
-    $("#czje").val("");
+    $("#jzje").val("50000");
+    $("#czje").val("50000");
     yjdcDownload(true);
 }
 
@@ -172,8 +172,8 @@ function determineThresholdValue(){
 
 // 下一个
 function nextYjdc(){
-    $("#jzje").val("");
-    $("#czje").val("");
+    $("#jzje").val("50000");
+    $("#czje").val("50000");
     var sel = document.getElementById("a1");
     var index = sel.selectedIndex;
     var selectLength = sel.length-1;
@@ -186,7 +186,7 @@ function nextYjdc(){
 
 // 批量导出
 function batchExport(){
-    var url = "http://localhost:8080/SINOFAITH/zfbZzmx/batchExport";
+    var url = "/SINOFAITH/zfbZzmx/batchExport";
     var form = $("<form></form>").attr("action", url).attr("method", "post");
     form.append($("<input></input>").attr("type", "hidden").attr("name", "yjdcList").attr("value",JSON.stringify(yjdcList)));
     form.appendTo('body').submit().remove();

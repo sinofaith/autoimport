@@ -74,6 +74,15 @@ public class BankPersonEntity {
         return yhkkh != null ? yhkkh.hashCode() : 0;
     }
 
+    public  String remove_(String yhkkh){
+        yhkkh = yhkkh.replace("\\N","").replaceFirst("-","").replace("暂无法获知","");
+        if(yhkkh.indexOf("_")>5){
+            return yhkkh.split("_")[0];
+        }else {
+            return yhkkh;
+        }
+    }
+
     public BankPersonEntity getByZcxx(BankZcxxEntity bce){
         BankPersonEntity bpe = new BankPersonEntity();
         bpe.setXm(bce.getKhxm());

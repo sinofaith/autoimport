@@ -97,14 +97,14 @@ public class MappingUtils {
                             if(rowValue==null){
                                 readList.add("");
                             }else{
-                                if(rowValue.contains("：")){
-                                    String reg = "[^：]+：(.+)";
-                                    Pattern pet = Pattern.compile(reg);
-                                    Matcher matcher = pet.matcher(rowValue);
-                                    while (matcher.find()) {
-                                        rowValue = matcher.group(1);
-                                    }
-                                }
+//                                if(rowValue.contains("：")){
+//                                    String reg = "[^：]+：(.+)";
+//                                    Pattern pet = Pattern.compile(reg);
+//                                    Matcher matcher = pet.matcher(rowValue);
+//                                    while (matcher.find()) {
+//                                        rowValue = matcher.group(1);
+//                                    }
+//                                }
                                 readList.add(rowValue);
                             }
                         }
@@ -285,12 +285,11 @@ public class MappingUtils {
      */
     public static BigDecimal mappingFieldBigDecimal(Row xssfRow, String fieldValue, Map<String, Integer> title){
         BigDecimal value;
-        String fieV = MappingUtils.rowValue(xssfRow.getCell(title.get(fieldValue)));
-        if(fieldValue.equals("无") || xssfRow.getCell(title.get(fieldValue))==null ||
-                "".equals(fieV)){
-            value = new BigDecimal(0);
+        if("无".equals(fieldValue) || xssfRow.getCell(title.get(fieldValue))==null){
+            value = new BigDecimal(-1);
         }else{
-            value = new BigDecimal(fieV.replace(",",""));
+            String fieV = MappingUtils.rowValue(xssfRow.getCell(title.get(fieldValue)));
+            value = new BigDecimal("".equals(fieV) ? "-1" : fieV.replace(",", ""));
         }
         return value;
     }

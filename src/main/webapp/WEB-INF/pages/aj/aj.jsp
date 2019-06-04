@@ -54,7 +54,7 @@
                                         <td width="7%">财付通交易数据</td>
                                         <td width="7%">支付宝账户数据</td>
                                         <td width="7%">物流寄件数据</td>
-                                        <td width="7%">传销会员数据</td>
+                                        <%--<td width="7%">传销会员数据</td>--%>
                                         <td width="12%">案件创建时间</td>
                                         <td width="6%">操作</td>
                                     </tr>
@@ -69,7 +69,7 @@
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=1">${item.cftnum}</a></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=5">${item.zfbnum}</a></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=3">${item.wuliunum}</a></td>
-                                            <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=4">${item.psnum}</a></td>
+                                            <%--<td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=4">${item.psnum}</a></td>--%>
                                             <td align="center">${item.inserttime}</td>
                                             <td align="center">
                                                 <c:choose>

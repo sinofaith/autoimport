@@ -133,7 +133,7 @@ public class BankTjjgsService {
         }else{
             seach.append(" and ( 1=1 ) ");
         }
-        seach.append(" and length(c.dfzh)>5 ");
+        seach.append(" and length(c.dfzh)>1 ");
         if(code!=-1) {
             seach.append(" and c.zhlx=" + code);
         }

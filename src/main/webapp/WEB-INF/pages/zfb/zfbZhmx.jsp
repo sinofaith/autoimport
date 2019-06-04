@@ -336,8 +336,8 @@
                     <option value="jyjlTjjgs">交易买家账户信息</option>
                     <option value="jyjlSjdzs">交易记录地址统计</option>
                 </select>&nbsp;&nbsp;&nbsp;
-                出账总金额阀值:<input type="number" style="width:120px" class="txt" id="czje">
-                进账总金额阀值:<input type="number" style="width:120px" class="txt" id="jzje">
+                出账总金额阀值:<input type="number" style="width:120px" value="50000" class="txt" id="czje">
+                进账总金额阀值:<input type="number" style="width:120px" value="50000" class="txt" id="jzje">
                 <input type="button" class="btn btn-primary" value="预览数据" onclick="yjdcDownload(true)">
             </div>
             <div class="modal-body">

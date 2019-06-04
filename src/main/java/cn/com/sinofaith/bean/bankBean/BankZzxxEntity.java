@@ -104,7 +104,7 @@ public class BankZzxxEntity {
 
     public void setJysj(String jysj) {
         if(jysj!=null&&jysj.indexOf("/")>0) {
-            jysj= TimeFormatUtil.DateFormat(jysj);
+            jysj= TimeFormatUtil.getDateSwitchTimestamp(jysj);
         }
         this.jysj = jysj;
     }
@@ -354,12 +354,43 @@ public class BankZzxxEntity {
         return result;
     }
     public  String remove_(String yhkkh){
-        yhkkh = yhkkh.replace("\\N","");
+        yhkkh = yhkkh.replace("\\N","").replaceFirst("-","").replace("暂无法获知","");
         if(yhkkh.indexOf("_")>5){
             return yhkkh.split("_")[0];
         }else {
             return yhkkh;
         }
+    }
+    //电信诈骗数据转实体
+    public static BankZzxxEntity listDzToObj(List<String> list, Map<String,Integer> title){
+        BankZzxxEntity b = new BankZzxxEntity();
+        b.setYhkkh("".equals(list.get(title.get("yhkkh")).trim()) ? null:b.remove_(list.get(title.get("yhkkh"))).trim());
+        b.setDskh("".equals(list.get(title.get("dskh")).trim())? null:b.remove_(list.get(title.get("dskh"))).trim());
+        b.setDsxm("".equals(list.get(title.get("dsxm")).trim())? null:list.get(title.get("dsxm")).trim());
+        b.setJyje(new BigDecimal(list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")).trim():"0" ).abs());
+        b.setJyye(new BigDecimal(list.get(title.get("jyye")).trim().length()>0 ? list.get(title.get("jyye")).trim():"0" ));
+        b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).replace("借","出").replace("贷","进").trim());
+        b.setJysfcg("".equals(list.get(title.get("jysfcg")).trim())? null:list.get(title.get("jysfcg")).trim());
+        b.setDskhh("".equals(list.get(title.get("dskhh")).trim())? null:list.get(title.get("dskhh")).trim());
+        b.setJywdmc("".equals(list.get(title.get("jywdmc")).trim())? null:list.get(title.get("jywdmc")).trim());
+        b.setZysm("".equals(list.get(title.get("zysm")).trim())? null:list.get(title.get("zysm")).trim());
+        b.setJysj("".equals(list.get(title.get("jysj")).trim())? null:TimeFormatUtil.getDateSwitchTimestamp(list.get(title.get("jysj")).trim()));
+
+        if(b.getDskh()==null||"".equals(b.getDskh())){
+            String bcsm = b.getYhkkh()+"-";
+            if(b.getDsxm()!=null&&!"".equals(b.getDsxm())){
+                bcsm+=b.getDsxm();
+            }else if(b.getZysm()!=null&&!"".equals(b.getZysm())){
+                bcsm+=b.getZysm();
+            }else if(b.getBz()!=null&&!"".equals(b.getBz())){
+                bcsm+=b.getBz();
+            }else {
+                bcsm += "空账户";
+            }
+            b.setBcsm(bcsm);
+        }
+
+        return b;
     }
 
     public static BankZzxxEntity listToObj(List<String> list, Map<String,Integer> title){
@@ -378,7 +409,7 @@ public class BankZzxxEntity {
         }
         b.setJyje(new BigDecimal(list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")).trim():"0" ));
         b.setJyye(new BigDecimal(list.get(title.get("jyye")).trim().length()>0 ? list.get(title.get("jyye")).trim():"0" ));
-        b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).replace("付","出").replace("收","入").trim());
+        b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).replace("付","出").replace("收","进").trim());
         b.setDskh("".equals(list.get(title.get("dskh")).trim())? null:b.remove_(list.get(title.get("dskh"))).trim());
         if(title.containsKey("dszh")) {
             b.setDszh("".equals(list.get(title.get("dszh")).trim()) ? null : b.remove_(list.get(title.get("dszh"))).trim());

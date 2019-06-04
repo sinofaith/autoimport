@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +57,7 @@ public class ZfbZzmxGtzhService {
      * @return
      */
     public List<ZfbZzmxGtzhForm> getZfbZzmxGtzhAll(long id, String search) {
-        List<ZfbZzmxGtzhForm> jyjlForms = null;
+        List<ZfbZzmxGtzhForm> jyjlForms = new ArrayList<>();
         int rowAll = zfbZzmxGtzhDao.getCountRow(search,id);
         if(rowAll>0) {
             jyjlForms = zfbZzmxGtzhDao.queryForPage(0,0,search,id, false);

@@ -134,7 +134,7 @@
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center" title="${item.zfbzh}"><div style="width:130px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbzh}</div></td>
                                             <td align="center">${item.zfbmc}</td>
-                                            <td align="center" title="${item.zfbzh}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zzcpmc}</div></td>
+                                            <td align="center" title="${item.zzcpmc}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zzcpmc}</div></td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.fkzcs}</td>
                                             <td align="center">${item.fkzje}</td>

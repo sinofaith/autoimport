@@ -120,7 +120,7 @@ public class AjServices {
         Statement st;
         try {
             st = con.createStatement();
-            if(type.length==5){
+            if(type.length==4){
                 st.execute("delete aj where id ="+ajid);
                 con.commit();
             }

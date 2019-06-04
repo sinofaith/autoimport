@@ -40,7 +40,7 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
     public int getGtCount(String seachCode,long ajid){
         StringBuffer sql= new StringBuffer("select count(1) NUM from bank_tjjgs c right join (" +
                 "       select t.dfzh,count(1) as num from bank_tjjgs t " +
-                "       where t.zhlx = 1 and length(t.dfzh) >5 and t.aj_id=" +ajid+
+                "       where t.zhlx = 1 and length(t.dfzh) >1 and t.aj_id=" +ajid+
                 "       group by dfzh " +
                 "       having(count(1)>=2) ) a on c.dfzh = a.dfzh" +
                 "       left join bank_person s on c.jyzh = s.yhkkh" +
@@ -59,7 +59,7 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
         }
         sql.append("select s.khxm as xm,d.khxm dfxm,to_char(d.dsfzh) dsfzh,c.*,a.num from bank_tjjgs c right join (" +
                 "       select t.dfzh,count(1) as num from bank_tjjgs t " +
-                "       where t.zhlx = 1 and length(t.dfzh) >5 and t.aj_id=" +ajid+
+                "       where t.zhlx = 1 and length(t.dfzh) >1 and t.aj_id=" +ajid+
                 "       group by dfzh " +
                 "       having(count(1)>=2) ) a on c.dfzh = a.dfzh " +
                 "       left join bank_person s on c.jyzh = s.yhkkh " +
@@ -98,6 +98,8 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
                 if(tjjg.getJyzh()==null || tjjg.getDfzh()==null){
                     continue;
                 }
+//                tjjg.setInserttime(TimeFormatUtil.getDate("/"));
+//                save(tjjg);
                 st.setString(1,tjjg.getJyzh());
                 st.setString(2,tjjg.getDfzh());
                 st.setBigDecimal(3,tjjg.getJyzcs());

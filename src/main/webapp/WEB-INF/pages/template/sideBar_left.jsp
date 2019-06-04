@@ -28,10 +28,10 @@
         <svg class="icon">
             <use xlink:href="#icon-xiangqing"></use>
         </svg><br>案件</a>
-     <a href="/SINOFAITH/customerPro" >
-        <svg class="icon">
-            <use xlink:href="#icon-renyuanxinxi"></use>
-        </svg><br>人员信息</a>
+     <%--<a href="/SINOFAITH/customerPro" >--%>
+        <%--<svg class="icon">--%>
+            <%--<use xlink:href="#icon-renyuanxinxi"></use>--%>
+        <%--</svg><br>人员信息</a>--%>
     <a href="/SINOFAITH/bank">
         <svg class="icon">
             <use xlink:href="#icon-icon"></use>
@@ -48,10 +48,10 @@
         <svg class="icon">
             <use xlink:href="#icon-wuliu"></use>
         </svg><br>物流</a>
-    <a href="/SINOFAITH/pyramidSale">
-        <svg class="icon">
-            <use xlink:href="#icon-cengji"></use>
-        </svg><br>传销</a>
+    <%--<a href="/SINOFAITH/pyramidSale">--%>
+        <%--<svg class="icon">--%>
+            <%--<use xlink:href="#icon-cengji"></use>--%>
+        <%--</svg><br>传销</a>--%>
      <c:if test="${user.role==0}">
      <a href="/SINOFAITH/user">
         <svg class="icon">

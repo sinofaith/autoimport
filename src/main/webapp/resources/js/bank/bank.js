@@ -10,6 +10,7 @@ $(function () {
     $('#myModal1').on('hide.bs.modal', function () {
         $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
     });
+    $("[data-toggle='tooltip']").tooltip();
 });
 
 function bankSkip(code) {
@@ -93,6 +94,7 @@ function UploadBank() {
                 if($("#c43")!=null){
                     $("#c43").remove();
                 }
+
                 var resp = xhr.responseText;
                 keyList = JSON.parse(resp);
                 for(var key in keyList){
@@ -114,6 +116,9 @@ function UploadBank() {
                 excelData = [];
                 $('#myModal').modal('hide');
                 $('#myModal1').modal('show');
+                $('#nextSelect').attr("disabled",true);
+                $('#c43').attr("disabled",true);
+                $('#c44').attr("disabled",true);
             }
         }else{
             alertify.set('notifier','position', 'top-center');
@@ -150,11 +155,11 @@ oldSheet = [];
 // 拼接table
 function insertTable(sheetName){
     oldSheet = sheetName;
-
     var sel = document.getElementById("c43");
     var index = sel.selectedIndex;
     var selectLength = sel.length-1;
-    if((selectLength==index && selectLength!=0) || optionSize==1){
+    var cbx = $("#cb1").attr("checked");
+    if(((selectLength==index && selectLength!=0) || optionSize==1)||cbx == 'checked'){
         $("#nextSelect").attr("disabled",true);
     }else{
         $("#nextSelect").attr("disabled",false);
@@ -203,20 +208,20 @@ function insertTable(sheetName){
                     (sheetName[key][i].indexOf("对手交易余额")!=-1&&j==startNum+14)||(sheetName[key][i].indexOf("对手余额")!=-1&&j==startNum+15)||
                     (sheetName[key][i].indexOf("备注")!=-1&&j==startNum+16)||(sheetName[key][i].indexOf("交易证件号码")!=-1&&j==startNum+17)||
                     (sheetName[key][i].indexOf("交易发生地")!=-1&&j==startNum+18)||(sheetName[key][i].indexOf("交易户名")!=-1&&j==startNum+19)||
-                    (sheetName[key][i].indexOf("补充说明")!=-1&&j==startNum+20)){
+                    (sheetName[key][i].indexOf("交易时间")!=-1&&j==startNum+20)){
                     $("#c"+j).append("<option value='"+sheetName[key][i]+"' selected>"+sheetName[key][i]+"</option>");
                 }else{
                     $("#c"+j).append("<option value='"+sheetName[key][i]+"'>"+sheetName[key][i]+"</option>");
                 }
             }else if(tableName=='bank_customer'){
                 if((sheetName[key][i].indexOf("证件号码")!=-1&&sheetName[key][i]!="法人代表证件号码"&&
-                sheetName[key][i]!="代办人证件号码"&&sheetName[key][i]!="其它证件_证件号码"&&j==startNum)||(sheetName[key][i].indexOf("单位电话")!=-1&&j==startNum+1)||
-                   (sheetName[key][i].indexOf("单位地址")!=-1&&j==startNum+2)||(sheetName[key][i].indexOf("Email")!=-1&&j==startNum+3)||
-                   (sheetName[key][i].indexOf("工作单位")!=-1&&j==startNum+4)||(sheetName[key][i].indexOf("联系电话")!=-1&&j==startNum+5)||
-                   (sheetName[key][i].indexOf("联系手机")!=-1&&j==startNum+6)||(sheetName[key][i].indexOf("客户名称")!=-1&&j==startNum+7)||
-                   (sheetName[key][i].indexOf("现住址_行政区划")!=-1&&j==startNum+8)||(sheetName[key][i].indexOf("证件类型")!=-1
-                &&sheetName[key][i]!="法人代表证件类型"&&sheetName[key][i]!="代办人证件类型"&&j==startNum+9)||
-                   (sheetName[key][i].indexOf("住宅电话")!=-1&&j==startNum+10)){
+                        sheetName[key][i]!="代办人证件号码"&&sheetName[key][i]!="其它证件_证件号码"&&j==startNum)||(sheetName[key][i].indexOf("单位电话")!=-1&&j==startNum+1)||
+                    (sheetName[key][i].indexOf("单位地址")!=-1&&j==startNum+2)||(sheetName[key][i].indexOf("Email")!=-1&&j==startNum+3)||
+                    (sheetName[key][i].indexOf("工作单位")!=-1&&j==startNum+4)||(sheetName[key][i].indexOf("联系电话")!=-1&&j==startNum+5)||
+                    (sheetName[key][i].indexOf("联系手机")!=-1&&j==startNum+6)||(sheetName[key][i].indexOf("客户名称")!=-1&&j==startNum+7)||
+                    (sheetName[key][i].indexOf("现住址_行政区划")!=-1&&j==startNum+8)||(sheetName[key][i].indexOf("证件类型")!=-1
+                        &&sheetName[key][i]!="法人代表证件类型"&&sheetName[key][i]!="代办人证件类型"&&j==startNum+9)||
+                    (sheetName[key][i].indexOf("住宅电话")!=-1&&j==startNum+10)){
                     $("#c"+j).append("<option value='"+sheetName[key][i]+"' selected>"+sheetName[key][i]+"</option>");
                 }else{
                     $("#c"+j).append("<option value='"+sheetName[key][i]+"'>"+sheetName[key][i]+"</option>");
@@ -252,7 +257,20 @@ function insertMappingFields(){
     }
     insertTable(oldSheet)
 }
-
+function cbxNextSelect() {
+    var cb1 = $("#cb1").attr("checked");
+    if(cb1=='checked'){
+        $("#nextSelect").attr("disabled",false);
+        $("#cb1").attr("checked",false);
+        $('#c43').attr("disabled",false);
+        $('#c44').attr("disabled",false);
+    }else{
+        $("#nextSelect").attr("disabled",true);
+        $("#cb1").attr('checked',true);
+        $('#c43').attr("disabled",true);
+        $('#c44').attr("disabled",true);
+    }
+}
 // 下一个
 function nextSelect(){
     var sel = document.getElementById("c43");
@@ -305,7 +323,23 @@ function uploadMapping(){
             }
         }
     }else{
-        excelData.push(fieldList);
+        var cb1 = $("#cb1").attr("checked");
+        if(cb1=='checked'){
+            for(var key in keyList){
+                for(var k in keyList[key]){
+                    var fieldList1=[];
+                    fieldList1.push(key);
+                    fieldList1.push(k);
+                    fieldList1.push(tableName);
+                    for(i=startNum;i<endNum;i++){
+                        fieldList1.push($("#c"+i).val());
+                    }
+                    excelData.push(fieldList1);
+                }
+            }
+        }else{
+            excelData.push(fieldList);
+        }
     }
     console.log(excelData);
 

@@ -547,7 +547,7 @@ public class BankZcxxServices {
             bankZcxx.setYhkkh("");
         }else{
             String yhkkh = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(4)))).replace(",","");
-            bankZcxx.setYhkkh(yhkkh);
+            bankZcxx.setYhkkh(bankZcxx.remove_(yhkkh));
         }
         if(field.get(5).equals("无") || xssfRow.getCell(title.get(field.get(5)))==null){
             bankZcxx.setKhxm("");
@@ -577,19 +577,19 @@ public class BankZcxxServices {
             bankZcxx.setZhye(new BigDecimal(0));
         }else{
             String ZHYE = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(9)))).replace(",","");
-            bankZcxx.setZhye(new BigDecimal(ZHYE));
+            bankZcxx.setZhye(new BigDecimal("".equals(ZHYE)? "0" : ZHYE));
         }
         if(field.get(10).equals("无") || xssfRow.getCell(title.get(field.get(10)))==null){
             bankZcxx.setKyye(new BigDecimal(0));
         }else{
             String KYYE = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(10)))).replace(",","");
-            bankZcxx.setKyye(new BigDecimal(KYYE));
+            bankZcxx.setKyye(new BigDecimal("".equals(KYYE)? "0" : KYYE));
         }
         if(field.get(11).equals("无") || xssfRow.getCell(title.get(field.get(11)))==null){
             bankZcxx.setYhkzh("");
         }else{
             String YHKZH = MappingUtils.rowValue(xssfRow.getCell(title.get(field.get(11)))).replace(",","");
-            bankZcxx.setYhkzh(YHKZH);
+            bankZcxx.setYhkzh(bankZcxx.remove_(YHKZH));
         }
         if(field.get(12).equals("无") || xssfRow.getCell(title.get(field.get(12)))==null){
             bankZcxx.setZhlx(1l);

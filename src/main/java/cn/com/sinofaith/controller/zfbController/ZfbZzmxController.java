@@ -279,9 +279,9 @@ public class ZfbZzmxController {
             // 添加逻辑或的关系
             Disjunction disjunction = Restrictions.disjunction();
             if(czje!=null && !czje.equals(""))
-                disjunction.add(Restrictions.gt("czzje",Double.parseDouble(czje)));
+                disjunction.add(Restrictions.gt("czzje",new BigDecimal(czje)));
             if(jzje!=null && !jzje.equals(""))
-                disjunction.add(Restrictions.gt("jzzje",Double.parseDouble(jzje)));
+                disjunction.add(Restrictions.gt("jzzje",new BigDecimal(jzje)));
             dc.add(disjunction);
         }else{
             dc.addOrder(Order.desc("fkzje"));

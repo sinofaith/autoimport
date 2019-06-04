@@ -295,7 +295,7 @@ public class BankZzxxServices {
         for(String path : listPath){
             String excelName = path.substring(path.lastIndexOf("\\")+1);
             for(List<String> field : fields){
-                if(field.get(0).equals(excelName) && field.get(2).equals("bank_zzxx")){
+                if((field.get(0).equals(excelName) && field.get(2).equals("bank_zzxx"))||(fields.size()==1)){
                     if(path.endsWith(".xlsx")){
                         bankZzxxList = getBy2007ExcelAll(path,excelName,fields);
                     }else if(path.endsWith(".xls")){
@@ -313,25 +313,40 @@ public class BankZzxxServices {
             allBp.put((allbp.get(j).getYhkkh()).replace("null", ""), null);
         }
         Map<String,BankPersonEntity> mapZ= new HashMap<>();
-        for (int g = 0; g < listZzxx.size(); g++) {
-            BankPersonEntity bp = new BankPersonEntity();
-            bp.setYhkkh(listZzxx.get(g).getDskh());
-            bp.setYhkzh(String.valueOf(aj.getId()));
-            bp.setXm(listZzxx.get(g).getDsxm());
-            if (bp.getYhkkh()!=null && bp.getXm()!=null&&bp.getYhkkh().length() > 0 && bp.getXm().length() > 0) {
-                if (bp.getXm().contains("支付宝")) {
-                    bp.setXm("支付宝（中国）网络技术有限公司");
-                } else if (bp.getXm().contains("微信") || bp.getXm().contains("财付通")) {
-                    bp.setXm("财付通支付科技有限公司");
+        for (int g = 0; g < bankZzxxLists.size(); g++) {
+            BankPersonEntity dsbp = new BankPersonEntity();
+            dsbp.setYhkkh(bankZzxxLists.get(g).getDskh());
+            dsbp.setYhkzh(String.valueOf(aj.getId()));
+            dsbp.setXm(bankZzxxLists.get(g).getDsxm());
+
+            BankPersonEntity jybp = new BankPersonEntity();
+            jybp.setYhkkh(bankZzxxLists.get(g).getYhkkh());
+            jybp.setYhkzh(String.valueOf(aj.getId()));
+            jybp.setXm(bankZzxxLists.get(g).getJyxm());
+//                bp.setKhh(bankName(GetBank.getBankname(bp.getYhkkh()).split("·")[0], listZzxx.get(g).getDskhh()));
+
+            if (dsbp.getYhkkh()!=null && dsbp.getXm()!=null&&dsbp.getYhkkh().length() > 0 && dsbp.getXm().length() > 0) {
+                if (dsbp.getXm().contains("支付宝")) {
+                    dsbp.setXm("支付宝（中国）网络技术有限公司");
+                } else if (dsbp.getXm().contains("微信") || dsbp.getXm().contains("财付通")) {
+                    dsbp.setXm("财付通支付科技有限公司");
                 }
-                mapZ.put((bp.getYhkkh()).replace("null", ""), bp);
-            } else {
+                mapZ.put((dsbp.getYhkkh()).replace("null", ""), dsbp);
+            }else if(jybp.getYhkkh()!=null && jybp.getXm()!=null&&jybp.getYhkkh().length() > 0 && jybp.getXm().length() > 0){
+                if (jybp.getXm().contains("支付宝")) {
+                    jybp.setXm("支付宝（中国）网络技术有限公司");
+                } else if (jybp.getXm().contains("微信") || jybp.getXm().contains("财付通")) {
+                    jybp.setXm("财付通支付科技有限公司");
+                }
+                mapZ.put((jybp.getYhkkh()).replace("null", ""), jybp);
+            }
+            else {
                 continue;
             }
         }
         List<String> str = new ArrayList<>();
         for (String o : mapZ.keySet()) {
-            if (allBp.containsKey(o)) {
+            if (allBp.containsKey(new BankPersonEntity().remove_(o))) {
                 str.add(o);
             }
         }
@@ -393,9 +408,13 @@ public class BankZzxxServices {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
-        } finally {
+            System.out.println(excelName.substring(13,excelName.length()));
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println(excelName.substring(13,excelName.length())+"-------------");
+        }finally {
             try {
                 if(is!=null)
                     is.close();
@@ -465,8 +484,12 @@ public class BankZzxxServices {
                     }
                 }
             }
+        }catch (NullPointerException e) {
+            e.printStackTrace();
+            System.out.println(excelName.substring(13,excelName.length()));
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(excelName.substring(13,excelName.length())+"-------------");
         } finally{
             try {
                 if(fi!=null){
@@ -490,30 +513,34 @@ public class BankZzxxServices {
      */
     private BankZzxxEntity RowToEntity(Row xssfRow, List<String> field, Map<String, Integer> title) {
         BankZzxxEntity bankZzxx = new BankZzxxEntity();
-        String YHKKH = MappingUtils.mappingFieldString(xssfRow,field.get(3),title);
-        if(YHKKH.indexOf("_")>5){
-            bankZzxx.setYhkkh(YHKKH.split("_")[0]);
-        }else {bankZzxx.setYhkkh(YHKKH);}
-        bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(4),title));
-        bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(5),title));
+        String YHKKH = bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(3),title));
+        bankZzxx.setYhkkh(YHKKH);
+        bankZzxx.setJyxm(MappingUtils.mappingFieldString(xssfRow,field.get(22),title));
+        bankZzxx.setJyzjh(MappingUtils.mappingFieldString(xssfRow,field.get(20),title));
+        String jyrq = MappingUtils.mappingFieldString(xssfRow,field.get(4),title);
+        if(jyrq.length()>0){
+            bankZzxx.setJysj(jyrq+MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
+        }else{
+            bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
+        }
+
+        bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(5),title).abs());
         bankZzxx.setJyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(6),title));
-        bankZzxx.setSfbz(MappingUtils.mappingFieldString(xssfRow,field.get(7),title));
-        bankZzxx.setDskh(MappingUtils.mappingFieldString(xssfRow,field.get(14),title));
+        bankZzxx.setSfbz(MappingUtils.mappingFieldString(xssfRow,field.get(7),title).replace("收","进").replace("付","出").replace("贷","入").replace("借","出"));
+        bankZzxx.setDskh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(14),title)));
         bankZzxx.setDsxm(MappingUtils.mappingFieldString(xssfRow,field.get(9),title));
         bankZzxx.setDssfzh(MappingUtils.mappingFieldString(xssfRow,field.get(10),title));
-        bankZzxx.setZysm(MappingUtils.mappingFieldString(xssfRow,field.get(11),title));
-        bankZzxx.setJysfcg(MappingUtils.mappingFieldString(xssfRow,field.get(12),title));
-        bankZzxx.setYhkzh(MappingUtils.mappingFieldString(xssfRow,field.get(13),title));
-        bankZzxx.setDszh(MappingUtils.mappingFieldString(xssfRow,field.get(8),title));
         bankZzxx.setDskhh(MappingUtils.mappingFieldString(xssfRow,field.get(15),title));
+
+        bankZzxx.setZysm(MappingUtils.mappingFieldString(xssfRow,field.get(11),title));
+//        bankZzxx.setJysfcg(MappingUtils.mappingFieldString(xssfRow,field.get(12),title));
+//        bankZzxx.setYhkzh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(13),title)));
+//        bankZzxx.setDszh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(8),title)));
         bankZzxx.setJywdmc(MappingUtils.mappingFieldString(xssfRow,field.get(16),title));
-        bankZzxx.setDsjyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(17),title));
-        bankZzxx.setDsye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(18),title));
+//        bankZzxx.setDsjyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(17),title));
+//        bankZzxx.setDsye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(18),title));
         bankZzxx.setBz(MappingUtils.mappingFieldString(xssfRow,field.get(19),title));
-        bankZzxx.setJyzjh(MappingUtils.mappingFieldString(xssfRow,field.get(20),title));
         bankZzxx.setJyfsd(MappingUtils.mappingFieldString(xssfRow,field.get(21),title));
-        bankZzxx.setJyxm(MappingUtils.mappingFieldString(xssfRow,field.get(22),title));
-        bankZzxx.setBcsm(MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
         if(bankZzxx.getDskh()==null || "".equals(bankZzxx.getDskh())){
             String bcsm = bankZzxx.getYhkkh()+"-";
             if(bankZzxx.getDsxm()!=null && !"".equals(bankZzxx.getDsxm())){

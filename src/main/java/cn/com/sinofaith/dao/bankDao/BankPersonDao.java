@@ -14,11 +14,18 @@ import java.util.List;
 @Repository
 public class BankPersonDao extends BaseDao<BankPersonEntity>{
     public int insert(BankPersonEntity bpe){
-        boolean temp = bpe.getXm().contains("财付通")||bpe.getXm().contains("支付")||bpe.getXm().contains("清算")
-                || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金")|| bpe.getXm().contains("银行")
+//        boolean temp = bpe.getXm().contains("财付通")||bpe.getXm().contains("支付")||bpe.getXm().contains("清算")
+//                || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金")|| bpe.getXm().contains("银行")
+//                || bpe.getXm().contains("银联") || bpe.getXm().contains("保险") || bpe.getXm().contains("过渡")
+//                || bpe.getXm().contains("美团");
+//        if(temp){
+//            bpe.setDsfzh(1);
+//        }
+        boolean temp = bpe.getXm().contains("财付通") || bpe.getXm().contains("支付") || bpe.getXm().contains("清算")
+                || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金") || bpe.getXm().contains("银行")
                 || bpe.getXm().contains("银联") || bpe.getXm().contains("保险") || bpe.getXm().contains("过渡")
                 || bpe.getXm().contains("美团");
-        if(temp){
+        if (temp) {
             bpe.setDsfzh(1);
         }
         saveOrUpdate(bpe);
@@ -36,14 +43,22 @@ public class BankPersonDao extends BaseDao<BankPersonEntity>{
             pstm = con.prepareStatement(sql);
             for (int j = 0; j < listbp.size(); j++) {
                 bpe = listbp.get(j);
-                boolean temp = bpe.getXm().contains("财付通")||bpe.getXm().contains("支付")||bpe.getXm().contains("清算")
-                        || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金")|| bpe.getXm().contains("银行")
+                if(bpe.getYhkkh()==null || bpe.getXm()==null ||bpe.getYhkkh().length()<1||bpe.getXm().length()<1){
+                    continue;
+                }
+                if (bpe.getXm().contains("支付宝")) {
+                    bpe.setXm( "支付宝（中国）网络技术有限公司");
+                } else if (bpe.getXm().contains("微信") || bpe.getXm().contains("财付通")) {
+                    bpe.setXm("财付通支付科技有限公司");
+                }
+                boolean temp = bpe.getXm().contains("财付通") || bpe.getXm().contains("支付") || bpe.getXm().contains("清算")
+                        || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金") || bpe.getXm().contains("银行")
                         || bpe.getXm().contains("银联") || bpe.getXm().contains("保险") || bpe.getXm().contains("过渡")
                         || bpe.getXm().contains("美团");
-                if(temp){
+                if (temp) {
                     bpe.setDsfzh(1);
                 }
-                pstm.setString(1, bpe.getYhkkh().replace("_156_1","").trim());
+                pstm.setString(1, bpe.remove_(bpe.getYhkkh()));
                 pstm.setString(2, aj_id);
                 pstm.setString(3, bpe.getXm());
                 pstm.setLong(4,bpe.getDsfzh());
