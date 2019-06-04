@@ -294,7 +294,7 @@
                             <label for="excelSheet">数据库表名</label>
                             <select class="form-control" id="c45" onchange='insertMappingFields()'>
                                 <option value='bank_zcxx' selected>资金开户信息表</option>
-                                <option value='bank_zzxx' >资金交易明细表</option>
+                                <option value='bank_zzxx'  >资金交易明细表</option>
                                 <option value='bank_customer'>资金人员信息表</option>
                             </select>
                         </span>
@@ -377,19 +377,19 @@
                         <select id="c28" placeholder="交易证件号" onchange="selectC()">
                         </select>
                     </div>
-
                     <div class="col-md-1">
-                         <label class="label_c" for="c31">交易日期</label>
-                         <select id="c31" placeholder="交易日期" onchange="selectC()">
-                         </select>
-                    </div>
-                    <div class="col-md-1">
-                        <label class="label_c" for="c12">交易时间*</label>
-                        <select	 id="c12" placeholder="交易时间" onchange="selectC()">
+                        <label class="label_c" for="c12">交易日期*</label>
+                        <select	 id="c12" placeholder="交易日期" onchange="selectC()">
                         </select>
                     </div>
                     <div class="col-md-1">
-                        <label class="label_c" for="c13">交易金额*</label>
+                         <label class="label_c" for="c31">交易时间</label>
+                         <select id="c31" placeholder="交易时间" onchange="selectC()">
+                         </select>
+                    </div>
+
+                    <div class="col-md-1">
+                        <label class="label_c" for="c13">交易金额/借方发生额*</label>
                         <select	 id="c13" placeholder="交易金额" onchange="selectC()">
                         </select>
                     </div>
@@ -401,7 +401,7 @@
                     <div class="col-md-1">
                         <!--<label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>-->
                         <label class="label_c" style="text-decoration:underline" data-toggle="tooltip"
-                               data-placement="top" data-html="true"  title="收付标志仅支持<br>进/出、收/付、贷/借" for="c15">收付标志*</label>
+                               data-placement="top" data-html="true"  title="收付标志仅支持<br>进/出、收/付、贷/借" for="c15">收付标志/贷方发生额*</label>
                         <select	id="c15" placeholder="收付标志" onchange="selectC()">
                         </select>
                     </div>
@@ -434,8 +434,8 @@
                         </select>
                     </div>
                     <div class="col-md-1">
-                        <label class="label_c" for="c18">对手身份证号</label>
-                        <select	id="c18" placeholder="对手身份证号" onchange="selectC()">
+                        <label class="label_c" for="c18">对手证件号</label>
+                        <select	id="c18" placeholder="对手证件号" onchange="selectC()">
                         </select>
                     </div>
                     <div class="col-md-1">
@@ -531,7 +531,7 @@
                             </select>
                         </div>
                     </div>
-                    <button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextSelect()">下一个</button>
+                    <button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;"  disabled='disabled'class="btn btn-primary" onclick="nextSelect()">下一个</button>
                     <button id="mapping" type="button" style="margin-left: 1280px" class="btn btn-primary" onclick="uploadMapping()">提交映射</button>
                     <span style="float: right;">
                         <input type="checkbox" id="cb1" checked value="1" onclick="cbxNextSelect()">

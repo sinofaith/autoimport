@@ -47,23 +47,23 @@
                                     </tr>
                                     <tr align="center">
                                         <td width="4%">序号</td>
-                                        <td width="7%">支付宝账号</td>
+                                        <td width="10%">支付宝账号</td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=zfbmc">账号名称</a></td>
                                         <td width="10%">对方账号</td>
                                         <td width="15%">对方信息</td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=fkzje">出账总金额</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=fkzje">出账总金额</a></td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=skzcs">进账总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=skzje">进账总金额</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=skzje">进账总金额</a></td>
                                         <td width="3%">详情</td>
                                     </tr>
                                     <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
-                                            <td align="center" title="${item.zfbzh}"><div style="width:110px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbzh}</div></td>
+                                            <td align="center" title="${item.zfbzh}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbzh}</div></td>
                                             <td align="center" title="${item.zfbmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbmc}</div></td>
-                                            <td align="center" title="${item.dfzh}"><div style="width:110px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfzh!=null?item.dfzh:"转账到银行卡"}</div></td>
+                                            <td align="center" title="${item.dfzh}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfzh!=null?item.dfzh:"转账到银行卡"}</div></td>
                                             <td align="center" title="${item.dfmc}"><div style="width:180px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfmc}</div></td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.fkzcs}</td>

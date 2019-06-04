@@ -57,7 +57,7 @@ public class ZfbZzmxGtzhService {
      * @return
      */
     public List<ZfbZzmxGtzhForm> getZfbZzmxGtzhAll(long id, String search) {
-        List<ZfbZzmxGtzhForm> jyjlForms = new ArrayList<>();
+        List<ZfbZzmxGtzhForm> jyjlForms = new ArrayList<>();;
         int rowAll = zfbZzmxGtzhDao.getCountRow(search,id);
         if(rowAll>0) {
             jyjlForms = zfbZzmxGtzhDao.queryForPage(0,0,search,id, false);

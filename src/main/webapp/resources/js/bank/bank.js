@@ -10,7 +10,7 @@ $(function () {
     $('#myModal1').on('hide.bs.modal', function () {
         $.ajax({url:"/SINOFAITH/bankzzxx/removeDesc"})
     });
-    $("[data-toggle='tooltip']").tooltip();
+     $("[data-toggle='tooltip']").tooltip();
 });
 
 function bankSkip(code) {
@@ -215,13 +215,13 @@ function insertTable(sheetName){
                 }
             }else if(tableName=='bank_customer'){
                 if((sheetName[key][i].indexOf("证件号码")!=-1&&sheetName[key][i]!="法人代表证件号码"&&
-                        sheetName[key][i]!="代办人证件号码"&&sheetName[key][i]!="其它证件_证件号码"&&j==startNum)||(sheetName[key][i].indexOf("单位电话")!=-1&&j==startNum+1)||
-                    (sheetName[key][i].indexOf("单位地址")!=-1&&j==startNum+2)||(sheetName[key][i].indexOf("Email")!=-1&&j==startNum+3)||
-                    (sheetName[key][i].indexOf("工作单位")!=-1&&j==startNum+4)||(sheetName[key][i].indexOf("联系电话")!=-1&&j==startNum+5)||
-                    (sheetName[key][i].indexOf("联系手机")!=-1&&j==startNum+6)||(sheetName[key][i].indexOf("客户名称")!=-1&&j==startNum+7)||
-                    (sheetName[key][i].indexOf("现住址_行政区划")!=-1&&j==startNum+8)||(sheetName[key][i].indexOf("证件类型")!=-1
-                        &&sheetName[key][i]!="法人代表证件类型"&&sheetName[key][i]!="代办人证件类型"&&j==startNum+9)||
-                    (sheetName[key][i].indexOf("住宅电话")!=-1&&j==startNum+10)){
+                sheetName[key][i]!="代办人证件号码"&&sheetName[key][i]!="其它证件_证件号码"&&j==startNum)||(sheetName[key][i].indexOf("单位电话")!=-1&&j==startNum+1)||
+                   (sheetName[key][i].indexOf("单位地址")!=-1&&j==startNum+2)||(sheetName[key][i].indexOf("Email")!=-1&&j==startNum+3)||
+                   (sheetName[key][i].indexOf("工作单位")!=-1&&j==startNum+4)||(sheetName[key][i].indexOf("联系电话")!=-1&&j==startNum+5)||
+                   (sheetName[key][i].indexOf("联系手机")!=-1&&j==startNum+6)||(sheetName[key][i].indexOf("客户名称")!=-1&&j==startNum+7)||
+                   (sheetName[key][i].indexOf("现住址_行政区划")!=-1&&j==startNum+8)||(sheetName[key][i].indexOf("证件类型")!=-1
+                &&sheetName[key][i]!="法人代表证件类型"&&sheetName[key][i]!="代办人证件类型"&&j==startNum+9)||
+                   (sheetName[key][i].indexOf("住宅电话")!=-1&&j==startNum+10)){
                     $("#c"+j).append("<option value='"+sheetName[key][i]+"' selected>"+sheetName[key][i]+"</option>");
                 }else{
                     $("#c"+j).append("<option value='"+sheetName[key][i]+"'>"+sheetName[key][i]+"</option>");
@@ -306,6 +306,11 @@ function uploadMapping(){
         startNum = 1;endNum = 11;
     }else if(tableName=='bank_zzxx'){
         startNum = 11;endNum = 32;
+        if($("#c11").val()=='无'||$("#c12").val()=='无'||$("#c13").val()=='无'||$("#c15").val()=='无'||$("#c22").val()=='无'){
+            alertify.set('notifier','position', 'top-center');
+            alertify.error("带*为必填选项");
+            return ;
+        }
     }else if(tableName=='bank_customer'){
         startNum = 32;endNum = 43;
     }

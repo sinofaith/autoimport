@@ -84,11 +84,11 @@
                                         <td width="6%">序号</td>
                                         <td width="10%">姓名</td>
                                         <td width="10%">证件号码</td>
-                                        <td width="10%">案件</td>
-                                        <td width="10%">手机号</td>
-                                        <td width="10%">银行卡</td>
-                                        <td width="10%">微信账户</td>
-                                        <td width="10%">支付宝账户</td>
+                                        <td width="10%">案件数</td>
+                                        <td width="10%">手机数</td>
+                                        <td width="10%">银行卡数</td>
+                                        <td width="10%">微信数</td>
+                                        <td width="10%">支付宝数</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">

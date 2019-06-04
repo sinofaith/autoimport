@@ -68,23 +68,23 @@
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
-                                                <%--<td align="center" title="${item.jyzh}"><button style="color: #666">${item.jyzh}</button></td>--%>
-                                                <td align="center" title="${item.jyzh}"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>
+                                                <td align="center" title="${item.jyzh}"><button style="color: #666">${item.jyzh}</button></td>
+                                                <%--<td align="center" title="${item.jyzh}"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>--%>
                                                 <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center"  title="${item.dfzh}">
                                                         <div class="dropCss" >
                                                             <div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
                                                                 <c:if test="${item.zhlx eq 2}">
-                                                                    <%--<button style="color: #FF00FE">${item.dfzh}</button>--%>
-                                                                    <button data-toggle="modal" data-target="#myModal2"  onclick="getBanktjjgs(this,'dfzh')" style="color: #FF00FE">${item.dfzh}</button>
+                                                                    <button style="color: #FF00FE">${item.dfzh}</button>
+                                                                    <%--<button data-toggle="modal" data-target="#myModal2"  onclick="getBanktjjgs(this,'dfzh')" style="color: #FF00FE">${item.dfzh}</button>--%>
                                                                 </c:if>
                                                                 <c:if test="${item.zhlx eq 1}">
-                                                                    <%--<button style="color: red">${item.dfzh}</button>--%>
-                                                                    <button data-toggle="modal" data-target="#myModal2" onclick="getBanktjjgs(this,'dfzh')"  style="color: red">${item.dfzh}</button>
+                                                                    <button style="color: red">${item.dfzh}</button>
+                                                                    <%--<button data-toggle="modal" data-target="#myModal2" onclick="getBanktjjgs(this,'dfzh')"  style="color: red">${item.dfzh}</button>--%>
                                                                 </c:if>
                                                                 <c:if test="${item.zhlx eq 0}">
-                                                                    <%--<button onclick="getBanktjjgs(this,'dfzh')" style="color: blue">${item.dfzh}</button>--%>
-                                                                    <button data-toggle="modal" data-target="#myModal2" onclick="getBanktjjgs(this,'dfzh')" style="color: blue">${item.dfzh}</button>
+                                                                    <button onclick="getBanktjjgs(this,'dfzh')" style="color: blue">${item.dfzh}</button>
+                                                                    <%--<button data-toggle="modal" data-target="#myModal2" onclick="getBanktjjgs(this,'dfzh')" style="color: blue">${item.dfzh}</button>--%>
                                                                 </c:if>
                                                             </div>
                                                             <div class="dropCss-content">

@@ -155,7 +155,7 @@
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
                            <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
                            <c:if test="${!fn:contains(aj.aj, ',')}">
-                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">银行卡数据导入</button>
+                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal5">银行卡数据导入</button>
                            </c:if>
                            <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bankzzxx/download'" >数据导出</button>
                        </span>
@@ -342,7 +342,7 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c13">交易金额*</label>
+                            <label class="label_c" for="c13">交易金额/借方发生额*</label>
                             <select	 id="c13" placeholder="交易金额" onchange="selectC()">
                             </select>
                         </div>
@@ -354,7 +354,7 @@
                         <div class="col-md-1">
                             <!--<label for="c15"><a href="#" onclick="$('#myModal3').modal('show')">收付标志</a></label>-->
                             <label class="label_c" style="text-decoration:underline" data-toggle="tooltip"
-                                   data-placement="top" data-html="true"  title="收付标志仅支持<br>进/出、收/付、贷/借" for="c15">收付标志*</label>
+                                   data-placement="top" data-html="true"  title="收付标志仅支持<br>进/出、收/付、贷/借" for="c15">收付标志/贷方发生额*</label>
                             <select	id="c15" placeholder="收付标志" onchange="selectC()">
                             </select>
                         </div>
@@ -387,8 +387,8 @@
                             </select>
                         </div>
                         <div class="col-md-1">
-                            <label class="label_c" for="c18">对手身份证号</label>
-                            <select	id="c18" placeholder="对手身份证号" onchange="selectC()">
+                            <label class="label_c" for="c18">对手证件号</label>
+                            <select	id="c18" placeholder="对手证件号" onchange="selectC()">
                             </select>
                         </div>
                         <div class="col-md-1">

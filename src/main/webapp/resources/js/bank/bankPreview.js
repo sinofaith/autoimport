@@ -5,8 +5,8 @@ for(var value in f){
 }
 
 function select_change(){
-    $("#jzje").val("");
-    $("#czje").val("");
+    $("#jzje").val("50000");
+    $("#czje").val("50000");
     yjdcDownload(true);
 }
 

@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class BankZzxxServices {
@@ -248,8 +250,8 @@ public class BankZzxxServices {
     }
 
     public List<BankZzxxEntity> getAll(long aj_id){
-       List<BankZzxxEntity> zz = bankzzd.find(" from BankZzxxEntity where aj_id = "+aj_id);
-       return zz;
+        List<BankZzxxEntity> zz = bankzzd.find(" from BankZzxxEntity where aj_id = "+aj_id);
+        return zz;
     }
 
     public Map<String,Map<String,List<String>>> readExcel(String uploadPath) {
@@ -288,7 +290,7 @@ public class BankZzxxServices {
      * @return
      */
     public int getBankZzxxAll(List<String> listPath, List<List<String>> fields,
-                                               AjEntity aj, List<BankZzxxEntity> listZzxx) {
+                              AjEntity aj, List<BankZzxxEntity> listZzxx) {
         // 读取
         List<BankZzxxEntity> bankZzxxList = null;
         List<BankZzxxEntity> bankZzxxLists = new ArrayList<>();
@@ -416,8 +418,11 @@ public class BankZzxxServices {
             System.out.println(excelName.substring(13,excelName.length())+"-------------");
         }finally {
             try {
-                if(is!=null)
+                if(is!=null) {
                     is.close();
+                    new File(path).delete();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -494,6 +499,7 @@ public class BankZzxxServices {
             try {
                 if(fi!=null){
                     fi.close();
+                    new File(path).delete();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -503,7 +509,14 @@ public class BankZzxxServices {
         new File(path).delete();
         return zzxxList;
     }
-
+    public static boolean isStartWithNumber(String str) {
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str.charAt(0)+"");
+        if (!isNum.matches()) {
+            return false;
+        }
+        return true;
+    }
     /**
      * excel行映射实体类
      * @param xssfRow
@@ -519,14 +532,25 @@ public class BankZzxxServices {
         bankZzxx.setJyzjh(MappingUtils.mappingFieldString(xssfRow,field.get(20),title));
         String jyrq = MappingUtils.mappingFieldString(xssfRow,field.get(4),title);
         if(jyrq.length()>0){
-            bankZzxx.setJysj(jyrq+MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
+            bankZzxx.setJysj(jyrq+" "+MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
         }else{
             bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
         }
 
         bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(5),title).abs());
         bankZzxx.setJyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(6),title));
-        bankZzxx.setSfbz(MappingUtils.mappingFieldString(xssfRow,field.get(7),title).replace("收","进").replace("付","出").replace("贷","入").replace("借","出"));
+        String sfbz = MappingUtils.mappingFieldString(xssfRow,field.get(7),title);
+        if(isStartWithNumber(sfbz)){
+            if(new BigDecimal(sfbz).abs().compareTo(BigDecimal.ZERO)==0){
+                bankZzxx.setSfbz("出");
+            }else{
+                bankZzxx.setSfbz("进");
+                bankZzxx.setJyje(new BigDecimal(sfbz));
+            }
+        }else{
+            bankZzxx.setSfbz(sfbz.replace("收","进").replace("付","出")
+                    .replace("贷","进").replace("借","出"));
+        }
         bankZzxx.setDskh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(14),title)));
         bankZzxx.setDsxm(MappingUtils.mappingFieldString(xssfRow,field.get(9),title));
         bankZzxx.setDssfzh(MappingUtils.mappingFieldString(xssfRow,field.get(10),title));

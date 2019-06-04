@@ -59,7 +59,7 @@
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center">${item.jyzfbzh}</td>
-                                            <td align="center">${item.jymc}</td>
+                                            <td align="center" title="${item.jymc}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jymc}</div></td>
                                             <td align="center">${item.dszfbzh}</td>
                                             <td align="center" title="${item.dsmc}"><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dsmc}</div></td>
                                             <td align="center">${item.jyzcs}</td>

@@ -176,15 +176,15 @@ public class UploadService {
                     }
                 }
             }
-                if(zhList.size()>0) {
-                    zzxxDb(zzxxs,zhList,aj);
-                }
-                if(zzxxs.size()>0) {
-                    zzxxs = new ArrayList<>(new HashSet<>(zzxxs));
-                    count += zzd.insertZzxx(zzxxs, aj);
-                }
-                zzxxs.clear();
+            if(zhList.size()>0) {
+                zzxxDb(zzxxs,zhList,aj);
             }
+            if(zzxxs.size()>0) {
+                zzxxs = new ArrayList<>(new HashSet<>(zzxxs));
+                count += zzd.insertZzxx(zzxxs, aj);
+            }
+            zzxxs.clear();
+        }
         return count;
     }
 
@@ -616,52 +616,52 @@ public class UploadService {
     }
 
     public  void getBzzxxTitle(String temp,int i,Map<String,Integer> title){
-            if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
-                title.put("yhkkh", i);
-            } else if (temp.contains("交易账号")) {
-                title.put("yhkzh", i);
-            } else if (temp.contains("交易户名")) {
-                title.put("jyxm", i);
-            } else if (temp.contains("交易证件号")) {
-                title.put("jyzjh", i);
-            } else if (temp.contains("交易日期")||temp.contains("交易时间")) {
-                title.put("jysj", i);
-            }
+        if (temp.contains("交易账卡号")||temp.contains("交易卡号")) {
+            title.put("yhkkh", i);
+        } else if (temp.contains("交易账号")) {
+            title.put("yhkzh", i);
+        } else if (temp.contains("交易户名")) {
+            title.put("jyxm", i);
+        } else if (temp.contains("交易证件号")) {
+            title.put("jyzjh", i);
+        } else if (temp.contains("交易日期")||temp.contains("交易时间")) {
+            title.put("jysj", i);
+        }
 //                        else if (temp.contains("交易时间")) {
 //                            title.put("jysfm", i);
 //                        }
-            else if (temp.contains("交易金额")) {
-                title.put("jyje", i);
-            } else if (temp.contains("交易余额") && !temp.contains("对手")) {
-                title.put("jyye", i);
-            } else if (temp.contains("收付标志")) {
-                title.put("sfbz", i);
-            } else if (temp.contains("对手账号")||temp.contains("对手账卡号")) {
-                title.put("dskh", i);
-            } else if (temp.contains("对手卡号")) {
-                title.put("dszh", i);
-            } else if (temp.contains("对手户名")) {
-                title.put("dsxm", i);
-            } else if (temp.contains("对手身份证号")) {
-                title.put("dssfzh", i);
-            } else if (temp.contains("对手开户银行")) {
-                title.put("dskhh", i);
-            } else if (temp.contains("摘要说明")) {
-                title.put("zysm", i);
-            } else if (temp.contains("交易网点名称")) {
-                title.put("jywdmc", i);
-            } else if (temp.contains("交易发生地")) {
-                title.put("jyfsd", i);
-            } else if (temp.contains("交易是否成功")) {
-                title.put("jysfcg", i);
-            } else if (temp.contains("对手交易余额")) {
-                title.put("dsjyye", i);
-            } else if (temp.contains("对手余额")) {
-                title.put("dsye", i);
-            } else if (temp.contains("备注")) {
-                title.put("bz", i);
-            }
+        else if (temp.contains("交易金额")) {
+            title.put("jyje", i);
+        } else if (temp.contains("交易余额") && !temp.contains("对手")) {
+            title.put("jyye", i);
+        } else if (temp.contains("收付标志")) {
+            title.put("sfbz", i);
+        } else if (temp.contains("对手账号")||temp.contains("对手账卡号")) {
+            title.put("dskh", i);
+        } else if (temp.contains("对手卡号")) {
+            title.put("dszh", i);
+        } else if (temp.contains("对手户名")) {
+            title.put("dsxm", i);
+        } else if (temp.contains("对手身份证号")) {
+            title.put("dssfzh", i);
+        } else if (temp.contains("对手开户银行")) {
+            title.put("dskhh", i);
+        } else if (temp.contains("摘要说明")) {
+            title.put("zysm", i);
+        } else if (temp.contains("交易网点名称")) {
+            title.put("jywdmc", i);
+        } else if (temp.contains("交易发生地")) {
+            title.put("jyfsd", i);
+        } else if (temp.contains("交易是否成功")) {
+            title.put("jysfcg", i);
+        } else if (temp.contains("对手交易余额")) {
+            title.put("dsjyye", i);
+        } else if (temp.contains("对手余额")) {
+            title.put("dsye", i);
+        } else if (temp.contains("备注")) {
+            title.put("bz", i);
         }
+    }
 
     public List<BankCustomerEntity> getBankCustByFile(List<String> listPath){
         final Map<String, Integer> title = new HashMap();
