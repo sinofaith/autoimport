@@ -125,7 +125,7 @@ function nextYjdc(){
 
 // 批量导出
 function batchExport(){
-    var url = "http://localhost:8080/SINOFAITH/bank/batchExport";
+    var url = "/SINOFAITH/bank/batchExport";
     var form = $("<form></form>").attr("action", url).attr("method", "post");
     form.append($("<input></input>").attr("type", "hidden").attr("name", "yjdcList").attr("value",JSON.stringify(yjdcList)));
     form.appendTo('body').submit().remove();

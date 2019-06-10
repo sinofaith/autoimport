@@ -261,7 +261,7 @@ public class BankZzxxServices {
         List<String> listPath = getFileList(uploadPath);
         String excelName = null;
         for (String path : listPath) {
-            excelName = path.substring(path.lastIndexOf("\\")+1);
+            excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
                 sheetMap = MappingUtils.getBy2007Excel(path);
             }else if(path.endsWith(".xls")){
@@ -295,7 +295,7 @@ public class BankZzxxServices {
         List<BankZzxxEntity> bankZzxxList = null;
         List<BankZzxxEntity> bankZzxxLists = new ArrayList<>();
         for(String path : listPath){
-            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            String excelName = path.substring(path.lastIndexOf(File.separator)+1);
             for(List<String> field : fields){
                 if((field.get(0).equals(excelName) && field.get(2).equals("bank_zzxx"))||(fields.size()==1)){
                     if(path.endsWith(".xlsx")){
@@ -540,9 +540,15 @@ public class BankZzxxServices {
         bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(5),title).abs());
         bankZzxx.setJyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(6),title));
         String sfbz = MappingUtils.mappingFieldString(xssfRow,field.get(7),title);
+        if("".equals(sfbz)){
+            sfbz ="0";
+        }
         if(isStartWithNumber(sfbz)){
             if(new BigDecimal(sfbz).abs().compareTo(BigDecimal.ZERO)==0){
                 bankZzxx.setSfbz("出");
+                if(bankZzxx.getJyje().compareTo(BigDecimal.ZERO)==0){
+                    bankZzxx.setSfbz(null);
+                }
             }else{
                 bankZzxx.setSfbz("进");
                 bankZzxx.setJyje(new BigDecimal(sfbz));
@@ -551,6 +557,7 @@ public class BankZzxxServices {
             bankZzxx.setSfbz(sfbz.replace("收","进").replace("付","出")
                     .replace("贷","进").replace("借","出"));
         }
+
         bankZzxx.setDskh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(14),title)));
         bankZzxx.setDsxm(MappingUtils.mappingFieldString(xssfRow,field.get(9),title));
         bankZzxx.setDssfzh(MappingUtils.mappingFieldString(xssfRow,field.get(10),title));

@@ -44,7 +44,7 @@ public class PyramidSaleService {
         // 读取
         List<String> listPath = getPsFileList(uploadPath);
         for (String path : listPath) {
-            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            String excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
                 sheetMap = MappingUtils.getBy2007Excel(path);
             }else if(path.endsWith(".xls")){
@@ -84,7 +84,7 @@ public class PyramidSaleService {
         List<PyramidSaleEntity> psListAll = new ArrayList<>();
         int sum = 0;
         for (String path : listPath) {
-            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            String excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
                 psList = getBy2007ExcelAll(path, excelName, field);
             }else if(path.endsWith(".xls")){

@@ -16,6 +16,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,7 +89,7 @@ public class ZfbZzmxTjjgsService {
      * @return
      */
     public List<ZfbZzmxTjjgsEntity> getZfbZzmxTjjgAll(DetachedCriteria dc) {
-        List<ZfbZzmxTjjgsEntity> wls = null;
+        List<ZfbZzmxTjjgsEntity> wls = new ArrayList<>();
         int rowAll = zfbZzmxTjjgsDao.getRowAll(dc);
         if(rowAll>0){
             wls = zfbZzmxTjjgsDao.getDoPageAll(dc);

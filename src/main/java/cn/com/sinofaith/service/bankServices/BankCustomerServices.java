@@ -189,7 +189,7 @@ public class BankCustomerServices {
         List<BankCustomerEntity> bankCustList = null;
         List<BankCustomerEntity> bankCustLists = new ArrayList<>();
         for(String path : listPath){
-            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            String excelName = path.substring(path.lastIndexOf(File.separator)+1);
             for(List<String> field : fields){
                 if(field.get(0).equals(excelName) && field.get(2).equals("bank_customer")){
                     if(path.endsWith(".xlsx")){

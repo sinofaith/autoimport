@@ -218,7 +218,7 @@ public class WuliuJjxxService {
         List<String> listPath = getPsFileList(uploadPath);
         String excelName = null;
         for (String path : listPath) {
-            excelName = path.substring(path.lastIndexOf("\\")+1);
+            excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
                 sheetMap = MappingUtils.getBy2007Excel(path);
             }else if(path.endsWith(".xls")){
@@ -258,7 +258,7 @@ public class WuliuJjxxService {
         List<WuliuEntity> wuliuList = null;
         int sum = 0;
         for (String path : listPath) {
-            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            String excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
                 wuliuList = getBy2007ExcelAll(path,excelName,field);
             }else if(path.endsWith(".xls")){

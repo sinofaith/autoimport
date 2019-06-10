@@ -262,8 +262,8 @@ public class ZfbZzmxController {
             Disjunction disjunction = Restrictions.disjunction();
             if(czje!=null && !czje.equals(""))
                 disjunction.add(Restrictions.gt("czzje",new BigDecimal(czje)));
-            if(jzje!=null && !jzje.equals(""))
-                disjunction.add(Restrictions.gt("jzzje",new BigDecimal(jzje)));
+//            if(jzje!=null && !jzje.equals(""))
+//                disjunction.add(Restrictions.gt("jzzje",new BigDecimal(jzje)));
             dc.add(disjunction);
             page = zfbJyjlSjdzsService.queryForPage(currentPage, 1000, dc);
         }
@@ -398,7 +398,7 @@ public class ZfbZzmxController {
         // 2.9 jyjlTjjgs
         Map<String, String> jyjlTjjgsMap = yjdcLists.get(8);
         dc = DetachedCriteria.forClass(ZfbJyjlTjjgsEntity.class);
-        getDetachedCriteria(dc,aj.getId(),jyjlTjjgsMap.get("czje"),jyjlTjjgsMap.get("jzje"),jyjlTjjgsMap.get("field"));
+        getDetachedCriteria(dc,aj.getId(),jyjlTjjgsMap.get("czje"),"",jyjlTjjgsMap.get("field"));
         List<ZfbJyjlTjjgsEntity> zfbJyjlTjjgsAll = zfbJyjlTjjgsService.getZfbjyjlTjjgAll(dc);
         if(zfbJyjlTjjgsAll.size()>0){
             HSSFWorkbook zfbjyjlTjjgsExcel = zfbJyjlTjjgsService.createExcel(zfbJyjlTjjgsAll);
@@ -413,8 +413,8 @@ public class ZfbZzmxController {
         Disjunction disjunction = Restrictions.disjunction();
         if(czje!=null && !czje.equals(""))
             disjunction.add(Restrictions.gt("czzje",new BigDecimal(czje)));
-        if(jzje!=null && !jzje.equals(""))
-            disjunction.add(Restrictions.gt("jzzje",new BigDecimal(jzje)));
+//        if(jzje!=null && !jzje.equals(""))
+//            disjunction.add(Restrictions.gt("jzzje",new BigDecimal(jzje)));
         dc.add(disjunction);
         List<ZfbJyjlSjdzsEntity> zfbjyjlSjdzsAll = zfbJyjlSjdzsService.getZfbjyjlSjdzsAll(dc);
         if(zfbjyjlSjdzsAll.size()>0){

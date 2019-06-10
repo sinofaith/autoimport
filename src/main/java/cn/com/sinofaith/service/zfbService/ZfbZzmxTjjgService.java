@@ -124,7 +124,7 @@ public class ZfbZzmxTjjgService {
      * @return
      */
     public List<ZfbZzmxTjjgEntity> getZfbZzmxTjjgAll(DetachedCriteria dc) {
-        List<ZfbZzmxTjjgEntity> wls = null;
+        List<ZfbZzmxTjjgEntity> wls = new ArrayList<>();
         int rowAll = zfbZzmxTjjgDao.getRowAll(dc);
         if (rowAll > 0) {
             wls = zfbZzmxTjjgDao.getDoPageAll(dc);

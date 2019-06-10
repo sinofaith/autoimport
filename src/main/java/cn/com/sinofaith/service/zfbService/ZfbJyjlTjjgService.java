@@ -12,6 +12,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,7 +84,7 @@ public class ZfbJyjlTjjgService {
      * @return
      */
     public List<ZfbJyjlTjjgForm> getZfbjyjlTjjgAll(String search,long id) {
-        List<ZfbJyjlTjjgForm> tjjgForms = null;
+        List<ZfbJyjlTjjgForm> tjjgForms = new ArrayList<>();
         int rowAll = zfbJyjlTjjgDao.getRowAlls(search,id);
         if(rowAll>0){
             tjjgForms = zfbJyjlTjjgDao.getPage(0, 0,search, id, false);

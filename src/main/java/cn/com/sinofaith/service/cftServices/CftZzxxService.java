@@ -302,7 +302,7 @@ public class CftZzxxService {
         int sum = 0;
         for (String path : listPath) {
             List<CftZzxxEntity> cftList = null;
-            String excelName = path.substring(path.lastIndexOf("\\")+1);
+            String excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
                 cftList = getBy2007ExcelAll(path,excelName,field);
             }else if(path.endsWith(".xls")){

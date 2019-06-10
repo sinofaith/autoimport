@@ -1,12 +1,16 @@
 package cn.com.sinofaith.bean.bankBean;
 
+import cn.com.sinofaith.util.MappingUtils;
 import cn.com.sinofaith.util.TimeFormatUtil;
+import org.apache.poi.ss.usermodel.Row;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.NodeChangeEvent;
+
+import static cn.com.sinofaith.service.bankServices.BankZzxxServices.isStartWithNumber;
 
 @Entity
 @Table(name = "bank_zzxx", schema = "", catalog = "")
@@ -442,5 +446,69 @@ public class BankZzxxEntity {
             b.setBcsm(bcsm);
         }
         return b;
+    }
+
+    public BankZzxxEntity RowToEntity(Row xssfRow, Map<String,String> field, Map<String, Integer> title) {
+        BankZzxxEntity bankZzxx = new BankZzxxEntity();
+        String YHKKH = bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get("jykh"),title));
+        bankZzxx.setYhkkh(YHKKH);
+        bankZzxx.setJyxm(MappingUtils.mappingFieldString(xssfRow,field.get("jyxm"),title));
+        bankZzxx.setJyzjh(MappingUtils.mappingFieldString(xssfRow,field.get("jyzjh"),title));
+        String jyrq = MappingUtils.mappingFieldString(xssfRow,field.get("jyrq"),title);
+        if(jyrq.length()>0){
+            bankZzxx.setJysj(jyrq+" "+MappingUtils.mappingFieldString(xssfRow,field.get("jysj"),title));
+        }else{
+            bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get("jysj"),title));
+        }
+
+        bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get("jyje"),title).abs());
+        bankZzxx.setJyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get("jyye"),title));
+        String sfbz = MappingUtils.mappingFieldString(xssfRow,field.get("sfbz"),title);
+        if("".equals(sfbz)){
+            sfbz ="0";
+        }
+        if(isStartWithNumber(sfbz)){
+            if(new BigDecimal(sfbz).abs().compareTo(BigDecimal.ZERO)==0){
+                bankZzxx.setSfbz("出");
+                if(bankZzxx.getJyje().compareTo(BigDecimal.ZERO)==0){
+                    bankZzxx.setSfbz(null);
+                }
+            }else{
+                bankZzxx.setSfbz("进");
+                bankZzxx.setJyje(new BigDecimal(sfbz));
+            }
+        }else{
+            bankZzxx.setSfbz(sfbz.replace("收","进").replace("付","出")
+                    .replace("贷","进").replace("借","出"));
+        }
+
+        bankZzxx.setDskh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get("dskh"),title)));
+        bankZzxx.setDsxm(MappingUtils.mappingFieldString(xssfRow,field.get("dsxm"),title));
+        bankZzxx.setDssfzh(MappingUtils.mappingFieldString(xssfRow,field.get("dszjh"),title));
+        bankZzxx.setDskhh(MappingUtils.mappingFieldString(xssfRow,field.get("dskhh"),title));
+
+        bankZzxx.setZysm(MappingUtils.mappingFieldString(xssfRow,field.get("zysm"),title));
+//        bankZzxx.setJysfcg(MappingUtils.mappingFieldString(xssfRow,field.get(12),title));
+//        bankZzxx.setYhkzh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(13),title)));
+//        bankZzxx.setDszh(bankZzxx.remove_(MappingUtils.mappingFieldString(xssfRow,field.get(8),title)));
+        bankZzxx.setJywdmc(MappingUtils.mappingFieldString(xssfRow,field.get("jywdmc"),title));
+//        bankZzxx.setDsjyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(17),title));
+//        bankZzxx.setDsye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(18),title));
+        bankZzxx.setJyfsd(MappingUtils.mappingFieldString(xssfRow,field.get("jyfsd"),title));
+        bankZzxx.setBz(MappingUtils.mappingFieldString(xssfRow,field.get("bz"),title));
+        if(bankZzxx.getDskh()==null || "".equals(bankZzxx.getDskh())){
+            String bcsm = bankZzxx.getYhkkh()+"-";
+            if(bankZzxx.getDsxm()!=null && !"".equals(bankZzxx.getDsxm())){
+                bcsm+=bankZzxx.getDsxm();
+            }else if(bankZzxx.getZysm()!=null && !"".equals(bankZzxx.getZysm())){
+                bcsm+=bankZzxx.getZysm();
+            }else if(bankZzxx.getBz()!=null && !"".equals(bankZzxx.getBz())){
+                bcsm+=bankZzxx.getBz();
+            }else {
+                bcsm += "空账户";
+            }
+            bankZzxx.setBcsm(bcsm);
+        }
+        return bankZzxx;
     }
 }

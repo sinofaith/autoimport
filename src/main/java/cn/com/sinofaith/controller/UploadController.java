@@ -5,6 +5,7 @@ import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
+import cn.com.sinofaith.bean.bankBean.MappingBankzzxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.wlBean.WuliuEntity;
 import cn.com.sinofaith.service.*;
@@ -33,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
