@@ -2,10 +2,14 @@ package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.UserEntity;
+import cn.com.sinofaith.bean.bankBean.MappingBankzzxxEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
+import cn.com.sinofaith.service.bankServices.MappingBankzzxxService;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.util.MappingUtils;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
@@ -29,6 +36,8 @@ public class BankZzxxController {
     private BankZzxxServices bankzzs;
     @Autowired
     private CftZzxxService cftzzs;
+    @Autowired
+    private MappingBankzzxxService mbs;
 
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
@@ -116,8 +125,8 @@ public class BankZzxxController {
         UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
-        String seach = cftzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
-        bankzzs.downloadFile(seach,rep,aj!=null?aj.getAj():"");
+        String seach = bankzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
+        bankzzs.doloadFilezz(seach,rep,aj!=null?aj.getAj():"");
     }
 
     @RequestMapping(value = "/removeDesc",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
@@ -134,6 +143,14 @@ public class BankZzxxController {
         return "200";
     }
 
+    @RequestMapping(value = "/getYl",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getYl(){
+        Gson gson = new GsonBuilder().serializeNulls().create();
+
+        List<MappingBankzzxxEntity> zzFs = mbs.getAll();
+        return gson.toJson(zzFs);
+    }
 
     @RequestMapping(value = "/getDetails",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody

@@ -71,7 +71,7 @@ public class UserServices {
     }
 
     public List<UserEntity> getGrand(long aj_id){
-        List list = ud.findBySQL(" select u.id,u.username from rel_grand_aj a " +
+        List list = ud.findBySQL(" select u.id,u.username,u.name from rel_grand_aj a " +
                 " left join T_User u on a.userid = u.id " +
                 " where  a.ajid ="+aj_id+" order by u.username ");
         List<UserEntity> result = new ArrayList<>();

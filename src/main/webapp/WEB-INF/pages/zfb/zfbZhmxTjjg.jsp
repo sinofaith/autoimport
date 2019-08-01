@@ -118,16 +118,6 @@
                         <div class=" ">
 
                             <div>
-                               <%--<div class="col-lg-15">
-                                    <div class="input-group">
-                                        <input type="text" id="filterInput" class="form-control" value="${aj.filter}" placeholder="请输入要筛选的内容,例如：MCM">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" onclick="filterZhmxByspmc('${aj.aj}')">
-                                                筛选
-                                            </button>
-                                        </span>
-                                    </div><!-- /input-group -->
-                                </div><!-- /.col-lg-6 --></div><br>--%>
                                 <form action="/SINOFAITH/zfbZhmxTjjg/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >
                                         <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
@@ -150,13 +140,16 @@
                                 <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">支付宝数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">
-                               <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
-                           </c:if>--%>
-                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmxTjjg/download'"</c:if>>数据导出</button>
-                       </span>
+                                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                           <c:choose>
+                                               <c:when test="${user.id==aj.userId}">
+                                                   <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmxTjjg/download'"</c:if>>数据导出</button>
+                                               </c:when>
+                                               <c:otherwise>
+                                                   <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                               </c:otherwise>
+                                           </c:choose>
+                                       </span>
                                     </div>
                                 </div>
                             </div>

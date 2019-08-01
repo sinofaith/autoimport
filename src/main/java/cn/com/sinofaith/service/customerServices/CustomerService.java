@@ -1,15 +1,14 @@
 package cn.com.sinofaith.service.customerServices;
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
+import cn.com.sinofaith.bean.customerProBean.PersonCompanyEntity;
+import cn.com.sinofaith.bean.customerProBean.PersonNumberEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.customerDao.CustomerDao;
-import cn.com.sinofaith.form.CustomerProForm;
+import cn.com.sinofaith.form.customerForm.CustomerProForm;
+import cn.com.sinofaith.form.customerForm.PersonRelationForm;
 import cn.com.sinofaith.page.Page;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class CustomerService {
         return ajid.toString();
     }
 
-    public String   getSeach(String seachCode, String seachCondition ,long userId){
+    public String getSeach(String seachCode, String seachCondition){
 //        String ajid = getAjidByAjm(aj,userId);
         StringBuffer seach = new StringBuffer();
 
@@ -54,6 +53,23 @@ public class CustomerService {
         }else{
             seach.append(" and ( 1=1 ) ");
         }
+        return seach.toString();
+    }
+    public String getSeachAj(String seachCode, String seachCondition,long ajid){
+//        String ajid = getAjidByAjm(aj,userId);
+        StringBuffer seach = new StringBuffer();
+
+        if(seachCode!=null){
+            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
+            if("name".equals(seachCondition)) {
+                seach.append(" and cp." + seachCondition + " like " + "'%" + seachCode + "%'");
+            }else {
+                seach.append(" and c." + seachCondition + " like " + "'%" + seachCode + "%'");
+            }
+        }else{
+            seach.append(" and ( 1=1 ) ");
+        }
+        seach.append(" and c.aj_id=" + ajid);
         return seach.toString();
     }
 
@@ -80,93 +96,188 @@ public class CustomerService {
         return page;
     }
 
-    public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
-        StringBuffer sql = new StringBuffer();
-        sql.append("SELECT  c.* ");
-        sql.append("FROM  bank_customer c right join rel_customer_aj s on c.zjhm = s.zjhm ");
-        sql.append(" where 1=1 " + seach );
-        List listZzxx = bcd.findBySQL(sql.toString());
-        HSSFWorkbook wb = createExcel(listZzxx);
+    public Page queryForPageAj(int currentPage, int pageSize, String seach){
+        Page page = new Page();
+        List<CustomerProForm> zzFs = new ArrayList<>();
+        int allRow = bcd.getAllRowCountAj(seach);
+        if(allRow>0){
+            List zzList = bcd.getDoPageAj(seach,currentPage,pageSize);
+            for(int i=0;i<zzList.size();i++) {
+                CustomerProForm zzf = new CustomerProForm();
+                Map map = (Map) zzList.get(i);
+                zzf = zzf.mapToObj(map);
+                zzf.setXh(i+1);
+                zzFs.add(zzf);
+            }
+        }
+        page.setPageSize(pageSize);
+        page.setPageNo(currentPage);
+        page.setTotalRecords(allRow);
+        page.setList(zzFs);
+        return page;
+    }
+
+    public void downloadFile(HttpServletResponse rep, List<PersonCompanyEntity> listpce, List<PersonNumberEntity> listpne, List<PersonRelationForm> listpre,AjEntity aj) throws Exception{
+        HSSFWorkbook wb = createExcel(listpce,listpne,listpre);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("人员信息信息\""+aj+".xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("目标团伙及上下家信息\""+aj.getAj()+".xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
         op.close();
     }
 
-    public HSSFWorkbook createExcel(List listZzxx)throws Exception{
-        HSSFWorkbook wb = new HSSFWorkbook();
-        Cell cell = null;
+    public HSSFWorkbook createExcel(List<PersonCompanyEntity> listpce, List<PersonNumberEntity> listpne, List<PersonRelationForm> listpre)throws Exception{
+        HSSFWorkbook wb=new HSSFWorkbook();
+        HSSFCell cell = null;
         int b = 1;
-        Sheet sheet = wb.createSheet("银行卡客户信息");
-        Row row = createRow(sheet);
-        for (int i = 0; i<listZzxx.size(); i++) {
+        HSSFSheet sheet = wb.createSheet("目标基本信息");
+        HSSFRow row = createRow(sheet);
+        for (int i = 0; i<listpce.size(); i++) {
             if(i>=65535&& i%65535==0){
-                sheet = wb.createSheet("银行卡客户信息("+b+")");
+                sheet = wb.createSheet("目标基本信息("+b+")");
                 row = createRow(sheet);
                 b+=1;
             }
-            Map map = (Map) listZzxx.get(i);
-            BankCustomerEntity zzf = new BankCustomerEntity();
-            zzf = zzf.mapToObj(map);
+            PersonCompanyEntity zzf = listpce.get(i);
             row = sheet.createRow(i%65535 + 1);
             cell = row.createCell(0);
-            cell.setCellValue(i + 1);
-            cell = row.createCell(1);
             cell.setCellValue(zzf.getName());
+            cell = row.createCell(1);
+            cell.setCellValue("公司");
             cell = row.createCell(2);
-            cell.setCellValue(zzf.getZjlx());
+            cell.setCellValue(zzf.getCompany());
             cell = row.createCell(3);
-            cell.setCellValue(zzf.getZjhm());
+            cell.setCellValue(zzf.getCompanyAdd());
             cell = row.createCell(4);
-            cell.setCellValue(zzf.getXzz_xzqh());
+            cell.setCellValue(zzf.getCompanyWeb());
             cell = row.createCell(5);
-            cell.setCellValue(zzf.getLxdh());
+            cell.setCellValue(zzf.getCompanyRemark());
             cell = row.createCell(6);
-            cell.setCellValue(zzf.getLxsj());
+            cell.setCellValue(zzf.getCompanyPhone());
             cell = row.createCell(7);
-            cell.setCellValue(zzf.getDwdh());
-            cell = row.createCell(8);
-            cell.setCellValue(zzf.getZzdh());
-            cell = row.createCell(9);
-            cell.setCellValue(zzf.getGzdw());
-            cell = row.createCell(10);
-            cell.setCellValue(zzf.getEmail());
+            cell.setCellValue(zzf.getCompanyEmail());
+        }
 
-            if(i%65536==0){
-                for (int a = 0; a < 15; a++) {
-                    sheet.autoSizeColumn(a);
-                }
+        for(int i=0;i<listpne.size();i++){
+            if((i+listpce.size())>=65535 && (i+listpce.size())%65535==0){
+                sheet = wb.createSheet("目标基本信息("+b+")");
+                b+=1;
             }
+            PersonNumberEntity pne = listpne.get(i);
+            row = sheet.createRow((i+listpce.size())%65535 + 1);
+            cell = row.createCell(0);
+            cell.setCellValue(pne.getName());
+            cell = row.createCell(1);
+            cell.setCellValue("手机");
+            cell = row.createCell(2);
+            cell.setCellValue(pne.getPhone());
+            cell = row.createCell(3);
+            cell.setCellValue(pne.getNumbers());
+            cell = row.createCell(4);
+            cell.setCellValue(pne.getNumberName());
+            cell = row.createCell(5);
+            cell.setCellValue(pne.getSex());
+            cell = row.createCell(6);
+            cell.setCellValue(pne.getAge());
+            cell = row.createCell(7);
+            cell.setCellValue(pne.getAddress());
+            cell = row.createCell(8);
+            cell.setCellValue(pne.getNumberType());
+        }
+        sheet = wb.createSheet("目标关系");
+        row = createRowByRelation(sheet);
+        for(int i=0;i<listpre.size();i++){
+            if(i>=65535&& i%65535==0){
+                sheet = wb.createSheet("目标关系("+b+")");
+                row = createRowByRelation(sheet);
+                b+=1;
+            }
+            PersonRelationForm pre = listpre.get(i);
+            row = sheet.createRow(i%65535 + 1);
+            cell = row.createCell(0);
+            cell.setCellValue(pre.getName());
+            cell = row.createCell(1);
+            cell.setCellValue(pre.getPname());
+            cell = row.createCell(2);
+            cell.setCellValue(pre.getRelationName());
+            cell = row.createCell(3);
+            cell.setCellValue(pre.getRelationShow());
+            cell = row.createCell(4);
+            cell.setCellValue(pre.getRelationMark());
+            cell = row.createCell(5);
+            cell.setCellValue(pre.getJzzje()==null ? "" : pre.getJzzje().toString());
+            cell = row.createCell(6);
+            cell.setCellValue(pre.getCzzje()==null ? "" : pre.getCzzje().toString());
+            cell = row.createCell(7);
+            cell.setCellValue(pre.getJzzje()==null ? "" : pre.getJzzje().subtract(pre.getCzzje()).toString());
         }
         return wb;
     }
 
-    public Row createRow(Sheet sheet){
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
-        cell.setCellValue("序号");
+    public HSSFRow createRow(HSSFSheet sheet){
+        HSSFRow row = sheet.createRow(0);
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue("目标人物姓名");
         cell = row.createCell(1);
-        cell.setCellValue("姓名");
+        cell.setCellValue("类型");
+        HSSFPatriarch p=sheet.createDrawingPatriarch();
+
+        HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)1,5,(short)4,20));
+
+        //输入批注信息
+        comment.setString(new HSSFRichTextString("类型为公司:\n" +
+                "1C-公司名称\n" +
+                "1D-公司地址\n" +
+                "1E-公司网址\n" +
+                "1F-备注或主营\n" +
+                "1G-公司电话\n" +
+                "1H-公司邮箱\n" +
+                "------------------------\n" +
+                "类型为手机:\n" +
+                "1C-手机号\n" +
+                "1D-关联账号\n" +
+                "1E-关联账号昵称\n" +
+                "1F-关联账号性别\n" +
+                "1G-关联账号年龄\n" +
+                "1H-关联账号定位\n" +
+                "1I-关联账号类型"));
+        //将批注添加到单元格对象中
+        cell.setCellComment(comment);
+        return row;
+    }
+
+
+    public HSSFRow createRowByRelation(HSSFSheet sheet){
+        HSSFRow row = sheet.createRow(0);
+        HSSFCell cell = row.createCell(0);
+        cell.setCellValue("目标人物姓名");
+        cell = row.createCell(1);
+        cell.setCellValue("对象");
         cell = row.createCell(2);
-        cell.setCellValue("证件类型");
+        cell.setCellValue("关系");
+        HSSFPatriarch p=sheet.createDrawingPatriarch();
+        HSSFComment comment=p.createComment(new HSSFClientAnchor(0,0,0,0,(short)1,5,(short)4,15));
+        //输入批注信息
+        comment.setString(new HSSFRichTextString("资金关联:\n" +
+                "1E-进账总金额\n" +
+                "1F-出账总金额\n" +
+                "1G-交易净值(进账-出账)\n" +
+                "----------\n" +
+                "公司关联:\n" +
+                "1E-公司名称"));
+        //将批注添加到单元格对象中
+        cell.setCellComment(comment);
         cell = row.createCell(3);
-        cell.setCellValue("证件号码");
+        cell.setCellValue("关系说明");
         cell = row.createCell(4);
-        cell.setCellValue("现住址");
+        cell.setCellValue("备注");
         cell = row.createCell(5);
-        cell.setCellValue("联系电话");
+        cell.setCellValue("进账总金额");
         cell = row.createCell(6);
-        cell.setCellValue("联系手机");
+        cell.setCellValue("出账总金额");
         cell = row.createCell(7);
-        cell.setCellValue("单位电话");
-        cell = row.createCell(8);
-        cell.setCellValue("住宅电话");
-        cell = row.createCell(9);
-        cell.setCellValue("工作单位");
-        cell = row.createCell(10);
-        cell.setCellValue("邮箱");
+        cell.setCellValue("交易净值");
         return row;
     }
 }

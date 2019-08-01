@@ -58,7 +58,7 @@
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center">${item.jyzfbzh}</td>
-                                            <td align="center" title="${item.jymc}"><div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jymc}</div></td>
+                                            <td align="center" title="${item.jymc}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.jymc}</div></td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.czzcs}</td>
                                             <td align="center">${item.czzje}</td>
@@ -145,13 +145,16 @@
                                 <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">支付宝数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">
-                               <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>
-                           </c:if>--%>
-                               <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmxJczz/download'"</c:if>>数据导出</button>
-                       </span>
+                                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                            <c:choose>
+                                                <c:when test="${user.id==aj.userId}">
+                                                    <button  type="button"  class="sideBar_r_button"  <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZhmxJczz/download'"</c:if>>数据导出</button>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                                </c:otherwise>
+                                            </c:choose>
+                                       </span>
                                     </div>
                                 </div>
                             </div>

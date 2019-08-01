@@ -10,23 +10,47 @@ import java.util.Map;
 @Repository
 public class CustomerDao extends BaseDao<BankCustomerEntity> {
     public int getAllRowCount(String seachCode) {
-        String sql = "select to_char(count(c.zjhm)) num from bank_customer c " +
+        String sql = "select to_char(count(c.zjh)) num from customerpro c " +
                 " where 1=1 " + seachCode;
         List list = findBySQL(sql);
         Map map = (Map) list.get(0);
         return Integer.parseInt((String) map.get("NUM"));
     }
 
+    public int getAllRowCountAj(String seachCode) {
+        String sql = "select to_char(count(distinct c.zjh)) as num from rel_zjh_hm c " +
+                "left join customerpro cp on c.zjh = cp.zjh where 1=1" + seachCode;
+        List list = findBySQL(sql);
+        Map map = (Map) list.get(0);
+        return Integer.parseInt(map.get("NUM").toString());
+    }
+
     public List getDoPage(String seach, int offset, int length) {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (SELECT  c.*,zc.yhkkh,cc.cftzh,zfc.zfbzh,aj.aj ");
-        sql.append("FROM  bank_customer c left join (select zc.khzjh zjhm,count(distinct zc.yhkkh) yhkkh from bank_zcxx zc group by zc.khzjh) zc on c.zjhm = zc.zjhm " +
-                "left join (select cc.sfzhm zjhm,count(distinct cc.zh) cftzh from cft_zcxx cc group by cc.sfzhm) cc on c.zjhm = cc.zjhm " +
-                "left join (select zfc.zjh zjhm,count(distinct zfc.yhid) zfbzh from zfbzcxx zfc group by zfc.zjh) zfc on c.zjhm = zfc.zjhm " +
-                "left join (select aj.zjhm zjhm,count(distinct aj.aj_id) aj from rel_customer_aj aj group by aj.zjhm) aj on c.zjhm = aj.zjhm ");
-        sql.append(" where 1=1 " + seach + ") a ");
+        sql.append("FROM (SELECT  c.*,y.yhkh,w.wx,z.zfb,s.sjh,a.aj ");
+        sql.append("FROM  customerpro c left join (select zjh,count(distinct hm) yhkh from rel_zjh_hm r where r.hmlx = 1 group by zjh) y on c.zjh = y.zjh " +
+                "left join (select zjh,count(distinct hm) wx from rel_zjh_hm r where r.hmlx = 2 group by zjh) w on c.zjh = w.zjh " +
+                "left join (select zjh,count(distinct hm) zfb from rel_zjh_hm r where r.hmlx = 3 group by zjh) z on c.zjh = z.zjh " +
+                "left join (select zjh,count(distinct hm) sjh from rel_zjh_hm r where r.hmlx = 4 group by zjh) s on c.zjh = s.zjh " +
+                "left join ( select zjh,count(distinct aj_id) aj from rel_zjh_hm r where r.aj_id != -1 group by zjh) a on c.zjh = a.zjh");
+        sql.append(" where 1=1 " + seach + "order by a.aj desc nulls last, y.yhkh desc nulls last, w.wx desc nulls last,z.zfb desc nulls last,s.sjh desc nulls last) a ");
+        sql.append("WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
+        return findBySQL(sql.toString());
+    }
+    public List getDoPageAj(String seach, int offset, int length) {
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT * ");
+        sql.append("FROM (SELECT a.*, ROWNUM rn ");
+        sql.append("FROM (select distinct c.zjh,cp.name,y.yhkh,w.wx,z.zfb,s.sjh,a.aj from rel_zjh_hm c ");
+        sql.append("left join (select * from customerpro ) cp on c.zjh = cp.zjh " +
+                "left join(select zjh,count(distinct hm) yhkh from rel_zjh_hm r where r.hmlx = 1 group by zjh) y on c.zjh = y.zjh " +
+                "left join (select zjh,count(distinct hm) wx from rel_zjh_hm r where r.hmlx = 2 group by zjh) w on c.zjh = w.zjh " +
+                "left join (select zjh,count(distinct hm) zfb from rel_zjh_hm r where r.hmlx = 3 group by zjh) z on c.zjh = z.zjh " +
+                "left join (select zjh,count(distinct hm) sjh from rel_zjh_hm r where r.hmlx = 4 group by zjh) s on c.zjh = s.zjh " +
+                "left join ( select zjh,count(distinct aj_id) aj from rel_zjh_hm r where r.aj_id != -1 group by zjh) a on c.zjh = a.zjh ");
+        sql.append(" where 1=1 " + seach + "order by a.aj desc nulls last, y.yhkh desc nulls last, w.wx desc nulls last,z.zfb desc nulls last,s.sjh desc nulls last) a ");
         sql.append("WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
         return findBySQL(sql.toString());
     }

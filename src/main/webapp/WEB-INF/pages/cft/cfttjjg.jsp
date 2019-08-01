@@ -183,7 +183,7 @@
                     <div class="sidebar_right pos_re">
 
                         <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1" onclick="ajCount('${aj.aj}')" />
-                        <label for="checkbox1" style="padding-top: 8px;font-size: 12px;font-weight:bold"">统计结果去除红包相关记录</label>
+                        <label for="checkbox1" style="padding-top: 8px;font-size: 12px;font-weight:bold">统计结果去除红包相关记录</label>
                         <div class=" ">
 
                             <div>
@@ -226,10 +226,16 @@
                                 <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">财付通数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cfttjjg/download'" >数据导出</button>
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件导入</button>--%>
-                       </span>
+                                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                           <c:choose>
+                                               <c:when test="${user.id==aj.userId}">
+                                                   <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/cfttjjg/download'" >数据导出</button>
+                                               </c:when>
+                                               <c:otherwise>
+                                                   <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                               </c:otherwise>
+                                           </c:choose>
+                                       </span>
                                     </div>
                                 </div>
                             </div>

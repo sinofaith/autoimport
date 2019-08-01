@@ -146,13 +146,14 @@
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
                        <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">--%>
-                               <%--<button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">支付宝数据导入</button>--%>
-                           <%--</c:if>--%>
-                           <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmx/download'"</c:if>>数据导出</button>
-                           <%--<button data-toggle="modal" data-target="#myModal2" type="button"  class="sideBar_l_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="yjdcDownload()"</c:if>>一键导出</button>--%>
-                           <%--<button class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmxTjjg/createPDF'"</c:if>>生成PDF报告文档</button>--%>
+                           <c:choose>
+                               <c:when test="${user.id==aj.userId}">
+                                   <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/zfbZzmx/download'"</c:if>>数据导出</button>
+                               </c:when>
+                               <c:otherwise>
+                                   <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                               </c:otherwise>
+                           </c:choose>
                        </span>
                                     </div>
                                 </div>
@@ -160,10 +161,6 @@
                         </div>
                     </div>
                 </div>
-                <%--<form id="uploadFileForm" action="/SINOFAITH/uploadFolder" method="post"  style="display: none;">--%>
-                <%--<input type="file" webkitdirectory name="file" id="file" style="display: none;">--%>
-                <%--<input type="text" id="updatestate" name="updatestate" style="display: none;" value="1">--%>
-                <%--</form>--%>
 
                 <form id="seachDetail" action="<c:url value=""/>"  method="post" style="display: none;">
                 </form>

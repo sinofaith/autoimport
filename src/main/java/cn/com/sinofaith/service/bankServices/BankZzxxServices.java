@@ -5,9 +5,11 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
+import cn.com.sinofaith.bean.bankBean.MappingBankzzxxEntity;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.bankDao.BankPersonDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
+import cn.com.sinofaith.dao.bankDao.MappingBankzzxxDao;
 import cn.com.sinofaith.form.bankForm.BankZzxxForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.ExcelReader;
@@ -40,6 +42,8 @@ public class BankZzxxServices {
     private BankPersonDao bpd;
     @Autowired
     private AJDao ad;
+    @Autowired
+    private MappingBankzzxxDao mbd;
 
     public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj,long userId){
         String ajid = getAjidByAjm(aj,userId);
@@ -100,6 +104,21 @@ public class BankZzxxServices {
         return page;
     }
 
+    public void doloadFilezz(String seach,HttpServletResponse rep,String aj) throws  Exception{
+        StringBuffer sql = new StringBuffer();
+        sql.append("SELECT  s.khxm jyxms,d.khxm dfxms,c.* ");
+        sql.append("FROM  bank_zzxx c left join bank_person s on c.yhkkh=s.yhkkh ");
+        sql.append("left join bank_person d on c.dskh=d.yhkkh  where 1=1 " + seach );
+        List listZzxx = bankzzd.findBySQL(sql.toString());
+        HSSFWorkbook wb = createExcel(listZzxx);
+        rep.setContentType("application/force-download");
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡转账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        OutputStream op = rep.getOutputStream();
+        wb.write(op);
+        op.flush();
+        op.close();
+    }
+
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
         String order = "";
         if(seach.contains("order")){
@@ -108,7 +127,7 @@ public class BankZzxxServices {
         }
         StringBuffer sql = new StringBuffer();
         sql.append("  select s.khxm jyxms,s.khxm dfxms,c.*  from(  ");
-        sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.dskh order by c.jysj ) su from bank_zzxx c  ");
+        sql.append("  select c.*,row_number() over(partition by c.yhkkh,c.jysj,c.jyje,c.jyye,c.sfbz,c.dskh order by c.jysj ) su from bank_zzxx c  ");
         sql.append("  where 1=1"+seach+" ) c ");
         sql.append("  left join bank_person s on c.yhkkh = s.yhkkh ");
         sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
@@ -309,6 +328,15 @@ public class BankZzxxServices {
             }
         }
         int num = bankzzd.insertZzxx(bankZzxxLists, aj.getId(), listZzxx);
+        List<MappingBankzzxxEntity> listmbs = new ArrayList<>();
+        for(List<String> field : fields){
+            MappingBankzzxxEntity mb = new MappingBankzzxxEntity();
+            mb = mb.listToObj(field);
+            if(!listmbs.contains(mb)){
+                listmbs.add(mb);
+            }
+        }
+        mbd.save(listmbs);
         List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
         Map<String, String> allBp = new HashMap<>();
         for (int j = 0; j < allbp.size(); j++) {
@@ -530,11 +558,11 @@ public class BankZzxxServices {
         bankZzxx.setYhkkh(YHKKH);
         bankZzxx.setJyxm(MappingUtils.mappingFieldString(xssfRow,field.get(22),title));
         bankZzxx.setJyzjh(MappingUtils.mappingFieldString(xssfRow,field.get(20),title));
-        String jyrq = MappingUtils.mappingFieldString(xssfRow,field.get(4),title);
+        String jyrq = MappingUtils.mappingFieldString(xssfRow,field.get(23),title);
         if(jyrq.length()>0){
-            bankZzxx.setJysj(jyrq+" "+MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
+            bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(4),title)+" "+jyrq);
         }else{
-            bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(23),title));
+            bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get(4),title));
         }
 
         bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get(5),title).abs());

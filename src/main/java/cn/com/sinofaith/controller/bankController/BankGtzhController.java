@@ -106,7 +106,7 @@ public class BankGtzhController {
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         int hcode = (Integer) req.getSession().getAttribute("hcode");
-        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),-1,hcode);
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),"-99",hcode);
         Page page = banktjss.queryForPageGt(parseInt(pageNo),10,seach,aj!=null ? aj.getId():-1);
         mav.addObject("page",page);
         mav.addObject("gtseachCode",seachCode);
@@ -141,7 +141,7 @@ public class BankGtzhController {
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         int hcode = (Integer) req.getSession().getAttribute("hcode");
-        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),-1,hcode);
+        String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),"-99",hcode);
         banktjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","共同",req);
     }
     @RequestMapping("/getDetails")

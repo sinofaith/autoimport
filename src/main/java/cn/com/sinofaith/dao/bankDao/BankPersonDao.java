@@ -18,7 +18,8 @@ public class BankPersonDao extends BaseDao<BankPersonEntity>{
                 || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金") || bpe.getXm().contains("银行")
                 || bpe.getXm().contains("银联") || bpe.getXm().contains("保险") || bpe.getXm().contains("过渡")
                 || bpe.getXm().contains("美团");
-        if (temp) {
+        boolean t = bpe.getYhkkh().matches("0+");
+        if (temp||t) {
             bpe.setDsfzh(1);
         }
         saveOrUpdate(bpe);
@@ -48,7 +49,8 @@ public class BankPersonDao extends BaseDao<BankPersonEntity>{
                         || bpe.getXm().contains("特约") || bpe.getXm().contains("备付金") || bpe.getXm().contains("银行")
                         || bpe.getXm().contains("银联") || bpe.getXm().contains("保险") || bpe.getXm().contains("过渡")
                         || bpe.getXm().contains("美团");
-                if (temp) {
+                boolean t = bpe.getYhkkh().matches("0+");
+                if (temp||t) {
                     bpe.setDsfzh(1);
                 }
                 pstm.setString(1, bpe.remove_(bpe.getYhkkh()));

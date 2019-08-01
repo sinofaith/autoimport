@@ -31,7 +31,7 @@ import java.util.Map;
 @Service
 public class AjServices {
     @Autowired
-    private AJDao ad;
+    public AJDao ad;
     @Autowired
     private CftZzxxDao zzd;
     @Autowired
@@ -113,70 +113,6 @@ public class AjServices {
             e.printStackTrace();
         }
         return "200";
-    }
-
-    public void deleteByAj(long ajid,String[] type){
-        Connection con = DBUtil.getConnection();
-        Statement st;
-        try {
-            st = con.createStatement();
-            if(type.length==4){
-                st.execute("delete aj where id ="+ajid);
-                con.commit();
-            }
-            for(String a:type){
-                if(a.equals("1")){
-                    st.addBatch("delete  cft_zcxx where aj_id="+ajid);
-                    st.addBatch("delete  cft_zzxx where aj_id="+ajid);
-                    st.addBatch("delete  cft_tjjg where aj_id="+ajid);
-                    st.addBatch("delete  cft_tjjgs where aj_id="+ajid);
-                }
-                if(a.equals("2")){
-                    st.addBatch("delete bank_zcxx where aj_id="+ajid);
-                    st.addBatch("delete bank_zzxx where aj_id="+ajid);
-                    st.addBatch("delete bank_tjjg where aj_id="+ajid);
-                    st.addBatch("delete bank_tjjgs where aj_id="+ajid);
-                    st.addBatch("delete rel_customer_aj where aj_id="+ajid);
-                }
-                if(a.equals("3")){
-                    st.addBatch("DELETE wuliu where aj_id="+ajid);
-                    st.addBatch("DELETE wuliu_relation where aj_id="+ajid);
-                    st.addBatch("DELETE wuliu_ship where aj_id="+ajid);
-                    st.addBatch("DELETE wuliu_sj where aj_id="+ajid);
-                }
-                if(a.equals("4")){
-                    st.addBatch("DELETE pyramidsale where aj_id="+ajid);
-                    st.addBatch("DELETE ps_hierarchy where aj_id="+ajid);
-                }
-                if(a.equals("5")){
-                    st.addBatch("DELETE zfbzcxx where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzhmx where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzzmx where aj_id="+ajid);
-                    st.addBatch("DELETE zfbdlrz where aj_id="+ajid);
-                    st.addBatch("DELETE zfbjyjl where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzhmx_tjjg where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzhmx_tjjgs where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzhmx_jczz where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzhmx_jylx where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzhmx_qxsj where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzzmx_tjjg where aj_id="+ajid);
-                    st.addBatch("DELETE zfbzzmx_tjjgs where aj_id="+ajid);
-                    st.addBatch("DELETE zfbjyjl_tjjgs where aj_id="+ajid);
-                    st.addBatch("DELETE zfbjyjl_Sjdzs where aj_id="+ajid);
-                    if(type.length< 5){
-                        st.addBatch("UPDATE AJ a SET a.filter='' WHERE ID="+ajid);
-                    }
-                }
-
-            }
-            st.executeBatch();
-            con.commit();
-
-            DBUtil.closeStatement(st);
-            DBUtil.closeConnection(con);
-        }catch (SQLException e){
-            e.getMessage();
-        }
     }
 
     public List<CftZzxxEntity> getCftList(AjEntity aj,long userId){

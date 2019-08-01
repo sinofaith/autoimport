@@ -272,7 +272,7 @@ public class UploadController {
         List<String> listPath = bankZcxxServices.getBankFileList(path);
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         // 取出excel表数据
-        List<BankZcxxEntity> bankZcxxList = bankZcxxServices.getBankZcxxAll(listPath, field);
+        List<BankZcxxEntity> bankZcxxList = bankZcxxServices.getBankZcxxAll(listPath, field,aj.getId());
         List<BankZzxxEntity> listZzxx = bzs.getAll(aj.getId());
         int num = bzs.getBankZzxxAll(listPath, field, aj, listZzxx);
         List<BankCustomerEntity> bankCustList = bcs.getBankCustAll(listPath, field, aj);

@@ -3,10 +3,7 @@ package cn.com.sinofaith.controller.bankController;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.page.Page;
-import cn.com.sinofaith.service.bankServices.BankCustomerServices;
-import cn.com.sinofaith.service.bankServices.BankTjjgServices;
-import cn.com.sinofaith.service.bankServices.BankTjjgsService;
-import cn.com.sinofaith.service.bankServices.BankZcxxServices;
+import cn.com.sinofaith.service.bankServices.*;
 import com.google.gson.Gson;
 import com.itextpdf.text.Document;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -42,6 +39,8 @@ public class BankInfoController {
     private BankTjjgServices tjs;
     @Autowired
     private BankTjjgsService banktjss;
+    @Autowired
+    private BankPersonServices bps;
 
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
@@ -291,4 +290,13 @@ public class BankInfoController {
             e.printStackTrace();
         }
     }
+
+    @RequestMapping(value = "/getName",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getRoleName(@RequestParam("term")String term,HttpSession session){
+        AjEntity aj = (AjEntity) session.getAttribute("aj");
+        Gson gson = new Gson();
+        return gson.toJson(bps.getName(term,aj.getId()));
+    }
+
 }

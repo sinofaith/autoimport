@@ -61,7 +61,7 @@ function getUser(id,ajm,username) {
         },
         success: function(result) {
             for(var j = 0;j<result.grand.length;j++){
-                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.grand[j].id+">"+result.grand[j].username+"("+result.grand[j].name+"</li>");
+                var li = $("<li class=\"list-group-item\" onselectstart=\"return false\" value="+result.grand[j].id+">"+result.grand[j].username+"("+result.grand[j].name+")</li>");
                 temp.push(result.grand[j].username);
                 li.click(function(){
                     if($(this).attr('class').indexOf("selected")>1){
@@ -239,9 +239,9 @@ function deleteAjByFilter() {
                         alertify.success("请先删除包含此案件的并案案件")
                         return
                     }
-                    setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
                     if(data==200){
                         alertify.success("删除成功")
+                        setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
                     }
                 },
                 error:function (e) {

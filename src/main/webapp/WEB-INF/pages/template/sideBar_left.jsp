@@ -28,15 +28,15 @@
         <svg class="icon">
             <use xlink:href="#icon-xiangqing"></use>
         </svg><br>案件</a>
-     <%--<a href="/SINOFAITH/customerPro" >--%>
-        <%--<svg class="icon">--%>
-            <%--<use xlink:href="#icon-renyuanxinxi"></use>--%>
-        <%--</svg><br>人员信息</a>--%>
+     <a href="/SINOFAITH/customerPro?aj=" class="sidebar_left_addative">
+        <svg class="icon">
+            <use xlink:href="#icon-renyuanxinxi"></use>
+        </svg><br>人员信息</a>
     <a href="/SINOFAITH/bank">
         <svg class="icon">
             <use xlink:href="#icon-icon"></use>
         </svg><br>银行卡</a>
-    <a href="/SINOFAITH/cft" class="sidebar_left_addative">
+    <a href="/SINOFAITH/cft">
         <svg class="icon">
             <use xlink:href="#icon-caifutong1"></use>
         </svg><br>财付通</a>

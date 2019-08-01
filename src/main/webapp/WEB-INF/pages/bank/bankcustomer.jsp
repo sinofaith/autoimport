@@ -96,7 +96,7 @@
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <%--<td align="center">${item.id}</td>--%>
-                                                <td align="center">${item.name}</td>
+                                                <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                 <td align="center" title="${item.zjlx}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjlx}</div></td>
                                                 <td align="center" title="${item.zjhm}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zjhm}</div></td>
                                                 <td align="center" title="${item.xzz_xzqh}" ><div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.xzz_xzqh}</div></td>
@@ -190,13 +190,17 @@
                                 <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">银行卡数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <%--<c:if test="${!fn:contains(aj.aj, ',')}">--%>
-                                <%--<button class="sideBar_r_button" data-toggle="modal" data-target="#myModal">银行卡数据导入</button>--%>
-                           <%--</c:if>--%>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bankcustomer/download'" >数据导出</button>
-                       </span>
+                                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                        <c:choose>
+                                            <c:when test="${user.id==aj.userId}">
+
+                                                    <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bankcustomer/download'" >数据导出</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                       </span>
                                     </div>
                                 </div>
                             </div>
@@ -216,132 +220,4 @@
     </ul>
 </div>
 
-<%--<div class="modal fade" id="myModal" tabindex="-1" role="dialog"--%>
-     <%--aria-labelledby="myModalLabel" aria-hidden="true">--%>
-    <%--<div class="modal-dialog">--%>
-        <%--<div class="modal-content">--%>
-            <%--<div class="modal-header">--%>
-                <%--<button type="button" class="close" data-dismiss="modal"--%>
-                        <%--aria-hidden="true">×</button>--%>
-                <%--<h4 class="modal-title" id="myModalLabel">文件上传进度</h4>--%>
-            <%--</div>--%>
-            <%--<div class="modal-body">--%>
-                <%--<progress id="progressBar" value="0" max="100"--%>
-                          <%--style="width: 100%;height: 20px; "> </progress>--%>
-                <%--<span id="percentage" style="color:blue;"></span> <br>--%>
-                <%--<br>--%>
-                <%--<div class="file-box">--%>
-                    <%--文件夹:<input type='text' name='textfield' id='textfield' class='txt'/>--%>
-                    <%--<input type='button' class='btn' value='浏览...' />--%>
-                    <%--<input--%>
-                        <%--type="file" name="file" webkitdirectory class="file" id="file" size="28"--%>
-                        <%--onchange="document.getElementById('textfield').value=this.value;" />--%>
-                <%--<br>--%>
-                    <%--案件名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">--%>
-                    <%--<br>--%>
-                    <%--&lt;%&ndash;<input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">&ndash;%&gt;--%>
-                    <%--&lt;%&ndash;<label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>&ndash;%&gt;--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="modal-footer">--%>
-                <%--<input type="submit" name="submit" class="btn" value="上传"--%>
-                       <%--onclick="UploadBank()" />--%>
-                <%--<button type="button" class="btn btn-default" data-dismiss="modal">关闭--%>
-                <%--</button>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <%--<!-- /.modal-content -->--%>
-    <%--</div>--%>
-    <%--<!-- /.modal -->--%>
-<%--</div>--%>
-
-
-<%--<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"--%>
-     <%--aria-labelledby="myModalLabel" aria-hidden="true">--%>
-    <%--<div class="modal-dialog" style="top: 0%; min-width: 90%;left: 5%;right: 5%;">--%>
-        <%--<div class="modal-content">--%>
-            <%--<div class="modal-header">--%>
-                <%--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--%>
-                <%--<h4 class="modal-title" id="myModalLabel1">多文件字段映射</h4>--%>
-            <%--</div>--%>
-            <%--<div class="modal-body" >--%>
-                <%--<div class="form-group">--%>
-                    <%--<div class="row" style="width: 600px;">--%>
-
-                        <%--<span class="col-md-1" id="excelName" style="width: 350px;">--%>
-                            <%--<label for="excelName">Excel名</label>--%>
-
-                        <%--</span>--%>
-                        <%--<span class="col-md-1" id="excelSheet" style="width: 200px;">--%>
-                            <%--<label for="excelSheet">Sheet名</label>--%>
-
-                        <%--</span>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-
-                <%--<div class="modal-body">--%>
-                    <%--<div id="roll" style="overflow-x: auto; overflow-y: auto; height: 100px; width:1300px;">--%>
-                        <%--<table id="head" class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc;">--%>
-
-                        <%--</table>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-                <%--<div class="form-group">--%>
-                    <%--<div class="row">--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c1">交易卡号</label>--%>
-                            <%--<select	 id="c1" placeholder="交易卡号" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c2">交易账号</label>--%>
-                            <%--<select	 id="c2" placeholder="交易账号" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c3">开户姓名</label>--%>
-                            <%--<select	 id="c3" placeholder="开户姓名" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c4">开户证件号</label>--%>
-                            <%--<select	 id="c4" placeholder="开户证件号" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c5">账户余额</label>--%>
-                            <%--<select	id="c5" placeholder="账户余额" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c6">可用余额</label>--%>
-                            <%--<select	id="c6" placeholder="可用余额" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c7">开户时间</label>--%>
-                            <%--<select id="c7" placeholder="开户时间" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c8">账户状态</label>--%>
-                            <%--<select	id="c8" placeholder="账户状态" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                        <%--<div class="col-md-1">--%>
-                            <%--<label for="c9">开户网点</label>--%>
-                            <%--<select id="c9" placeholder="开户网点" onchange="selectC()">--%>
-                            <%--</select>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<button id="nextSelect" type="button" style="margin-left: 1200px;top: 25px;" class="btn btn-primary" onclick="nextSelect()">下一个</button>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="modal-footer">--%>
-                <%--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>--%>
-                <%--<button type="button" class="btn btn-primary" onclick="uploadWuliuExcel()">导入数据</button>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
 <%@include file="../template/newfooter.jsp" %>

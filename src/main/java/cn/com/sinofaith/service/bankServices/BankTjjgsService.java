@@ -112,7 +112,7 @@ public class BankTjjgsService {
         return page;
     }
 
-    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj,int code,int hcode){
+    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj,String code,int hcode){
         StringBuffer seach = new StringBuffer(" and aj_id ="+aj.getId());
         if(seachCode!=null){
             seachCode=seachCode.replace("\r\n","")
@@ -134,8 +134,16 @@ public class BankTjjgsService {
             seach.append(" and ( 1=1 ) ");
         }
         seach.append(" and length(c.dfzh)>1 ");
-        if(code!=-1) {
-            seach.append(" and c.zhlx=" + code);
+        if(!code.equals("-99")) {
+           String temp[] = code.split(",");
+            seach.append(" and (");
+            for(int i =0; i<temp.length;i++){
+                seach.append(" c.zhlx=" + temp[i]);
+                if(i!=temp.length-1){
+                    seach.append(" or ");
+                }
+            }
+            seach.append(" ) ");
         }
         if(hcode!=0){
 //            seach.append(" and (d.khxm not like '%财付通%' and d.khxm not like '%支付%' " +
@@ -174,6 +182,20 @@ public class BankTjjgsService {
 //        page.setTotalRecords(allRow);
 //        return page;
 //    }
+
+    public CftTjjgsForm getJczzByName(String name,String dsxm,long ajid){
+        CftTjjgsForm cf = new CftTjjgsForm();
+        List list = banktjsd.findBySQL("select bp.khxm as name,pbp.khxm as dfxm,sum(bt.jzzje) jzzje,sum(bt.czzje) czzje from bank_tjjgs bt " +
+                "left join bank_person bp on bt.jyzh = bp.yhkkh " +
+                "left join bank_person pbp on bt.dfzh = pbp.yhkkh " +
+                "where bp.khxm= '"+name+"' and pbp.khxm= '"+dsxm+"' and bt.aj_id = "+ajid+" group by bp.khxm,pbp.khxm");
+        Map map = (Map) list.get(0);
+        cf.setName(map.get("NAME").toString());
+        cf.setDfxm(map.get("DFXM").toString());
+        cf.setJzzje(new BigDecimal(map.get("JZZJE").toString()));
+        cf.setCzzje(new BigDecimal(map.get("CZZJE").toString()));
+        return cf;
+    }
 
     public int count(List<BankZzxxEntity> listZzxx, long aj){
         Map<String,BankTjjgsEntity> map = new HashMap();

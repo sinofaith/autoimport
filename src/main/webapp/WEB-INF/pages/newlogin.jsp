@@ -50,6 +50,10 @@
                                     <h4 class="header blue lighter bigger icon_login">
 
                                         <b>电子数据综合分析系统</b>
+                                        <%--<span class="fl_r font_075 padd_r_30" >--%>
+                                            <%--<a style="color:  #6698ce;font-size: 16px;padding-left: 139px;" target="_blank"--%>
+                                               <%--href="<c:url value="/resources/ali_icon/电子数据综合分析系统操作手册.pdf"/>">操作手册</a>--%>
+                                        <%--</span>--%>
                                     </h4>
 
                                     <div class="space-6"></div>
@@ -75,9 +79,9 @@
                                             <div class="clearfix">
                                                 <span style="color:red;font-weight: bold;" id="result">${result}</span>
                                                 <br>
-                                                <button type="button" class="width-10 pull-left btn btn-sm btn-info yuanjiao5"  data-toggle="modal" data-target="#myModal">
-                                                    试用申请
-                                                </button>
+                                                <%--<button type="button" class="width-10 pull-left btn btn-sm btn-info yuanjiao5"  data-toggle="modal" data-target="#myModal">--%>
+                                                    <%--试用申请--%>
+                                                <%--</button>--%>
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-primary yuanjiao5" onclick="login()">
                                                     <i class="icon-key"></i>
                                                     登录
@@ -266,7 +270,7 @@
         xhr.onload = function () {
             if (xhr.responseText == 200) {
                 alertify.set('notifier','position', 'top-center');
-                alertify.success("申请成功!请联系管理员批注登陆");
+                alertify.success("申请成功!请联系管理员批准登陆");
                 $("#username").val(username);
                 $("#passwordInput").val("");
                 $('#myModal').modal('hide');

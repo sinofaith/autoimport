@@ -1,3 +1,112 @@
+$(function () {
+    $("[data-toggle='tooltip']").tooltip();
+});
+
+function editPersonRelation(name,pname) {
+    $("#name").val(name);
+    $("#pname").val(pname);
+    var url = "/SINOFAITH/banktjjgs/getJczz";
+    $.ajax({
+        type:"get",
+        dataType:"json",
+        url:url,
+        data:{
+            name:name,
+            pname:pname
+        },
+        success:function (msg) {
+            $("#jzzje").val(msg.jzzje);
+            $("#czzje").val(msg.czzje);
+            $("#jyjz").val((msg.jzzje-msg.czzje).toFixed(0));
+            if($("#jyjz").val()>0){
+                $("#relationShow").find("option[value='上家']").attr("selected",true);
+            }
+            if($("#jyjz").val()<0){
+                $("#relationShow").find("option[value='下家']").attr("selected",true);
+            }
+        }
+    });
+}
+
+function changeRelationShow() {
+    $("#relationShow").empty();
+    var relationName = $("#relationName").val();
+    if(relationName=="资金关联"){
+        $("#relationShow").append("<option value='上家'>上家</option>");
+        $("#relationShow").append("<option value='下家'>下家</option>");
+        $("#relationShow").append("<option value='仓储物流'>仓储物流</option>");
+        $("#relationShow").append("<option value='电商平台'>电商平台</option>");
+        $("#relationShow").append("<option value='支付平台'>支付平台</option>");
+        $("#relationShow").append("<option value='日常消费'>日常消费</option>");
+    }
+    if(relationName=="公司关联"){
+        $("#relationShow").append("<option value='董事'>董事</option>");
+        $("#relationShow").append("<option value='监事'>监事</option>");
+        $("#relationShow").append("<option value='高管'>高管</option>");
+        $("#relationShow").append("<option value='职工'>职工</option>");
+        $("#relationShow").append("<option value='其他'>其他</option>");
+    }
+    if(relationName=="户籍关联"){
+        $("#relationShow").append("<option value='丈夫'>丈夫</option>");
+        $("#relationShow").append("<option value='妻子'>妻子</option>");
+        $("#relationShow").append("<option value='父亲'>父亲</option>");
+        $("#relationShow").append("<option value='母亲'>母亲</option>");
+        $("#relationShow").append("<option value='儿子'>儿子</option>");
+        $("#relationShow").append("<option value='女儿'>女儿</option>");
+        $("#relationShow").append("<option value='其他亲属'>其他亲属</option>");
+    }
+}
+
+function addRelation() {
+    var name = $("#name").val();
+    var pname = $("#pname").val()
+    if(name.trim()==''){
+        $("#name").attr('data-original-title',"目标姓名不能为空").tooltip('show');
+        return
+    }
+    if(pname.trim()==''){
+        $("#pname").attr('data-original-title',"对象不能为空").tooltip('show');
+        return
+    }
+    if($("#jyjz").val()==''&&$("#relationName").val()=='资金关联'){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("未查询到账户点对点统计,无法添加资金关联");
+        return
+    }
+    if(name===pname){
+        alertify.set('notifier','position', 'top-center');
+        alertify.error("姓名一致,不可添加关系");
+        return ;
+    }
+    var data = {
+        name:name,
+        pname:pname,
+        relationName:$("#relationName").val(),
+        relationShow:$("#relationShow").val(),
+        relationMark:$("#relationMark").val(),
+    }
+    var url = "/SINOFAITH/customerRelation/addRelation";
+    $.ajax({
+        type:"post",
+        dataType:"json",
+        contentType:"application/json",
+        url:url,
+        data:JSON.stringify(data),
+        success:function (msg) {
+            if(msg=="200") {
+                alertify.success("添加成功");
+                $('#myModal3').modal('hide');
+
+            }else{
+                alertify.set('notifier','position', 'top-center');
+                alertify.error("错误");
+            }
+        }
+    })
+
+}
+
+
 function getBanktjjgs(obj,type) {
     var zh = "";
     var list = "";
@@ -382,7 +491,7 @@ function getBanktjjgs(obj,type) {
     //                 }
     //                 str += "<td width=\"4%\">" + data[i].id + "</td>" +
     //                     "<td width=\"5%\">" + data[i].jyzcs + "</td>" +
-    //                     "<td width=\"13%\">" + data[i].dfzh + "</td>" +
+    //                     "<td width=\"13%aj>" + data[i].dfzh + "</td>" +
     //                     "<td width=\"7%\" title=\""+data[i].dfxm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dfxm+"</div></td>"+
     //                     "<td width=\"8%\">" + data[i].jzzcs + "</td>" +
     //                     "<td width=\"8%\">" + data[i].jzzje + "</td>" +
@@ -419,26 +528,32 @@ function hiddenZfbCft() {
     location.href= "/SINOFAITH/banktjjgs/hiddenZfbCft?code="+flg;
 }
 
-$(function () {
-
-    var old = null; //用来保存原来的对象
-    $(":radio").each(function(){
-        if(this.checked){
-            old = this; //如果当前对象选中，保存该对象
-        }
-        this.onclick = function(){
-            if(this == old){//如果点击的对象原来是选中的，取消选中
-                this.checked = false;
-                old = null;
-                location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+-1;
-            } else{
-                old = this;
-                location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+$(this).val();
-            }
-        }
+function getZhzt() {
+    var chk_value = [];//定义一个数组
+    $('input[name="zhzt"]:checked').each(function () {//遍历每一个名字为interest的复选框，其中选中的执行函数
+        chk_value.push($(this).val());//将选中的值添加到数组chk_value中
     });
-    //
-    // $(":radio").click(function(){
-    //     alert(this.val());
+    if(chk_value.length==0){
+        chk_value.push(-99);
+    }
+    location.href = "/SINOFAITH/banktjjgs/getByZhzt?code=" + chk_value;
+}
+// $(function () {
+    // var old = null; //用来保存原来的对象
+    // $(":radio").each(function(){
+    //     if(this.checked){
+    //         old = this; //如果当前对象选中，保存该对象
+    //     }
+    //     this.onclick = function(){
+    //         if(this == old){//如果点击的对象原来是选中的，取消选中
+    //             this.checked = false;
+    //             old = null;
+    //             location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+-1;
+    //         } else{
+    //             old = this;
+    //             location.href="/SINOFAITH/banktjjgs/getByZhzt?code="+$(this).val();
+    //         }
+    //     }
     // });
-});
+
+// });

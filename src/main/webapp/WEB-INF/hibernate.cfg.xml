@@ -40,6 +40,11 @@
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity"/>
             <mapping class="cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity"/>
             <mapping class="cn.com.sinofaith.bean.UserEntity"/>
+            <mapping class="cn.com.sinofaith.bean.customerProBean.CustomerproEntity"/>
+            <mapping class="cn.com.sinofaith.bean.customerProBean.PersonCompanyEntity"/>
+            <mapping class="cn.com.sinofaith.bean.customerProBean.PersonNumberEntity"/>
+            <mapping class="cn.com.sinofaith.bean.customerProBean.PersonRelationEntity"/>
+            <mapping class="cn.com.sinofaith.bean.RelZjhHmEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
     </session-factory>

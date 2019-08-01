@@ -244,14 +244,17 @@
                                         <div class="form-group_search loadFile width100"
                                              style="margin-top: 5px;height: auto;">
                                             <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <button type="button" class="sideBar_r_button"
-                                   onclick="location.href='/SINOFAITH/banktjjg/download'">数据导出</button>
-                           <%--<button type="button" class="sideBar_r_button"--%>
-                                   <%--data-toggle="modal" data-target="#myModal1"--%>
-                           <%--onclick="getZhxx()">协助调查文书导出</button>--%>
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件导入</button>--%>
-                       </span>
+                                               <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                                   <c:choose>
+                                                       <c:when test="${user.id==aj.userId}">
+                                                           <button type="button" class="sideBar_r_button"
+                                                                   onclick="location.href='/SINOFAITH/banktjjg/download'">数据导出</button>                                                                                  </c:when>
+                                                       <c:otherwise>
+                                                           <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                                       </c:otherwise>
+                                                   </c:choose>
+
+                                               </span>
                                             </div>
                                         </div>
                                     </div>

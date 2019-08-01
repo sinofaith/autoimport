@@ -26,7 +26,7 @@ public class BankCustomerDao  extends BaseDao<BankCustomerEntity> {
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
         sql.append("FROM (SELECT  c.* ");
-        sql.append("FROM  bank_customer c right join rel_customer_aj s on c.zjhm = s.zjhm ");
+        sql.append("FROM  bank_customer c left join rel_customer_aj s on c.zjhm = s.zjhm ");
         sql.append(" where 1=1 " + seach + ") a ");
         sql.append("WHERE ROWNUM <= " + offset * length + ") WHERE rn >= " + ((offset - 1) * length + 1));
         return findBySQL(sql.toString());
@@ -38,22 +38,28 @@ public class BankCustomerDao  extends BaseDao<BankCustomerEntity> {
         int a = 0;
         PreparedStatement pstm = null;
         try {
-            con.setAutoCommit(false);
+//            con.setAutoCommit(false);
             pstm = con.prepareStatement(sql);
             for (int j = 0; j < zjhm.size(); j++) {
-                pstm.setString(1, zjhm.get(j));
-                pstm.setLong(2, aj_id);
-                pstm.execute();
-                con.commit();
-                a++;
+                try {
+                    pstm.setString(1, zjhm.get(j));
+                    pstm.setLong(2, aj_id);
+                    pstm.execute();
+//                    con.commit();
+                    a++;
+                }catch (Exception e){
+                    e.printStackTrace();
+                    System.out.println("该案件已存在此人");
+                    con.rollback();
+                }
             }
         } catch (Exception e) {
-            e.getMessage();
-            DBUtil.closeStatement(pstm);
-            DBUtil.closeConnection(con);
+            e.printStackTrace();
+//            DBUtil.closeStatement(pstm);
+//            DBUtil.closeConnection(con);
         }finally {
-            DBUtil.closeStatement(pstm);
-            DBUtil.closeConnection(con);
+//            DBUtil.closeStatement(pstm);
+//            DBUtil.closeConnection(con);
         }
         return a;
     }

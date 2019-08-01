@@ -163,9 +163,7 @@
         <span class="fl_r font_075 padd_r_30">
             <span>${user.username}</span>，您已登录&nbsp;<a id="btnLogout" href="/SINOFAITH/logout" onclick="window.location.href='http://localhost:8080/SINOFAITH/'" style="color:  #6698ce" class="color_black">退出系统</a>
         </span>
-
-
-    <div class="nav-search" style="width: 300px">
+        <div class="nav-search" style="width: 300px">
         <%--<a  id="nav-enable" style="display:block ;float: right" title="模式切换"><img src="<c:url value="/resources/img/enable.png"/>" width="35" height="30"></a>--%>
 
         <%--<c:choose>--%>

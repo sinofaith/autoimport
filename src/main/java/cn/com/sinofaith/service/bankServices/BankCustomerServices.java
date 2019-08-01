@@ -1,10 +1,12 @@
 package cn.com.sinofaith.service.bankServices;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.customerProBean.CustomerproEntity;
+import cn.com.sinofaith.bean.RelZjhHmEntity;
 import cn.com.sinofaith.bean.bankBean.BankCustomerEntity;
-import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
-import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.dao.AJDao;
+import cn.com.sinofaith.dao.CustomerproDao;
+import cn.com.sinofaith.dao.RelZjhHmDao;
 import cn.com.sinofaith.dao.bankDao.BankCustomerDao;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.MappingUtils;
@@ -17,8 +19,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,10 @@ public class BankCustomerServices {
     private BankCustomerDao bcd;
     @Autowired
     private AJDao ad;
-
+    @Autowired
+    private CustomerproDao cd;
+    @Autowired
+    private RelZjhHmDao rd;
 
     public String getAjidByAjm(AjEntity aj,long userId){
         String[] ajm = new String[]{};
@@ -208,6 +211,21 @@ public class BankCustomerServices {
             c.setInserttime(inserttime);
             bcd.saveOrUpdate(c);
             zjhm.add(c.getZjhm());
+
+            CustomerproEntity cme = new CustomerproEntity();
+            cme.setZjh(c.getZjhm());
+            cme.setName(c.getName());
+            cd.add(cme);
+            String[] sjhs = c.getLxsj().split(",");
+            for(String sjh : sjhs) {
+                RelZjhHmEntity r = new RelZjhHmEntity();
+                r.setZjh(c.getZjhm());
+                r.setHm(sjh.trim());
+                r.setHmlx(4);
+                r.setHmly(4);
+                r.setAj_id(aj.getId());
+                rd.add(r);
+            }
         }
         bcd.saveRel(zjhm,aj.getId());
         return bankCustLists;

@@ -196,15 +196,22 @@
                                 <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">银行卡数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
-                           <c:if test="${!fn:contains(aj.aj, ',')}">
-                                <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal5">银行卡数据导入</button>
-                           </c:if>
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bank/download'" >数据导出</button>
-                           <button  type="button"  class="sideBar_l_button" data-toggle="modal" data-target="#myModal2" onclick="yjdcDownload()">一键导出</button>
-                           <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null && detailinfo.size()!=0}">onclick="location.href='/SINOFAITH/bank/createPDF'"</c:if>>生成PDF报告文档</button>
-                       </span>
+                                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                        <c:choose>
+                                            <c:when test="${user.id==aj.userId}">
+                                                   <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件夹导入</button>--%>
+                                                   <c:if test="${!fn:contains(aj.aj, ',')}">
+                                                       <button class="sideBar_r_button" data-toggle="modal" data-target="#myModal5">银行卡数据导入</button>
+                                                   </c:if>
+                                                <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/bank/download'" >数据导出</button>
+                                                <button  type="button"  class="sideBar_l_button" data-toggle="modal" data-target="#myModal2" onclick="yjdcDownload()">一键导出</button>
+                                                <button  type="button"  class="sideBar_r_button" <c:if test="${aj!=null}">onclick="location.href='/SINOFAITH/bank/createPDF'"</c:if>>生成PDF报告文档</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -246,6 +253,7 @@
                         onchange="document.getElementById('textfield').value=this.value;" />
                 <br>
                     案&nbsp;&nbsp;件&nbsp;&nbsp;名:<input type="text" name = 'aj' id ='aj' class='txt' readonly="readonly" value="${aj.aj}">
+                    <button type="button" class="btn btn-default"  data-toggle="modal" data-target="#myModalyl" onclick="getYl()">查看样例</button>
                     <br>
                     导入方式:
                     <div class="radio radio-info radio-inline">
@@ -256,15 +264,14 @@
                         <input type="radio" id="inlineRadio2" value="xlsx" name="radioInline">
                         <label class="label_c" for="inlineRadio2"> 映射导入 </label>
                     </div>
-                    <%--<input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">--%>
+                <%--<input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1">--%>
                     <%--<label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>--%>
                 </div>
             </div>
             <div class="modal-footer">
                 <input type="submit" name="submit" class="btn" value="上传"
                        onclick="UploadBank()" />
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -612,4 +619,53 @@
     </div>
     <!-- /.modal -->
 </div>
+
+<div class="modal fade" id="myModalyl" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 0%; min-width: 96%;left: 2%;right: 2%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="myModalLabelyl">自动导入表头样例</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table  table-hover table_style table_list1 "
+                       style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
+                    <thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">
+                    <tr align="center">
+                        <td width="4%">序号</td>
+                        <td width="6%">交易卡号</td>
+                        <td width="7%">交易姓名</td>
+                        <td width="7%">交易证件号</td>
+                        <td width="7%">交易日期</td>
+                        <td width="7%">交易时间</td>
+                        <td width="7%">交易金额</td>
+                        <td width="7%">交易余额</td>
+                        <td width="6%">收付标志</td>
+                        <td width="7%">对方卡号</td>
+                        <td width="7%">对方户名</td>
+                        <td width="7%">对手证件号</td>
+                        <td width="7%">对手开户行</td>
+                        <td width="7%">摘要说明</td>
+                        <td width="7%">交易网点名称</td>
+                        <td width="7%">交易发生地</td>
+                    </tr>
+                    </thead>
+                    <tbody id="result" style="display:block;height:340px;overflow-y:scroll;"
+                           onscroll="">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
 <%@include file="../template/newfooter.jsp" %>

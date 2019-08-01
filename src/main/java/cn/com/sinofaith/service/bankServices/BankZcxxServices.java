@@ -1,9 +1,12 @@
 package cn.com.sinofaith.service.bankServices;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.customerProBean.CustomerproEntity;
+import cn.com.sinofaith.bean.RelZjhHmEntity;
 import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
 import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
+import cn.com.sinofaith.dao.CustomerproDao;
+import cn.com.sinofaith.dao.RelZjhHmDao;
 import cn.com.sinofaith.dao.bankDao.BankPersonDao;
 import cn.com.sinofaith.dao.bankDao.BankTjjgDao;
 import cn.com.sinofaith.dao.bankDao.BankTjjgsDao;
@@ -14,7 +17,6 @@ import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.cftServices.CftZzxxService;
 import cn.com.sinofaith.util.CreatePdfUtils;
 import cn.com.sinofaith.util.MappingUtils;
-import cn.com.sinofaith.util.WatermarkImageUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.itextpdf.text.*;
@@ -54,6 +56,10 @@ public class BankZcxxServices {
     private BankTjjgsDao banktjsd;
     @Autowired
     private BankPersonDao bpd;
+    @Autowired
+    private CustomerproDao cd;
+    @Autowired
+    private RelZjhHmDao rd;
 
     public String getBq(String yhkh,long ajid){
         String sql = " select to_char(c.zzsum) zzsum ,to_char(r.zzrsum) zzrsum ,to_char(j.tjsum) tjsum" +
@@ -126,7 +132,7 @@ public class BankZcxxServices {
     }
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
-        List<BankZcxxEntity> listZcxx = bzcd.find("from BankZcxxEntity where 1=1"+seach+" order by inserttime,khzjh nulls last desc");
+        List<BankZcxxEntity> listZcxx = bzcd.find("from BankZcxxEntity where 1=1"+seach);
         HSSFWorkbook wb = createExcel(listZcxx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-Disposition","attachment;filename="+new String(("银行卡开户信息\""+aj+".xls").getBytes(), "ISO8859-1"));
@@ -362,7 +368,7 @@ public class BankZcxxServices {
      * @param listPath
      * @return
      */
-    public List<BankZcxxEntity> getBankZcxxAll(List<String> listPath, List<List<String>> fields) {
+    public List<BankZcxxEntity> getBankZcxxAll(List<String> listPath, List<List<String>> fields,long id) {
         // 读取
         List<BankZcxxEntity> bankZcxxList = null;
         List<BankZcxxEntity> bankZcxxLists = new ArrayList<>();
@@ -386,6 +392,17 @@ public class BankZcxxServices {
             if (bpe.getYhkkh().trim().length() > 0) {
                 bpd.insert(bpe);
             }
+            CustomerproEntity cme = new CustomerproEntity();
+            cme.setZjh(bce.getKhzjh());
+            cme.setName(bce.getKhxm());
+            cd.add(cme);
+            RelZjhHmEntity r = new RelZjhHmEntity();
+            r.setZjh(bce.getKhzjh());
+            r.setHm(bce.getYhkkh());
+            r.setHmlx(1);
+            r.setHmly(1);
+            r.setAj_id(id);
+            rd.add(r);
         }
         return bankZcxxLists;
     }

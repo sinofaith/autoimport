@@ -3,17 +3,12 @@ package cn.com.sinofaith.controller;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
-import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.util.TimeFormatUtil;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,11 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.HTML;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -48,6 +40,7 @@ public class AjController {
         ModelAndView mav = new ModelAndView("redirect:/aj/seach?pageNo=1");
         httpSession.removeAttribute("ajseachCondition"); //查询条件
         httpSession.removeAttribute("ajseachCode");//查询内容
+        httpSession.removeAttribute("aj");
         return mav;
     }
     @RequestMapping(value = "/seach")
@@ -105,6 +98,7 @@ public class AjController {
     public ModelAndView jump(@RequestParam("aj") String aj,@RequestParam("type") long type, HttpSession httpSession){
         UserEntity user = (UserEntity) httpSession.getAttribute("user");
         ModelAndView mav = null;
+        AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         if(type==1){
              mav = new ModelAndView("redirect:/cft/seach?pageNo=1");
         } else if(type==2){
@@ -121,11 +115,13 @@ public class AjController {
             mav = new ModelAndView("redirect:/pyramidSale/seach?pageNo=1");
         } else if(type==5){
             mav = new ModelAndView("redirect:/zfbZhmx?flag=a2");
+        } else if (type==6){
+            mav = new ModelAndView("redirect:/customerPro?aj="+aje.getId());
         }
 
         httpSession.removeAttribute("zcseachCode");
         httpSession.removeAttribute("zcseachCondition");
-        httpSession.setAttribute("aj",ajs.findByName(aj,user.getId()).get(0));
+        httpSession.setAttribute("aj",aje);
         return mav;
     }
 
@@ -153,7 +149,7 @@ public class AjController {
             return "303";
         }else{
             String [] type = list.split(",");
-            ajs.deleteByAj(aje.getId(),type);
+            ajs.ad.deleteByAj(aje.getId(),type);
             if(type.length==4) {
                 httpSession.removeAttribute("aj");
             }

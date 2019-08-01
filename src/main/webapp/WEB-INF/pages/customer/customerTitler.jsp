@@ -23,7 +23,7 @@
             var url = window.location.pathname.split("/");
             $(".tab_nav a").each(function(index, element) {
                 var aherf = element.getAttribute('href').split("/");
-                if(url[url.length-2]==aherf[aherf.length-1]){
+                if(aherf[aherf.length-1].startsWith(url[url.length-2])){
                     element.setAttribute("class","addactive")
                 }
             });
@@ -33,7 +33,10 @@
 <%--新加样式--%>
 <body>
 <span class="tab_nav">
-        <a href="/SINOFAITH/customerPro" style="width: 16%">人员信息</a>
+        <a href="/SINOFAITH/customerPro?aj=${aj.aj}"  style="width: 16%">人员信息</a>
+        <c:if test="${aj!=null}">
+                <a href="/SINOFAITH/customerRelation" style="width: 16%">目标人物关系</a>
+        </c:if>
         <%--<a href="/SINOFAITH/bank" style="width: 16%" >资金开户信息</a>--%>
         <%--<a href="/SINOFAITH/bankzzxx" style="width: 16%">资金交易明细</a>--%>
         <%--<a href="/SINOFAITH/banktjjg" style="width: 16%">账户统计信息</a>--%>

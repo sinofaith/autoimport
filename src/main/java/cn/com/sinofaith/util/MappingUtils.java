@@ -61,7 +61,8 @@ public class MappingUtils {
      * @param path
      * @return
      */
-    public static Map<String,List<String>> getBy2007Excel(String path) {
+    public static Map<String,List<String>>
+    getBy2007Excel(String path) {
         // 所有sheet工作簿数据
         Map<String,List<String>> sheetMap = new LinkedHashMap<>();
         // 数据内容

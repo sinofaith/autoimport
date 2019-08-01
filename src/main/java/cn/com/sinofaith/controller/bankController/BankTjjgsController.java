@@ -4,6 +4,7 @@ import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.bankBean.BankTjjgEntity;
 import cn.com.sinofaith.form.cftForm.CftTjjgForm;
+import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.AjServices;
 import cn.com.sinofaith.service.bankServices.BankTjjgServices;
@@ -46,7 +47,7 @@ public class BankTjjgsController {
         httpSession.removeAttribute("tjsseachCondition");
         //查询内容
         httpSession.removeAttribute("tjsseachCode");
-        httpSession.setAttribute("code",-1);
+        httpSession.setAttribute("code","-99");
         httpSession.setAttribute("hcode",0);
 
         httpSession.setAttribute("sorderby","czzje");
@@ -63,7 +64,7 @@ public class BankTjjgsController {
         if(zhlx==1){
             ses.setAttribute("tjsseachCondition","dfzh");
         }
-        ses.setAttribute("code",-1);
+        ses.setAttribute("code","-99");
         ses.setAttribute("hcode",0);
         ses.setAttribute("sorderby","jyzcs");
         ses.setAttribute("slastOrder","jyzcs");
@@ -99,7 +100,7 @@ public class BankTjjgsController {
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
-        int code = (Integer) req.getSession().getAttribute("code");
+        String code = (String) req.getSession().getAttribute("code");
         int hcode = (Integer) req.getSession().getAttribute("hcode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),code,hcode);
@@ -133,7 +134,7 @@ public class BankTjjgsController {
     }
 
     @RequestMapping(value = "/getByZhzt")
-    public ModelAndView getByZhzt(int code ,HttpSession httpSession){
+    public ModelAndView getByZhzt(String code ,HttpSession httpSession){
         ModelAndView mav = new ModelAndView("redirect:/banktjjgs/seach?pageNo=1");
         httpSession.setAttribute("code",code);
         return mav;
@@ -150,7 +151,7 @@ public class BankTjjgsController {
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
-        int code = (Integer) req.getSession().getAttribute("code");
+        String code = (String) req.getSession().getAttribute("code");
         int hcode = (Integer) req.getSession().getAttribute("hcode");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         String seach = banktjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),code,hcode);
@@ -162,10 +163,19 @@ public class BankTjjgsController {
     public String getSeach(String zh,String type,HttpServletResponse rep, HttpServletRequest req){
         Gson gson = new  GsonBuilder().serializeNulls().create();
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = banktjss.getSeach(type,zh.replace("\n","").trim()," jyzcs "," desc ",aj,-1,0);
+        String seach = banktjss.getSeach(type,zh.replace("\n","").trim()," jyzcs "," desc ",aj,"-99",0);
         CftTjjgForm bf = tjs.getByJyzh(zh.replace("\n","").trim(),aj);
         Page page = banktjss.queryForPage(1,10000,seach);
         page.setResult(bf);
         return gson.toJson(page);
+    }
+
+    @RequestMapping("/getJczz")
+    @ResponseBody
+    public String getJczz(String name,String pname,HttpServletRequest req){
+        Gson gson = new Gson();
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+
+        return gson.toJson(banktjss.getJczzByName(name,pname,aj.getId()));
     }
 }

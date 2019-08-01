@@ -1,11 +1,15 @@
 package cn.com.sinofaith.service;
 
 import cn.com.sinofaith.bean.AjEntity;
+import cn.com.sinofaith.bean.customerProBean.CustomerproEntity;
+import cn.com.sinofaith.bean.RelZjhHmEntity;
 import cn.com.sinofaith.bean.bankBean.*;
 import cn.com.sinofaith.bean.cftBean.CftPersonEntity;
 import cn.com.sinofaith.bean.cftBean.CftZcxxEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.bean.zfbBean.*;
+import cn.com.sinofaith.dao.CustomerproDao;
+import cn.com.sinofaith.dao.RelZjhHmDao;
 import cn.com.sinofaith.dao.bankDao.BankCustomerDao;
 import cn.com.sinofaith.dao.zfbDao.*;
 import cn.com.sinofaith.dao.bankDao.BankPersonDao;
@@ -18,11 +22,9 @@ import cn.com.sinofaith.dao.wuliuDao.WuliuJjxxDao;
 import cn.com.sinofaith.form.zfbForm.ZfbJyjlTjjgsForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgForm;
 import cn.com.sinofaith.form.zfbForm.ZfbZzmxTjjgsForm;
-import cn.com.sinofaith.service.bankServices.BankZzxxServices;
 import cn.com.sinofaith.service.bankServices.MappingBankzzxxService;
 import cn.com.sinofaith.util.*;
 import com.csvreader.CsvReader;
-import com.csvreader.CsvWriter;
 import com.monitorjbl.xlsx.StreamingReader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -101,6 +103,10 @@ public class UploadService {
     private ZfbZhmxJylxDao zfbZhmxJylxDao;
     @Autowired
     private MappingBankzzxxService mbs;
+    @Autowired
+    private CustomerproDao cd;
+    @Autowired
+    private RelZjhHmDao rd;
 
     public int deleteAll(String uploadPath) {
         try {
@@ -123,6 +129,27 @@ public class UploadService {
         List<String> listPath = getFileList(filepath, filter);
         List<CftZcxxEntity> listZcxx = getZcxxByTxt(listPath);
         int i = zcd.saveZcxx(listZcxx, aj);
+        for(CftZcxxEntity c :listZcxx){
+            CustomerproEntity cme = new CustomerproEntity();
+            cme.setZjh(c.getSfzhm());
+            cme.setName(c.getXm());
+            cd.add(cme);
+
+            RelZjhHmEntity r = new RelZjhHmEntity();
+            r.setZjh(c.getSfzhm());
+            r.setHm(c.getZh());
+            r.setHmlx(2);
+            r.setHmly(2);
+            r.setAj_id(aj);
+            rd.add(r);
+            r.setHm(c.getBdsj());
+            r.setHmlx(4);
+            rd.add(r);
+            r.setHm(c.getYhzh());
+            r.setHmlx(1);
+            rd.add(r);
+
+        }
         return i;
     }
 
@@ -340,6 +367,22 @@ public class UploadService {
             c.setInserttime(inserttime);
             bcd.saveOrUpdate(c);
             zjhm.add(c.getZjhm());
+
+            CustomerproEntity cme = new CustomerproEntity();
+            cme.setZjh(c.getZjhm());
+            cme.setName(c.getName());
+            cd.add(cme);
+
+            String[] sjhs = c.getLxsj().split(",");
+            for(String sjh : sjhs) {
+                RelZjhHmEntity r = new RelZjhHmEntity();
+                r.setZjh(c.getZjhm());
+                r.setHm(sjh.trim());
+                r.setHmlx(4);
+                r.setHmly(4);
+                r.setAj_id(aj.getId());
+                rd.add(r);
+            }
         }
         bcd.saveRel(zjhm,aj.getId());
         return listcust.size();
@@ -368,7 +411,6 @@ public class UploadService {
             dsbp.setYhkkh(listZzxx.get(g).getDskh());
             dsbp.setYhkzh(String.valueOf(aj_id));
             dsbp.setXm(listZzxx.get(g).getDsxm());
-
             BankPersonEntity jybp = new BankPersonEntity();
             jybp.setYhkkh(listZzxx.get(g).getYhkkh());
             jybp.setYhkzh(String.valueOf(aj_id));
@@ -404,11 +446,13 @@ public class UploadService {
             mapZ.remove(str.get(s));
         }
         allbp = new ArrayList<>(mapZ.values());
-        bpd.add(allbp, String.valueOf(aj_id));
-        return i;
+        for(BankPersonEntity b : allbp){
+            bpd.insert(b);
+        }
+         return i;
     }
     /**
-     * 物流寄件添加数据
+     *
      * @param elPath 标准数据以外的银行资金自动导入
      */
     public List<BankZzxxEntity> getByExcelMapping(List<String> elPath){
@@ -417,6 +461,9 @@ public class UploadService {
         Map<String,List<String>> sheetMap = new HashMap<>();
         String excelName = "";
         List<MappingBankzzxxEntity> listmb = mbs.getAll();
+        //通过未填入字段排序 为后续匹配表头增加完整性
+        listmb.sort((m1,m2)->new BigDecimal(m1.objToMap().values().stream().filter(k->k.equals("无")).collect(Collectors.toList()).size())
+                .compareTo(new BigDecimal(m2.objToMap().values().stream().filter(k->k.equals("无")).collect(Collectors.toList()).size())));
         for(String path : elPath){
             excelName = path.substring(path.lastIndexOf(File.separator)+1);
             if(path.endsWith(".xlsx")){
@@ -426,6 +473,7 @@ public class UploadService {
             }
             // 将单个excel表头放入map中
             excelMap.put(excelName,sheetMap);
+
             for (MappingBankzzxxEntity me:listmb){
                 //获取数据库表头样例
                 Map<String,String> mepMap = me.objToMap();
@@ -434,9 +482,11 @@ public class UploadService {
                     //不为空的Excel表头与数据库样例比对
                     if(sheetMap.values().stream().collect(Collectors.toList()).get(0).containsAll(ls)){
                         if(path.endsWith(".xlsx")){
-                            zzlist = getBy2007ExcelAll(path,excelName,mepMap);
+                            zzlist.addAll(getBy2007ExcelAll(path,excelName,mepMap));
+                            break;
                         }else if(path.endsWith(".xls")){
-                            zzlist = getBy2003ExcelAll(path,excelName,mepMap);
+                            zzlist.addAll(getBy2003ExcelAll(path,excelName,mepMap));
+                            break;
                         }
                     }
                 }
@@ -922,7 +972,6 @@ public class UploadService {
         Map<String, Integer> title = new HashMap();
         List<BankZzxxEntity> listB = new ArrayList<>();
         CsvReader csv = null;
-
         for (int i = 0; i < filepath.size(); i++) {
             File file = new File(filepath.get(i));
             try {
@@ -1061,6 +1110,18 @@ public class UploadService {
             if (bpe.getYhkkh().trim().length() > 0) {
                 bpd.insert(bpe);
             }
+            CustomerproEntity cme = new CustomerproEntity();
+            cme.setZjh(bce.getKhzjh());
+            cme.setName(bce.getKhxm());
+            cd.add(cme);
+
+            RelZjhHmEntity r = new RelZjhHmEntity();
+            r.setZjh(bce.getKhzjh());
+            r.setHm(bce.getYhkkh());
+            r.setHmlx(1);
+            r.setHmly(1);
+            r.setAj_id(aj_id);
+            rd.add(r);
         }
         return listZcxx;
     }
@@ -1131,6 +1192,7 @@ public class UploadService {
                                 zcxxs.add(BankZcxxEntity.mapToObj(map.get(i), title));
                             }
                         }
+                        new File(path).delete();
                     }
                 }
                 if(path.endsWith(".csv")){
@@ -1162,8 +1224,8 @@ public class UploadService {
                         }
                     }
                     csv.close();
+                    new File(path).delete();
                 }
-                new File(path).delete();
             } catch (FileNotFoundException e) {
                 System.out.println("未找到指定路径的文件!");
                 e.printStackTrace();
@@ -1241,6 +1303,30 @@ public class UploadService {
             if (path.contains("注册信息")) {
                 List<ZfbZcxxEntity> zcxxList = (List<ZfbZcxxEntity>) getZfbByCsv(path, 1);
                 sum += zfbZcxxDao.insertZcxx(zcxxList, id);
+                for(ZfbZcxxEntity c :zcxxList){
+                    CustomerproEntity cme = new CustomerproEntity();
+                    cme.setZjh(c.getZjh());
+                    cme.setName(c.getZhmc());
+                    cd.add(cme);
+
+                    RelZjhHmEntity r = new RelZjhHmEntity();
+                    r.setZjh(c.getZjh());
+                    r.setHm(c.getBdsj());
+                    r.setHmlx(4);
+                    r.setHmly(3);
+                    r.setAj_id(id);
+                    rd.add(r);
+                    r.setHm(c.getYhId());
+                    r.setHmlx(3);
+                    rd.add(r);
+                    String[] yhks = c.getBdyhk().split(";");
+                    for(String yhk : yhks){
+                        r.setHm(yhk.split(":")[2]);
+                        r.setHmly(3);
+                        rd.add(r);
+                    }
+
+                }
             } else if (path.contains("登陆日志")) {
                 List<ZfbDlrzEntity> dlrzList = (List<ZfbDlrzEntity>) getZfbByCsv(path, 2);
                 sum += zfbDlrzDao.insertDlrz(dlrzList, id);

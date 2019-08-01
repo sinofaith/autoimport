@@ -1,5 +1,7 @@
 package cn.com.sinofaith.util;
 
+import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
+
 public class Compare {
     private int compare(String str, String target) {
         int d[][];              // 矩阵
@@ -48,14 +50,37 @@ public class Compare {
      */
 
     public float getSimilarityRatio(String str, String target) {
-        return 1 - (float) compare(str, target) / Math.max(str.length(), target.length());
+        int a = compare(str,target);
+        if(str.contains(target)||target.contains("str")){
+            a-=5;
+        }
+        return 1 - (float) a / Math.max(str.length(), target.length());
     }
 
     public static void main(String[] args) {
         Compare lt = new Compare();
-        String str = "证照类型";
-        String target = "证照类型";
-        System.out.println("similarityRatio=" + lt.getSimilarityRatio(str, target));
+        String[] strs= {"交易日期","交易时间","本方户名","本方卡号","摘要","借",
+                "贷","账户余额","交易机构名称",
+        "对方账号","对方户名","交易对手账号","对方行名","交易渠道",
+        "交易备注","币种"};
+//        String[] target = {"交易姓名","交易户名","交易名称"};
+        String[] target = {"借方发生额"};
+        float result=0;
+        String name = "";
+        for(int i=0;i<strs.length;i++) {
+            String temp = strs[i];
+//            if(temp.contains("日期")||temp.contains("号")||temp.contains("卡")||temp.contains("时间")||temp.contains("方式")||temp.contains("余额")||temp.contains("IP")||temp.contains("名")){
+//                continue;
+//            }
+            for (int j=0;j<target.length;j++) {
+                float tempresult = lt.getSimilarityRatio(strs[i], target[j]);
+                if(tempresult>result){
+                    result = tempresult;
+                    name = strs[i];
+                }
+            }
+        }
+        System.out.println(name+"      "+result);
     }
 }
 

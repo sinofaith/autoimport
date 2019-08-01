@@ -21,12 +21,7 @@
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
-</script>
-<style>
-    .crimeterrace{ background-color: #636B75 !important;}
-
-
-</style>
+</script> 
 
 <div class="tab_div">
     <%@include file="../bank/bankTitler.jsp" %>
@@ -54,9 +49,9 @@
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
                                             <label for="checkbox1" class="label_c">去除第三方账户</label>
                                             <br>
-                                            <label style="color:#0a36e9;" class="label_c"><input name="zhzt" type="radio"  value="0" <c:if test="${code == 0 }">checked='checked'</c:if> />已调单 </label>
-                                            <label style="color:red;" class="label_c"><input name="zhzt" type="radio"  value="1" <c:if test="${code == 1 }">checked='checked'</c:if>/>未调单 </label>
-                                            <label style="color: #FF00FE;" class="label_c"><input name="zhzt" type="radio"  value="2" <c:if test="${code == 2 }">checked='checked'</c:if>/>人为设计 </label> </td>
+                                            <label style="color:#0a36e9;" class="label_c"><input name="zhzt" type="checkbox"  value="0" <c:if test="${code.contains('0') }">checked='checked'</c:if> onclick="getZhzt()" />已调单 </label>
+                                            <label style="color:red;" class="label_c"><input name="zhzt" type="checkbox"  value="1" <c:if test="${code.contains('1') }">checked='checked'</c:if> onclick="getZhzt()"/>未调单 </label>
+                                            <label style="color: #FF00FE;" class="label_c"><input name="zhzt" type="checkbox"  value="2" <c:if test="${code.contains('2') }">checked='checked'</c:if> onclick="getZhzt()"/>人为设计 </label> </td>
                                         <td width="7%">对方户名</td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进账总次数</a></td>
@@ -101,7 +96,14 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                <td align="center"title="${item.dfxm}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div></td>
+                                                <td align="center"title="${item.dfxm}">
+                                                    <div class="dropCss" >
+                                                        <div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div>
+                                                        <div class="dropCss-content">
+                                                            <a data-toggle="modal" data-target="#myModal3" onclick="editPersonRelation('${item.name}','${item.dfxm}')">添加目标关系</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
@@ -183,10 +185,16 @@
                                 <span style="margin-left: 10px;color: #444;padding-bottom: 10px;margin-top: 20px;">银行卡数据导入/导出</span>
                                 <div class="form-group_search loadFile width100" style="margin-top: 5px;height: auto;">
                                     <div class="if_tel width100">
-                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
-                           <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/banktjjgs/download'" >数据导出</button>
-                           <%--<button  type="button"  class="sideBar_r_button" id="btnLoadFile" >文件导入</button>--%>
-                       </span>
+                                       <span class="fl_l width100 " style="padding-bottom: 10px;margin-top: 10px;">
+                                           <c:choose>
+                                               <c:when test="${user.id==aj.userId}">
+                                                   <button  type="button"  class="sideBar_r_button"  onclick="location.href='/SINOFAITH/banktjjgs/download'" >数据导出</button>
+                                               </c:when>
+                                               <c:otherwise>
+                                                   <button  type="button"  class="sideBar_r_button" >授权查看无法操作</button>
+                                               </c:otherwise>
+                                           </c:choose>
+                                       </span>
                                     </div>
                                 </div>
                             </div>
@@ -274,34 +282,78 @@
             <div class="modal-body" >
                 <div id="main" style="width: 1450px;height:590px;">
                 </div>
-            <%--<table class="table  table-hover table_style table_list1 "--%>
-                       <%--style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">--%>
-                    <%--<thead style="display:table;width:100%;table-layout:fixed;width: calc( 100% - 16.5px );">--%>
-                    <%--<tr align="center">--%>
-                        <%--<td width="4%">序号</td>--%>
-                        <%--<td width="5%">交易总次数</td>--%>
-                        <%--<td width="13%">流入账卡号</td>--%>
-                        <%--<td width="7%">流入户名</td>--%>
-                        <%--<td width="8%">流入总次数</td>--%>
-                        <%--<td width="8%">流入总金额(元)</td>--%>
-                        <%--<td width="13%">交易账卡号</td>--%>
-                        <%--<td width="7%">交易户名</td>--%>
-                        <%--<td width="8%">流出总次数</td>--%>
-                        <%--<td width="8%">流出总金额(元)</td>--%>
-                        <%--<td width="13%">流出账卡号</td>--%>
-                        <%--<td width="7%">流出户名</td>--%>
-                    <%--</tr>--%>
-                    <%--<input name="label" id="yhkkh1" hidden="hidden" value="">--%>
-                    <%--<input name="label" id="dfkh1" hidden="hidden" value="">--%>
-                    <%--<input name="label" id="allRow1" hidden="hidden" value="">--%>
-                    <%--</thead>--%>
-                    <%--<tbody id="result2" style="display:block;height:340px;overflow-y:scroll;"--%>
-                           <%--&lt;%&ndash;onscroll="scrollF('tjjgs')">&ndash;%&gt;--%>
-                    <%--</tbody>--%>
-                <%--</table>--%>
             </div>
             <div class="modal-footer">
                 <%--<button type="button" class="btn btn-default" onclick="downDetailZh()">导出</button>--%>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="top: 10%; min-width: 30%;left: 30%;right: 30%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel3">目标关系<span id="title3"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="basic-grey">
+                    <label>
+                        <span>目标姓名:</span>
+                        <input id="name" type="text"  name="name" placeholder="目标人物姓名"
+                               data-toggle="tooltip" data-placement="top" oninput="$('#name').tooltip('destroy');"/>
+                    </label>
+                    <label>
+                        <span>对象:</span>
+                        <input id="pname" type="text" name="pname" placeholder="对象"
+                               data-toggle="tooltip" data-placement="top" oninput="$('#pname').tooltip('destroy');"/>
+                    </label>
+                    <label>
+                        <span>关系 :</span>
+                        <select id="relationName" name="relationName" onchange="changeRelationShow()">
+                            <option value="资金关联">资金关联</option>
+                            <option value="公司关联">公司关联</option>
+                            <option value="户籍关联">户籍关联</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>关系说明 :</span>
+                        <select id="relationShow" name="relationShow">
+                            <option value="上家">上家</option>
+                            <option value="下家">下家</option>
+                            <option value="仓储物流">仓储物流</option>
+                            <option value='电商平台'>电商平台</option>
+                            <option value='支付平台'>支付平台</option>
+                            <option value='日常消费'>日常消费</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>备注 :</span>
+                        <input id="relationMark" type="text" name="relationMark" placeholder="备注(公司关联填公司名)"></label>
+                    </label>
+                    <label>
+                        <span>进账总金额 :</span>
+                        <input id="jzzje" type="text" name="name" readonly />
+                    </label>
+                    <label>
+                        <span>出账总金额 :</span>
+                        <input id="czzje" type="text" name="name" readonly />
+                    </label>
+                    <label>
+                        <span>交易净值 :</span>
+                        <input id="jyjz" type="text" name="name" readonly />
+                    </label>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="addRelation()">添加</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div>
