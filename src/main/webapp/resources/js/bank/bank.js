@@ -395,12 +395,38 @@ function progressFunction(evt) {
         percentageDiv.innerHTML = Math.round(evt.loaded / evt.total * 100)+ "%";
         if((evt.loaded/evt.total) ==1){
             alertify.set('notifier','position', 'top-center');
+            alertify.set('notifier','delay', 0);
             alertify.success("文件夹上传成功!请等待数据导入...");
         }
     }
 }
 
-
+function seachSubmit() {
+    var url = "/SINOFAITH/bankzzxx/SeachCode";
+    var d = {};
+    var formDate = $("#seachForm").serializeArray();
+    $.each(formDate, function() {
+        d[this.name] = this.value;
+    });
+    d =  JSON.stringify(d);
+    $.ajax({
+        type:"post",
+        contentType:"application/json",
+        url:url,
+        data:d,
+        success:function () {
+            window.location.href="/SINOFAITH/bankzzxx/seach?pageNo=1"
+        }
+    })
+}
+function clearForom(formId) {
+    var form = document.getElementById(formId);
+    var tagElements = form.getElementsByTagName('input');
+    for (var j = 0; j < tagElements.length; j++){
+        tagElements[j].value="";
+    }
+    $("#dskh").val("");
+}
 function editBp(yhkkh,dsfzh) {
     if(dsfzh==1){
         dsfzh=0;
@@ -520,10 +546,10 @@ function getZzDetails(obj,type,czhlx) {
                     "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                     "<td width=\"13%\" title=\""+data[i].dskh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dskh+"</div></td>"+
                     "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
-                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jywdmc+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jywdmc+"</div></td>"+
-                    "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
@@ -587,10 +613,10 @@ function orderByFilter(type,filter) {
                     "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                     "<td width=\"13%\" title=\""+data[i].dskh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dskh+"</div></td>"+
                     "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
-                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].zysm  +"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
                     "<td width=\"7%\" title=\""+data[i].jywdmc+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jywdmc+"</div></td>"+
-                    "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
+                    "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                     // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                     "</tr>";
             }
@@ -659,10 +685,10 @@ function scrollF(type) {
                             "<td width=\"7%\">"+data[i].sfbz+"</td>"+
                             "<td width=\"13%\" title=\""+data[i].dskh+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dskh+"</div></td>"+
                             "<td width=\"13%\" title=\""+data[i].dsxm+"\"> <div style=\"width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].dsxm+"</div></td>"+
-                            "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
+                            "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].jyfsd+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jyfsd+"</div></td>"+
                             "<td width=\"7%\" title=\""+data[i].jywdmc+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].jywdmc+"</div></td>"+
-                            "<td width=\"7%\" title=\""+data[i].zysm+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].zysm+"</div></td>"+
+                            "<td width=\"7%\" title=\""+data[i].bz+"\"> <div style=\"width:90px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;\">"+data[i].bz+"</div></td>"+
                             // "<td width=\"8%\">"+data[i].jsje+"</td>"+
                             "</tr>";
                     }

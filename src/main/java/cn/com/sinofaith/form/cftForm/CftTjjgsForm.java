@@ -16,6 +16,9 @@ public class CftTjjgsForm {
     private BigDecimal count = new BigDecimal(0);
     private long zhlx;
     private long dsfzh;
+    private String  minsj;
+    private String maxsj;
+    private String jgsj;
 
 
     public long getId() {
@@ -125,6 +128,30 @@ public class CftTjjgsForm {
 
     public void setDsfzh(long dsfzh) {
         this.dsfzh = dsfzh;
+    }
+
+    public String getMinsj() {
+        return minsj;
+    }
+
+    public void setMinsj(String minsj) {
+        this.minsj = minsj;
+    }
+
+    public String getMaxsj() {
+        return maxsj;
+    }
+
+    public void setMaxsj(String maxsj) {
+        this.maxsj = maxsj;
+    }
+
+    public String getJgsj() {
+        return jgsj;
+    }
+
+    public void setJgsj(String jgsj) {
+        this.jgsj = jgsj;
     }
 
     @Override

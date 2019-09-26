@@ -127,25 +127,61 @@
                         <div class=" ">
 
                             <div>
-                                <form action="/SINOFAITH/bankzzxx/SeachCode" method="post">
+                                <form action="" id="seachForm" method="post" enctype="application/json">
                                     <div class="form-group_search  fl_l width100" >
-                                        <span style="margin-left: 10px;color: #444;padding-bottom: 10px;">查询方式</span>
-                                        <select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">
-                                            <option value="yhkkh" <c:if test="${bzzseachCondition=='yhkkh'}">selected="selected"</c:if> >交易卡号</option>
-                                            <option value="khxm"<c:if test="${bzzseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>
-                                            <option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手卡号</option>
-                                            <option value="dsxm" <c:if test="${bzzseachCondition=='dsxm'}">selected="selected"</c:if> >对手户名</option>
-                                            <option value="zysm" <c:if test="${bzzseachCondition=='zysm'}">selected="selected"</c:if> >摘要说明</option>
-                                            <option value="jywdmc" <c:if test="${bzzseachCondition=='jywdmc'}">selected="selected"</c:if> >交易网点名称</option>
-                                            <option value="bz" <c:if test="${bzzseachCondition=='bz'}">selected="selected"</c:if> >备注</option>
+                                        <label>
+                                            <span>交易卡号:</span>
+                                            <input id="yhkkh" type="text" name="yhkkh" autocomplete="off" placeholder="交易卡号" value="${seach.yhkkh}"/>
+                                        </label>
+                                        <label>
+                                            <span>交易户名:</span>
+                                            <input id="khxm" type="text" name="khxm" autocomplete="off" placeholder="交易户名" value="${seach.khxm}"/>
+                                        </label>
+                                        <label>
+                                            <span>收付标志:</span>
+                                            <input id="sfbz" type="text" name="sfbz" autocomplete="off" placeholder="收付标志" value="${seach.sfbz}"/>
+                                        </label>
+                                        <label>
+                                            <span>对手卡号:</span>
+                                            <%--<input id="dskh" type="text" name="dskh" placeholder="对手卡号"/>--%>
+                                            <textarea id="dskh" name="dskh" style="border-radius: 5px!important;height: 20%;
+                                            font-size: 12px;width: 69.1%;overflow-y: inherit"  placeholder="交易卡号(多个以逗号隔开)">${seach.dskh}</textarea>
+                                        </label>
+                                        <label>
+                                            <span>对手户名:</span>
+                                            <input id="dsxm" type="text" name="dsxm" autocomplete="off" placeholder="对手户名" value="${seach.dsxm}"/>
+                                        </label>
+                                        <label>
+                                            <span>摘要说明:</span>
+                                            <input id="zysm" type="text" name="zysm" autocomplete="off" placeholder="摘要说明" value="${seach.zysm}"/>
+                                        </label>
+                                        <label>
+                                            <span>备&emsp;&emsp;注:</span>
+                                            <input id="bz" type="text" name="bz" autocomplete="off" placeholder="备注" value="${seach.bz}"/>
+                                        </label>
+                                        <label>
+                                            <span>交易网点:</span>
+                                            <input id="jywdmc" type="text" name="jywdmc" autocomplete="off" placeholder="交易网点名称" value="${seach.jywdmc}"/>
+                                        </label>
 
-                                        </select>
-                                        <%--<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效--%>
-                                        <textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${bzzseachCode}</textarea>
+                                        <%--<select name="seachCondition" class="width100" STYLE="margin-bottom: 20px;">--%>
+                                            <%--<option value="yhkkh" <c:if test="${bzzseachCondition=='yhkkh'}">selected="selected"</c:if> >交易卡号</option>--%>
+                                            <%--<option value="khxm"<c:if test="${bzzseachCondition=='khxm'}">selected="selected"</c:if>>交易户名</option>--%>
+                                            <%--<option value="dskh" <c:if test="${bzzseachCondition=='dskh'}">selected="selected"</c:if> >对手卡号</option>--%>
+                                            <%--<option value="dsxm" <c:if test="${bzzseachCondition=='dsxm'}">selected="selected"</c:if> >对手户名</option>--%>
+                                            <%--<option value="zysm" <c:if test="${bzzseachCondition=='zysm'}">selected="selected"</c:if> >摘要说明</option>--%>
+                                            <%--<option value="jywdmc" <c:if test="${bzzseachCondition=='jywdmc'}">selected="selected"</c:if> >交易网点名称</option>--%>
+                                            <%--<option value="bz" <c:if test="${bzzseachCondition=='bz'}">selected="selected"</c:if> >备注</option>--%>
+
+                                        <%--</select>--%>
+                                        <%--&lt;%&ndash;<input  style="margin-left: 10px;" type="checkbox" name="usable" value="1" <c:if test="${usable eq '1'}">checked="checked"</c:if>>上次条件有效&ndash;%&gt;--%>
+                                        <%--<textarea  class="form-control02 seachCode fl_l width100" id="seachCode" placeholder="请输入要查询内容" name="seachCode" >${bzzseachCode}</textarea>--%>
                                     </div>
 
-                                    <button type="submit" class="right_a_nav margin_none" >查询</button>
-                                    <%--<button type="button" class="right_a_nav margin_none add_button" onclick="AddCrimeterrace()">新增人员信息</button>--%>
+                                    <button style="width: 26%;margin-right: 6px;" type="button" onclick="clearForom('seachForm')" class="right_a_nav margin_none" >清空</button>
+                                    <button style="width: 50%" type="button" onclick="seachSubmit()" class="right_a_nav margin_none" >查询</button>
+
+                                <%--<button type="button" class="right_a_nav margin_none add_button" onclick="AddCrimeterrace()">新增人员信息</button>--%>
                                 </form>
                             </div>
                             <div class="width100" style="margin-top: 10px;float: left;">

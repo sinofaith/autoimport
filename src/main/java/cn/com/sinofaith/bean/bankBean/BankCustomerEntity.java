@@ -1,5 +1,7 @@
 package cn.com.sinofaith.bean.bankBean;
 
+import cn.com.sinofaith.util.DBCSBC;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -194,6 +196,7 @@ public class BankCustomerEntity {
         zzf.setZzdh((String)map.get("ZZDH"));
         zzf.setGzdw((String)map.get("GZDW"));
         zzf.setEmail((String)map.get("EMAIL"));
+        zzf.setDwdz((String)map.get("DWDZ"));
         return zzf;
     }
 
@@ -202,8 +205,8 @@ public class BankCustomerEntity {
         c.setName(list.get(title.get("name")).trim().replace(" ",""));
         c.setZjlx(list.get(title.get("zjlx")).trim().replace("居民",""));
         c.setZjhm(list.get(title.get("zjhm")).trim());
-        c.setXzz_xzqh(list.get(title.get("xzz")).trim());
-        c.setDwdz(list.get(title.get("dwdz")).trim());
+        c.setXzz_xzqh(DBCSBC.ToDBC(list.get(title.get("xzz")).trim()));
+        c.setDwdz(DBCSBC.ToDBC(list.get(title.get("dwdz")).trim()));
         c.setLxdh(list.get(title.get("lxdh")).trim().replace("+86","").replace("-",""));
         c.setLxsj(list.get(title.get("lxsj")).trim().replace("+86","").replace("-",""));
         c.setDwdh(list.get(title.get("dwdh")).trim().replace("+86","").replace("-",""));

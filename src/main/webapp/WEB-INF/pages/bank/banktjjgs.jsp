@@ -35,40 +35,43 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="14"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>账户点对点统计信息(${aj.aj})</strong>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr align="center">
-                                        <td width="5%">序号</td>
-                                        <td width="9%">交易卡号</td>
-                                        <td width="7%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">交易户名</a></td>
-                                        <td width="15%">对方卡号<br>
+                                        <td width="4%">序号</td>
+                                        <td width="6%">交易卡号</td>
+                                        <td width="5%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxm">交易户名</a></td>
+                                        <td width="12%">对方卡号<br>
                                             <input type="checkbox" id="checkbox1"  value="1" <c:if test="${hcode == 1 }">checked='checked'</c:if> onclick="hiddenZfbCft()" />
                                             <label for="checkbox1" class="label_c">去除第三方账户</label>
                                             <br>
                                             <label style="color:#0a36e9;" class="label_c"><input name="zhzt" type="checkbox"  value="0" <c:if test="${code.contains('0') }">checked='checked'</c:if> onclick="getZhzt()" />已调单 </label>
                                             <label style="color:red;" class="label_c"><input name="zhzt" type="checkbox"  value="1" <c:if test="${code.contains('1') }">checked='checked'</c:if> onclick="getZhzt()"/>未调单 </label>
                                             <label style="color: #FF00FE;" class="label_c"><input name="zhzt" type="checkbox"  value="2" <c:if test="${code.contains('2') }">checked='checked'</c:if> onclick="getZhzt()"/>人为设计 </label> </td>
-                                        <td width="7%">对方户名</td>
-                                        <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交易总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzje">进账总金额</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzcs">出账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzje">出账总金额</a></td>
-                                        <td width="4%">详情</td>
+                                        <td width="5%"><a href="/SINOFAITH/banktjjgs/order?orderby=khxms">对方户名</a></td>
+                                        <td width="4%"><a href="/SINOFAITH/banktjjgs/order?orderby=jyzcs">交 易<br>总次数</a></td>
+                                        <td width="4%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzcs">进 账<br>总次数</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/banktjjgs/order?orderby=jzzje">进 账<br>总金额</a></td>
+                                        <td width="4%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzcs">出 账<br>总次数</a></td>
+                                        <td width="6%"><a href="/SINOFAITH/banktjjgs/order?orderby=czzje">出 账<br>总金额</a></td>
+                                        <td width="12%"><a href="/SINOFAITH/banktjjgs/order?orderby=minsj">最早交易时间</a></td>
+                                        <td width="12%"><a href="/SINOFAITH/banktjjgs/order?orderby=maxsj">最晚交易时间</a></td>
+                                        <td width="4%">间隔天数(天)</td>
+                                        <td width="3%">详情</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
                                                 <td align="center">${item.id}</td>
                                                 <td align="center" title="${item.jyzh}"><button style="color: #666">${item.jyzh}</button></td>
                                                 <%--<td align="center" title="${item.jyzh}"><button data-toggle="modal" data-target="#myModal2" style="color: #666" onclick="getBanktjjgs(this,'jyzh')">${item.jyzh}</button></td>--%>
-                                                <td align="center" title="${item.name}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
+                                                <td align="center" title="${item.name}"><div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.name}</div></td>
                                                     <td align="center"  title="${item.dfzh}">
                                                         <div class="dropCss" >
-                                                            <div style="width:150px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
+                                                            <div style="width:160px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">
                                                                 <c:if test="${item.zhlx eq 2}">
                                                                     <button style="color: #FF00FE">${item.dfzh}</button>
                                                                     <%--<button data-toggle="modal" data-target="#myModal2"  onclick="getBanktjjgs(this,'dfzh')" style="color: #FF00FE">${item.dfzh}</button>--%>
@@ -98,7 +101,7 @@
                                                     </td>
                                                 <td align="center"title="${item.dfxm}">
                                                     <div class="dropCss" >
-                                                        <div style="width:60px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div>
+                                                        <div style="width:50px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfxm}</div>
                                                         <div class="dropCss-content">
                                                             <a data-toggle="modal" data-target="#myModal3" onclick="editPersonRelation('${item.name}','${item.dfxm}')">添加目标关系</a>
                                                         </div>
@@ -109,6 +112,9 @@
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
                                                 <td align="center">${item.czzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
+                                                <td align="center">${item.minsj}</td>
+                                                <td align="center">${item.maxsj}</td>
+                                                <td align="center">${item.jgsj}</td>
                                                 <td align="center">
                                                     <button  data-toggle="modal" class="btna" data-target="#myModal" onclick="getZzDetails(this,'tjjgs','-1')">详情</button>
                                                 </td>

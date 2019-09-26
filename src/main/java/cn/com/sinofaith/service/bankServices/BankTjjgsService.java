@@ -2,17 +2,15 @@ package cn.com.sinofaith.service.bankServices;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.bankBean.BankTjjgsEntity;
-import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
 import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
-import cn.com.sinofaith.bean.cftBean.CftTjjgsEntity;
-import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
+import cn.com.sinofaith.bean.customerProBean.PersonRelationEntity;
 import cn.com.sinofaith.dao.bankDao.BankTjjgsDao;
 import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
-import cn.com.sinofaith.dao.cftDao.CftTjjgsDao;
-import cn.com.sinofaith.form.bankForm.BankTjForm;
+import cn.com.sinofaith.dao.customerDao.PersonRelationDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -41,6 +39,8 @@ public class BankTjjgsService {
     @Autowired
     private BankZzxxDao bzzd;
 
+    @Autowired
+    private PersonRelationDao prd;
     public Page queryForPage(int currentPage, int pageSize, String seach){
         Page page = new Page();
         //总记录数
@@ -65,6 +65,9 @@ public class BankTjjgsService {
                 cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
                 cftForm.setZhlx(new BigDecimal(map.get("ZHLX").toString()).longValue());
                 cftForm.setDsfzh(new BigDecimal(map.get("DSFZH")!=null ? map.get("DSFZH").toString():"-1").longValue());
+                cftForm.setMinsj((String) map.get("MINSJ"));
+                cftForm.setMaxsj((String) map.get("MAXSJ"));
+                cftForm.setJgsj(TimeFormatUtil.sjjg(cftForm.getMaxsj(),cftForm.getMinsj()));
                 cfttjs.add(cftForm);
                 xh++;
             }
@@ -158,7 +161,9 @@ public class BankTjjgsService {
                 seach.append(" order by s." + orderby + desc + " nulls last ,c.jyzcs desc,c.dfzh");
             }else if("num".equals(orderby)){
               seach.append(" order by a." + orderby + desc + ",c.dfzh,c.jyzh");
-            } else{
+            }else if("khxms".equals(orderby)){
+                seach.append(" order by d.khxm " + desc +  " nulls last ,c.jyzcs desc,c.dfzh ");
+            }else{
                 seach.append( " order by c." +orderby + desc+",c.id");
             }
         }
@@ -213,6 +218,13 @@ public class BankTjjgsService {
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMinsj()))==-1){
+                                tjjgs.setMinsj(zzxx.getJysj());
+                            }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMaxsj()))==1){
+                                tjjgs.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         BankTjjgsEntity tjs1 = new BankTjjgsEntity();
                         tjs1.setJyzh(zzxx.getYhkkh());
@@ -225,10 +237,14 @@ public class BankTjjgsService {
                         tjs1.setCzzcs(new BigDecimal(1));
                         tjs1.setCzzje(zzxx.getJyje());
                         tjs1.setAj_id(aj);
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            tjs1.setMinsj(zzxx.getJysj());
+                            tjs1.setMaxsj(zzxx.getJysj());
+                        }
                         map.put(temp, tjs1);
                     }
                 }
-                if ( "进".equals(zzxx.getSfbz())) {
+                if ("进".equals(zzxx.getSfbz())) {
                     String temp = zzxx.getYhkkh()+zzxx.getDskh();
                     if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
                         temp = zzxx.getYhkkh()+zzxx.getBcsm();
@@ -238,6 +254,13 @@ public class BankTjjgsService {
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMinsj()))==-1){
+                                tjjgs.setMinsj(zzxx.getJysj());
+                            }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMaxsj()))==1){
+                                tjjgs.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         BankTjjgsEntity tjs2 = new BankTjjgsEntity();
                         tjs2.setJyzh(zzxx.getYhkkh());
@@ -250,6 +273,11 @@ public class BankTjjgsService {
                         tjs2.setJzzcs(new BigDecimal(1));
                         tjs2.setJzzje(zzxx.getJyje());
                         tjs2.setAj_id(aj);
+
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            tjs2.setMinsj(zzxx.getJysj());
+                            tjs2.setMaxsj(zzxx.getJysj());
+                        }
                         map.put(temp, tjs2);
                     }
             }
@@ -265,10 +293,25 @@ public class BankTjjgsService {
                 bz.setZhlx(0);
             }
         }
-
         int i =0;
         banktjsd.delAll(aj);
         banktjsd.save(listTjjgs);
+        List list = banktjsd.getGroup(aj);
+        for(int j=0;j<list.size();j++){
+            Map map1 = (Map) list.get(j);
+            PersonRelationEntity pr = new PersonRelationEntity();
+            pr.setAj_id(aj);
+            pr.setRelationName("资金关联");
+            pr.setPname(map1.get("PNAME").toString());
+            pr.setName(map1.get("NAME").toString());
+            if(Double.valueOf(map1.get("JZZJE").toString())>Double.valueOf(map1.get("CZZJE").toString())){
+                pr.setRelationShow("下家");
+            }else{
+                pr.setRelationShow("上家");
+            }
+//            pr.getRelationShow();
+            prd.save(pr);
+        }
         return i;
     }
 

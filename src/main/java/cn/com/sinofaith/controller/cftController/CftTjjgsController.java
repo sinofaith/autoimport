@@ -41,6 +41,7 @@ public class CftTjjgsController {
         httpSession.setAttribute("sorderby","jyzcs");
         httpSession.setAttribute("slastOrder","jyzcs");
         httpSession.setAttribute("sdesc"," desc ");
+        httpSession.setAttribute("code","0,1");
         return mav;
     }
 
@@ -52,6 +53,13 @@ public class CftTjjgsController {
         ses.setAttribute("sorderby","jyzcs");
         ses.setAttribute("slastOrder","jyzcs");
         ses.setAttribute("sdesc"," desc ");
+        return mav;
+    }
+
+    @RequestMapping(value = "/getByZhzt")
+    public ModelAndView getByZhzt(String code ,HttpSession httpSession){
+        ModelAndView mav = new ModelAndView("redirect:/cfttjjgs/seach?pageNo=1");
+        httpSession.setAttribute("code",code);
         return mav;
     }
 
@@ -83,8 +91,9 @@ public class CftTjjgsController {
         String seachCode = (String) req.getSession().getAttribute("tjsseachCode");
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
+        String code = (String) req.getSession().getAttribute("code");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),code);
         Page page = cfttjss.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
         mav.addObject("tjsseachCode",seachCode);
@@ -119,7 +128,8 @@ public class CftTjjgsController {
         String orderby = (String) req.getSession().getAttribute("sorderby");
         String desc = (String) req.getSession().getAttribute("sdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        String code = (String) req.getSession().getAttribute("code");
+        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),code);
         cfttjss.downloadFile(seach, rep,aj!=null?aj.getAj():"","对手",req);
     }
 

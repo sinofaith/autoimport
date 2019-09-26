@@ -7,7 +7,7 @@
     </span>
     <span class="dropdown">
         <a href="#" onclick="skip('a2','zfbZhmx')" <c:if test="${flag=='a2'||flag=='a12'||flag=='a13'||flag=='a14'||flag=='a15'}">class="addactive"</c:if> id="dropdownMenu2" data-toggle="dropdown">支付宝账户明细</a>
-        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -283px">
+        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -1131px">
             <li role="presentation">
                 <a id="a14" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a14','zfbZhmxJczz')" style="width: 265px; height: 30px; <c:if test="${flag=='a14'}">background: #09CEB8</c:if>">账户明细进出总账统计</a>
                 <a id="a12" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a12','zfbZhmxTjjg')" style="width: 265px; height: 30px; <c:if test="${flag=='a12'}">background: #09CEB8</c:if>">账户明细账户与账户统计</a>
@@ -18,7 +18,7 @@
     </span>
     <span class="dropdown">
         <a href="#" onclick="skip('a3','zfbZzmx')" <c:if test="${flag=='a3'||flag=='a4'||flag=='a5'||flag=='a6'}">class="addactive"</c:if> id="dropdownMenu3" data-toggle="dropdown">支付宝转账明细</a>
-        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -283px">
+        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -850px">
             <li role="presentation">
                 <a id="a4" role="menuitem" tabindex="1" href="JavaScript:void(0);" onclick="skip('a4','zfbZzmxTjjg')" style="width: 265px; height: 30px; <c:if test="${flag=='a4'}">background: #09CEB8</c:if>">转账明细统计结果</a>
             </li>
@@ -32,7 +32,7 @@
     </span>
     <span class="dropdown">
         <a href="#" onclick="skip('a7','zfbJyjl')" <c:if test="${flag=='a7'||flag=='a8'||flag=='a9'||flag=='a10'}">class="addactive"</c:if> id="dropdownMenu4" data-toggle="dropdown">支付宝交易记录</a>
-        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -283px">
+        <span class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="width: 283px; background: white; margin-top: 6px; margin-left: -566px">
             <li role="presentation">
                 <a id="a10" role="menuitem" tabindex="2" href="JavaScript:void(0);" onclick="skip('a10','zfbJyjlTjjg')" style="width: 265px; height: 30px; <c:if test="${flag=='a10'}">background: #09CEB8</c:if>">交易卖家账户信息</a>
             </li>

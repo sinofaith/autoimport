@@ -25,6 +25,7 @@ public class ZfbZzmxTjjgsEntity {
     private BigDecimal skzje = new BigDecimal(0);
     private String insert_time;
     private long aj_id;
+    private long zhlx;
 
     @Id
     @Column(name="id",nullable = false)
@@ -145,6 +146,15 @@ public class ZfbZzmxTjjgsEntity {
     public void setAj_id(long aj_id) {
         this.aj_id = aj_id;
     }
+    @Basic
+    @Column(name="zhlx",nullable = true,precision = 0)
+    public long getZhlx() {
+        return zhlx;
+    }
+
+    public void setZhlx(long zhlx) {
+        this.zhlx = zhlx;
+    }
 
     @Override
     public String toString() {
@@ -158,10 +168,13 @@ public class ZfbZzmxTjjgsEntity {
      * @param id
      * @return
      */
-    public static List<ZfbZzmxTjjgsEntity> FormToList(List<ZfbZzmxTjjgsForm> tjjgsForms, long id) {
+    public static List<ZfbZzmxTjjgsEntity> FormToList(List<ZfbZzmxTjjgsForm> tjjgsForms, long id,Map<String,List<ZfbZcxxEntity>> m ) {
         Map<String,ZfbZzmxTjjgsEntity> map = new HashMap<>();
         ZfbZzmxTjjgsEntity tjjgs = null;
         for (ZfbZzmxTjjgsForm tjjgsForm : tjjgsForms) {
+            if(tjjgsForm.getFkfzfbzh().equals(tjjgsForm.getSkfzfbzh())||tjjgsForm.getSkfzfbzh()==null||tjjgsForm.getFkfzfbzh()==null){
+                continue;
+            }
             if(tjjgsForm.getYhid()!=null){
                 // 是付款方
                 if(tjjgsForm.getYhid().equals(tjjgsForm.getFkfzfbzh())){
@@ -194,6 +207,11 @@ public class ZfbZzmxTjjgsEntity {
                         tjjgs.setFkzcs(1);
                         tjjgs.setFkzje(tjjgsForm.getZzje());
                         tjjgs.setAj_id(id);
+                        tjjgs.setZhlx(0);
+                        if(m.keySet().contains(tjjgs.getDfzh())){
+                            tjjgs.setZhlx(1);
+                            tjjgs.setDfmc(m.get(tjjgs.getDfzh()).get(0).getZhmc());
+                        }
                         map.put(tjjgsForm.getYhid()+tjjgsForm.getSkfzfbzh(),tjjgs);
                     }
                 }else if(tjjgsForm.getYhid().equals(tjjgsForm.getSkfzfbzh())) { //收款方
@@ -226,6 +244,11 @@ public class ZfbZzmxTjjgsEntity {
                         tjjgs.setSkzcs(1);
                         tjjgs.setSkzje(tjjgsForm.getZzje());
                         tjjgs.setAj_id(id);
+                        tjjgs.setZhlx(0);
+                        if(m.keySet().contains(tjjgs.getDfzh())){
+                            tjjgs.setZhlx(1);
+                            tjjgs.setDfmc(m.get(tjjgs.getDfzh()).get(0).getZhmc());
+                        }
                         map.put(tjjgsForm.getYhid() + tjjgsForm.getFkfzfbzh(), tjjgs);
                     }
                 }

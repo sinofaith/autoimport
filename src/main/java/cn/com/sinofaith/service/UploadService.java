@@ -37,6 +37,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Id;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -281,7 +282,7 @@ public class UploadService {
                         if(txtString.equals("")||txtString.length()==0){
                             continue;
                         }
-                        if(txtString.startsWith("注销信息")){
+                        if(txtString.startsWith("注销信息")||txtString.startsWith("帐号数据错误")){
                             break;
                         }
                         if (txtString.contains("账户状态")||txtString.contains("账号")) {
@@ -365,6 +366,9 @@ public class UploadService {
         List<String> zjhm = new ArrayList<>();
         for(BankCustomerEntity c:listcust){
             c.setInserttime(inserttime);
+            if(c.getZjhm().contains("@")){
+                c.setZjhm("");
+            }
             bcd.saveOrUpdate(c);
             zjhm.add(c.getZjhm());
 
@@ -389,18 +393,22 @@ public class UploadService {
     }
 
 
-    public int insertBankZzxx(String filePath, long aj_id, List<BankZzxxEntity> all) {
+    public int insertBankZzxx(String filePath, long aj_id) {
         List<String> listPath = getFileLists(filePath, "交易明细");
         listPath.addAll(getFileLists(filePath,"详细信息"));
         listPath.addAll(getFileLists(filePath,"、"));
         listPath.addAll(getFileLists(filePath,"："));
         List<String> elPath = getZfbFileList(filePath);
         elPath.removeAll(listPath);
-        List<BankZzxxEntity> listZzxx = getByExcel(listPath);
-        listZzxx.addAll(getByExcelMapping(elPath));
-        int i = bzzd.insertZzxx(listZzxx, aj_id, all);
+        Set<String> all = bzzd.getAllHash(aj_id,"");
+        int listZzxx = getByExcel(listPath,aj_id,all);
+        listZzxx+=getByExcelMapping(elPath,aj_id,all);
 
-        List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
+//        int i = bzzd.insertZzxx(listZzxx, aj_id, all);
+        return listZzxx;
+    }
+
+    public List<BankPersonEntity> savebp(List<BankZzxxEntity> listZzxx,long aj_id,List<BankPersonEntity> allbp){
         Map<String, String> allBp = new HashMap<>();
         for (int j = 0; j < allbp.size(); j++) {
             allBp.put((allbp.get(j).getYhkkh()).replace("null", ""), null);
@@ -446,20 +454,23 @@ public class UploadService {
             mapZ.remove(str.get(s));
         }
         allbp = new ArrayList<>(mapZ.values());
-        for(BankPersonEntity b : allbp){
-            bpd.insert(b);
-        }
-         return i;
+//        for(BankPersonEntity b : allbp){
+//            bpd.insert(b);
+//        }
+        bpd.add(allbp,String.valueOf(aj_id));
+        return allbp;
     }
     /**
      *
      * @param elPath 标准数据以外的银行资金自动导入
      */
-    public List<BankZzxxEntity> getByExcelMapping(List<String> elPath){
+    public int getByExcelMapping(List<String> elPath,long aj_id,Set<String> all){
         List<BankZzxxEntity> zzlist = new ArrayList<>();
+        List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
         Map<String,Map<String,List<String>>> excelMap = new HashMap<>();
         Map<String,List<String>> sheetMap = new HashMap<>();
         String excelName = "";
+        int num = 0;
         List<MappingBankzzxxEntity> listmb = mbs.getAll();
         //通过未填入字段排序 为后续匹配表头增加完整性
         listmb.sort((m1,m2)->new BigDecimal(m1.objToMap().values().stream().filter(k->k.equals("无")).collect(Collectors.toList()).size())
@@ -491,9 +502,20 @@ public class UploadService {
                     }
                 }
             }
+            Map<String,List<BankZzxxEntity>> m = zzlist.stream().collect(Collectors.groupingBy(BankZzxxEntity ->BankZzxxEntity.getHash(BankZzxxEntity)));
+            zzlist.clear();
+            for(String key: m.keySet()){
+                if(!all.contains(key)){
+                    zzlist.add(m.get(key).get(0));
+                    all.add(key);
+                }
+            }
+            num += bzzd.insertZzxx(zzlist,aj_id);
+            allbp.addAll(savebp(zzlist,aj_id,allbp));
+            zzlist.clear();
         }
 
-        return  zzlist;
+        return  num;
     }
 
     private List<BankZzxxEntity> getBy2003ExcelAll(String path, String excelName, Map<String,String> mepMap) {
@@ -968,10 +990,12 @@ public class UploadService {
     }
 
 
-    public List<BankZzxxEntity> getByExcel(List<String> filepath) {
+    public int getByExcel(List<String> filepath,long aj_id,Set<String> all) {
         Map<String, Integer> title = new HashMap();
+        List<BankPersonEntity> allbp = bpd.find("from BankPersonEntity");
         List<BankZzxxEntity> listB = new ArrayList<>();
         CsvReader csv = null;
+        int num =0;
         for (int i = 0; i < filepath.size(); i++) {
             File file = new File(filepath.get(i));
             try {
@@ -1087,15 +1111,43 @@ public class UploadService {
                 file.delete();
             } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
                 if(csv!=null) {
                     csv.close();
                 }
+            }finally {
+                if(csv!=null) {
+                    csv.close();
+                    file.delete();
+                }
+            }
+            if(listB.size()>1000000) {
+                Map<String,List<BankZzxxEntity>> m = listB.stream().collect(Collectors.groupingBy(BankZzxxEntity ->BankZzxxEntity.getHash(BankZzxxEntity)));
+                listB.clear();
+                for(String key: m.keySet()){
+                    if(!all.contains(key)){
+                        listB.add(m.get(key).get(0));
+                        all.add(key);
+                    }
+                }
+                num += bzzd.insertZzxx(listB, aj_id);
+                allbp.addAll(savebp(listB, aj_id,allbp));
+                System.out.println(listB.size());
+                listB.clear();
             }
         }
-//        Set<BankZzxxEntity> setB = new HashSet<>(listB);
-
-        return listB;
+        Map<String,List<BankZzxxEntity>> m = listB.stream().collect(Collectors.groupingBy(BankZzxxEntity ->BankZzxxEntity.getHash(BankZzxxEntity)));
+        listB.clear();
+        for(String key: m.keySet()){
+            if(!all.contains(key)){
+                listB.add(m.get(key).get(0));
+                all.add(key);
+            }
+        }
+        num += bzzd.insertZzxx(listB, aj_id);
+        savebp(listB, aj_id,allbp);
+        System.out.println(listB.size());
+        listB.clear();
+        return num;
     }
 
     public List<BankZcxxEntity> insertBankZcxx(String filePath, long aj_id) {
@@ -1150,6 +1202,8 @@ public class UploadService {
                     lb = "zhye";
                 } else if (str.contains("可用余额")) {
                     lb = "kyye";
+                }else if (str.contains("账户类型")) {
+                    lb = "zhlx";
                 }
                 if (!"".endsWith(lb)) {
                     title.put(lb, i);
@@ -1321,7 +1375,9 @@ public class UploadService {
                     rd.add(r);
                     String[] yhks = c.getBdyhk().split(";");
                     for(String yhk : yhks){
-                        r.setHm(yhk.split(":")[2]);
+                        if(yhk.contains(":")) {
+                            r.setHm(yhk.split(":")[2]);
+                        }
                         r.setHmly(3);
                         rd.add(r);
                     }
@@ -1373,8 +1429,10 @@ public class UploadService {
         zfbZzmxTjjgDao.delAll(id);
         zfbZzmxTjjgDao.insertZzmxTjjg(zzmxTjjgList);
         // 添加转账明细对手账户统计数据
+        List<ZfbZcxxEntity> zcxxList = zfbZcxxDao.find("from ZfbZcxxEntity where aj_id = "+id);
+        Map<String,List<ZfbZcxxEntity>> m = zcxxList.stream().collect(Collectors.groupingBy(ZfbZcxxEntity::getYhId));
         List<ZfbZzmxTjjgsForm> tjjgsForms = zfbZzmxTjjgsDao.selectZzmxTjjgs(id);
-        List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = ZfbZzmxTjjgsEntity.FormToList(tjjgsForms, id);
+        List<ZfbZzmxTjjgsEntity> zzmxTjjgsList = ZfbZzmxTjjgsEntity.FormToList(tjjgsForms, id,m);
         zfbZzmxTjjgsDao.delAll(id);
         zfbZzmxTjjgsDao.insertZzmxTjjgs(zzmxTjjgsList);
         // 添加交易记录对手账户统计数据

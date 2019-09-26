@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -47,6 +48,14 @@ public class ZfbZzmxTjjgsController {
         session.removeAttribute("zzmxTjjgsLastOrder");
         session.removeAttribute("zzmxTjjgsDesc");
         session.setAttribute("flag",flag);
+        session.setAttribute("code","0,1");
+        return mav;
+    }
+
+    @RequestMapping(value = "/getByZhzt")
+    public ModelAndView getByZhzt(String code ,HttpSession httpSession){
+        ModelAndView mav = new ModelAndView("redirect:/zfbZzmxTjjgs/seach?pageNo=1");
+        httpSession.setAttribute("code",code);
         return mav;
     }
 
@@ -63,10 +72,19 @@ public class ZfbZzmxTjjgsController {
         DetachedCriteria dc = DetachedCriteria.forClass(ZfbZzmxTjjgsEntity.class);
         // 从域中取出对象
         AjEntity aj = (AjEntity) session.getAttribute("aj");
+        String code = (String) session.getAttribute("code");
+
         if(aj==null){
             return "/zfb/zfbZzmxTjjgs";
         }
         dc.add(Restrictions.eq("aj_id",aj.getId()));
+        if(!"-99".equals(code)){
+            if(code.contains(",")){
+                dc.add(Restrictions.or(Restrictions.eq("zhlx",1L),Restrictions.eq("zhlx",0L)));
+            }else{
+                dc.add(Restrictions.eq("zhlx",Long.parseLong(code)));
+            }
+        }
         // 查询字段
         String seachCondition = (String) session.getAttribute("zzmxTjjgsSeachCondition");
         // 查询内容
@@ -225,6 +243,14 @@ public class ZfbZzmxTjjgsController {
         // 获得session中对象
         String seachCondition = (String) session.getAttribute("zzmxTjjgsSeachCondition");
         String seachCode = (String) session.getAttribute("zzmxTjjgsSeachCode");
+        String code = (String) session.getAttribute("code");
+        if(!"-99".equals(code)){
+            if(code.contains(",")){
+                dc.add(Restrictions.or(Restrictions.eq("zhlx",1L),Restrictions.eq("zhlx",0L)));
+            }else{
+                dc.add(Restrictions.eq("zhlx",Long.parseLong(code)));
+            }
+        }
         String name = "";
         if(seachCode!=null){
             seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");

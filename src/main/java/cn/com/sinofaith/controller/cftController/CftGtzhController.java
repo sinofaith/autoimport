@@ -77,7 +77,7 @@ public class CftGtzhController {
         String orderby = (String) req.getSession().getAttribute("gorderby");
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),"-99");
         Page page = cfttjss.queryForPageGt(parseInt(pageNo),10,seach,aj!=null ? aj.getId():-1);
         mav.addObject("page",page);
         mav.addObject("gtseachCode",seachCode);
@@ -110,7 +110,7 @@ public class CftGtzhController {
         String orderby = (String) req.getSession().getAttribute("gorderby");
         String desc = (String) req.getSession().getAttribute("gdesc");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
-        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity());
+        String seach = cfttjss.getSeach(seachCondition,seachCode,orderby,desc,aj!=null?aj:new AjEntity(),"-99");
         cfttjss.downloadFile(seach, rep,aj.getAj(),"共同",req);
     }
     @RequestMapping("/getDetails")

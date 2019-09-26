@@ -72,8 +72,8 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
     public void insertZzmxTjjgs(List<ZfbZzmxTjjgsEntity> zzmxTjjgsList) {
         // 使用原生sql
         Connection conn = DBUtil.getConnection();
-        String sql = "insert into ZfbZzmx_Tjjgs(zfbmc,zfbzh,dfmc,dfzh,jyzcs,fkzcs,fkzje,skzcs,skzje,insert_time,aj_id) " +
-                "values(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into ZfbZzmx_Tjjgs(zfbmc,zfbzh,dfmc,dfzh,jyzcs,fkzcs,fkzje,skzcs,skzje,insert_time,aj_id,zhlx) " +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pstm = null;
         // 做批处理
         try {
@@ -93,6 +93,7 @@ public class ZfbZzmxTjjgsDao extends BaseDao<ZfbZzmxTjjgsEntity> {
                 pstm.setBigDecimal(9,tjjg.getSkzje());
                 pstm.setString(10, TimeFormatUtil.getDate("/"));
                 pstm.setLong(11,tjjg.getAj_id());
+                pstm.setLong(12,tjjg.getZhlx());
                 pstm.addBatch();
                 // 有50000条添加一次
                 if ((i + 1) % 50000 == 0) {

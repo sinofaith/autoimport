@@ -3,10 +3,7 @@ package cn.com.sinofaith.service;
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.UserEntity;
 import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbJyjlSjdzsEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbJyjlTjjgsEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxEntity;
-import cn.com.sinofaith.bean.zfbBean.ZfbZzmxTjjgsEntity;
+import cn.com.sinofaith.bean.zfbBean.*;
 import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
 import cn.com.sinofaith.dao.zfbDao.*;
@@ -27,6 +24,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AjServices {
@@ -36,6 +34,8 @@ public class AjServices {
     private CftZzxxDao zzd;
     @Autowired
     private ZfbZzmxDao zfbZzmxDao;
+    @Autowired
+    private ZfbZcxxDao zfbZcxxDao;
     @Autowired
     private ZfbZzmxTjjgsDao zfbZzmxTjjgsDao;
     @Autowired
@@ -137,8 +137,11 @@ public class AjServices {
             search += " and upper(j1.spmc) like '%"+filterInput.toUpperCase()+"%'";
         }
         // 转账明细条件筛选
+
+        List<ZfbZcxxEntity> zcxxList = zfbZcxxDao.find("from ZfbZcxxEntity where aj_id = "+aje.getId());
+        Map<String,List<ZfbZcxxEntity>> m = zcxxList.stream().collect(Collectors.groupingBy(ZfbZcxxEntity::getYhId));
         List<ZfbZzmxTjjgsForm> zfbZzmxList = zfbZzmxDao.selectFilterJyjlBySpmc(search, aje.getId());
-        List<ZfbZzmxTjjgsEntity> tjjgsList = ZfbZzmxTjjgsEntity.FormToList(zfbZzmxList, aje.getId());
+        List<ZfbZzmxTjjgsEntity> tjjgsList = ZfbZzmxTjjgsEntity.FormToList(zfbZzmxList, aje.getId(),m);
         // 交易记录条件筛选
         List<ZfbJyjlTjjgsForm> zfbJyjlList = zfbJyjlDao.selectFilterJyjlBySpmc(search, aje.getId());
         List<ZfbJyjlTjjgsEntity> jyjlTjjgsList = ZfbJyjlTjjgsEntity.FormToList(zfbJyjlList, aje.getId());

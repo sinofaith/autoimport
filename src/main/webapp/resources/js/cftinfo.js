@@ -227,7 +227,16 @@ function seachChange() {
         }
 }
 
-
+function getZhzt() {
+    var chk_value = [];//定义一个数组
+    $('input[name="zhzt"]:checked').each(function () {//遍历每一个名字为interest的复选框，其中选中的执行函数
+        chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+    });
+    if(chk_value.length==0){
+        chk_value.push(-99);
+    }
+    location.href = "/SINOFAITH/cfttjjgs/getByZhzt?code=" + chk_value;
+}
 //
 // function fileOnclick(){
 //     $("input[id='files1']").click();
@@ -249,7 +258,7 @@ function cftSkip(code){
     var totalPage = $("#totalPage").text();
     var onPage = $("#num").val();
     if(onPage ==="" || onPage === 0 || parseInt(onPage) <=0){
-        alert("请输入你要跳转的页数！");
+        alertify.error("请输入你要跳转的页数！");
         return;
     }
     if(parseInt(onPage)>parseInt(totalPage)){
@@ -792,7 +801,7 @@ function orderByFilter(filter) {
 function getZzDetails(obj) {
     var jyzh = $(obj).closest("tr").find("td:eq(2)").attr("title");
     var jylx = $(obj).closest("tr").find("td:eq(3)").text();
-    var sum = $(obj).closest("tr").find("td:eq(4)").text();
+    var sum = $(obj).closest("tr").find("td:eq(5)").text();
     window.page = 1
 
     var type = "";

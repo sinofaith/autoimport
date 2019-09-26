@@ -62,6 +62,7 @@ public class ZfbZhmxTjjgsController {
         DetachedCriteria dc = DetachedCriteria.forClass(ZfbZhmxTjjgsEntity.class);
         // 取出案件对象
         AjEntity aj = (AjEntity) session.getAttribute("aj");
+        String code = (String) session.getAttribute("code");
         if(aj == null)
             return "/zfb/zfbZhmxTjjgs";
         dc.add(Restrictions.eq("aj_id",aj.getId()));

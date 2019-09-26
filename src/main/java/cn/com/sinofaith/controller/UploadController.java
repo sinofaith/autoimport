@@ -132,7 +132,7 @@ public class UploadController {
                     seach=" and shmc not like '%红包%'";
                 }
                 zzs.countTjjgAndTjjgs(aje.getId(),seach);
-                zzs.countTjjgAndTjjgs(aje.getId(),seach);
+//                zzs.countTjjgAndTjjgs(aje.getId(),seach);
             }
         }
 
@@ -273,14 +273,14 @@ public class UploadController {
         AjEntity aj = (AjEntity) session.getAttribute("aj");
         // 取出excel表数据
         List<BankZcxxEntity> bankZcxxList = bankZcxxServices.getBankZcxxAll(listPath, field,aj.getId());
-        List<BankZzxxEntity> listZzxx = bzs.getAll(aj.getId());
-        int num = bzs.getBankZzxxAll(listPath, field, aj, listZzxx);
+        int num = bzs.getBankZzxxAll(listPath, field, aj);
         List<BankCustomerEntity> bankCustList = bcs.getBankCustAll(listPath, field, aj);
-        listZzxx = bzs.getAll(aj.getId());
-        Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
-        listZzxx = new ArrayList<>(setB);
-        int count1 = btjs.count(listZzxx, aj.getId(), bankZcxxList);
-        int count2 = btjss.count(listZzxx,aj.getId());
+//        listZzxx = bzs.getAll(aj.getId());
+//        Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+//        listZzxx = new ArrayList<>(setB);
+//        int count1 = btjs.count(listZzxx, aj.getId(), bankZcxxList);
+//        int count2 = btjss.count(listZzxx,aj.getId());
+        bzs.countTjjgAndTjjgs(aj.getId(),bankZcxxList,"");
         bankZcxxList.clear();
         // 删除文件
         File uploadPathd = new File(path);
@@ -324,18 +324,18 @@ public class UploadController {
 
         AjEntity aje = ajs.findByName(aj,user.getId()).get(0);
         if(uploadPathd.listFiles()!=null) {
-            List<BankZzxxEntity> listZzxx = bzs.getAll(aje.getId());
             List<BankZcxxEntity> listzcxx = us.insertBankZcxx(uploadPath,aje.getId());
             us.insertBankCustomer(uploadPath,aje);
-            us.insertBankZzxx(uploadPath,aje.getId(),listZzxx);
+            a=us.insertBankZzxx(uploadPath,aje.getId());
             us.deleteAll(uploadPath);
             uploadPathd.delete();
-            listZzxx = bzs.getAll(aje.getId());
-            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
-            listZzxx = new ArrayList<>(setB);
-            setB = null;
-            btjs.count(listZzxx,aje.getId(),listzcxx);
-            btjss.count(listZzxx,aje.getId());
+//            listZzxx = bzs.getAll(aje.getId());
+//            Set<BankZzxxEntity> setB = new HashSet<>(listZzxx);
+//            listZzxx = new ArrayList<>(setB);
+//            setB = null;
+//            btjs.count(listZzxx,aje.getId(),listzcxx);
+//            btjss.count(listZzxx,aje.getId());
+            bzs.countTjjgAndTjjgs(aje.getId(),listzcxx,"");
             listzcxx.clear();
         }
 

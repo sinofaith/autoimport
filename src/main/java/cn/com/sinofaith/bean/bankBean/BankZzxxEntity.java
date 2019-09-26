@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.NodeChangeEvent;
@@ -346,13 +347,17 @@ public class BankZzxxEntity {
         if (sfbz != null ? !sfbz.equals(that.sfbz) : that.sfbz != null) return false;
         return dskh != null ? dskh.equals(that.dskh) : that.dskh == null;
     }
-
+    public String getHash(BankZzxxEntity b){
+        DecimalFormat df = new DecimalFormat("#0.00");
+        return b.getYhkkh()+b.getDskh()+b.getJysj()+df.format(b.getJyje())+df.format(b.getJyye()).replace("null","");
+    }
     @Override
     public int hashCode() {
+        DecimalFormat df = new DecimalFormat("#0.00");
         int result = yhkkh != null ? yhkkh.hashCode() : 0;
         result = 31 * result + (jysj != null ? jysj.hashCode() : 0);
-        result = 31 * result + (jyje != null ? jyje.hashCode() : 0);
-        result = 31 * result + (jyye != null ? jyye.hashCode() : 0);
+        result = 31 * result + (jyje != null ? df.format(jyje).hashCode() : 0);
+        result = 31 * result + (jyye != null ? df.format(jyye).hashCode() : 0);
         result = 31 * result + (sfbz != null ? sfbz.hashCode() : 0);
         result = 31 * result + (dskh != null ? dskh.hashCode() : 0);
         return result;
@@ -371,7 +376,7 @@ public class BankZzxxEntity {
         b.setYhkkh("".equals(list.get(title.get("yhkkh")).trim()) ? null:b.remove_(list.get(title.get("yhkkh"))).trim());
         b.setDskh("".equals(list.get(title.get("dskh")).trim())? null:b.remove_(list.get(title.get("dskh"))).trim());
         b.setDsxm("".equals(list.get(title.get("dsxm")).trim())? null:list.get(title.get("dsxm")).trim());
-        b.setJyje(new BigDecimal(list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")).trim():"0" ).abs());
+        b.setJyje(new BigDecimal(list.get(title.get("jyje")).trim().length()>0 ? list.get(title.get("jyje")).trim():"0" ));
         b.setJyye(new BigDecimal(list.get(title.get("jyye")).trim().length()>0 ? list.get(title.get("jyye")).trim():"0" ));
         b.setSfbz("".equals(list.get(title.get("sfbz")).trim())? null:list.get(title.get("sfbz")).replace("借","出").replace("贷","进").trim());
         b.setJysfcg("".equals(list.get(title.get("jysfcg")).trim())? null:list.get(title.get("jysfcg")).trim());
@@ -461,7 +466,7 @@ public class BankZzxxEntity {
             bankZzxx.setJysj(MappingUtils.mappingFieldString(xssfRow,field.get("jysj"),title));
         }
 
-        bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get("jyje"),title).abs());
+        bankZzxx.setJyje(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get("jyje"),title));
         bankZzxx.setJyye(MappingUtils.mappingFieldBigDecimal(xssfRow,field.get("jyye"),title));
         String sfbz = MappingUtils.mappingFieldString(xssfRow,field.get("sfbz"),title);
         if("".equals(sfbz)){

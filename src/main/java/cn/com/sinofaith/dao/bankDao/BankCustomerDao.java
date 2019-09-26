@@ -48,9 +48,7 @@ public class BankCustomerDao  extends BaseDao<BankCustomerEntity> {
 //                    con.commit();
                     a++;
                 }catch (Exception e){
-                    e.printStackTrace();
                     System.out.println("该案件已存在此人");
-                    con.rollback();
                 }
             }
         } catch (Exception e) {

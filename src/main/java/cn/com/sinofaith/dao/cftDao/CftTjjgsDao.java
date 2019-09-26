@@ -18,7 +18,7 @@ import java.util.Map;
 public class CftTjjgsDao extends BaseDao<CftTjjgsEntity> {
     public int getAllRowCount(String seachCode){
         StringBuffer sql = new StringBuffer("select to_char(Count(1)) num from cft_tjjgs c left join " +
-                " cft_person s on c.jyzh = s.zh where 1=1 ").append(seachCode);
+                " cft_person s on c.jyzh = s.zh left join cft_person ps on c.dfzh = ps.zh where 1=1 ").append(seachCode);
         List list = findBySQL(sql.toString());
         Map map = (Map) list.get(0);
         return Integer.parseInt((String)map.get("NUM"));
@@ -28,8 +28,9 @@ public class CftTjjgsDao extends BaseDao<CftTjjgsEntity> {
         StringBuffer sql = new StringBuffer();
         sql.append("SELECT * ");
         sql.append("FROM (SELECT a.*, ROWNUM rn ");
-        sql.append("FROM (SELECT  s.xm,c.* ");
-        sql.append("FROM  cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+seachCode+") a ");
+        sql.append("FROM (SELECT  s.xm,ps.xm dfxm, c.* ");
+        sql.append("FROM  cft_tjjgs c left join cft_person s on c.jyzh = s.zh " +
+                " left join cft_person ps on c.dfzh = ps.zh where 1=1 "+seachCode+") a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
 
         return findBySQL(sql.toString());

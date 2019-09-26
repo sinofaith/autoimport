@@ -79,15 +79,24 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
     public void delAll(long ajid){
         delete("delete from BankTjjgsEntity where aj_id="+ajid);
     }
-
+    public List getGroup(long ajid){
+        String sql = "select * from (" +
+                "select p.khxm name,p1.khxm pname,sum(t.jzzje) jzzje,sum(t.czzje) czzje,t.aj_id from bank_tjjgs t " +
+                "left join bank_person p on t.jyzh = p.yhkkh " +
+                "left join bank_person p1 on t.dfzh = p1.yhkkh " +
+                "where t.aj_id = "+ajid+" and p.khxm is not null and p1.khxm is not null and p1.dsfzh = 0 " +
+                "group by p.khxm,p1.khxm,t.aj_id " +
+                ") where jzzje > 50000 or czzje > 50000";
+        return findBySQL(sql);
+    }
     public void insert(BankTjjgsEntity tjs){
         saveOrUpdate(tjs);
     }
 
     public void save(List<BankTjjgsEntity> tjjgs){
         Connection con = DBUtil.getConnection();
-        String sql = "insert into bank_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id,zhlx) " +
-                "values(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into bank_tjjgs(jyzh,dfzh,jyzcs,jzzcs,jzzje,czzcs,czzje,inserttime,aj_id,zhlx,minsj,maxsj) " +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement st ;
         BankTjjgsEntity tjjg = new BankTjjgsEntity();
         try {
@@ -110,6 +119,8 @@ public class BankTjjgsDao extends BaseDao<BankTjjgsEntity> {
                 st.setString(8, TimeFormatUtil.getDate("/"));
                 st.setLong(9,tjjg.getAj_id());
                 st.setLong(10,tjjg.getZhlx());
+                st.setString(11,tjjg.getMinsj());
+                st.setString(12,tjjg.getMaxsj());
                 st.addBatch();
                 if((i+1)%50000 == 0){
                     st.executeBatch();

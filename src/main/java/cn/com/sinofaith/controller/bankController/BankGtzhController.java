@@ -35,7 +35,7 @@ public class BankGtzhController {
         httpSession.removeAttribute("gtseachCondition");
         //查询内容
         httpSession.removeAttribute("gtseachCode");
-        httpSession.setAttribute("hcode",0);
+        httpSession.setAttribute("hcode",1);
 
 
         httpSession.setAttribute("gorderby","num");
@@ -65,7 +65,7 @@ public class BankGtzhController {
         if(zhlx==1){
             ses.setAttribute("gtseachCondition","dfzh");
         }
-        ses.setAttribute("hcode",0);
+        ses.setAttribute("hcode",1);
         return mav;
     }
 

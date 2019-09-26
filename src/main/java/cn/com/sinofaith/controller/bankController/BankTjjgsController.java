@@ -47,8 +47,8 @@ public class BankTjjgsController {
         httpSession.removeAttribute("tjsseachCondition");
         //查询内容
         httpSession.removeAttribute("tjsseachCode");
-        httpSession.setAttribute("code","-99");
-        httpSession.setAttribute("hcode",0);
+        httpSession.setAttribute("code","0,1");
+        httpSession.setAttribute("hcode",1);
 
         httpSession.setAttribute("sorderby","czzje");
         httpSession.setAttribute("slastOrder","czzje");
@@ -64,8 +64,8 @@ public class BankTjjgsController {
         if(zhlx==1){
             ses.setAttribute("tjsseachCondition","dfzh");
         }
-        ses.setAttribute("code","-99");
-        ses.setAttribute("hcode",0);
+        ses.setAttribute("code","0,1");
+        ses.setAttribute("hcode",1);
         ses.setAttribute("sorderby","jyzcs");
         ses.setAttribute("slastOrder","jyzcs");
         ses.setAttribute("sdesc"," desc ");

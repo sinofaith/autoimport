@@ -15,6 +15,65 @@ $(function () {
             }
         }
     });
+    $("#start_time").datetimepicker(
+        {
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            clearBtn: true,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+        }).on('changeDate', function (ev) {
+        if (ev.date) {
+            $("#end_time").datetimepicker('setStartDate', new Date(ev.date.valueOf()))
+        } else {
+            $("#end_time").datetimepicker('setStartDate', null);
+        }
+    });
+
+    $("#end_time").datetimepicker(
+        {
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            clearBtn: true,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+        }).on('changeDate', function (ev) {
+        if (ev.date) {
+            $("#start_time").datetimepicker('setEndDate', new Date(ev.date.valueOf()))
+        } else {
+            $("#start_time").datetimepicker('setEndDate', new Date());
+        }
+
+    });
+    // $(":radio").click(function(){
+    //     alert(this.val());
+    // });
+    $.ajaxSetup({
+        complete : function(xhr, status) {
+            //拦截器实现超时跳转到登录页面
+            // 通过xhr取得响应头
+            var REDIRECT = xhr.getResponseHeader("REDIRECT");
+            //如果响应头中包含 REDIRECT 则说明是拦截器返回的
+            if (REDIRECT == "REDIRECT")
+            {
+                var win = window;
+                while (win != win.top)
+                {
+                    win = win.top;
+                }
+                //重新跳转到 login.html
+                win.location.href = xhr.getResponseHeader("CONTEXTPATH");
+            }
+        }
+    });
 
     // $(":radio").click(function(){
     //     alert(this.val());
@@ -104,7 +163,50 @@ function getZhxxByFilter() {
     $("#jzje").attr("value",jzje);
 }
 
+function countBysj() {
+    var minsj=$("#start_time").val();
+    var maxsj=$("#end_time").val();
+    var url = "/SINOFAITH/banktjjg/countBysj?minsj="+minsj+"&maxsj="+maxsj;
 
+    var tx="";
+    if(minsj.length<1 && maxsj<1){
+        tx = "确认将分析条件清空?";
+    }else if(minsj.length>1 && maxsj.length<1){
+        tx = "确认将分析条件改为"+minsj+"至今的数据?";
+    }else if(minsj.length<1 && maxsj.length>1){
+        tx = "确认将分析条件改为"+maxsj+"以前的数据?";
+    }else {
+        tx = "确认将分析条件改为"+minsj+"至"+maxsj+"之间的数据?";
+    }
+    alertify.confirm(tx,function () {
+        alertify.set('notifier','delay', 0);
+        alertify.set('notifier','position', 'top-center');
+        alertify.success("数据分析中,请等待跳转...");
+        $.get(url,function (data) {
+            if(data==201){
+                alertify.success("分析条件未改变");
+                setTimeout(function (){document.getElementById("seachDetail").submit()},2000);
+            }
+            if(data==202){
+                alertify.success("分析条件区间数据条数为0");
+                setTimeout(function (){document.getElementById("seachDetail").submit()},2000);
+            }
+            if(data==200){
+                alertify.success("分析完成..正在跳转..");
+                setTimeout(function (){document.getElementById("seachDetail").submit()},1500);
+            }
+        })
+    }, function() {
+        // 用户点击"cancel"按钮
+        return
+    });
+
+}
+
+function clearTime() {
+    $("#start_time").val("");
+    $("#end_time").val("");
+}
 
 
 var page = 1

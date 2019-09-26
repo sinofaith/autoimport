@@ -74,7 +74,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>资金开户信息(${aj.aj})</strong>
                                             </div>
@@ -91,6 +91,7 @@
                                         <td width="12%">开户时间</td>
                                         <td width="7%">账户状态</td>
                                         <td width="8%">开户行</td>
+                                        <td width="8%">账户类型</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
                                             <tr class="${st.index%2==1 ? '':'odd' }">
@@ -111,13 +112,14 @@
                                                 <td align="center">${item.khsj}</td>
                                                 <td align="center" title="${item.zhzt}"><div style="width:80px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zhzt}</div></td>
                                                 <td align="center" title="${item.khh}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.khh}</div></td>
+                                                <td align="center" title="${item.zhlxy}"><div style="width:100px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zhlxy}</div></td>
 
                                             </tr>
                                         </c:forEach>
                                         <c:choose>
                                             <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                                 <tr>
-                                                    <td colspan="10" align="center"> 无数据 </td>
+                                                    <td colspan="11" align="center"> 无数据 </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>

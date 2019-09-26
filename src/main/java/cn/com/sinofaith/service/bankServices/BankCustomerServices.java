@@ -209,6 +209,9 @@ public class BankCustomerServices {
         List<String> zjhm = new ArrayList<>();
         for(BankCustomerEntity c : bankCustLists){
             c.setInserttime(inserttime);
+            if(c.getZjhm().contains("@")){
+                c.setZjhm("");
+            }
             bcd.saveOrUpdate(c);
             zjhm.add(c.getZjhm());
 

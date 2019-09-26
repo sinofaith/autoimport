@@ -1,6 +1,7 @@
 package cn.com.sinofaith.dao.bankDao;
 
 import cn.com.sinofaith.bean.bankBean.BankTjjgEntity;
+import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
 import cn.com.sinofaith.dao.BaseDao;
 import cn.com.sinofaith.util.DBUtil;
 import cn.com.sinofaith.util.TimeFormatUtil;
@@ -8,8 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class BankTjjgDao extends BaseDao<BankTjjgEntity>{
@@ -28,7 +31,6 @@ public class BankTjjgDao extends BaseDao<BankTjjgEntity>{
         sql.append("FROM (SELECT  s.khxm as xm,to_char(s.dsfzh) dsfzh,c.* ");
         sql.append("FROM  bank_tjjg c left join bank_person s on c.jyzh = s.yhkkh where 1=1 "+seachCode+") a ");
         sql.append("WHERE ROWNUM <= "+offset*length+") WHERE rn >= "+((offset-1)*length+1));
-
         return findBySQL(sql.toString());
     }
 

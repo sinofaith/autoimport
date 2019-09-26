@@ -49,7 +49,10 @@
                                         <td width="4%">序号</td>
                                         <td width="10%">支付宝账号</td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=zfbmc">账号名称</a></td>
-                                        <td width="10%">对方账号</td>
+                                        <td width="10%">对方账号<br>
+                                            <label style="color:#0a36e9;" class="label_c"><input name="zhzt" type="checkbox"  value="1" <c:if test="${code.contains('1') }">checked='checked'</c:if> onclick="getZhzt()" />已调单 </label>
+                                            <label style="color:red;" class="label_c"><input name="zhzt" type="checkbox"  value="0" <c:if test="${code.contains('0') }">checked='checked'</c:if> onclick="getZhzt()"/>未调单 </label>
+                                        </td>
                                         <td width="15%">对方信息</td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=jyzcs">交易总次数</a></td>
                                         <td width="6%"><a href="/SINOFAITH/zfbZzmxTjjgs/seach?pageNo=1&orderby=fkzcs">出账总次数</a></td>
@@ -63,7 +66,7 @@
                                             <td align="center">${(st.index+1)+(page.pageNo-1)*page.pageSize}</td>
                                             <td align="center" title="${item.zfbzh}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbzh}</div></td>
                                             <td align="center" title="${item.zfbmc}"><div style="width:70px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.zfbmc}</div></td>
-                                            <td align="center" title="${item.dfzh}"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfzh!=null?item.dfzh:"转账到银行卡"}</div></td>
+                                            <td align="center" title="${item.dfzh}" style="color: ${item.zhlx ==1 ?'blue':'red' }"><div style="width:120px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfzh!=null?item.dfzh:"转账到银行卡"}</div></td>
                                             <td align="center" title="${item.dfmc}"><div style="width:180px;white-space: nowrap;text-overflow:ellipsis; overflow:hidden;">${item.dfmc}</div></td>
                                             <td align="center">${item.jyzcs}</td>
                                             <td align="center">${item.fkzcs}</td>

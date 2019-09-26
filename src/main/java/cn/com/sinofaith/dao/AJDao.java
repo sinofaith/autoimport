@@ -32,8 +32,10 @@ public class AJDao extends BaseDao<AjEntity>{
                 aje.setFlg(new BigDecimal(map.get("FLG").toString()).longValue());
                 aje.setFilter((String)map.get("FILTER"));
                 aje.setUserId(new BigDecimal(map.get("USERID").toString()).longValue());
-                aje.setInserttime((String)map.get("INSERTTIMER"));
+                aje.setInserttime((String)map.get("INSERTTIME"));
                 aje.setAj((String) map.get("AJ"));
+                aje.setZjminsj((String)map.get("ZJMINSJ")==null ? "" : (String)map.get("ZJMINSJ"));
+                aje.setZjmaxsj((String)map.get("ZJMAXSJ")==null ? "" : (String)map.get("ZJMAXSJ"));
                 listAj.add(aje);
             }
         }
@@ -99,7 +101,7 @@ public class AJDao extends BaseDao<AjEntity>{
         Statement st;
         try {
             st = con.createStatement();
-            if(type.length==4  ){
+            if(type.length==4){
                 st.execute("delete aj where id ="+ajid);
                 con.commit();
             }
@@ -109,7 +111,7 @@ public class AJDao extends BaseDao<AjEntity>{
                     st.addBatch("delete cft_zzxx where aj_id="+ajid);
                     st.addBatch("delete cft_tjjg where aj_id="+ajid);
                     st.addBatch("delete cft_tjjgs where aj_id="+ajid);
-                    st.addBatch("update rel_zjh_hm set aj_id=-1 where (hmlx = 1 or hmlx = 2 or hmlx = 4) and  hmly =2 and aj_id="+ajid);
+                    st.addBatch("delete rel_zjh_hm  where (hmlx = 1 or hmlx = 2 or hmlx = 4) and  hmly =2 and aj_id="+ajid);
                 }
                 if(a.equals("2")){
                     st.addBatch("delete bank_zcxx where aj_id="+ajid);
@@ -117,7 +119,7 @@ public class AJDao extends BaseDao<AjEntity>{
                     st.addBatch("delete bank_tjjg where aj_id="+ajid);
                     st.addBatch("delete bank_tjjgs where aj_id="+ajid);
                     st.addBatch("delete rel_customer_aj where aj_id="+ajid);
-                    st.addBatch("update rel_zjh_hm set where aj_id=-1 (hmlx = 1 and hmly =1) or (hmlx = 4 and hmly =4) and aj_id="+ajid);
+                    st.addBatch("delete rel_zjh_hm  where  (hmlx = 1 and hmly =1) or (hmlx = 4 and hmly =4) and aj_id="+ajid);
                 }
                 if(a.equals("3")){
                     st.addBatch("DELETE wuliu where aj_id="+ajid);
@@ -149,7 +151,6 @@ public class AJDao extends BaseDao<AjEntity>{
                         st.addBatch("UPDATE AJ a SET a.filter='' WHERE ID="+ajid);
                     }
                 }
-
             }
             st.executeBatch();
             con.commit();

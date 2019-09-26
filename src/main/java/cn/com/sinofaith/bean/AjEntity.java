@@ -11,7 +11,8 @@ public class AjEntity {
     private String filter="";
     private String inserttime;
     private long userId;
-
+    private String zjminsj="";
+    private String zjmaxsj="";
     @Id
     @Column(name="id",nullable = false,precision = 0)
     public long getId() {
@@ -63,7 +64,24 @@ public class AjEntity {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+    @Basic
+    @Column(name="zjminsj",nullable = false)
+    public String getZjminsj() {
+        return zjminsj;
+    }
 
+    public void setZjminsj(String zjminsj) {
+        this.zjminsj = zjminsj;
+    }
+    @Basic
+    @Column(name="zjmaxsj",nullable = false)
+    public String getZjmaxsj() {
+        return zjmaxsj;
+    }
+
+    public void setZjmaxsj(String zjmaxsj) {
+        this.zjmaxsj = zjmaxsj;
+    }
     @Override
     public String toString() {
         return "AjEntity{" +
@@ -76,13 +94,15 @@ public class AjEntity {
                 '}';
     }
 
-    public AjEntity(long id, String aj, long flg, String filter, String inserttime, long userId) {
+    public AjEntity(long id, String aj, long flg, String filter, String inserttime, long userId, String zjminsj, String zjmaxsj) {
         this.id = id;
         this.aj = aj;
         this.flg = flg;
         this.filter = filter;
         this.inserttime = inserttime;
         this.userId = userId;
+        this.zjminsj = zjminsj;
+        this.zjmaxsj = zjmaxsj;
     }
 
     public AjEntity(){

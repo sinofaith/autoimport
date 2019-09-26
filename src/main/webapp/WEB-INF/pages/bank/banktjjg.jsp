@@ -14,6 +14,7 @@
         <%@include file="../template/newmain.jsp" %>
 
         <%--详情模块脚本--%>
+        <link href="<c:url value="/resources/css/bootstrap-datetimepicker.min.css"/>" rel="stylesheet" media="screen">
 
         <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
         <link href="<c:url value="/resources/css/bootstrap-theme.css"/>" rel="stylesheet" media="screen">
@@ -26,6 +27,9 @@
         <script src="<c:url value="/resources/js/bank/bank.js"/> "></script>
         <script src="<c:url value="/resources/js/bank/banktjjg.js"/> "></script>
         <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
+
+        <script src="<c:url value="/resources/js/bootstrap-datetimepicker.js"/> "></script>
+        <script src="<c:url value="/resources/js/bootstrap-datetimepicker.zh-CN.js"/> "></script>
         <%--详情模块脚本--%>
         <script type="text/javascript">
             try {
@@ -183,7 +187,21 @@
                                        <%--onclick="ajCount('${aj.aj}')"/>--%>
                                 <%--<label for="checkbox1" style="padding-top: 8px">统计结果去除红包相关记录</label>--%>
                                 <div class=" ">
+                                    <div class="form-group">
+                                        <label for="loginTime" class="col-md-2 control-label" style="width: 25%">开始时间:</label>
+                                        <div class="input-group date form_date col-md-5" data-link-field="loginTime" >
+                                            <input id="start_time" name="start_time"  size="16" type="text" value="${aj.zjminsj}" readonly placeholder="选择起始时间">
+                                        </div>
+                                        <label for="loginTime" class="col-md-2 control-label"style="width: 25%">结束时间:</label>
+                                        <div class="input-group date form_date col-md-5" data-link-field="loginTime" >
+                                            <input id="end_time" name="end_time"  size="16" type="text" value="${aj.zjmaxsj}" readonly placeholder="选择结束时间">
+                                        </div>
 
+                                        <input type="hidden" id="loginTime" value="" />
+                                        <button style="width: 26%;margin-right: 6px; margin-top: 2px;height: 25px;line-height: 25px" onclick="clearTime()" type="button" class="right_a_nav margin_none">清除时间</button>
+                                        <button style="width: 47%; margin-top: 2px;height: 25px;line-height: 25px" type="button" class="right_a_nav margin_none" onclick="countBysj()">开始分析</button>
+
+                                    </div>
                                     <div>
                                         <form action="/SINOFAITH/banktjjg/SeachCode" method="post">
                                             <div class="form-group_search  fl_l width100">

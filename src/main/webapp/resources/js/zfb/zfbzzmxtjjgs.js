@@ -14,7 +14,16 @@ function zfbSkip(code){
         location="/SINOFAITH/zfb"+code+"/seach?pageNo="+onPage;
     }
 }
-
+function getZhzt() {
+    var chk_value = [];//定义一个数组
+    $('input[name="zhzt"]:checked').each(function () {//遍历每一个名字为interest的复选框，其中选中的执行函数
+        chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+    });
+    if(chk_value.length==0){
+        chk_value.push(-99);
+    }
+    location.href = "/SINOFAITH/zfbZzmxTjjgs/getByZhzt?code=" + chk_value;
+}
 // 转账明细显示详情数据
 function getZfbZzxxTjjgsDetails(obj){
     // 用户Id

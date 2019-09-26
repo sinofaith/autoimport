@@ -134,7 +134,7 @@ public class AjController {
         if(ajs.findByName(aj,user.getId()).size()>0){
             result = "303";
         }else {
-            ajs.save(new AjEntity(0,aj, 1,"",TimeFormatUtil.getDate("/"),user.getId()));
+            ajs.save(new AjEntity(0,aj, 1,"",TimeFormatUtil.getDate("/"),user.getId(),"",""));
             result = "200";
         }
         return result;
@@ -163,7 +163,7 @@ public class AjController {
         UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         List<AjEntity> ajlist = ajs.findByName(ajm,user.getId());
         if(ajlist.size()<1) {
-            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/"),user.getId()));
+            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/"),user.getId(),"",""));
             AjEntity aje = ajs.findByName(ajm,user.getId()).get(0);
             List<CftZzxxEntity> listZz = ajs.getCftList(aje,user.getId());
             tjs.count(listZz, aje.getId());

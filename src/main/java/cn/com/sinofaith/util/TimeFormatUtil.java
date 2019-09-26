@@ -53,10 +53,16 @@ public class TimeFormatUtil {
     }
 
 
-    public static String DateFormat(String time){
-        Date date = new Date(time);
+    public static Date DateFormat(String time){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return df.format(date);
+        Date date = null;
+        try{
+             date = df.parse(time);
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return date;
     }
 
     public static String getDateSwitchTimestamp(String time){
@@ -88,19 +94,24 @@ public class TimeFormatUtil {
             return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(result);
         }
     }
+
+    public static String sjjg(String sdate,String sdate1){
+        String result = "0";
+        try {
+            Date date = DateFormat(sdate);
+            Date date1 = DateFormat(sdate1);
+            Double resultD =(double) (date.getTime()-date1.getTime())/1000/60/60/24;
+            result = String.format("%.2f", resultD);
+        } catch (Exception e){
+            result = "-";
+        }
+
+        return result;
+    }
     public static void main(String[] args) throws Exception{
-
-        System.out.println(getDateSwitchTimestamp("20160811tttttt"));
-
-        Date date = new SimpleDateFormat("yyyyMMdd").parse("20130704");
-        String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        System.out.println(now);
-        System.out.println(getDateSwitchTimestamp("1"));
-        /*String time = "2018/01/01";
-        Date data = new Date(time);
-        System.out.println(data);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(df.format(data));*/
-
+        Date a = DateFormat("");
+        Date b = DateFormat("2018-04-24 01:19:10");
+        System.out.println(a.compareTo(b));
+        System.out.println(sjjg("2018-04-24 16:19:10","2018-04-24 01:19:10"));
     }
 }

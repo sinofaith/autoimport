@@ -2,18 +2,15 @@ package cn.com.sinofaith.service.bankServices;
 
 
 import cn.com.sinofaith.bean.AjEntity;
-import cn.com.sinofaith.bean.bankBean.BankPersonEntity;
-import cn.com.sinofaith.bean.bankBean.BankZcxxEntity;
-import cn.com.sinofaith.bean.bankBean.BankZzxxEntity;
-import cn.com.sinofaith.bean.bankBean.MappingBankzzxxEntity;
+import cn.com.sinofaith.bean.bankBean.*;
 import cn.com.sinofaith.dao.AJDao;
-import cn.com.sinofaith.dao.bankDao.BankPersonDao;
-import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
-import cn.com.sinofaith.dao.bankDao.MappingBankzzxxDao;
+import cn.com.sinofaith.dao.bankDao.*;
 import cn.com.sinofaith.form.bankForm.BankZzxxForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.ExcelReader;
+import cn.com.sinofaith.util.GetBank;
 import cn.com.sinofaith.util.MappingUtils;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.monitorjbl.xlsx.StreamingReader;
@@ -34,28 +31,53 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.math.BigDecimal.ROUND_UP;
+
 @Service
 public class BankZzxxServices {
     @Autowired
+    private BankPersonServices bps;
+    @Autowired
     private BankZzxxDao bankzzd;
     @Autowired
+    private BankZcxxDao bzcd;
+    @Autowired
     private BankPersonDao bpd;
+    @Autowired
+    private BankTjjgDao tjd;
+    @Autowired
+    private BankTjjgsDao tjsd;
     @Autowired
     private AJDao ad;
     @Autowired
     private MappingBankzzxxDao mbd;
 
-    public String getSeach(String seachCode, String seachCondition,String orderby,String desc, AjEntity aj,long userId){
+    public String getSeach(BankZzSeachEntity seachE, String orderby, String desc, AjEntity aj, long userId){
         String ajid = getAjidByAjm(aj,userId);
         StringBuffer seach = new StringBuffer(" and c.aj_id in ("+ajid+") ");
-
-        if(seachCode!=null){
-            seachCode = seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
-            if("khxm".equals(seachCondition)){
-                seach.append(" and (s."+seachCondition + " like '%"+seachCode+"%' or c.jyxm like '%"+seachCode+"%')");
-            } else {
-                seach.append(" and c." + seachCondition + " like " + "'%" + seachCode + "%'");
+        Map<String,String> seachMap = new HashMap<>();
+        if(seachE!=null){
+            seachMap = seachE.objToMap(seachE);
+            for(String entry : seachMap.keySet()) {
+                if (!"".equals(seachMap.get(entry))) {
+                    if ("khxm".equals(entry)) {
+                        seach.append(" and (s." + entry + " like '%" + seachMap.get(entry) + "%' or c.jyxm like '%" + seachMap.get(entry) + "%')");
+                    } else if ("dskh".equals(entry) || "dsxm".equals(entry)) {
+                        List<String> list = Arrays.asList(seachMap.get(entry).split(","));
+                        seach.append("and ( ");
+                        for (int i = 0; i < list.size(); i++) {
+                            seach.append("  c." + entry + " like " + "'%" + list.get(i) + "%' ");
+                            if (i != list.size() - 1) {
+                                seach.append(" or ");
+                            }
+                        }
+                        seach.append(" ) ");
+                    } else {
+                        seach.append(" and c." + entry + " like " + "'%" + seachMap.get(entry) + "%'");
+                    }
+                }
             }
+
         }else{
             seach.append(" and ( 1=1 ) ");
         }
@@ -241,6 +263,12 @@ public class BankZzxxServices {
             seach=" and (c.yhkkh='"+zh+"') ";
             seach+=" and (c.dskh = '"+jylx+"' or c.bcsm = '"+jylx+"') ";
         }
+        if(aj.getZjminsj().length()>1){
+            seach+=" and c.jysj >= '"+aj.getZjminsj()+"' ";
+        }
+        if(aj.getZjmaxsj().length()>1){
+            seach+=" and c.jysj <= '"+aj.getZjmaxsj()+"' ";
+        }
 //        if(aj.getFlg()==1){
 //            seach +=" and c.shmc not like'%红包%'";
 //        }
@@ -309,7 +337,7 @@ public class BankZzxxServices {
      * @return
      */
     public int getBankZzxxAll(List<String> listPath, List<List<String>> fields,
-                              AjEntity aj, List<BankZzxxEntity> listZzxx) {
+                              AjEntity aj) {
         // 读取
         List<BankZzxxEntity> bankZzxxList = null;
         List<BankZzxxEntity> bankZzxxLists = new ArrayList<>();
@@ -327,7 +355,7 @@ public class BankZzxxServices {
                 }
             }
         }
-        int num = bankzzd.insertZzxx(bankZzxxLists, aj.getId(), listZzxx);
+        int num = bankzzd.insertZzxx(bankZzxxLists, aj.getId());
         List<MappingBankzzxxEntity> listmbs = new ArrayList<>();
         for(List<String> field : fields){
             MappingBankzzxxEntity mb = new MappingBankzzxxEntity();
@@ -460,6 +488,290 @@ public class BankZzxxServices {
         return zzxxList;
     }
 
+    public int getAllBysj(long aj_id,String minsj,String maxsj){
+        String sql = "";
+        if(minsj.length()>1){
+            sql += " and jysj > '"+minsj+"'";
+        }
+        if(maxsj.length()>1){
+            sql+=" and jysj < '"+maxsj+"'";
+        }
+        List zz = bankzzd.findBySQL(" select to_char(count(1)) num from bank_zzxx where aj_id =  "+aj_id+sql);
+        Map map = (Map) zz.get(0);
+        return Integer.parseInt((String)map.get("NUM"));
+    }
+
+    public void countTjjgAndTjjgs(long ajid,List<BankZcxxEntity> listZcxx,String seach){
+        List list = bankzzd.findBySQL("select to_char(count(1)) as num from bank_zzxx where aj_id ="+ajid+seach);
+        List<BankZzxxEntity> listZzxx = new ArrayList<>();
+
+        List<Map> listTjjg = new ArrayList<>();
+        //账户统计结果
+        listTjjg.add(new HashMap());
+        //点对点统计结果
+        listTjjg.add(new HashMap());
+        //保存已经计算的实体哈希值
+        listTjjg.add(new HashMap());
+        Map map = (Map) list.get(0);
+        double sum = Double.parseDouble(map.get("NUM").toString());
+        Set<String> zczh = bankzzd.getYhkkhDis(ajid);
+        if(sum>300000){
+            for (int i =1;i<=((int)Math.ceil(sum/300000));i++){
+                listZzxx = bankzzd.doPage("from BankZzxxEntity where aj_id ="+ajid+seach,i,300000);
+                listTjjg = count(listZzxx,ajid,listTjjg,listZcxx,zczh);
+            }
+        }else{
+            listZzxx = bankzzd.getAlla(ajid,seach);
+            listTjjg=count(listZzxx,ajid,listTjjg,listZcxx,zczh);
+        }
+
+        if(listZcxx.size()>0) {
+            listZcxx.forEach(zcxx -> {
+                if (zczh.contains(zcxx.getYhkkh())) {
+                    zcxx.setZhlx(0);
+                }
+            });
+            bzcd.saveZcxx(listZcxx, ajid);
+        }
+        List<String> bp = bps.getByFilter();
+        List<BankTjjgEntity> tjjg = new ArrayList<>(listTjjg.get(0).values());
+        for (int i =0;i<tjjg.size();i++){
+            BankTjjgEntity bz = tjjg.get(i);
+            if(!zczh.contains(bz.getJyzh())){
+                bz.setZhlx(1);
+            }else if(zczh.contains(bz.getJyzh())){
+                bz.setZhlx(0);
+            }
+            String temp = "";
+            BigDecimal temps = new BigDecimal(0);
+            if(bp.contains(bz.getJyzh())) {
+                temp = "第三方账户";
+            }else if (bz.getCzzje().compareTo(new BigDecimal(0)) == 0) {
+                temp = "汇聚账户";
+            } else if (bz.getJzzje().compareTo(new BigDecimal(0)) == 0) {
+                temp = "来源账户";
+            }else {
+                temps = bz.getJzzje().divide(bz.getCzzje(), 5, ROUND_UP);
+                if (temps.doubleValue() <= 0.15) {
+                    temp = "来源账户";
+                } else if (temps.doubleValue() <= 1.35) {
+                    temp = "中转账户";
+                } else {
+                    temp = "汇聚账户";
+                }
+            }
+            bz.setZhlb(temp);
+        }
+        tjd.delAll(ajid);
+        tjd.save(tjjg);
+        List<BankTjjgsEntity> tjjgs = new ArrayList<>(listTjjg.get(1).values());
+        for (int i =0;i<tjjgs.size();i++){
+            BankTjjgsEntity bz = tjjgs.get(i);
+            if(!zczh.contains(bz.getDfzh())&&bz.getZhlx()!=2){
+                bz.setZhlx(1);
+            }else if(zczh.contains(bz.getDfzh())&&bz.getZhlx()!=2){
+                bz.setZhlx(0);
+            }
+        }
+        tjsd.delAll(ajid);
+        tjsd.save(tjjgs);
+    }
+    public List<Map> count(List<BankZzxxEntity> listZzxx,long aj,List<Map> list,List<BankZcxxEntity> listZcxx,Set<String> zczh){
+        Map<String,BankTjjgEntity> mapTjjg = list.get(0);
+        Map<String,BankTjjgsEntity> mapTjjgs = list.get(1);
+        Map<Integer,BankZzxxEntity> listHash = list.get(2);
+        BankZzxxEntity zzxx = null;
+        BankTjjgEntity tjjg = null;
+        BankTjjgsEntity tjjgs = null;
+
+        for(int i=0;i<listZzxx.size();i++){
+            zzxx = listZzxx.get(i);
+            if(listHash.containsKey(zzxx.hashCode())){
+                continue;
+            }
+            if ("出".equals(zzxx.getSfbz())) {
+                if (mapTjjg.containsKey(zzxx.getYhkkh())) {
+                    tjjg = mapTjjg.get(zzxx.getYhkkh());
+                    tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                    tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
+                    tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                    if(tjjg.getKhh()==null){
+                        tjjg.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                    }
+                } else {
+                    BankTjjgEntity tj1 = new BankTjjgEntity();
+                    tj1.setJyzh(zzxx.getYhkkh());
+                    tj1.setJyzcs(new BigDecimal(1));
+                    tj1.setCzzcs(new BigDecimal(1));
+                    tj1.setCzzje(zzxx.getJyje());
+                    tj1.setAj_id(aj);
+                    if(tj1.getKhh()==null){
+                        tj1.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                    }
+                    mapTjjg.put(zzxx.getYhkkh(), tj1);
+                }
+                if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh()) && !zczh.contains(zzxx.getDskh())) {
+                    if (mapTjjg.containsKey(zzxx.getDskh())) {
+                        tjjg = mapTjjg.get(zzxx.getDskh());
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                        tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                        if(tjjg.getKhh()==null){
+                            tjjg.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                        }
+                    } else {
+                        BankTjjgEntity tj1 = new BankTjjgEntity();
+                        tj1.setJyzh(zzxx.getDskh());
+                        tj1.setJyzcs(new BigDecimal(1));
+                        tj1.setJzzcs(new BigDecimal(1));
+                        tj1.setJzzje(zzxx.getJyje());
+                        tj1.setAj_id(aj);
+                        if(tj1.getKhh()==null){
+                            tj1.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                        }
+                        mapTjjg.put(zzxx.getDskh(), tj1);
+                    }
+                }
+
+
+                String temp = zzxx.getYhkkh()+zzxx.getDskh();
+                if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
+                    temp = zzxx.getYhkkh()+zzxx.getBcsm();
+                }
+                if (mapTjjgs.containsKey(temp)) {
+                    tjjgs = mapTjjgs.get(temp);
+                    tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
+                    tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
+                    tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
+                    if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMinsj()))==-1){
+                            tjjgs.setMinsj(zzxx.getJysj());
+                        }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMaxsj()))==1){
+                            tjjgs.setMaxsj(zzxx.getJysj());
+                        }
+                    }
+                } else {
+                    BankTjjgsEntity tjs1 = new BankTjjgsEntity();
+                    tjs1.setJyzh(zzxx.getYhkkh());
+                    tjs1.setDfzh(zzxx.getDskh());
+                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
+                        tjs1.setDfzh(zzxx.getBcsm());
+                        tjs1.setZhlx(2);
+                    }
+                    tjs1.setJyzcs(new BigDecimal(1));
+                    tjs1.setCzzcs(new BigDecimal(1));
+                    tjs1.setCzzje(zzxx.getJyje());
+                    tjs1.setAj_id(aj);
+                    if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                        tjs1.setMinsj(zzxx.getJysj());
+                        tjs1.setMaxsj(zzxx.getJysj());
+                    }
+                    mapTjjgs.put(temp, tjs1);
+                }
+
+            }
+            if ("进".equals(zzxx.getSfbz())) {
+                if (mapTjjg.containsKey(zzxx.getYhkkh())) {
+                    tjjg = mapTjjg.get(zzxx.getYhkkh());
+                    tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                    tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
+                    tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                    if(tjjg.getKhh()==null){
+                        tjjg.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                    }
+                } else {
+                    BankTjjgEntity tj2 = new BankTjjgEntity();
+                    tj2.setJyzh(zzxx.getYhkkh());
+                    tj2.setJyzcs(new BigDecimal(1));
+                    tj2.setJzzcs(new BigDecimal(1));
+                    tj2.setJzzje(zzxx.getJyje());
+                    tj2.setAj_id(aj);
+                    if(tj2.getKhh()==null) {
+                        tj2.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                    }
+                    mapTjjg.put(zzxx.getYhkkh(), tj2);
+                }
+                if (zzxx.getDskh() != null && !zzxx.getYhkkh().equals(zzxx.getDskh())&& !zczh.contains(zzxx.getDskh())) {
+                    if (mapTjjg.containsKey(zzxx.getDskh())) {
+                        tjjg = mapTjjg.get(zzxx.getDskh());
+                        tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
+                        tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                        if(tjjg.getKhh()==null){
+                            tjjg.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                        }
+                    } else {
+                        BankTjjgEntity tj2 = new BankTjjgEntity();
+                        tj2.setJyzh(zzxx.getDskh());
+                        tj2.setJyzcs(new BigDecimal(1));
+                        tj2.setCzzcs(new BigDecimal(1));
+                        tj2.setCzzje(zzxx.getJyje());
+                        tj2.setAj_id(aj);
+                        if(tj2.getKhh()==null) {
+                            tj2.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0], zzxx.getDskhh()));
+                        }
+                        mapTjjg.put(zzxx.getDskh(), tj2);
+                    }
+                }
+
+                String temp = zzxx.getYhkkh()+zzxx.getDskh();
+                if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
+                    temp = zzxx.getYhkkh()+zzxx.getBcsm();
+                }
+                if (mapTjjgs.containsKey(temp)) {
+                    tjjgs = mapTjjgs.get(temp);
+                    tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
+                    tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
+                    tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
+                    if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMinsj()))==-1){
+                            tjjgs.setMinsj(zzxx.getJysj());
+                        }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMaxsj()))==1){
+                            tjjgs.setMaxsj(zzxx.getJysj());
+                        }
+                    }
+                } else {
+                    BankTjjgsEntity tjs2 = new BankTjjgsEntity();
+                    tjs2.setJyzh(zzxx.getYhkkh());
+                    tjs2.setDfzh(zzxx.getDskh());
+                    if(zzxx.getDskh() == null || "".equals(zzxx.getDskh().trim())){
+                        tjs2.setDfzh(zzxx.getBcsm());
+                        tjs2.setZhlx(2);
+                    }
+                    tjs2.setJyzcs(new BigDecimal(1));
+                    tjs2.setJzzcs(new BigDecimal(1));
+                    tjs2.setJzzje(zzxx.getJyje());
+                    tjs2.setAj_id(aj);
+                    if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                        tjs2.setMinsj(zzxx.getJysj());
+                        tjs2.setMaxsj(zzxx.getJysj());
+                    }
+                    mapTjjgs.put(temp, tjs2);
+                }
+            }
+            listHash.put(zzxx.hashCode(),null);
+        }
+        list.clear();
+        list.add(mapTjjg);
+        list.add(mapTjjgs);
+        list.add(listHash);
+        return list;
+    }
+    public String bankName(String khh,String dskhh){
+        String temp ="";
+        if("".equals(khh)){
+            if(dskhh!=null&&dskhh.contains("银行")){
+                temp = dskhh.substring(0,dskhh.indexOf("银行")+2);
+            }else if(dskhh!=null&&dskhh.contains("信用社")){
+                temp = dskhh.substring(0,dskhh.indexOf("信用社")+3);
+            }else {
+                temp = "";
+            }
+        }else{
+            temp = khh;
+        }
+        return temp;
+    }
     /**
      * 07版数据读取
      * @param path

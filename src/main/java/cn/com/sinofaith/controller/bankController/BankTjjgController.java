@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
+
 import static java.lang.Integer.parseInt;
 
 @Controller
@@ -42,7 +44,7 @@ public class BankTjjgController {
             httpSession.setAttribute("blastOrder", "czzje");
             httpSession.setAttribute("bdesc", " desc ");
             httpSession.setAttribute("code",-1);
-            httpSession.setAttribute("hcode",0);
+            httpSession.setAttribute("hcode",1);
             return mav;
         }
 
@@ -61,7 +63,7 @@ public class BankTjjgController {
             ses.setAttribute("btjseachCondition","jyzh");
             ses.setAttribute("btjseachCode",yhkkh.replace("#",""));
             ses.setAttribute("code",-1);
-            ses.setAttribute("hcode",0);
+            ses.setAttribute("hcode",1);
             ses.setAttribute("borderby", "jyzcs");
             ses.setAttribute("blastOrder", "jyzcs");
             ses.setAttribute("bdesc", " desc ");
@@ -178,5 +180,32 @@ public class BankTjjgController {
             String downPath = req.getSession().getServletContext().getRealPath("/");
             AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
             tjs.downWs(czje,jzje,wstitle,downPath+"download/",aj != null ? aj : new AjEntity(),rep);
+        }
+
+        @RequestMapping("/countBysj")
+        @ResponseBody
+        public String countBysj(String minsj,String maxsj,HttpServletRequest req){
+            AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+            if(minsj.equals(aj.getZjminsj())&&maxsj.equals(aj.getZjmaxsj())){
+                return "201";
+            }
+            int count = zzs.getAllBysj(aj.getId(),minsj,maxsj);
+            if(count==0){
+                return "202";
+            }
+            String sql = "";
+            if(minsj.length()>1){
+                sql += " and jysj >= '"+minsj+"'";
+            }
+            if(maxsj.length()>1){
+                sql+=" and jysj <= '"+maxsj+"'";
+            }
+    //            tjs.count(listZzxx,aj.getId(),new ArrayList<>());
+    //            tjss.count(listZzxx,aj.getId());
+            zzs.countTjjgAndTjjgs(aj.getId(),new ArrayList<>(),sql);
+            aj.setZjminsj(minsj);
+            aj.setZjmaxsj(maxsj);
+            ajs.updateAj(aj);
+            return "200";
         }
 }

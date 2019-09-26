@@ -51,6 +51,8 @@ public class CftTjjgsService {
                 cftForm.setJzzje( new BigDecimal(map.get("JZZJE").toString()));
                 cftForm.setCzzcs( new BigDecimal(map.get("CZZCS").toString()));
                 cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
+                cftForm.setZhlx( new BigDecimal(map.get("ZHLX").toString()).longValue());
+                cftForm.setDfxm((String) map.get("DFXM"));
                 cfttjs.add(cftForm);
                 xh++;
             }
@@ -98,7 +100,7 @@ public class CftTjjgsService {
         return page;
     }
 
-    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj){
+    public String getSeach(String seachCondition, String seachCode, String orderby, String desc, AjEntity aj,String code){
         StringBuffer seach = new StringBuffer(" and aj_id ="+aj.getId());
         if(seachCode!=null){
             seachCode=seachCode.replace("\r\n","").replace("，","").replace(" ","").replace(" ","").replace("\t","");
@@ -108,12 +110,24 @@ public class CftTjjgsService {
                          .replace("大于",">").replace("小于","<"));
             }else if("xm".equals(seachCondition)){
                 seach.append(" and s."+ seachCondition+" like "+"'%"+ seachCode+"%'");
-            }
-            else{
+            }else if ("dfxm".equals(seachCondition)){
+                seach.append(" and ps.xm like "+"'%"+ seachCode+"%'");
+            } else{
                 seach.append(" and c."+ seachCondition+" like "+"'%"+ seachCode +"%'");
             }
         }else{
             seach.append(" and ( 1=1 ) ");
+        }
+        if(!code.equals("-99")) {
+            String temp[] = code.split(",");
+            seach.append(" and (");
+            for(int i =0; i<temp.length;i++){
+                seach.append(" c.zhlx=" + temp[i]);
+                if(i!=temp.length-1){
+                    seach.append(" or ");
+                }
+            }
+            seach.append(" ) ");
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
@@ -220,7 +234,8 @@ public class CftTjjgsService {
             }
 
         }else {
-            listTjjg = cfttjsd.findBySQL("select s.xm,c.* from cft_tjjgs c left join cft_person s on c.jyzh = s.zh where 1=1 "+seach);
+            listTjjg = cfttjsd.findBySQL("select s.xm,ps.xm dfxm,c.* from cft_tjjgs c left join cft_person s on c.jyzh = s.zh " +
+                    " left join cft_person ps on c.dfzh = ps.zh where 1=1 "+seach);
         }
 
         HSSFWorkbook wb = createExcel(listTjjg,lx);
@@ -245,20 +260,19 @@ public class CftTjjgsService {
             cell = row.createCell(2);
             cell.setCellValue("交易账户");
             cell = row.createCell(3);
-            cell.setCellValue("对手账户");
+            cell.setCellValue("对方账户");
             cell = row.createCell(4);
-            cell.setCellValue("交易总次数");
+            cell.setCellValue("对方姓名");
             cell = row.createCell(5);
-            cell.setCellValue("进账总次数");
+            cell.setCellValue("交易总次数");
             cell = row.createCell(6);
-            cell.setCellValue("进账总金额(元)");
+            cell.setCellValue("进账总次数");
             cell = row.createCell(7);
-            cell.setCellValue("出账总次数");
+            cell.setCellValue("进账总金额(元)");
             cell = row.createCell(8);
+            cell.setCellValue("出账总次数");
+            cell = row.createCell(9);
             cell.setCellValue("出账总金额(元)");
-            for (int a = 0; a < 10; a++) {
-                sheet.autoSizeColumn(a);
-            }
         }else{
             cell.setCellValue("序号");
             cell = row.createCell(1);
@@ -281,9 +295,9 @@ public class CftTjjgsService {
             cell.setCellValue("出账总次数");
             cell = row.createCell(10);
             cell.setCellValue("出账总金额(元)");
-            for (int a = 0; a < 12; a++) {
-                sheet.autoSizeColumn(a);
-            }
+        }
+        for (int a = 0; a < 12; a++) {
+            sheet.autoSizeColumn(a);
         }
         int b = 1;
         for(int i=0;i<listTjjg.size();i++){
@@ -298,17 +312,22 @@ public class CftTjjgsService {
                     cell = row.createCell(2);
                     cell.setCellValue("交易账户");
                     cell = row.createCell(3);
-                    cell.setCellValue("对手账户");
+                    cell.setCellValue("对方账户");
                     cell = row.createCell(4);
-                    cell.setCellValue("交易总次数");
+                    cell.setCellValue("对方姓名");
                     cell = row.createCell(5);
-                    cell.setCellValue("进账总次数");
+                    cell.setCellValue("交易总次数");
                     cell = row.createCell(6);
-                    cell.setCellValue("进账总金额(元)");
+                    cell.setCellValue("进账总次数");
                     cell = row.createCell(7);
-                    cell.setCellValue("出账总次数");
+                    cell.setCellValue("进账总金额(元)");
                     cell = row.createCell(8);
+                    cell.setCellValue("出账总次数");
+                    cell = row.createCell(9);
                     cell.setCellValue("出账总金额(元)");
+                    for (int a = 0; a < 12; a++) {
+                        sheet.autoSizeColumn(a);
+                    }
                     b += 1;
                 }else{
                     cell.setCellValue("序号");
@@ -332,6 +351,9 @@ public class CftTjjgsService {
                     cell.setCellValue("出账总次数");
                     cell = row.createCell(10);
                     cell.setCellValue("出账总金额(元)");
+                    for (int a = 0; a < 12; a++) {
+                        sheet.autoSizeColumn(a);
+                    }
                     b += 1;
                 }
             }
@@ -341,45 +363,32 @@ public class CftTjjgsService {
             cell.setCellValue(i+1);
             if(!"共同".equals(lx)) {
                 cell = row.createCell(1);
-                if (map.get("XM") != null && map.get("XM").toString().length() > 0) {
-                    cell.setCellValue(map.get("XM").toString());
-                }
+                cell.setCellValue((String)map.get("XM"));
                 cell = row.createCell(2);
                 cell.setCellValue(map.get("JYZH").toString());
                 cell = row.createCell(3);
-                if (map.get("DFZH") != null && map.get("DFZH").toString().length() > 0) {
-                    cell.setCellValue(map.get("DFZH").toString());
-                }
+                cell.setCellValue((String)map.get("DFZH"));
                 cell = row.createCell(4);
-                cell.setCellValue(map.get("JYZCS").toString());
+                cell.setCellValue((String)map.get("DFXM"));
                 cell = row.createCell(5);
-                cell.setCellValue(map.get("JZZCS").toString());
+                cell.setCellValue(map.get("JYZCS").toString());
                 cell = row.createCell(6);
-                cell.setCellValue(map.get("JZZJE").toString());
+                cell.setCellValue(map.get("JZZCS").toString());
                 cell = row.createCell(7);
-                cell.setCellValue(map.get("CZZCS").toString());
+                cell.setCellValue(map.get("JZZJE").toString());
                 cell = row.createCell(8);
+                cell.setCellValue(map.get("CZZCS").toString());
+                cell = row.createCell(9);
                 cell.setCellValue(map.get("CZZJE").toString());
-                if (i % 65536 == 0) {
-                    for (int a = 0; a < 10; a++) {
-                        sheet.autoSizeColumn(a);
-                    }
-                }
             }else{
                 cell = row.createCell(1);
-                if (map.get("XM") != null && map.get("XM").toString().length() > 0) {
-                    cell.setCellValue(map.get("XM").toString());
-                }
+                cell.setCellValue((String)map.get("XM"));
                 cell = row.createCell(2);
                 cell.setCellValue(map.get("JYZH").toString());
                 cell = row.createCell(3);
-                if (map.get("DFZH") != null && map.get("DFZH").toString().length() > 0) {
-                    cell.setCellValue(map.get("DFZH").toString());
-                }
+                cell.setCellValue((String)map.get("DFZH"));
                 cell = row.createCell(4);
-                if (map.get("DFXM") != null && map.get("DFXM").toString().length() > 0) {
-                    cell.setCellValue(map.get("DFXM").toString());
-                }
+                cell.setCellValue((String)map.get("DFXM"));
                 cell = row.createCell(5);
                 cell.setCellValue(map.get("NUM").toString());
                 cell = row.createCell(6);
@@ -392,11 +401,6 @@ public class CftTjjgsService {
                 cell.setCellValue(map.get("CZZCS").toString());
                 cell = row.createCell(10);
                 cell.setCellValue(map.get("CZZJE").toString());
-                if (i % 65536 == 0) {
-                    for (int a = 0; a < 12; a++) {
-                        sheet.autoSizeColumn(a);
-                    }
-                }
             }
         }
         return wb;

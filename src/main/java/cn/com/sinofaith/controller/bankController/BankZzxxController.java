@@ -2,6 +2,7 @@ package cn.com.sinofaith.controller.bankController;
 
 import cn.com.sinofaith.bean.AjEntity;
 import cn.com.sinofaith.bean.UserEntity;
+import cn.com.sinofaith.bean.bankBean.BankZzSeachEntity;
 import cn.com.sinofaith.bean.bankBean.MappingBankzzxxEntity;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.service.bankServices.BankZzxxServices;
@@ -12,10 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +40,7 @@ public class BankZzxxController {
     @RequestMapping()
     public ModelAndView redirectCftinfo(HttpSession httpSession) {
         ModelAndView mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
-        httpSession.removeAttribute("bzzseachCondition"); //查询条件
-        httpSession.removeAttribute("bzzseachCode");//查询内容
+        httpSession.removeAttribute("seach"); //查询条件
 
         httpSession.removeAttribute("bzorderby");
         httpSession.removeAttribute("bzlastOrder");
@@ -65,17 +62,14 @@ public class BankZzxxController {
     @RequestMapping(value = "/seach")
     public ModelAndView getCftzzxx(@RequestParam("pageNo") String pageNo, HttpServletRequest req) {
         ModelAndView mav = new ModelAndView("bank/bankzzxx");
-        String seachCondition = (String) req.getSession().getAttribute("bzzseachCondition");
-        String seachCode = (String) req.getSession().getAttribute("bzzseachCode");
+        BankZzSeachEntity seachE = (BankZzSeachEntity) req.getSession().getAttribute("seach");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
-        String seach = bankzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
+        String seach = bankzzs.getSeach(seachE,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
         Page page = bankzzs.queryForPage(parseInt(pageNo),10,seach);
         mav.addObject("page",page);
-        mav.addObject("seachCode",seachCode);
-        mav.addObject("seachCondition",seachCondition);
         mav.addObject("detailinfo",page.getList());
         mav.addObject("aj",aj);
         return mav;
@@ -83,17 +77,10 @@ public class BankZzxxController {
 
     @RequestMapping(value = "/SeachCode" , method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView seachCode(String seachCode,String seachCondition,HttpSession httpSession){
+    public void seachCode(@RequestBody BankZzSeachEntity yhkkh, HttpSession httpSession){
         ModelAndView mav = new ModelAndView("redirect:/bankzzxx/seach?pageNo=1");
-        if(seachCode == null || seachCode.isEmpty()){
-            httpSession.removeAttribute("bzzseachCode");
-            httpSession.removeAttribute("bzzseachCondition");
-            return mav;
-        }
-
-        httpSession.setAttribute("bzzseachCondition",seachCondition);
-        httpSession.setAttribute("bzzseachCode",seachCode);
-        return mav;
+        httpSession.setAttribute("seach",yhkkh);
+//        return mav;
     }
 
     @RequestMapping(value = "/order")
@@ -119,13 +106,12 @@ public class BankZzxxController {
 
     @RequestMapping(value = "/download")
     public void getZzxxDownload(HttpServletResponse rep, HttpServletRequest req) throws Exception{
-        String seachCondition = (String) req.getSession().getAttribute("bzzseachCondition");
-        String seachCode = (String) req.getSession().getAttribute("bzzseachCode");
+        BankZzSeachEntity seachCondition = (BankZzSeachEntity) req.getSession().getAttribute("seach");
         AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
         UserEntity user = (UserEntity) req.getSession().getAttribute("user");
         String orderby = (String) req.getSession().getAttribute("bzorderby");
         String desc = (String) req.getSession().getAttribute("bzdesc");
-        String seach = bankzzs.getSeach(seachCode,seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
+        String seach = bankzzs.getSeach(seachCondition,orderby,desc,aj!=null ? aj:new AjEntity(),user.getId());
         bankzzs.doloadFilezz(seach,rep,aj!=null?aj.getAj():"");
     }
 
@@ -204,6 +190,13 @@ public class BankZzxxController {
             }else{
                 seach="and c.sfbz is not null and (c.dskh='"+yhkkh+"') ";
             }
+        }
+        //时间限制
+        if(aj.getZjminsj().length()>1){
+            seach+=" and c.jysj >= '"+aj.getZjminsj()+"' ";
+        }
+        if(aj.getZjmaxsj().length()>1){
+            seach+=" and c.jysj <= '"+aj.getZjmaxsj()+"' ";
         }
         seach+=" and c.aj_id in("+ajid+") ";
         seach+=" order by c."+lastOrder+desc +" nulls last ";

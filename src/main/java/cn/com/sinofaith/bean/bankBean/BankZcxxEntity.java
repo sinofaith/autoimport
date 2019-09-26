@@ -22,6 +22,7 @@ public class BankZcxxEntity {
     private long zhlx =1;
     private long aj_id;
     private String inserttime;
+    private String zhlxy;
 
     public BankZcxxEntity() {
         super();
@@ -39,7 +40,7 @@ public class BankZcxxEntity {
         this.inserttime = inserttime;
     }
 
-    @Basic
+    @Id
     @Column(name = "id",nullable = false,precision = 0)
     public long getId() {
         return id;
@@ -59,7 +60,7 @@ public class BankZcxxEntity {
         this.zhzt = zhzt;
     }
 
-    @Id
+    @Basic
     @Column(name = "yhkkh",nullable = false,length = 50)
     public String getYhkkh() {
         return yhkkh;
@@ -162,6 +163,15 @@ public class BankZcxxEntity {
     public String getInserttime(){return inserttime;}
     public void setInserttime(String inserttime){this.inserttime=inserttime;}
 
+    @Basic
+    @Column(name = "zhlxy",nullable = true,length = 100)
+    public String getZhlxy() {
+        return zhlxy;
+    }
+
+    public void setZhlxy(String zhlxy) {
+        this.zhlxy = zhlxy;
+    }
     @Override
     public String toString() {
         return "BankZcxxEntity{" +
@@ -188,12 +198,17 @@ public class BankZcxxEntity {
 
         BankZcxxEntity that = (BankZcxxEntity) o;
 
-        return yhkkh != null ? yhkkh.equals(that.yhkkh) : that.yhkkh == null;
+        if (yhkkh != null ? !yhkkh.equals(that.yhkkh) : that.yhkkh != null) return false;
+        if (zhlxy != null ? !zhlxy.equals(that.zhlxy) : that.zhlxy != null&&!that.zhlxy.equals("") ) return false;
+        return zhye != null ? zhye.compareTo(that.zhye)==0 : that.zhye != null &&that.zhye.compareTo(new BigDecimal(-1))==0;
     }
 
     @Override
     public int hashCode() {
-        return yhkkh != null ? yhkkh.hashCode() : 0;
+        int result = yhkkh != null ? yhkkh.hashCode() : 0;
+        result = 31 * result + (zhye != null ? zhye.hashCode() : 0);
+        result = 31 * result + (zhlxy != null ? zhlxy.hashCode() : 0);
+        return result;
     }
 
     public  String remove_(String yhkkh){
@@ -219,6 +234,7 @@ public class BankZcxxEntity {
             b.setKhh(map.get(title.get("khh")).toString());
             b.setKyye(new BigDecimal(map.get(title.get("kyye")).toString()));
             b.setZhye(new BigDecimal(map.get(title.get("zhye")).toString()));
+            b.setZhlxy(map.get(title.get("zhlx")).toString());
         }catch (Exception e){
             e.getStackTrace();
         }

@@ -38,7 +38,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="11"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>财付通对手账户信息(${aj.aj})</strong>
                                             </div>
@@ -48,7 +48,11 @@
                                         <td width="7%">序号</td>
                                         <td width="7%"><a href="/SINOFAITH/cfttjjgs/order?orderby=xm">姓名</a></td>
                                         <td width="9%">微信账户</td>
-                                        <td width="9%">对方账户</td>
+                                        <td width="9%">对方账户<br>
+                                            <label style="color:#0a36e9;" class="label_c"><input name="zhzt" type="checkbox"  value="0" <c:if test="${code.contains('0') }">checked='checked'</c:if> onclick="getZhzt()" />已调单 </label>
+                                            <label style="color:red;" class="label_c"><input name="zhzt" type="checkbox"  value="1" <c:if test="${code.contains('1') }">checked='checked'</c:if> onclick="getZhzt()"/>未调单 </label>
+                                        </td>
+                                        <td width="7%">对方姓名</td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jyzcs">交易总次数</a></td>
                                         <td width="8%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzcs">进账总次数</a></td>
                                         <td width="10%"><a href="/SINOFAITH/cfttjjgs/order?orderby=jzzje">进账总金额</a></td>
@@ -61,7 +65,8 @@
                                                 <td align="center">${item.id}</td>
                                                 <td align="center">${item.name}</td>
                                                 <td align="center" title="${item.jyzh}">${item.jyzh}</td>
-                                                <td align="center">${item.dfzh}</td>
+                                                <td align="center" style="color: ${item.zhlx == 0 ? 'blue':'red'}">${item.dfzh}</td>
+                                                <td align="center">${item.dfxm}</td>
                                                 <td align="center">${item.jyzcs}</td>
                                                 <td align="center">${item.jzzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
@@ -75,7 +80,7 @@
                                         <c:choose>
                                             <c:when test="${detailinfo ==null || detailinfo.size()==0}">
                                                 <tr>
-                                                    <td colspan="10" align="center"> 无数据 </td>
+                                                    <td colspan="11" align="center"> 无数据 </td>
                                                 </tr>
                                             </c:when>
                                         </c:choose>

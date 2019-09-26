@@ -21,6 +21,7 @@ public class CftTjjgsEntity implements Serializable {
     private BigDecimal czzje = new BigDecimal(0);
     private long aj_id;
     private String inserttime;
+    private long zhlx = 0;
 
     @Basic
     @Column(name = "id",nullable = true,precision = 0)
@@ -32,7 +33,7 @@ public class CftTjjgsEntity implements Serializable {
         this.id = id;
     }
     @Id
-    @Column(name = "jyzh",nullable = false,length = 100)
+    @Column(name = "jyzh",nullable = false,length = 200)
     public String getJyzh() {
         return jyzh;
     }
@@ -42,7 +43,7 @@ public class CftTjjgsEntity implements Serializable {
     }
 
     @Id
-    @Column(name="dfzh",nullable = false,length = 100)
+    @Column(name="dfzh",nullable = false,length = 200)
     public String getDfzh() { return dfzh; }
 
     public void setDfzh(String dfzh) { this.dfzh = dfzh; }
@@ -111,7 +112,15 @@ public class CftTjjgsEntity implements Serializable {
     public void setAj_id(long aj_id) {
         this.aj_id = aj_id;
     }
+    @Basic
+    @Column(name = "zhlx",nullable = false,precision = 0)
+    public long getZhlx() {
+        return zhlx;
+    }
 
+    public void setZhlx(long zhlx) {
+        this.zhlx = zhlx;
+    }
     @Override
     public String toString() {
         return "TjjgEntity{" +

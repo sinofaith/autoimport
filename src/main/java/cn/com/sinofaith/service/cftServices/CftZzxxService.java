@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by Me. on 2018/5/22
@@ -606,10 +607,18 @@ public class CftZzxxService {
             listZzxx = cftzzd.getAlla(ajid,seach);
             listTjjg=count(listZzxx,ajid,listTjjg);
         }
+        List<CftTjjgEntity> tjjg = new ArrayList<>(listTjjg.get(0).values());
         cfttjd.delAll(ajid);
-        cfttjd.save(new ArrayList<>(listTjjg.get(0).values()));
+        cfttjd.save(tjjg);
+        List<String> listzh = tjjg.stream().map(CftTjjgEntity::getJyzh).collect(Collectors.toSet()).stream().collect(Collectors.toList());
+        List<CftTjjgsEntity> tjjgs = new ArrayList<>(listTjjg.get(1).values());
+        for(CftTjjgsEntity c :tjjgs){
+            if(!listzh.contains(c.getDfzh())){
+                c.setZhlx(1);
+            }
+        }
         cfttjds.delAll(ajid);
-        cfttjds.save(new ArrayList<>(listTjjg.get(1).values()));
+        cfttjds.save(tjjgs);
         return listZzxx;
     }
 
