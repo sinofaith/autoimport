@@ -36,6 +36,8 @@ public class AJDao extends BaseDao<AjEntity>{
                 aje.setAj((String) map.get("AJ"));
                 aje.setZjminsj((String)map.get("ZJMINSJ")==null ? "" : (String)map.get("ZJMINSJ"));
                 aje.setZjmaxsj((String)map.get("ZJMAXSJ")==null ? "" : (String)map.get("ZJMAXSJ"));
+                aje.setCftminsj(map.get("CFTMINSJ")==null ? "" : (String)map.get("CFTMINSJ"));
+                aje.setCftmaxsj(map.get("CFTMAXSJ")==null ? "" : (String)map.get("CFTMAXSJ"));
                 listAj.add(aje);
             }
         }
@@ -118,8 +120,9 @@ public class AJDao extends BaseDao<AjEntity>{
                     st.addBatch("delete bank_zzxx where aj_id="+ajid);
                     st.addBatch("delete bank_tjjg where aj_id="+ajid);
                     st.addBatch("delete bank_tjjgs where aj_id="+ajid);
-                    st.addBatch("delete rel_customer_aj where aj_id="+ajid);
-                    st.addBatch("delete rel_zjh_hm  where  (hmlx = 1 and hmly =1) or (hmlx = 4 and hmly =4) and aj_id="+ajid);
+//                    st.addBatch("delete rel_customer_aj where aj_id="+ajid);
+//                    st.addBatch("delete rel_zjh_hm  where  (hmlx = 1 and hmly =1) or (hmlx = 4 and hmly =4) and aj_id="+ajid);
+//                    st.addBatch("delete PERSON_RELATION  where  aj_id="+ajid);
                 }
                 if(a.equals("3")){
                     st.addBatch("DELETE wuliu where aj_id="+ajid);

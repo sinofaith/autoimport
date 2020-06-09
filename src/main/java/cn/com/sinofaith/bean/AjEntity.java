@@ -13,6 +13,11 @@ public class AjEntity {
     private long userId;
     private String zjminsj="";
     private String zjmaxsj="";
+    private String cftminsj="";
+    private String cftmaxsj="";
+    private String pinpai="";
+    private String createtime="";
+
     @Id
     @Column(name="id",nullable = false,precision = 0)
     public long getId() {
@@ -82,6 +87,43 @@ public class AjEntity {
     public void setZjmaxsj(String zjmaxsj) {
         this.zjmaxsj = zjmaxsj;
     }
+    @Basic
+    @Column(name="cftminsj",length = 19)
+    public String getCftminsj() {
+        return cftminsj;
+    }
+
+    public void setCftminsj(String cftminsj) {
+        this.cftminsj = cftminsj;
+    }
+    @Basic
+    @Column(name="cftmaxsj",length = 19)
+    public String getCftmaxsj() {
+        return cftmaxsj;
+    }
+
+    public void setCftmaxsj(String cftmaxsj) {
+        this.cftmaxsj = cftmaxsj;
+    }
+    @Basic
+    @Column(name = "pinpai")
+    public String getPinpai() {
+        return pinpai;
+    }
+
+    public void setPinpai(String pinpai) {
+        this.pinpai = pinpai;
+    }
+    @Basic
+    @Column(name = "createtime")
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
     @Override
     public String toString() {
         return "AjEntity{" +
@@ -91,10 +133,14 @@ public class AjEntity {
                 ", filter='" + filter + '\'' +
                 ", inserttime='" + inserttime + '\'' +
                 ", userId=" + userId +
+                ", zjminsj='" + zjminsj + '\'' +
+                ", zjmaxsj='" + zjmaxsj + '\'' +
+                ", cftminsj='" + cftminsj + '\'' +
+                ", cftmaxsj='" + cftmaxsj + '\'' +
                 '}';
     }
 
-    public AjEntity(long id, String aj, long flg, String filter, String inserttime, long userId, String zjminsj, String zjmaxsj) {
+    public AjEntity(long id, String aj, long flg, String filter, String inserttime, long userId, String zjminsj, String zjmaxsj, String cftminsj, String cftmaxsj, String pinpai, String createtime) {
         this.id = id;
         this.aj = aj;
         this.flg = flg;
@@ -103,6 +149,10 @@ public class AjEntity {
         this.userId = userId;
         this.zjminsj = zjminsj;
         this.zjmaxsj = zjmaxsj;
+        this.cftminsj = cftminsj;
+        this.cftmaxsj = cftmaxsj;
+        this.pinpai = pinpai;
+        this.createtime = createtime;
     }
 
     public AjEntity(){

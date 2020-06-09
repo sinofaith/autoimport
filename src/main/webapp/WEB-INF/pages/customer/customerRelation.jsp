@@ -194,7 +194,6 @@
                 </div>
                 <form id="seachDetail" action="<c:url value=""/>"  method="post" style="display: none;">
                 </form>
-    </ul>
             </div>
         </div>
     </ul>

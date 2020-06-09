@@ -13,6 +13,19 @@ function ajSkip(){
     }
 }
 
+function getBrandNameOnfocus() {
+    var e = jQuery.Event("keydown");//模拟一个键盘事件
+    e.keyCode = 8;//keyCode=8是空格
+    $("#pinpai").trigger(e);
+    $( "#pinpai" ).autocomplete({
+        source: "/SINOFAITH/aj/getBrandName",
+        minLength: 0,
+        select: function(e, ui) {
+            $(".pinpai").tooltip('destroy');
+        }
+    });
+}
+
 function editGrand() {
     var ajid = $("#ajid").val();
     var ul = $("#grand");
@@ -109,8 +122,14 @@ function getUser(id,ajm,username) {
 
 function addAj() {
     var aj = $("#aj").val();
+    var pinpai = $("#pinpai").val();
+    var createtime = $("#start_time").val();
     if(aj==''){
-        $(".txt").attr('title',"案件名不能为空").tooltip('show');
+        $(".aj").attr('title',"案件名不能为空").tooltip('show');
+        return
+    }
+    if(pinpai==''){
+        $(".pinpai").attr('title',"品牌不能为空").tooltip('show');
         return
     }
     $(".btn").attr("disabled","true")
@@ -118,6 +137,8 @@ function addAj() {
     // FormData 对象
     var form = new FormData();
     form.append("aj", aj); // 可以增加表单数据
+    form.append("pinpai", pinpai); // 可以增加表单数据
+    form.append("createtime", createtime); // 可以增加表单数据
     var xhr = new XMLHttpRequest();                // XMLHttpRequest 对象
     xhr.open("post", Controller, true);
     xhr.onload = function() {
@@ -127,7 +148,7 @@ function addAj() {
             setTimeout(function () {document.getElementById("seachDetail").submit()},1000);
         }
         if(xhr.responseText==303){
-            $(".txt").attr('title',"案件名重复").tooltip('show');
+            $("#aj").attr('title',"案件名重复").tooltip('show');
         }
         if(xhr.responseText==404){
             alertify.error("添加失败")
@@ -139,6 +160,18 @@ function addAj() {
 
 $(function () {
     alertify.set('notifier','position', 'top-center');
+
+    $('.form_date').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        startDate:new Date()
+    });
     $(".delete").click(function () {
         var label = $(this).next(":hidden").val();
         var flag = confirm("确定删除 "+label+" ?");
@@ -162,6 +195,8 @@ $(function () {
             })
         }
         return false;
+    });
+    $( "#brandname" ).autocomplete({
     });
 })
 

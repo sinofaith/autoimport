@@ -59,9 +59,16 @@ function insertTable1(data){
     if(selectValue == "cftTjjg"){
         columns.push({field:"jylx",title:"交易类型", sort: true});
         pushColumns(columns);
+
+        columns.push({field:"minsj",title:"最早交易时间", sort: true});
+        columns.push({field:"maxsj",title:"最晚交易时间", sort: true});
+        columns.push({field:"jgsj",title:"间隔天数", sort: true});
     }else if(selectValue == "cftTjjgs"){
         columns.push({ field: "dfzh", title: "对方账户", sort: true });
         pushColumns(columns);
+        columns.push({field:"minsj",title:"最早交易时间", sort: true});
+        columns.push({field:"maxsj",title:"最晚交易时间", sort: true});
+        columns.push({field:"jgsj",title:"间隔天数", sort: true});
     }else if(selectValue == "cftGtzh"){
         columns.push({ field: "dfzh", title: "对方账户", sort: true });
         columns.push({ field: "dfxm", title: "对方姓名", sort: true });

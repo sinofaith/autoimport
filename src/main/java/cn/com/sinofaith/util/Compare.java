@@ -81,6 +81,8 @@ public class Compare {
             }
         }
         System.out.println(name+"      "+result);
+
+        System.out.println(Long.parseLong("146628"));
     }
 }
 

@@ -271,8 +271,11 @@ public class CftZzxxEntity {
                 a.setJssj(null);
                 a.setJsje(new BigDecimal(0));
             }
+            if(null == a.getFsf()&&!a.getZh().equals(a.getJsf())){
+                a.setFsf(a.getZh());
+            }
         }catch (Exception e){
-            e.getMessage();
+            e.printStackTrace();
         }
         return a;
     }

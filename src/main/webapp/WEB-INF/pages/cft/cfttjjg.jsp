@@ -16,6 +16,11 @@
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/js/cftinfo.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
+
+
+<link href="<c:url value="/resources/css/bootstrap-datetimepicker.min.css"/>" rel="stylesheet" media="screen">
+<script src="<c:url value="/resources/js/bootstrap-datetimepicker.js"/> "></script>
+<script src="<c:url value="/resources/js/bootstrap-datetimepicker.zh-CN.js"/> "></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
@@ -99,7 +104,7 @@
                                 <input name="label" id="label" hidden="hidden">
                                 <table class="table  table-hover table_style table_list1 " style="border-left: 1px solid #ccc; border-right: 1px solid #ccc!important;">
                                     <tr>
-                                        <td colspan="10"  align="center" class="dropdown_index" style="background-color: #eee;">
+                                        <td colspan="13"  align="center" class="dropdown_index" style="background-color: #eee;">
                                             <div class="dropdown " style="color: #333">
                                                 <strong>财付通账户信息(${aj.aj})</strong>
                                             </div>
@@ -109,12 +114,15 @@
                                         <td width="7%">序号</td>
                                         <td width="7%"><a href="/SINOFAITH/cfttjjg/order?orderby=xm">姓名</a></td>
                                         <td width="8%">微信账户</td>
-                                        <td width="8%">交易类型</td>
-                                        <td width="9%"><a href="/SINOFAITH/cfttjjg/order?orderby=jyzcs">交易总次数</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/cfttjjg/order?orderby=jzzcs">进账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/cfttjjg/order?orderby=jzzje">进账总金额</a></td>
-                                        <td width="8%"><a href="/SINOFAITH/cfttjjg/order?orderby=czzcs">出账总次数</a></td>
-                                        <td width="10%"><a href="/SINOFAITH/cfttjjg/order?orderby=czzje">出账总金额</a></td>
+                                        <td width="12%">交易类型</td>
+                                        <td width="4%"><a href="/SINOFAITH/cfttjjg/order?orderby=jyzcs">交 易<br>总次数</a></td>
+                                        <td width="4%"><a href="/SINOFAITH/cfttjjg/order?orderby=jzzcs">进 账<br>总次数</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cfttjjg/order?orderby=jzzje">进 账<br>总金额</a></td>
+                                        <td width="4%"><a href="/SINOFAITH/cfttjjg/order?orderby=czzcs">出 账<br>总次数</a></td>
+                                        <td width="8%"><a href="/SINOFAITH/cfttjjg/order?orderby=czzje">出 账<br>总金额</a></td>
+                                        <td width="12%"><a href="/SINOFAITH/banktjjg/order?orderby=minsj">最早交易时间</a></td>
+                                        <td width="12%"><a href="/SINOFAITH/banktjjg/order?orderby=maxsj">最晚交易时间</a></td>
+                                        <td width="4%">间隔天数(天)</td>
                                         <td width="7%">详情</td>
                                     </tr>
                                         <c:forEach items="${detailinfo}" var="item" varStatus="st">
@@ -134,6 +142,9 @@
                                                 <td align="center"><fmt:formatNumber value="${item.jzzje}" pattern="#,##0"/></td>
                                                 <td align="center">${item.czzcs}</td>
                                                 <td align="center"><fmt:formatNumber value="${item.czzje}" pattern="#,##0"/></td>
+                                                <td align="center">${item.minsj}</td>
+                                                <td align="center">${item.maxsj}</td>
+                                                <td align="center">${item.jgsj}</td>
                                                 <td align="center">
                                                     <button  data-toggle="modal" class="btna" data-target="#myModal" onclick="getZzDetails(this)">详情</button>
                                                 </td>
@@ -185,7 +196,21 @@
                         <input type="checkbox" id="checkbox1" ${aj.flg==1? 'checked':''} value="1" onclick="ajCount('${aj.aj}')" />
                         <label for="checkbox1" style="padding-top: 8px;font-size: 12px;font-weight:bold">统计结果去除红包相关记录</label>
                         <div class=" ">
+                            <div class="form-group">
+                                <label for="loginTime" class="col-md-2 control-label" style="width: 25%">开始时间:</label>
+                                <div class="input-group date form_date col-md-5" data-link-field="loginTime" >
+                                    <input id="start_time" name="start_time"  size="16" type="text" value="${aj.cftminsj}" readonly placeholder="选择起始时间">
+                                </div>
+                                <label for="loginTime" class="col-md-2 control-label"style="width: 25%">结束时间:</label>
+                                <div class="input-group date form_date col-md-5" data-link-field="loginTime" >
+                                    <input id="end_time" name="end_time"  size="16" type="text" value="${aj.cftmaxsj}" readonly placeholder="选择结束时间">
+                                </div>
 
+                                <input type="hidden" id="loginTime" value="" />
+                                <button style="width: 26%;margin-right: 6px; margin-top: 2px;height: 25px;line-height: 25px" onclick="clearTime()" type="button" class="right_a_nav margin_none">清除时间</button>
+                                <button style="width: 47%; margin-top: 2px;height: 25px;line-height: 25px" type="button" class="right_a_nav margin_none" onclick="countBysj()">开始分析</button>
+
+                            </div>
                             <div>
                                 <form action="/SINOFAITH/cfttjjg/SeachCode" method="post">
                                     <div class="form-group_search  fl_l width100" >

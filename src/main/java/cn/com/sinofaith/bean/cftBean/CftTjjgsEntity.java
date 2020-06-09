@@ -22,6 +22,8 @@ public class CftTjjgsEntity implements Serializable {
     private long aj_id;
     private String inserttime;
     private long zhlx = 0;
+    private String minsj;
+    private String maxsj;
 
     @Basic
     @Column(name = "id",nullable = true,precision = 0)
@@ -120,6 +122,25 @@ public class CftTjjgsEntity implements Serializable {
 
     public void setZhlx(long zhlx) {
         this.zhlx = zhlx;
+    }
+
+    @Basic
+    @Column(name="minsj",nullable = true,length = 200)
+    public String getMinsj() {
+        return minsj;
+    }
+
+    public void setMinsj(String minsj) {
+        this.minsj = minsj;
+    }
+    @Basic
+    @Column(name="maxsj",nullable = true,length = 200)
+    public String getMaxsj() {
+        return maxsj;
+    }
+
+    public void setMaxsj(String maxsj) {
+        this.maxsj = maxsj;
     }
     @Override
     public String toString() {

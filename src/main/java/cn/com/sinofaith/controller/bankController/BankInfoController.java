@@ -7,6 +7,7 @@ import cn.com.sinofaith.service.bankServices.*;
 import com.google.gson.Gson;
 import com.itextpdf.text.Document;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -206,7 +207,7 @@ public class BankInfoController {
         search += " and (s.dsfzh =0 or s.dsfzh is null) order by c.jzzje desc,c.czzje desc";
         List bankTjjg = tjs.getbankTjjgAll(search);
         if(bankTjjg.size()>0){
-            HSSFWorkbook bankTjjgExcel = tjs.createExcel(bankTjjg);
+            XSSFWorkbook bankTjjgExcel = tjs.createExcel(bankTjjg);
             writerExcel(downPath, bankTjjgExcel,"账户统计信息("+aj.getAj()+")", listPath);
         }
         // 2.2 bankTjjgs
@@ -215,7 +216,7 @@ public class BankInfoController {
         search += " and (d.dsfzh = 0 or d.dsfzh is null) order by c.jzzje desc,c.czzje desc";
         List bankTjjgs = banktjss.getbankTjjgsAll(search);
         if(bankTjjgs.size()>0){
-            HSSFWorkbook bankTjjgsExcel = banktjss.createExcel(bankTjjgs,"点对点");
+            XSSFWorkbook bankTjjgsExcel = banktjss.createExcel(bankTjjgs,"点对点");
             writerExcel(downPath, bankTjjgsExcel,"账户点对点统计信息("+aj.getAj()+")", listPath);
         }
         // 2.3 bankGtzh
@@ -224,7 +225,7 @@ public class BankInfoController {
         search += " and (d.dsfzh = 0 or d.dsfzh is null) order by a.num desc";
         List bankGtzh = banktjss.getbankGtzhAll(search, aj);
         if(bankTjjgs.size()>0){
-            HSSFWorkbook bankGtzhExcel = banktjss.createExcel(bankGtzh,"共同");
+            XSSFWorkbook bankGtzhExcel = banktjss.createExcel(bankGtzh,"共同");
             writerExcel(downPath, bankGtzhExcel,"公共账户统计信息("+aj.getAj()+")", listPath);
         }
         // 3. 打包
@@ -274,18 +275,18 @@ public class BankInfoController {
         return search;
     }
 
-    public static void writerExcel(String downPath, HSSFWorkbook excel, String excelName, List<String> listPath){
+    public static void writerExcel(String downPath, XSSFWorkbook excel, String excelName, List<String> listPath){
         try {
             // 判断是否存在文件夹
             File uploadPathd = new File(downPath+"upload/temp/bank");
             if(!uploadPathd.exists()){
                 uploadPathd.mkdirs();
             }
-            FileOutputStream fos = new FileOutputStream(downPath+"upload/temp/bank/"+excelName+".xls");
+            FileOutputStream fos = new FileOutputStream(downPath+"upload/temp/bank/"+excelName+".xlsx");
             excel.write(fos);
             fos.flush();
             fos.close();
-            listPath.add(downPath+"upload/temp/bank/"+excelName+".xls");
+            listPath.add(downPath+"upload/temp/bank/"+excelName+".xlsx");
         } catch (Exception e) {
             e.printStackTrace();
         }

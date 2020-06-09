@@ -7,10 +7,7 @@ import cn.com.sinofaith.dao.AJDao;
 import cn.com.sinofaith.dao.bankDao.*;
 import cn.com.sinofaith.form.bankForm.BankZzxxForm;
 import cn.com.sinofaith.page.Page;
-import cn.com.sinofaith.util.ExcelReader;
-import cn.com.sinofaith.util.GetBank;
-import cn.com.sinofaith.util.MappingUtils;
-import cn.com.sinofaith.util.TimeFormatUtil;
+import cn.com.sinofaith.util.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.monitorjbl.xlsx.StreamingReader;
@@ -21,6 +18,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -132,9 +130,9 @@ public class BankZzxxServices {
         sql.append("FROM  bank_zzxx c left join bank_person s on c.yhkkh=s.yhkkh ");
         sql.append("left join bank_person d on c.dskh=d.yhkkh  where 1=1 " + seach );
         List listZzxx = bankzzd.findBySQL(sql.toString());
-        HSSFWorkbook wb = createExcel(listZzxx);
+        XSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡转账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡交易明细(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -155,25 +153,27 @@ public class BankZzxxServices {
         sql.append("   left join bank_person d on c.dskh = d.yhkkh ");
         sql.append(" where su=1 "+order);
         List listZzxx = bankzzd.findBySQL(sql.toString());
-        HSSFWorkbook wb = createExcel(listZzxx);
+        XSSFWorkbook wb = createExcel(listZzxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡转账信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-disposition","attachment;filename="+new String(("银行卡交易明细(\""+aj+").xls").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
         op.close();
     }
 
-    public HSSFWorkbook createExcel(List listZzxx)throws Exception{
-        HSSFWorkbook wb = new HSSFWorkbook();
+    public XSSFWorkbook createExcel(List listZzxx)throws Exception{
+        XSSFWorkbook wb = new XSSFWorkbook();
         Cell cell = null;
         int b = 1;
-        Sheet sheet = wb.createSheet("银行卡转账信息");
-        Row row = createRow(sheet);
+        Sheet sheet = wb.createSheet("银行卡交易明细");
+        String[] title = {"序号","交易卡号","交易户名","交易时间","交易金额","交易余额","收付标志","对手卡号"
+                ,"对手户名","摘要说明","交易发生地","交易网点名称","备注"};
+        Row row = Excel2007Export.createRow(sheet,title);
         for (int i = 0; i<listZzxx.size(); i++) {
             if(i>=65535&& i%65535==0){
-                sheet = wb.createSheet("银行卡转账信息("+b+")");
-                row = createRow(sheet);
+                sheet = wb.createSheet("银行卡交易明细("+b+")");
+                row = Excel2007Export.createRow(sheet,title);
                 b+=1;
             }
             Map map = (Map) listZzxx.get(i);
@@ -579,14 +579,14 @@ public class BankZzxxServices {
     public List<Map> count(List<BankZzxxEntity> listZzxx,long aj,List<Map> list,List<BankZcxxEntity> listZcxx,Set<String> zczh){
         Map<String,BankTjjgEntity> mapTjjg = list.get(0);
         Map<String,BankTjjgsEntity> mapTjjgs = list.get(1);
-        Map<Integer,BankZzxxEntity> listHash = list.get(2);
+        Map<String,BankZzxxEntity> listHash = list.get(2);
         BankZzxxEntity zzxx = null;
         BankTjjgEntity tjjg = null;
         BankTjjgsEntity tjjgs = null;
 
         for(int i=0;i<listZzxx.size();i++){
             zzxx = listZzxx.get(i);
-            if(listHash.containsKey(zzxx.hashCode())){
+            if(listHash.containsKey(zzxx.getHash(zzxx))){
                 continue;
             }
             if ("出".equals(zzxx.getSfbz())) {
@@ -595,6 +595,13 @@ public class BankZzxxServices {
                     tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                     tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                     tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                    if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                            tjjg.setMinsj(zzxx.getJysj());
+                        }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                            tjjg.setMaxsj(zzxx.getJysj());
+                        }
+                    }
                     if(tjjg.getKhh()==null){
                         tjjg.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
                     }
@@ -605,8 +612,12 @@ public class BankZzxxServices {
                     tj1.setCzzcs(new BigDecimal(1));
                     tj1.setCzzje(zzxx.getJyje());
                     tj1.setAj_id(aj);
-                    if(tj1.getKhh()==null){
+                    if (tj1.getKhh() == null) {
                         tj1.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                    }
+                    if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                        tj1.setMinsj(zzxx.getJysj());
+                        tj1.setMaxsj(zzxx.getJysj());
                     }
                     mapTjjg.put(zzxx.getYhkkh(), tj1);
                 }
@@ -616,6 +627,13 @@ public class BankZzxxServices {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                         tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                         if(tjjg.getKhh()==null){
                             tjjg.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
                         }
@@ -628,6 +646,10 @@ public class BankZzxxServices {
                         tj1.setAj_id(aj);
                         if(tj1.getKhh()==null){
                             tj1.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
+                        }
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            tj1.setMinsj(zzxx.getJysj());
+                            tj1.setMaxsj(zzxx.getJysj());
                         }
                         mapTjjg.put(zzxx.getDskh(), tj1);
                     }
@@ -679,6 +701,13 @@ public class BankZzxxServices {
                     if(tjjg.getKhh()==null){
                         tjjg.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
                     }
+                    if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                            tjjg.setMinsj(zzxx.getJysj());
+                        }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                            tjjg.setMaxsj(zzxx.getJysj());
+                        }
+                    }
                 } else {
                     BankTjjgEntity tj2 = new BankTjjgEntity();
                     tj2.setJyzh(zzxx.getYhkkh());
@@ -688,6 +717,10 @@ public class BankZzxxServices {
                     tj2.setAj_id(aj);
                     if(tj2.getKhh()==null) {
                         tj2.setKhh(GetBank.getBankname(zzxx.getYhkkh()).split("·")[0]);
+                    }
+                    if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                        tj2.setMinsj(zzxx.getJysj());
+                        tj2.setMaxsj(zzxx.getJysj());
                     }
                     mapTjjg.put(zzxx.getYhkkh(), tj2);
                 }
@@ -700,6 +733,13 @@ public class BankZzxxServices {
                         if(tjjg.getKhh()==null){
                             tjjg.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0],zzxx.getDskhh()));
                         }
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         BankTjjgEntity tj2 = new BankTjjgEntity();
                         tj2.setJyzh(zzxx.getDskh());
@@ -709,6 +749,10 @@ public class BankZzxxServices {
                         tj2.setAj_id(aj);
                         if(tj2.getKhh()==null) {
                             tj2.setKhh(bankName(GetBank.getBankname(zzxx.getDskh()).split("·")[0], zzxx.getDskhh()));
+                        }
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj2.setMinsj(zzxx.getJysj());
+                            tj2.setMaxsj(zzxx.getJysj());
                         }
                         mapTjjg.put(zzxx.getDskh(), tj2);
                     }
@@ -749,7 +793,7 @@ public class BankZzxxServices {
                     mapTjjgs.put(temp, tjs2);
                 }
             }
-            listHash.put(zzxx.hashCode(),null);
+            listHash.put(zzxx.getHash(zzxx),null);
         }
         list.clear();
         list.add(mapTjjg);

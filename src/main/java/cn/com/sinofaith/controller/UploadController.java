@@ -131,8 +131,13 @@ public class UploadController {
                 if(checkBox==1){
                     seach=" and shmc not like '%红包%'";
                 }
+                if(aje.getCftminsj().length()>1){
+                    seach += " and jysj >= '"+aje.getCftminsj()+"'";
+                }
+                if(aje.getCftmaxsj().length()>1){
+                    seach+=" and jysj <= '"+aje.getCftmaxsj()+"'";
+                }
                 zzs.countTjjgAndTjjgs(aje.getId(),seach);
-//                zzs.countTjjgAndTjjgs(aje.getId(),seach);
             }
         }
 
@@ -210,9 +215,14 @@ public class UploadController {
         File uploadPathd = new File(path);
         zzs.deleteFile(uploadPathd);
         // 统计数据
-        List<CftZzxxEntity> listZzxx = zzs.getAll(aj.getId(),aj.getFlg());
-        tjs.count(listZzxx,aj.getId());
-        tjss.count(listZzxx,aj.getId());
+        String seach = " and shmc not like '%红包%' ";
+        if(aj.getCftminsj().length()>1){
+            seach += " and jysj >= '"+aj.getCftminsj()+"'";
+        }
+        if(aj.getCftmaxsj().length()>1){
+            seach+=" and jysj <= '"+aj.getCftmaxsj()+"'";
+        }
+        zzs.countTjjgAndTjjgs(aj.getId(),seach);
         if(sum>0){
             return "200";
         } else {
@@ -280,7 +290,14 @@ public class UploadController {
 //        listZzxx = new ArrayList<>(setB);
 //        int count1 = btjs.count(listZzxx, aj.getId(), bankZcxxList);
 //        int count2 = btjss.count(listZzxx,aj.getId());
-        bzs.countTjjgAndTjjgs(aj.getId(),bankZcxxList,"");
+        String sql = "";
+        if(aj.getZjminsj().length()>1){
+            sql += " and jysj >= '"+aj.getZjminsj()+"' ";
+        }
+        if(aj.getZjminsj().length()>1){
+            sql+=" and jysj <= '"+aj.getZjmaxsj()+"' ";
+        }
+        bzs.countTjjgAndTjjgs(aj.getId(),bankZcxxList,sql);
         bankZcxxList.clear();
         // 删除文件
         File uploadPathd = new File(path);
@@ -335,7 +352,14 @@ public class UploadController {
 //            setB = null;
 //            btjs.count(listZzxx,aje.getId(),listzcxx);
 //            btjss.count(listZzxx,aje.getId());
-            bzs.countTjjgAndTjjgs(aje.getId(),listzcxx,"");
+            String sql = "";
+            if(aje.getZjminsj().length()>1){
+                sql += " and jysj >= '"+aje.getZjminsj()+"' ";
+            }
+            if(aje.getZjminsj().length()>1){
+                sql+=" and jysj <= '"+aje.getZjmaxsj()+"' ";
+            }
+            bzs.countTjjgAndTjjgs(aje.getId(),listzcxx,sql);
             listzcxx.clear();
         }
 

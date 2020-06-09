@@ -6,6 +6,7 @@ import cn.com.sinofaith.bean.cftBean.CftZzxxEntity;
 import cn.com.sinofaith.dao.cftDao.CftTjjgsDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -53,6 +54,9 @@ public class CftTjjgsService {
                 cftForm.setCzzje( new BigDecimal(map.get("CZZJE").toString()));
                 cftForm.setZhlx( new BigDecimal(map.get("ZHLX").toString()).longValue());
                 cftForm.setDfxm((String) map.get("DFXM"));
+                cftForm.setMinsj((String) map.get("MINSJ"));
+                cftForm.setMaxsj((String) map.get("MAXSJ"));
+                cftForm.setJgsj(TimeFormatUtil.sjjg(cftForm.getMaxsj(),cftForm.getMinsj()));
                 cfttjs.add(cftForm);
                 xh++;
             }
@@ -131,11 +135,11 @@ public class CftTjjgsService {
         }
         if(orderby!=null){
             if("xm".equals(orderby)){
-                seach.append(" order by s." + orderby + desc + " nulls last ,c.jyzcs desc,c.dfzh");
+                seach.append(" order by s." + orderby + desc + " nulls last ,c.jyzcs desc,c.dfzh,c.id");
             }else if("num".equals(orderby)){
-              seach.append(" order by a." + orderby + desc + ",c.dfzh,c.jyzh");
+              seach.append(" order by a." + orderby + desc + " ,c.dfzh,c.jyzh,c.id");
             } else{
-                seach.append( " order by c." +orderby + desc);
+                seach.append( " order by c." +orderby + desc+" ,c.id");
             }
         }
         return seach.toString();
@@ -273,6 +277,12 @@ public class CftTjjgsService {
             cell.setCellValue("出账总次数");
             cell = row.createCell(9);
             cell.setCellValue("出账总金额(元)");
+            cell = row.createCell(10);
+            cell.setCellValue("最早交易时间");
+            cell = row.createCell(11);
+            cell.setCellValue("最晚交易时间");
+            cell = row.createCell(12);
+            cell.setCellValue("间隔天数");
         }else{
             cell.setCellValue("序号");
             cell = row.createCell(1);
@@ -325,6 +335,12 @@ public class CftTjjgsService {
                     cell.setCellValue("出账总次数");
                     cell = row.createCell(9);
                     cell.setCellValue("出账总金额(元)");
+                    cell = row.createCell(10);
+                    cell.setCellValue("最早交易时间");
+                    cell = row.createCell(11);
+                    cell.setCellValue("最晚交易时间");
+                    cell = row.createCell(12);
+                    cell.setCellValue("间隔天数");
                     for (int a = 0; a < 12; a++) {
                         sheet.autoSizeColumn(a);
                     }
@@ -351,6 +367,7 @@ public class CftTjjgsService {
                     cell.setCellValue("出账总次数");
                     cell = row.createCell(10);
                     cell.setCellValue("出账总金额(元)");
+                    cell.setCellValue("间隔天数");
                     for (int a = 0; a < 12; a++) {
                         sheet.autoSizeColumn(a);
                     }
@@ -380,6 +397,12 @@ public class CftTjjgsService {
                 cell.setCellValue(map.get("CZZCS").toString());
                 cell = row.createCell(9);
                 cell.setCellValue(map.get("CZZJE").toString());
+                cell = row.createCell(10);
+                cell.setCellValue(map.get("MINSJ").toString());
+                cell = row.createCell(11);
+                cell.setCellValue(map.get("MAXSJ").toString());
+                cell = row.createCell(12);
+                cell.setCellValue(TimeFormatUtil.sjjg(map.get("MAXSJ").toString(),map.get("MINSJ").toString()));
             }else{
                 cell = row.createCell(1);
                 cell.setCellValue((String)map.get("XM"));

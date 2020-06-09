@@ -12,12 +12,12 @@ public class BankCustomerEntity {
     private String name;
     private String zjlx; //证件类型
     private String zjhm; //证件号码
-    private String xzz_xzqh; //现住址_行政区划
+    private String xzz_xzqh=""; //现住址_行政区划
     private String dwdz; //单位地址
-    private String lxdh; //联系电话
-    private String lxsj; //联系手机
-    private String dwdh; //单位电话
-    private String zzdh; //住宅电话
+    private String lxdh=""; //联系电话
+    private String lxsj=""; //联系手机
+    private String dwdh=""; //单位电话
+    private String zzdh=""; //住宅电话
     private String gzdw; //工作单位
     private String email; //电子邮箱
     private String inserttime;
@@ -205,12 +205,20 @@ public class BankCustomerEntity {
         c.setName(list.get(title.get("name")).trim().replace(" ",""));
         c.setZjlx(list.get(title.get("zjlx")).trim().replace("居民",""));
         c.setZjhm(list.get(title.get("zjhm")).trim());
-        c.setXzz_xzqh(DBCSBC.ToDBC(list.get(title.get("xzz")).trim()));
+        if(title.get("xzz")!=null) {
+            c.setXzz_xzqh(DBCSBC.ToDBC(list.get(title.get("xzz"))).trim());
+        }
         c.setDwdz(DBCSBC.ToDBC(list.get(title.get("dwdz")).trim()));
-        c.setLxdh(list.get(title.get("lxdh")).trim().replace("+86","").replace("-",""));
-        c.setLxsj(list.get(title.get("lxsj")).trim().replace("+86","").replace("-",""));
+        if(title.get("lxdh")!=null) {
+            c.setLxdh(list.get(title.get("lxdh")).trim().replace("+86", "").replace("-", ""));
+        }
+        if(title.get("lxsj")!=null) {
+            c.setLxsj(list.get(title.get("lxsj")).trim().replace("+86", "").replace("-", ""));
+        }
         c.setDwdh(list.get(title.get("dwdh")).trim().replace("+86","").replace("-",""));
-        c.setZzdh(list.get(title.get("zzdh")).trim().replace("+86","").replace("-",""));
+        if(title.get("zzdh")!=null) {
+            c.setZzdh(list.get(title.get("zzdh")).trim().replace("+86", "").replace("-", ""));
+        }
         c.setGzdw(list.get(title.get("gzdw")).trim().replace("+86","").replace("-",""));
         c.setEmail(list.get(title.get("email")).trim());
         return c;

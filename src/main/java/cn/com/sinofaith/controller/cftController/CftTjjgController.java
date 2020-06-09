@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
+
 import static java.lang.Integer.parseInt;
 
 /**
@@ -129,4 +131,31 @@ public class CftTjjgController {
         cfttjs.downloadFile(seach, rep,aj!=null?aj.getAj():"");
     }
 
+    @RequestMapping("/countcftBysj")
+    @ResponseBody
+    public String countBysj(String minsj,String maxsj,HttpServletRequest req){
+        AjEntity aj = (AjEntity) req.getSession().getAttribute("aj");
+        if(minsj.equals(aj.getCftminsj())&&maxsj.equals(aj.getCftmaxsj())){
+            return "201";
+        }
+        int count = zzs.getAllBysj(aj.getId(),minsj,maxsj);
+        if(count==0){
+            return "202";
+        }
+        String sql = "";
+        if(minsj.length()>1){
+            sql += " and jysj >= '"+minsj+"'";
+        }
+        if(maxsj.length()>1){
+            sql+=" and jysj <= '"+maxsj+"'";
+        }
+        if(aj.getFlg()==1){
+            sql+="  and shmc not like '%红包%' ";
+        }
+        zzs.countTjjgAndTjjgs(aj.getId(),sql);
+        aj.setCftminsj(minsj);
+        aj.setCftmaxsj(maxsj);
+        ajs.updateAj(aj);
+        return "200";
+    }
 }

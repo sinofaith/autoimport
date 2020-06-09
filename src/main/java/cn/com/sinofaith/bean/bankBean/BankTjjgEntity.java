@@ -18,6 +18,8 @@ public class BankTjjgEntity {
     private long zhlx;
     private String zhlb;
     private String khh;
+    private String minsj;
+    private String maxsj;
 
     @Basic
     @Column(name = "id", nullable = true, precision = 0)
@@ -136,6 +138,24 @@ public class BankTjjgEntity {
         this.khh = khh;
     }
 
+    @Basic
+    @Column(name="minsj",nullable = true,length = 200)
+    public String getMinsj() {
+        return minsj;
+    }
+
+    public void setMinsj(String minsj) {
+        this.minsj = minsj;
+    }
+    @Basic
+    @Column(name="maxsj",nullable = true,length = 200)
+    public String getMaxsj() {
+        return maxsj;
+    }
+
+    public void setMaxsj(String maxsj) {
+        this.maxsj = maxsj;
+    }
     @Override
     public String toString() {
         return "BankTjjgEntity{" +

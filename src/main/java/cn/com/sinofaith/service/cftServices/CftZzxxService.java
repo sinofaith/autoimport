@@ -12,6 +12,7 @@ import cn.com.sinofaith.dao.cftDao.CftZzxxDao;
 import cn.com.sinofaith.form.cftForm.CftZzxxForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.MappingUtils;
+import cn.com.sinofaith.util.TimeFormatUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.monitorjbl.xlsx.StreamingReader;
@@ -246,6 +247,12 @@ public class CftZzxxService {
             if(zh.equals(jylx)){
                 seach = "and c.fsf = c.jsf and c.zh='"+zh+"' ";
             }
+        }
+        if(aj.getCftminsj().length()>1){
+            seach+=" and c.jysj >= '"+aj.getCftminsj()+"' ";
+        }
+        if(aj.getCftmaxsj().length()>1){
+            seach+=" and c.jysj <= '"+aj.getCftmaxsj()+"' ";
         }
         if(aj.getFlg()==1){
             seach +=" and c.shmc not like'%红包%'";
@@ -659,6 +666,13 @@ public class CftZzxxService {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                         tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjg.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(tjjg.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgEntity tj1 = new CftTjjgEntity();
                         tj1.setJyzh(zzxx.getZh());
@@ -667,6 +681,10 @@ public class CftZzxxService {
                         tj1.setCzzcs(new BigDecimal(1));
                         tj1.setCzzje(zzxx.getJyje());
                         tj1.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj1.setMinsj(zzxx.getJysj());
+                            tj1.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjg.put(zzxx.getZh() + zzxx.getJylx(), tj1);
                     }
                 }
@@ -677,6 +695,13 @@ public class CftZzxxService {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                         tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjg.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(tjjg.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgEntity tj1 = new CftTjjgEntity();
                         tj1.setJyzh(zzxx.getZh());
@@ -685,6 +710,10 @@ public class CftZzxxService {
                         tj1.setCzzcs(new BigDecimal(1));
                         tj1.setCzzje(zzxx.getJyje());
                         tj1.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj1.setMinsj(zzxx.getJysj());
+                            tj1.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjg.put(zzxx.getZh() + "转帐(有对手账户)", tj1);
                     }
 
@@ -693,6 +722,13 @@ public class CftZzxxService {
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzcs(tjjgs.getCzzcs().add(new BigDecimal(1)));
                         tjjgs.setCzzje(tjjgs.getCzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjgs.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMinsj()))==-1){
+                                tjjgs.setMinsj(zzxx.getJysj());
+                            }else if(tjjgs.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMaxsj()))==1){
+                                tjjgs.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgsEntity tjs1 = new CftTjjgsEntity();
                         tjs1.setJyzh(zzxx.getZh());
@@ -701,6 +737,10 @@ public class CftZzxxService {
                         tjs1.setCzzcs(new BigDecimal(1));
                         tjs1.setCzzje(zzxx.getJyje());
                         tjs1.setAj_id(aj);
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            tjs1.setMinsj(zzxx.getJysj());
+                            tjs1.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjgs.put(zzxx.getZh() + zzxx.getJsf(), tjs1);
                     }
                 }else {
@@ -709,6 +749,13 @@ public class CftZzxxService {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setCzzcs(tjjg.getCzzcs().add(new BigDecimal(1)));
                         tjjg.setCzzje(tjjg.getCzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjg.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(tjjg.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgEntity tj1 = new CftTjjgEntity();
                         tj1.setJyzh(zzxx.getZh());
@@ -717,6 +764,10 @@ public class CftZzxxService {
                         tj1.setCzzcs(new BigDecimal(1));
                         tj1.setCzzje(zzxx.getJyje());
                         tj1.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj1.setMinsj(zzxx.getJysj());
+                            tj1.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjg.put(zzxx.getZh() + "转帐(无对手账户)", tj1);
                     }
                 }
@@ -729,6 +780,13 @@ public class CftZzxxService {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                         tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjg.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(tjjg.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgEntity tj2 = new CftTjjgEntity();
                         tj2.setJyzh(zzxx.getZh());
@@ -737,6 +795,10 @@ public class CftZzxxService {
                         tj2.setJzzcs(new BigDecimal(1));
                         tj2.setJzzje(zzxx.getJyje());
                         tj2.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj2.setMinsj(zzxx.getJysj());
+                            tj2.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjg.put(zzxx.getZh() + zzxx.getJylx(), tj2);
                     }
                 }
@@ -747,6 +809,13 @@ public class CftZzxxService {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                         tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjg.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(tjjg.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgEntity tj2 = new CftTjjgEntity();
                         tj2.setJyzh(zzxx.getZh());
@@ -755,6 +824,10 @@ public class CftZzxxService {
                         tj2.setJzzcs(new BigDecimal(1));
                         tj2.setJzzje(zzxx.getJyje());
                         tj2.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj2.setMinsj(zzxx.getJysj());
+                            tj2.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjg.put(zzxx.getZh() + "转帐(有对手账户)", tj2);
                     }
 
@@ -763,6 +836,13 @@ public class CftZzxxService {
                         tjjgs.setJyzcs(tjjgs.getJyzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzcs(tjjgs.getJzzcs().add(new BigDecimal(1)));
                         tjjgs.setJzzje(tjjgs.getJzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjgs.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMinsj()))==-1){
+                                tjjgs.setMinsj(zzxx.getJysj());
+                            }else if(tjjgs.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjgs.getMaxsj()))==1){
+                                tjjgs.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgsEntity tjs2 = new CftTjjgsEntity();
                         tjs2.setJyzh(zzxx.getZh());
@@ -771,6 +851,10 @@ public class CftZzxxService {
                         tjs2.setJzzcs(new BigDecimal(1));
                         tjs2.setJzzje(zzxx.getJyje());
                         tjs2.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tjs2.setMinsj(zzxx.getJysj());
+                            tjs2.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjgs.put(zzxx.getZh() + zzxx.getFsf(), tjs2);
                     }
                 }else {
@@ -779,6 +863,13 @@ public class CftZzxxService {
                         tjjg.setJyzcs(tjjg.getJyzcs().add(new BigDecimal(1)));
                         tjjg.setJzzcs(tjjg.getJzzcs().add(new BigDecimal(1)));
                         tjjg.setJzzje(tjjg.getJzzje().add(zzxx.getJyje()));
+                        if(TimeFormatUtil.DateFormat(zzxx.getJysj())!=null){
+                            if(tjjg.getMinsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMinsj()))==-1){
+                                tjjg.setMinsj(zzxx.getJysj());
+                            }else if(tjjg.getMaxsj()!=null&&TimeFormatUtil.DateFormat(zzxx.getJysj()).compareTo(TimeFormatUtil.DateFormat(tjjg.getMaxsj()))==1){
+                                tjjg.setMaxsj(zzxx.getJysj());
+                            }
+                        }
                     } else {
                         CftTjjgEntity tj1 = new CftTjjgEntity();
                         tj1.setJyzh(zzxx.getZh());
@@ -787,6 +878,10 @@ public class CftZzxxService {
                         tj1.setJzzcs(new BigDecimal(1));
                         tj1.setJzzje(zzxx.getJyje());
                         tj1.setAj_id(aj);
+                        if (TimeFormatUtil.DateFormat(zzxx.getJysj()) != null) {
+                            tj1.setMinsj(zzxx.getJysj());
+                            tj1.setMaxsj(zzxx.getJysj());
+                        }
                         mapTjjg.put(zzxx.getZh() + "转帐(无对手账户)", tj1);
                     }
                 }
@@ -796,5 +891,18 @@ public class CftZzxxService {
         list.add(mapTjjg);
         list.add(mapTjjgs);
         return list;
+    }
+
+    public int getAllBysj(long aj_id,String minsj,String maxsj){
+        String sql = "";
+        if(minsj.length()>1){
+            sql += " and jysj > '"+minsj+"'";
+        }
+        if(maxsj.length()>1){
+            sql+=" and jysj < '"+maxsj+"'";
+        }
+        List zz = cfttjd.findBySQL(" select to_char(count(1)) num from cft_zzxx where aj_id =  "+aj_id+sql);
+        Map map = (Map) zz.get(0);
+        return Integer.parseInt((String)map.get("NUM"));
     }
 }

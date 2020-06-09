@@ -64,10 +64,16 @@ function insertTable1(data){
     if(selectValue == "bankTjjg"){
         pushColumns(columns);
         columns.push({field:"zhlb",title:"账户类别", sort: true});
+        columns.push({field:"minsj",title:"最早交易时间", sort: true});
+        columns.push({field:"maxsj",title:"最晚交易时间", sort: true});
+        columns.push({field:"jgsj",title:"间隔天数", sort: true});
     }else if(selectValue == "bankTjjgs"){
         columns.push({ field: "dfzh", title: "对方卡号", sort: true });
         columns.push({ field: "dfxm", title: "对方户名", sort: true });
         pushColumns(columns);
+        columns.push({field:"minsj",title:"最早交易时间", sort: true});
+        columns.push({field:"maxsj",title:"最晚交易时间", sort: true});
+        columns.push({field:"jgsj",title:"间隔天数", sort: true});
     }else if(selectValue == "bankGtzh"){
         columns.push({ field: "dfzh", title: "对方卡号", sort: true });
         columns.push({ field: "dfxm", title: "对方姓名", sort: true });

@@ -16,6 +16,8 @@ public class AjForm {
     private String inserttime;
     private long userId;
     private String ry;
+    private String pinpai;
+    private String createtime;
 
     public String getWuliunum() {
         return wuliunum;
@@ -113,6 +115,22 @@ public class AjForm {
         this.ry = ry;
     }
 
+    public String getPinpai() {
+        return pinpai;
+    }
+
+    public void setPinpai(String pinpai) {
+        this.pinpai = pinpai;
+    }
+
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
     public AjForm mapToForm(Map map){
         AjForm af = new AjForm();
         af.setId((BigDecimal)map.get("ID"));
@@ -125,6 +143,9 @@ public class AjForm {
         af.setInserttime((String)map.get("INSERTTIME"));
         af.setUserId(Long.parseLong(map.get("USERID").toString()));
         af.setRy(map.get("RY")!=null ? (String) map.get("RY"):"0");
+        af.setPinpai((String)map.get("PINPAI"));
+        af.setCreatetime((String)map.get("CREATETIME"));
+
         return af;
     }
 }

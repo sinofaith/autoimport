@@ -10,11 +10,13 @@ import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.dao.customerDao.PersonRelationDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.Excel2007Export;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -344,10 +346,10 @@ public class BankTjjgsService {
                     " left join bank_person d on c.dfzh = d.yhkkh  where 1=1 "+seach);
         }
 
-        HSSFWorkbook wb = createExcel(listTjjg,lx);
+        XSSFWorkbook wb = createExcel(listTjjg,lx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+
-                new String(("银行卡"+lx+"账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+                new String(("银行卡"+lx+"账户信息(\""+aj+").xlsx").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
@@ -355,56 +357,22 @@ public class BankTjjgsService {
     }
 
 
-    public HSSFWorkbook createExcel(List listTjjg,String lx){
-        HSSFWorkbook wb = new HSSFWorkbook();
+    public XSSFWorkbook createExcel(List listTjjg, String lx){
+        XSSFWorkbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet("银行卡"+lx+"账户信息");
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
+        String[] title = {"序号","姓名","交易卡号","对手卡号","对手姓名","交易总次数","进账总次数","进账总金额",
+                "出账总次数","出账总金额","最早交易时间","最晚交易时间","时间间隔"};
+        String[] title1 = {"序号","姓名","交易卡号","对手卡号","对手姓名","共同联系人数",
+                "交易总次数","进账总次数","进账总金额", "出账总次数","出账总金额"};
+        Row row ;
+        Cell cell ;
         if(!"共同".equals(lx)) {
-            cell.setCellValue("序号");
-            cell = row.createCell(1);
-            cell.setCellValue("姓名");
-            cell = row.createCell(2);
-            cell.setCellValue("交易卡号");
-            cell = row.createCell(3);
-            cell.setCellValue("对手卡号");
-            cell = row.createCell(4);
-            cell.setCellValue("对手姓名");
-            cell = row.createCell(5);
-            cell.setCellValue("交易总次数");
-            cell = row.createCell(6);
-            cell.setCellValue("进账总次数");
-            cell = row.createCell(7);
-            cell.setCellValue("进账总金额(元)");
-            cell = row.createCell(8);
-            cell.setCellValue("出账总次数");
-            cell = row.createCell(9);
-            cell.setCellValue("出账总金额(元)");
+            row = Excel2007Export.createRow(sheet,title);
             for (int a = 0; a < 11; a++) {
                 sheet.autoSizeColumn(a);
             }
         }else{
-            cell.setCellValue("序号");
-            cell = row.createCell(1);
-            cell.setCellValue("姓名");
-            cell = row.createCell(2);
-            cell.setCellValue("交易卡号");
-            cell = row.createCell(3);
-            cell.setCellValue("对手卡号");
-            cell = row.createCell(4);
-            cell.setCellValue("对手姓名");
-            cell = row.createCell(5);
-            cell.setCellValue("共同联系人数");
-            cell = row.createCell(6);
-            cell.setCellValue("交易总次数");
-            cell = row.createCell(7);
-            cell.setCellValue("进账总次数");
-            cell = row.createCell(8);
-            cell.setCellValue("进账总金额(元)");
-            cell = row.createCell(9);
-            cell.setCellValue("出账总次数");
-            cell = row.createCell(10);
-            cell.setCellValue("出账总金额(元)");
+            row = Excel2007Export.createRow(sheet,title1);
             for (int a = 0; a < 12; a++) {
                 sheet.autoSizeColumn(a);
             }
@@ -416,48 +384,10 @@ public class BankTjjgsService {
                 row = sheet.createRow(0);
                 cell = row.createCell(0);
                 if(!"共同".equals(lx)) {
-                    cell.setCellValue("序号");
-                    cell = row.createCell(1);
-                    cell.setCellValue("姓名");
-                    cell = row.createCell(2);
-                    cell.setCellValue("交易卡号");
-                    cell = row.createCell(3);
-                    cell.setCellValue("对手卡号");
-                    cell = row.createCell(4);
-                    cell.setCellValue("对手姓名");
-                    cell = row.createCell(5);
-                    cell.setCellValue("交易总次数");
-                    cell = row.createCell(6);
-                    cell.setCellValue("进账总次数");
-                    cell = row.createCell(7);
-                    cell.setCellValue("进账总金额(元)");
-                    cell = row.createCell(8);
-                    cell.setCellValue("出账总次数");
-                    cell = row.createCell(9);
-                    cell.setCellValue("出账总金额(元)");
+                    row = Excel2007Export.createRow(sheet,title);
                     b += 1;
                 }else{
-                    cell.setCellValue("序号");
-                    cell = row.createCell(1);
-                    cell.setCellValue("姓名");
-                    cell = row.createCell(2);
-                    cell.setCellValue("交易卡号");
-                    cell = row.createCell(3);
-                    cell.setCellValue("对手卡号");
-                    cell = row.createCell(4);
-                    cell.setCellValue("对手姓名");
-                    cell = row.createCell(5);
-                    cell.setCellValue("共同联系人数");
-                    cell = row.createCell(6);
-                    cell.setCellValue("交易总次数");
-                    cell = row.createCell(7);
-                    cell.setCellValue("进账总次数");
-                    cell = row.createCell(8);
-                    cell.setCellValue("进账总金额(元)");
-                    cell = row.createCell(9);
-                    cell.setCellValue("出账总次数");
-                    cell = row.createCell(10);
-                    cell.setCellValue("出账总金额(元)");
+                    row = Excel2007Export.createRow(sheet,title);
                     b += 1;
                 }
             }
@@ -490,6 +420,12 @@ public class BankTjjgsService {
                 cell.setCellValue(map.get("CZZCS").toString());
                 cell = row.createCell(9);
                 cell.setCellValue(map.get("CZZJE").toString());
+                cell = row.createCell(10);
+                cell.setCellValue((String)map.get("MINSJ"));
+                cell = row.createCell(11);
+                cell.setCellValue((String)map.get("MAXSJ"));
+                cell = row.createCell(12);
+                cell.setCellValue(TimeFormatUtil.sjjg((String)map.get("MAXSJ").toString(),(String) map.get("MINSJ")));
                 if (i % 65536 == 0) {
                     for (int a = 0; a < 11; a++) {
                         sheet.autoSizeColumn(a);

@@ -209,13 +209,17 @@ public class ZfbZhmxTjjgController {
         if(seachCode!=null) {
             seachCode = seachCode.replace("\r\n", "").replace("，", "").replace(" ", "").replace(" ", "").replace("\t", "");
             if (seachCondition.equals("jzzje") || seachCondition.equals("czzje")) {
-                Double fz = Double.parseDouble(seachCode);
-                if (seachCondition.equals("czzje")) {
-                    name = "--出账总金额大于" + fz;
-                } else {
-                    name = "--进账总金额大于" + fz;
+                try {
+                    BigDecimal fz = new BigDecimal(seachCode);
+                    if (seachCondition.equals("czzje")) {
+                        name = "--出账总金额大于" + fz;
+                    } else {
+                        name = "--进账总金额大于" + fz;
+                    }
+                    dc.add(Restrictions.gt(seachCondition, fz));
+                } catch (NumberFormatException e) {
+                    dc.add(Restrictions.gt(seachCondition, new BigDecimal(50000)));
                 }
-                dc.add(Restrictions.gt(seachCondition, fz));
             }else{
                 dc.add(Restrictions.eq(seachCondition,seachCode));
             }

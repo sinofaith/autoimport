@@ -8,6 +8,7 @@ import cn.com.sinofaith.service.*;
 import cn.com.sinofaith.service.cftServices.CftTjjgService;
 import cn.com.sinofaith.service.cftServices.CftTjjgsService;
 import cn.com.sinofaith.util.TimeFormatUtil;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -125,16 +126,23 @@ public class AjController {
         return mav;
     }
 
+    @RequestMapping(value = "/getBrandName",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String getBrandName(@RequestParam("term") String brandName){
+        Gson gson = new Gson();
+        return gson.toJson(ajs.getBrandName(brandName));
+    }
+
     @RequestMapping(value = "/add",method = RequestMethod.POST,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String add(@RequestParam("aj") String aj,HttpServletRequest request){
+    public String add(@RequestParam("aj") String aj,@RequestParam("pinpai")String pinpai,@RequestParam("createtime")String createtime,HttpServletRequest request){
         UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         String result = "404";
         aj= aj.replace(",","");
         if(ajs.findByName(aj,user.getId()).size()>0){
             result = "303";
         }else {
-            ajs.save(new AjEntity(0,aj, 1,"",TimeFormatUtil.getDate("/"),user.getId(),"",""));
+            ajs.save(new AjEntity(0, aj,0,"", TimeFormatUtil.getDate("/"),user.getId(),"","","","",pinpai,createtime));
             result = "200";
         }
         return result;
@@ -159,11 +167,11 @@ public class AjController {
 
     @RequestMapping(value = "/ajsCount",method = RequestMethod.GET,produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String ajsCount(@RequestParam("ajm") String ajm, HttpServletRequest request){
+    public String ajsCount(@RequestParam("ajm") String ajm,@RequestParam("pinpai")String pinpai,@RequestParam("createtime")String createtime, HttpServletRequest request){
         UserEntity user =(UserEntity) request.getSession().getAttribute("user");
         List<AjEntity> ajlist = ajs.findByName(ajm,user.getId());
         if(ajlist.size()<1) {
-            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/"),user.getId(),"",""));
+            ajs.save(new AjEntity(0, ajm,0,"", TimeFormatUtil.getDate("/"),user.getId(),"","","","",pinpai,createtime));
             AjEntity aje = ajs.findByName(ajm,user.getId()).get(0);
             List<CftZzxxEntity> listZz = ajs.getCftList(aje,user.getId());
             tjs.count(listZz, aje.getId());

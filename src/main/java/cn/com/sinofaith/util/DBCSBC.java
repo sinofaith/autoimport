@@ -25,8 +25,9 @@ public class DBCSBC {
      * @return 半角字符串
      */
     public static String ToDBC(String input) {
-
-
+        if(input==null){
+            return "";
+        }
         char c[] = input.toCharArray();
         for (int i = 0; i < c.length; i++) {
             if (c[i] == '\u3000') {

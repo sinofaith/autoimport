@@ -13,9 +13,13 @@
 <link href="<c:url value="/resources/css/font.css"/>" rel="stylesheet" media="screen">
 <script src="<c:url value="/resources/jquery/jquery.js"/> "></script>
 <script src="<c:url value="/resources/js/jquery-1.9.1.min.js"/> "></script>
+<link href="<c:url value="/resources/thirdparty/gojs/css/jquery-ui.min.css"/> " rel="stylesheet">
+<script src="<c:url value="/resources/thirdparty/gojs/js/jquery/jquery-ui.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.js"/> "></script>
 <script src="<c:url value="/resources/thirdparty/jquery-form/jquery.form.js"/>" type="text/javascript"></script>
 <script src="<c:url value="/resources/js/aj.js"/>" type="text/javascript"></script>
+<script src="<c:url value="/resources/js/bootstrap-datetimepicker.js"/> "></script>
+<script src="<c:url value="/resources/js/bootstrap-datetimepicker.zh-CN.js"/> "></script>
 <%--详情模块脚本--%>
 <script type="text/javascript">
     try{ace.settings.check('main-container','fixed')}catch(e){}
@@ -50,6 +54,7 @@
                                     <tr align="center">
                                         <td width="6%">序号</td>
                                         <td width="7%">案件名</td>
+                                        <td width="7%">品牌名</td>
                                         <td width="7%">银行卡交易数据</td>
                                         <td width="7%">财付通交易数据</td>
                                         <td width="7%">支付宝账户数据</td>
@@ -66,13 +71,14 @@
                                         <tr class="${st.index%2==1 ? '':'odd' }">
                                             <td align="center">${item.xh} &nbsp;<c:if test="${!fn:contains(item.aj, ',')}"><input type="checkbox" name="ajval" value="${item.aj}"></c:if></td>
                                             <td align="center">${item.aj}</td>
+                                            <td align="center">${item.pinpai}</td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=2">${item.banknum}</a></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=1">${item.cftnum}</a></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=5">${item.zfbnum}</a></td>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=3">${item.wuliunum}</a></td>
                                             <%--<td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=4">${item.psnum}</a></td>--%>
                                             <td align="center"><a href="/SINOFAITH/aj/ajm?aj=${item.aj}&type=6">${item.ry}</a></td>
-                                            <td align="center">${item.inserttime}</td>
+                                            <td align="center">${item.createtime == null ? item.inserttime:item.createtime}</td>
                                             <td align="center">
                                                 <c:choose>
                                                     <c:when test="${user.id==item.userId}">
@@ -186,7 +192,19 @@
                 <div class="file-box">
 
                     案件名:<input type="text" name = 'aj' id ='aj'
-                               class='txt'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" >
+                               class='txt aj'  data-toggle="tooltip" data-placement="top" oninput="destroyTooltip()" ><br/>
+                    品牌名:<input type="text" name = 'pinpai' id ='pinpai'
+                               class='txt pinpai'  data-toggle="tooltip" data-placement="top" onfocus="getBrandNameOnfocus()">
+                    <div class="form-group">
+                        <label for="createTime" class="col-md-2 control-label">创建时间:</label>
+                        <div class="input-group date form_date col-md-5" data-date="" data-date-format="" data-link-field="createTime" data-link-format="yyyy/MM/dd HH:mm:ss">
+                            <input id="start_time" name="start_time" class="form-control" size="19" type="text" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+        
+                        <input type="hidden" id="createTime" value="" />
+                    </div>
                     <input type="submit" name="submit" class="btn" value="确定"
                            onclick="addAj()"/>
 

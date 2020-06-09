@@ -49,6 +49,15 @@ public class AjServices {
          ad.save(aj);
     }
 
+    public List<String> getBrandName(String brandName){
+        List<AjEntity> l = ad.find("from AjEntity where pinpai like '%"+brandName+"%'");
+        List<String> result = new ArrayList<>();
+        if(l.size()>0){
+            result = new ArrayList<>(l.stream().map(AjEntity::getPinpai).collect(Collectors.toSet()));
+        }
+        return result;
+    }
+
     public void deleteById(long id){
          ad.deleteById(id);
     }
@@ -120,6 +129,12 @@ public class AjServices {
         String [] ajm = aj.getAj().split(",");
         long [] ajid = new long[ajm.length];
         String seach = "and shmc  like '%红包%'";
+        if(aj.getCftminsj().length()>1){
+            seach += " and jysj >= '"+aj.getCftminsj()+"'";
+        }
+        if(aj.getCftmaxsj().length()>1){
+            seach+=" and jysj <= '"+aj.getCftmaxsj()+"'";
+        }
         for(int i=0;i<ajm.length;i++){
             ajid[i] = findByName(ajm[i],userId).get(0).getId();
             listZz.addAll(zzd.getAlla(ajid[i],seach));

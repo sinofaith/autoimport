@@ -174,6 +174,12 @@ public class CftZzxxController {
                 seach = "and c.fsf = c.jsf and c.zh='"+zh+"' ";
             }
         }
+        if(aj.getCftminsj().length()>1){
+            seach += " and jysj >= '"+aj.getCftminsj()+"'";
+        }
+        if(aj.getCftmaxsj().length()>1){
+            seach+=" and jysj <= '"+aj.getCftmaxsj()+"'";
+        }
         if(aj.getFlg()==1){
             seach +=" and c.shmc not like'%红包%'";
         }

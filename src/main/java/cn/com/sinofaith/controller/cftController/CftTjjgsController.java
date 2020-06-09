@@ -53,6 +53,7 @@ public class CftTjjgsController {
         ses.setAttribute("sorderby","jyzcs");
         ses.setAttribute("slastOrder","jyzcs");
         ses.setAttribute("sdesc"," desc ");
+        ses.setAttribute("code","0,1");
         return mav;
     }
 

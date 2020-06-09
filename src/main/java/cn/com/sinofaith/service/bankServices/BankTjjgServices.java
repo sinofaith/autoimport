@@ -10,6 +10,7 @@ import cn.com.sinofaith.dao.bankDao.BankZcxxDao;
 import cn.com.sinofaith.dao.bankDao.BankZzxxDao;
 import cn.com.sinofaith.form.cftForm.CftTjjgForm;
 import cn.com.sinofaith.page.Page;
+import cn.com.sinofaith.util.Excel2007Export;
 import cn.com.sinofaith.util.GetBank;
 import cn.com.sinofaith.util.TimeFormatUtil;
 import cn.com.sinofaith.util.ZipFile;
@@ -17,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static cn.com.sinofaith.util.ZipFile.ZipFiles;
@@ -138,6 +142,13 @@ public class BankTjjgServices {
         if("".equals(khh)){
             if(dskhh!=null&&dskhh.contains("银行")){
                 temp = dskhh.substring(0,dskhh.indexOf("银行")+2);
+                Pattern p = Pattern.compile("[\\d]");
+                Matcher matcher = p.matcher(temp);
+                temp = matcher.replaceAll("");
+                temp = temp.replace("-","");
+                if(temp.contains("中国")&&!temp.contains("中国银行")){
+                    temp = temp.replace("中国","");
+                }
             }else if(dskhh!=null&&dskhh.contains("信用社")){
                 temp = dskhh.substring(0,dskhh.indexOf("信用社")+3);
             }else {
@@ -396,61 +407,28 @@ public class BankTjjgServices {
 
     public void downloadFile(String seach, HttpServletResponse rep, String aj) throws Exception{
         List listTjxx = tjjd.findBySQL("select s.khxm,c.* from bank_tjjg c left join bank_person s on c.jyzh = s.yhkkh where 1=1 "+seach);
-        HSSFWorkbook wb = createExcel(listTjxx);
+        XSSFWorkbook wb = createExcel(listTjxx);
         rep.setContentType("application/force-download");
         rep.setHeader("Content-disposition","attachment;filename="+
-                new String(("银行卡账户信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+                new String(("银行卡账户信息(\""+aj+").xlsx").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
         op.close();
     }
 
-    public HSSFWorkbook createExcel(List listTjjg){
-        HSSFWorkbook wb = new HSSFWorkbook();
+    public XSSFWorkbook createExcel(List listTjjg){
+        XSSFWorkbook wb = new XSSFWorkbook();
         int b = 1;
         Sheet sheet = wb.createSheet("银行卡账户信息");
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
-        cell.setCellValue("序号");
-        cell = row.createCell(1);
-        cell.setCellValue("账户类型");
-        cell = row.createCell(2);
-        cell.setCellValue("姓名");
-        cell = row.createCell(3);
-        cell.setCellValue("交易卡号");
-        cell = row.createCell(4);
-        cell.setCellValue("交易总次数");
-        cell = row.createCell(5);
-        cell.setCellValue("进账总次数");
-        cell = row.createCell(6);
-        cell.setCellValue("进账总金额(元)");
-        cell = row.createCell(7);
-        cell.setCellValue("出账总次数");
-        cell = row.createCell(8);
-        cell.setCellValue("出账总金额(元)");
+        String[] title = {"序号","姓名","交易卡号","交易总次数","进账总次数","进账总金额",
+                "出账总次数","出账总金额","账户类型","最早交易时间","最晚交易时间","时间间隔"};
+        Row  row = Excel2007Export.createRow(sheet,title);;
+        Cell cell;
         for(int i=0;i<listTjjg.size();i++){
             if(i>=65535&& i%65535==0){
                 sheet = wb.createSheet("银行卡账户信息("+b+")");
-                row = sheet.createRow(0);
-                cell = row.createCell(0);
-                cell.setCellValue("序号");
-                cell = row.createCell(1);
-                cell.setCellValue("账户类型");
-                cell = row.createCell(2);
-                cell.setCellValue("姓名");
-                cell = row.createCell(3);
-                cell.setCellValue("交易卡号");
-                cell = row.createCell(4);
-                cell.setCellValue("交易总次数");
-                cell = row.createCell(5);
-                cell.setCellValue("进账总次数");
-                cell = row.createCell(6);
-                cell.setCellValue("进账总金额(元)");
-                cell = row.createCell(7);
-                cell.setCellValue("出账总次数");
-                cell = row.createCell(8);
-                cell.setCellValue("出账总金额(元)");
+                row = Excel2007Export.createRow(sheet,title);
                 b+=1;
             }
             Map map = (Map)listTjjg.get(i);
@@ -475,6 +453,12 @@ public class BankTjjgServices {
             cell.setCellValue(map.get("CZZCS").toString());
             cell = row.createCell(8);
             cell.setCellValue(map.get("CZZJE").toString());
+            cell = row.createCell(9);
+            cell.setCellValue((String)map.get("MINSJ"));
+            cell = row.createCell(10);
+            cell.setCellValue((String)map.get("MAXSJ"));
+            cell = row.createCell(11);
+            cell.setCellValue(TimeFormatUtil.sjjg((String)map.get("MAXSJ"),(String)map.get("MINSJ")));
             if(i%65536==0) {
                 for (int a = 0; a < 10; a++) {
                     sheet.autoSizeColumn(a);
@@ -488,7 +472,6 @@ public class BankTjjgServices {
 
     public void downWs(long czje,long jzje,String wstitle,String downPath,AjEntity aj,HttpServletResponse rep){
         String[] time = TimeFormatUtil.getDate("/").split("/");
-
         StringBuffer seach = new StringBuffer();
         seach.append(" from BankTjjgEntity where 1=1 and aj_id=").append(aj.getId());
         seach.append(" and (czzje >=").append(czje).append(" or jzzje >=").append(jzje).append(") ");
@@ -540,13 +523,13 @@ public class BankTjjgServices {
             }
         }
         if(listNull.size()>0){
-            HSSFWorkbook wb = createExcel(listNull);
+            XSSFWorkbook wb = createExcel(listNull);
             try {
-                FileOutputStream fos = new FileOutputStream(downPath+"temp/未知开户行账户.xls");
+                FileOutputStream fos = new FileOutputStream(downPath+"temp/未知开户行账户.xlsx");
                 wb.write(fos);
                 fos.flush();
                 fos.close();
-                listPath.add(downPath+"temp/未知开户行账户.xls");
+                listPath.add(downPath+"temp/未知开户行账户.xlsx");
             }catch (Exception e){
                 e.printStackTrace();
             }

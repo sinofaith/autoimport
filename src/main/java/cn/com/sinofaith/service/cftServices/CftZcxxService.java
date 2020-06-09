@@ -9,6 +9,7 @@ import cn.com.sinofaith.form.cftForm.CftTjjgForm;
 import cn.com.sinofaith.form.cftForm.CftTjjgsForm;
 import cn.com.sinofaith.page.Page;
 import cn.com.sinofaith.util.CreatePdfUtils;
+import cn.com.sinofaith.util.Excel2007Export;
 import cn.com.sinofaith.util.WatermarkImageUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,65 +104,30 @@ public class CftZcxxService {
 
     public void downloadFile(String seach, HttpServletResponse rep,String aj) throws Exception{
         List<CftZcxxEntity> listZcxx = czd.find("from CftZcxxEntity where 1=1"+seach+" order by id desc ");
-        HSSFWorkbook wb = createExcel(listZcxx);
+        XSSFWorkbook wb = createExcel(listZcxx);
         rep.setContentType("application/force-download");
-        rep.setHeader("Content-Disposition","attachment;filename="+new String(("财付通注册信息(\""+aj+").xls").getBytes(), "ISO8859-1"));
+        rep.setHeader("Content-Disposition","attachment;filename="+new String(("财付通注册信息(\""+aj+").xlsx").getBytes(), "ISO8859-1"));
         OutputStream op = rep.getOutputStream();
         wb.write(op);
         op.flush();
         op.close();
     }
 
-    public HSSFWorkbook createExcel(List<CftZcxxEntity> listZcxx)throws Exception{
-        HSSFWorkbook wb = new HSSFWorkbook();
+    public XSSFWorkbook createExcel(List<CftZcxxEntity> listZcxx)throws Exception{
+        XSSFWorkbook wb = new XSSFWorkbook();
+        String[] title = {"序号","账户状态","微信账户","姓名","注册时间","身份证号","绑定手机","开户行","银行账号"};
         Sheet sheet = wb.createSheet("财付通注册信息");
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
-        cell.setCellValue("序号");
-        cell = row.createCell(1);
-        cell.setCellValue("账户状态");
-        cell = row.createCell(2);
-        cell.setCellValue("微信账户");
-        cell = row.createCell(3);
-        cell.setCellValue("姓名");
-        cell = row.createCell(4);
-        cell.setCellValue("注册时间");
-        cell = row.createCell(5);
-        cell.setCellValue("身份证号");
-        cell = row.createCell(6);
-        cell.setCellValue("绑定手机");
-        cell = row.createCell(7);
-        cell.setCellValue("开户行");
-        cell = row.createCell(8);
-        cell.setCellValue("银行账号");
+        Row row = Excel2007Export.createRow(sheet,title);
         int i = 1;
         int b = 1;
         for(CftZcxxEntity czxx:listZcxx){
             if(i>=65536 && i%65536==0){
                 sheet = wb.createSheet("财付通注册信息("+b+")");
-                row = sheet.createRow(0);
-                cell = row.createCell(0);
-                cell.setCellValue("序号");
-                cell = row.createCell(1);
-                cell.setCellValue("账户状态");
-                cell = row.createCell(2);
-                cell.setCellValue("微信账户");
-                cell = row.createCell(3);
-                cell.setCellValue("姓名");
-                cell = row.createCell(4);
-                cell.setCellValue("注册时间");
-                cell = row.createCell(5);
-                cell.setCellValue("身份证号");
-                cell = row.createCell(6);
-                cell.setCellValue("绑定手机");
-                cell = row.createCell(7);
-                cell.setCellValue("开户行");
-                cell = row.createCell(8);
-                cell.setCellValue("银行账号");
+                row = Excel2007Export.createRow(sheet,title);
                 b+=1;
             }
             row = sheet.createRow(i%65536);
-            cell = row.createCell(0);
+            Cell cell = row.createCell(0);
             cell.setCellValue(i);
             cell = row.createCell(1);
             cell.setCellValue(czxx.getZhzt());

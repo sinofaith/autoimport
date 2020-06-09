@@ -21,6 +21,8 @@ public class CftTjjgEntity implements Serializable {
     private BigDecimal czzje = new BigDecimal(0);
     private long aj_id;
     private String inserttime;
+    private String minsj;
+    private String maxsj;
 
     @Basic
     @Column(name = "id",nullable = true,precision = 0)
@@ -116,9 +118,28 @@ public class CftTjjgEntity implements Serializable {
         this.aj_id = aj_id;
     }
 
+    @Basic
+    @Column(name="minsj",nullable = true,length = 200)
+    public String getMinsj() {
+        return minsj;
+    }
+
+    public void setMinsj(String minsj) {
+        this.minsj = minsj;
+    }
+    @Basic
+    @Column(name="maxsj",nullable = true,length = 200)
+    public String getMaxsj() {
+        return maxsj;
+    }
+
+    public void setMaxsj(String maxsj) {
+        this.maxsj = maxsj;
+    }
+
     @Override
     public String toString() {
-        return "TjjgEntity{" +
+        return "CftTjjgEntity{" +
                 "id=" + id +
                 ", jyzh='" + jyzh + '\'' +
                 ", jylx='" + jylx + '\'' +
@@ -127,6 +148,10 @@ public class CftTjjgEntity implements Serializable {
                 ", jzzje=" + jzzje +
                 ", czzcs=" + czzcs +
                 ", czzje=" + czzje +
+                ", aj_id=" + aj_id +
+                ", inserttime='" + inserttime + '\'' +
+                ", minsj='" + minsj + '\'' +
+                ", maxsj='" + maxsj + '\'' +
                 '}';
     }
 }

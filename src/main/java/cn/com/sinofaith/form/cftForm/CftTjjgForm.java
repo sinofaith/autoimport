@@ -1,5 +1,7 @@
 package cn.com.sinofaith.form.cftForm;
 
+import cn.com.sinofaith.util.TimeFormatUtil;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -16,6 +18,9 @@ public class CftTjjgForm {
     private long zhlx;
     private String zhlb;
     private long dsfzh;
+    private String minsj;
+    private String maxsj;
+    private String jgsj;
 
     public long getId() {
         return id;
@@ -117,6 +122,30 @@ public class CftTjjgForm {
         this.dsfzh = dsfzh;
     }
 
+    public String getMinsj() {
+        return minsj;
+    }
+
+    public void setMinsj(String minsj) {
+        this.minsj = minsj;
+    }
+
+    public String getMaxsj() {
+        return maxsj;
+    }
+
+    public void setMaxsj(String maxsj) {
+        this.maxsj = maxsj;
+    }
+
+    public String getJgsj() {
+        return jgsj;
+    }
+
+    public void setJgsj(String jgsj) {
+        this.jgsj = jgsj;
+    }
+
     @Override
     public String toString() {
         return name + "//" + jyzh + "//" + jylx + "//" + jyzcs + "//" + jzzcs + "//" + jzzje + "//" + czzcs + "//" + czzje;
@@ -139,6 +168,9 @@ public class CftTjjgForm {
         cftForm.setZhlx(new BigDecimal(map.get("ZHLX")!=null ? map.get("ZHLX").toString():"-1").longValue());
         cftForm.setZhlb((String) map.get("ZHLB"));
         cftForm.setDsfzh(new BigDecimal(map.get("DSFZH")!=null ? map.get("DSFZH").toString():"-1").longValue());
+        cftForm.setMinsj(map.get("MINSJ")!=null ? map.get("MINSJ").toString():"");
+        cftForm.setMaxsj(map.get("MAXSJ")!=null ? map.get("MAXSJ").toString():"");
+        cftForm.setJgsj(TimeFormatUtil.sjjg(cftForm.getMaxsj(),cftForm.getMinsj()));
         return cftForm;
     }
 
